@@ -37,6 +37,9 @@ playwright-report/
 # Storybook build
 storybook-static/
 
+# TypeScript build info
+*.tsbuildinfo
+
 # Misc
 *.tgz
 .cache/
