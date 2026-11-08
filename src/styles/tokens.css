@@ -1,0 +1,96 @@
+/* Design tokens — Cosmosyy
+   Every colour, size and duration is defined here.
+   Components read tokens only. No hex values outside this file. */
+
+/* 1. Light values on :root — every token defined here first */
+:root {
+  /* Colours */
+  --bg: #F6F8FB;
+  --surface: #FFFFFF;
+  --fg: #0E1626;
+  --fg-muted: #4A566B;
+  --border: #DCE3EE;
+  --primary: #1D4ED8;
+  --primary-fg: #FFFFFF;
+  --ok: #1F8A5B;
+  --warn: #B7791F;
+  --danger: #C53030;
+  --space: #050A14;
+
+  /* Shape */
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 10px;
+
+  /* Spacing (4 px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Motion */
+  --dur-fast: 120ms;
+  --dur: 200ms;
+  --dur-page: 320ms;
+  --ease: cubic-bezier(.2, 0, 0, 1);
+
+  /* Shadows */
+  --shadow-1: 0 1px 2px rgb(14 22 38 / .06), 0 4px 12px rgb(14 22 38 / .06);
+  --shadow-2: 0 2px 4px rgb(14 22 38 / .08), 0 8px 24px rgb(14 22 38 / .10);
+}
+
+/* 2. Dark: system preference unless the user forced light */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B111C;
+    --surface: #111A29;
+    --fg: #E7ECF4;
+    --fg-muted: #8896AB;
+    --border: #1E2D42;
+    --primary: #60A5FA;
+    --primary-fg: #0B111C;
+    --ok: #34D399;
+    --warn: #FBBF24;
+    --danger: #F87171;
+    --shadow-1: 0 1px 2px rgb(0 0 0 / .20), 0 4px 12px rgb(0 0 0 / .25);
+    --shadow-2: 0 2px 4px rgb(0 0 0 / .25), 0 8px 24px rgb(0 0 0 / .30);
+    color-scheme: dark;
+  }
+}
+
+/* 3. Explicit toggle wins both ways */
+:root[data-theme="dark"] {
+  --bg: #0B111C;
+  --surface: #111A29;
+  --fg: #E7ECF4;
+  --fg-muted: #8896AB;
+  --border: #1E2D42;
+  --primary: #60A5FA;
+  --primary-fg: #0B111C;
+  --ok: #34D399;
+  --warn: #FBBF24;
+  --danger: #F87171;
+  --shadow-1: 0 1px 2px rgb(0 0 0 / .20), 0 4px 12px rgb(0 0 0 / .25);
+  --shadow-2: 0 2px 4px rgb(0 0 0 / .25), 0 8px 24px rgb(0 0 0 / .30);
+  color-scheme: dark;
+}
+
+/* 4. Expose to Tailwind v4 */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-space: var(--space);
+  --radius-md: var(--radius);
+}
