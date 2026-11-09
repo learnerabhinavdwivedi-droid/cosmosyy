@@ -320,7 +320,7 @@ function FlightAnimator() {
 
   return (
     <group ref={shipRef} scale={0.7}>
-      <group rotation={[-Math.PI / 2, 0, 0]}>
+      <group rotation={[Math.PI / 2, 0, 0]}>
         <mesh>
           <coneGeometry args={[0.45, 1.6, 12]} />
           <meshStandardMaterial
@@ -344,7 +344,7 @@ function FlightAnimator() {
       </group>
       <mesh
         ref={flameRef}
-        rotation={[Math.PI / 2, 0, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
         position={[0, 0, 2.5]}
       >
         <coneGeometry args={[0.35, 3, 12]} />
@@ -519,6 +519,8 @@ export function FlightScene() {
 
   const gate = GATES[phase];
 
+  const showStepOutFade = phase === "stepOut";
+
   return (
     <div className="relative h-screen w-full">
       <Canvas
@@ -538,6 +540,9 @@ export function FlightScene() {
             [Space] {t(gate.labelKey)}
           </button>
         </div>
+      )}
+      {showStepOutFade && (
+        <div className="absolute inset-0 z-30 animate-[fadeIn_2.5s_ease-in_forwards] bg-black opacity-0" />
       )}
     </div>
   );

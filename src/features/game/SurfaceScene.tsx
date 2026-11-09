@@ -11,6 +11,7 @@ import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import { Stars, Text } from "@react-three/drei";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
+import { gameAudio } from "@/lib/gameAudio";
 import { LMDescent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
 import {
@@ -462,6 +463,7 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
     addFoundObject(nearObjectId);
     findObject(missionId, nearObjectId);
     send("START_INSPECT", { objectId: nearObjectId });
+    gameAudio.playRadioBeep();
 
     setToast(t("xp.object", { amount: obj?.xp ?? 50, name: obj?.name ?? nearObjectId }));
     if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -472,6 +474,7 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
     if (!missionId) return;
     useAppStore.getState().plantFlag(missionId);
     send("PLANT_FLAG");
+    gameAudio.playSuccess();
     setToast(t("xp.flag", { amount: 100 }));
     if (toastTimer.current) clearTimeout(toastTimer.current);
     toastTimer.current = setTimeout(() => setToast(null), 2500);

@@ -3,9 +3,10 @@ import { useTranslation } from "react-i18next";
 import { useParams, useNavigate } from "react-router-dom";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
-import { useGameStore } from "@/store/useGameStore";
+import { useGameStore, type GamePhase } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { DebugPanel } from "@/components/DebugPanel";
+import { gameAudio } from "@/lib/gameAudio";
 import { FlightScene } from "./FlightScene";
 import { SurfaceScene } from "./SurfaceScene";
 import { ReportScreen } from "./ReportScreen";
@@ -13,6 +14,94 @@ import { LMDescent, LMAscent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
 import { getApollo11SunPosition } from "./sunPosition";
 import * as THREE from "three";
+
+const FLIGHT_PHASES = new Set<string>(["flight", "coast", "orbit", "targetLocked", "descent", "touchdown", "stepOut"]);
+const SURFACE_PHASES = new Set<string>(["explore", "inspect", "flagReady", "flagPlanted"]);
+const ENGINE_PHASES = new Set<string>(["flight", "targetLocked", "descent", "launch"]);
+
+function GameAudioController() {
+  const prevPhase = useRef<GamePhase>("select");
+
+  useEffect(() => {
+    const unsub = useGameStore.subscribe((s) => {
+      const phase = s.phase;
+      const prev = prevPhase.current;
+      if (phase === prev) return;
+      prevPhase.current = phase;
+
+      if (phase === "flight" && prev === "select") {
+        gameAudio.unlock();
+        gameAudio.playCountdown();
+        setTimeout(() => gameAudio.startEngine(), 1600);
+      }
+
+      if (ENGINE_PHASES.has(phase) && !ENGINE_PHASES.has(prev)) {
+        gameAudio.startEngine();
+      }
+      if (!ENGINE_PHASES.has(phase) && ENGINE_PHASES.has(prev)) {
+        gameAudio.stopEngine();
+      }
+
+      if (phase === "orbit" || phase === "coast") {
+        gameAudio.playRadioBeep();
+      }
+
+      if (phase === "touchdown") {
+        gameAudio.stopEngine();
+        gameAudio.playThud();
+      }
+
+      if (phase === "explore") {
+        gameAudio.playRadioBeep();
+      }
+
+      if (phase === "launch") {
+        gameAudio.playCountdown();
+        setTimeout(() => gameAudio.startEngine(), 1600);
+      }
+
+      if (phase === "report") {
+        gameAudio.stopEngine();
+        gameAudio.playSuccess();
+      }
+    });
+    return unsub;
+  }, []);
+
+  return null;
+}
+
+function SceneFade({ phase }: { phase: string }) {
+  const prevPhase = useRef(phase);
+  const [opacity, setOpacity] = useState(0);
+
+  useEffect(() => {
+    const prev = prevPhase.current;
+    prevPhase.current = phase;
+
+    const wasFlightScene = FLIGHT_PHASES.has(prev);
+    const isSurfaceScene = SURFACE_PHASES.has(phase);
+    const wasLaunch = prev === "launch";
+    const isReport = phase === "report";
+    const wasSurface = SURFACE_PHASES.has(prev);
+    const isLaunch = phase === "launch";
+
+    if ((wasFlightScene && isSurfaceScene) || (wasLaunch && isReport) || (wasSurface && isLaunch)) {
+      setOpacity(1);
+      const timer = setTimeout(() => setOpacity(0), 600);
+      return () => clearTimeout(timer);
+    }
+  }, [phase]);
+
+  if (opacity === 0) return null;
+
+  return (
+    <div
+      className="pointer-events-none absolute inset-0 z-50 bg-black transition-opacity duration-700"
+      style={{ opacity }}
+    />
+  );
+}
 
 export default function GameShell() {
   const { missionId } = useParams();
@@ -42,22 +131,8 @@ export default function GameShell() {
     prevPhase.current = phase;
   }, [phase, navigate]);
 
-  const isFlightPhase = [
-    "flight",
-    "coast",
-    "orbit",
-    "targetLocked",
-    "descent",
-    "touchdown",
-    "stepOut",
-  ].includes(phase);
-
-  const isSurfacePhase = [
-    "explore",
-    "inspect",
-    "flagReady",
-    "flagPlanted",
-  ].includes(phase);
+  const isFlightPhase = FLIGHT_PHASES.has(phase);
+  const isSurfacePhase = SURFACE_PHASES.has(phase);
 
   return (
     <div className="relative min-h-screen bg-bg text-fg">
@@ -65,6 +140,8 @@ export default function GameShell() {
       {isSurfacePhase && <SurfaceScene />}
       {phase === "launch" && <LaunchScene />}
       {phase === "report" && <ReportScreen />}
+      <SceneFade phase={phase} />
+      <GameAudioController />
       <DebugPanel />
     </div>
   );
