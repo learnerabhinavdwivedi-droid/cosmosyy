@@ -63,6 +63,13 @@ function GameAudioController() {
         gameAudio.playThud();
       }
 
+      if (SURFACE_PHASES.has(phase) && !SURFACE_PHASES.has(prev)) {
+        gameAudio.startBreathing();
+      }
+      if (!SURFACE_PHASES.has(phase) && SURFACE_PHASES.has(prev)) {
+        gameAudio.stopBreathing();
+      }
+
       if (phase === "explore") {
         gameAudio.playRadioBeep();
       }

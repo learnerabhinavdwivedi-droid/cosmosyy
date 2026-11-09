@@ -70,6 +70,17 @@ export const XP_OBJECT = 50;
 export const XP_FLAG = 100;
 export const XP_COMPLETE = 100;
 
+export const MISSION_ORDER = [
+  "apollo-11", "apollo-12", "apollo-14",
+  "apollo-15", "apollo-16", "apollo-17",
+];
+
+export function getNextMissionId(currentId: string): string | null {
+  const idx = MISSION_ORDER.indexOf(currentId);
+  if (idx >= 0 && idx < MISSION_ORDER.length - 1) return MISSION_ORDER[idx + 1];
+  return null;
+}
+
 export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
@@ -153,18 +164,30 @@ export const useAppStore = create<AppState>()(
         set((s) => {
           const mission = s.progress.missions[missionId];
           if (!mission || mission.status === "completed") return s;
+
+          const updatedMissions = {
+            ...s.progress.missions,
+            [missionId]: {
+              ...mission,
+              xp: mission.xp + XP_COMPLETE,
+              status: "completed" as MissionStatus,
+            },
+          };
+
+          const idx = MISSION_ORDER.indexOf(missionId);
+          if (idx >= 0 && idx < MISSION_ORDER.length - 1) {
+            const nextId = MISSION_ORDER[idx + 1];
+            const next = updatedMissions[nextId];
+            if (next && next.status === "locked") {
+              updatedMissions[nextId] = { ...next, status: "available" };
+            }
+          }
+
           return {
             progress: {
               ...s.progress,
               totalXp: s.progress.totalXp + XP_COMPLETE,
-              missions: {
-                ...s.progress.missions,
-                [missionId]: {
-                  ...mission,
-                  xp: mission.xp + XP_COMPLETE,
-                  status: "completed",
-                },
-              },
+              missions: updatedMissions,
             },
           };
         }),

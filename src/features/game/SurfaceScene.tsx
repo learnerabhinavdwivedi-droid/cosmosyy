@@ -40,6 +40,56 @@ const OBJECTS: HeritageObjectDef[] = missionData.objects.map((o) => ({
 const TOTAL_OBJECTS = OBJECTS.length;
 const SCAN_RANGE = 5;
 
+function HoloParticles({ color, speed }: { color: string; speed: number }) {
+  const ref = useRef<THREE.Points>(null);
+  const count = 14;
+  const positions = useMemo(() => {
+    const arr = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      const angle = (i / count) * Math.PI * 2;
+      arr[i * 3] = Math.cos(angle) * 1.5;
+      arr[i * 3 + 1] = 0.5 + (i % 4) * 0.6;
+      arr[i * 3 + 2] = Math.sin(angle) * 1.5;
+    }
+    return arr;
+  }, []);
+
+  useFrame(() => {
+    if (!ref.current) return;
+    const posAttr = ref.current.geometry.attributes.position;
+    const t = Date.now() * 0.001 * speed;
+    for (let i = 0; i < count; i++) {
+      const baseAngle = (i / count) * Math.PI * 2;
+      const angle = baseAngle + t;
+      const r = 1.2 + Math.sin(t * 2 + i) * 0.3;
+      const y = 0.5 + (i % 4) * 0.6 + Math.sin(t * 1.5 + i * 0.7) * 0.3;
+      posAttr.setXYZ(i, Math.cos(angle) * r, y, Math.sin(angle) * r);
+    }
+    posAttr.needsUpdate = true;
+  });
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          args={[positions, 3]}
+          count={count}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        color={color}
+        size={0.08}
+        transparent
+        opacity={0.8}
+        blending={THREE.AdditiveBlending}
+        depthWrite={false}
+        sizeAttenuation
+      />
+    </points>
+  );
+}
+
 function HeritageMarker({
   obj,
   isFound,
@@ -49,70 +99,155 @@ function HeritageMarker({
   isFound: boolean;
   isNear: boolean;
 }) {
-  const ringRef = useRef<THREE.Mesh>(null);
+  const outerRingRef = useRef<THREE.Mesh>(null);
+  const innerRingRef = useRef<THREE.Mesh>(null);
   const beamRef = useRef<THREE.Mesh>(null);
+  const pulseRef = useRef<THREE.Mesh>(null);
+  const scanRef = useRef<THREE.Mesh>(null);
 
   useFrame(() => {
-    if (ringRef.current && !isFound) {
-      (ringRef.current.material as THREE.MeshBasicMaterial).opacity =
-        0.5 + Math.sin(Date.now() * 0.004) * 0.3;
+    const t = Date.now() * 0.001;
+
+    if (outerRingRef.current) {
+      outerRingRef.current.rotation.z = t * 0.5;
+      (outerRingRef.current.material as THREE.MeshBasicMaterial).opacity =
+        0.6 + Math.sin(t * 3) * 0.2;
+    }
+    if (innerRingRef.current) {
+      innerRingRef.current.rotation.z = -t * 0.8;
+      (innerRingRef.current.material as THREE.MeshBasicMaterial).opacity =
+        0.5 + Math.sin(t * 2 + 1) * 0.2;
     }
     if (beamRef.current) {
-      (beamRef.current.material as THREE.MeshBasicMaterial).opacity = isNear
-        ? 0.4
-        : 0.15;
+      const beamOpacity = isNear ? 0.35 + Math.sin(t * 4) * 0.15 : 0.12;
+      (beamRef.current.material as THREE.MeshBasicMaterial).opacity = beamOpacity;
+    }
+    if (pulseRef.current) {
+      const pulseScale = 1 + Math.sin(t * 2) * 0.3;
+      pulseRef.current.scale.set(pulseScale, 1, pulseScale);
+      (pulseRef.current.material as THREE.MeshBasicMaterial).opacity =
+        0.15 + Math.sin(t * 2) * 0.1;
+    }
+    if (scanRef.current) {
+      if (isNear) {
+        const scanY = (t * 1.5) % 3;
+        scanRef.current.position.y = scanY;
+        (scanRef.current.material as THREE.MeshBasicMaterial).opacity = 0.3;
+      } else {
+        (scanRef.current.material as THREE.MeshBasicMaterial).opacity = 0;
+      }
     }
   });
 
   if (obj.id === "descent-stage") return null;
 
-  const ringColor = isFound ? "#66ff99" : "#ffd36e";
+  const baseColor = isFound ? "#66ff99" : isNear ? "#00d4ff" : "#ffd36e";
+  const beamColor = isFound ? "#66ff99" : "#ffd36e";
 
   return (
     <group position={obj.position}>
-      {/* Golden torus ring on the ground */}
       <mesh
-        ref={ringRef}
+        ref={outerRingRef}
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, 0.08, 0]}
+        position={[0, 0.1, 0]}
       >
-        <torusGeometry args={[1.2, 0.05, 8, 48]} />
+        <torusGeometry args={[1.5, 0.04, 8, 48]} />
         <meshBasicMaterial
-          color={ringColor}
+          color={baseColor}
           transparent
-          opacity={0.8}
+          opacity={0.7}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
       </mesh>
 
-      {/* Vertical beam */}
+      <mesh
+        ref={innerRingRef}
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, 0.15, 0]}
+      >
+        <torusGeometry args={[0.9, 0.03, 8, 32]} />
+        <meshBasicMaterial
+          color={baseColor}
+          transparent
+          opacity={0.5}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      <mesh
+        ref={pulseRef}
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, 0.05, 0]}
+      >
+        <circleGeometry args={[2, 32]} />
+        <meshBasicMaterial
+          color={baseColor}
+          transparent
+          opacity={0.15}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
       {!isFound && (
-        <mesh ref={beamRef} position={[0, 4, 0]}>
-          <cylinderGeometry args={[0.03, 0.03, 8, 6]} />
+        <mesh ref={beamRef} position={[0, 5, 0]}>
+          <cylinderGeometry args={[0.08, 0.15, 10, 8]} />
           <meshBasicMaterial
-            color="#ffd36e"
+            color={beamColor}
             transparent
-            opacity={0.2}
+            opacity={0.15}
             blending={THREE.AdditiveBlending}
             depthWrite={false}
           />
         </mesh>
       )}
 
-      {/* Name label */}
+      {isNear && !isFound && (
+        <mesh ref={scanRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+          <torusGeometry args={[0.6, 0.02, 6, 24]} />
+          <meshBasicMaterial
+            color="#00d4ff"
+            transparent
+            opacity={0.3}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </mesh>
+      )}
+
+      {!isFound && (
+        <HoloParticles color={baseColor} speed={isNear ? 2 : 0.8} />
+      )}
+
       <Text
-        position={[0, 2.2, 0]}
-        fontSize={0.28}
+        position={[0, 2.8, 0]}
+        fontSize={0.32}
         color={isFound ? "#66ff99" : "#ffffff"}
         anchorX="center"
         anchorY="bottom"
-        outlineWidth={0.02}
+        outlineWidth={0.03}
         outlineColor="#000000"
       >
         {obj.name}
         {isFound ? " ✓" : ""}
       </Text>
+
+      {isNear && !isFound && (
+        <Text
+          position={[0, 2.4, 0]}
+          fontSize={0.2}
+          color="#00d4ff"
+          anchorX="center"
+          anchorY="bottom"
+          outlineWidth={0.02}
+          outlineColor="#000000"
+        >
+          {"[E] SCAN"}
+        </Text>
+      )}
     </group>
   );
 }
@@ -150,13 +285,135 @@ function ProximityDetector({
   return null;
 }
 
-const LUNAR_G = 1.62;
+const LUNAR_G = 1.0;
 const EYE_HEIGHT = 1.7;
 const GROUND_Y = 0;
-const JUMP_V0 = 1.8;
+const JUMP_V0 = 2.6;
+const WALK_SPEED = 2;
+const RUN_SPEED = 4.5;
+const BOB_FREQ = 6;
+const BOB_AMP = 0.03;
 const _moveDir = new THREE.Vector3();
 const _lookTarget = new THREE.Vector3();
 const _currentLook = new THREE.Vector3();
+
+const playerState = {
+  x: 5, z: 10, heading: 0, isMoving: false, speed: 0,
+};
+
+function DustParticles() {
+  const ref = useRef<THREE.Points>(null);
+  const count = 40;
+  const lifetimes = useRef(new Float32Array(count));
+  const velocities = useRef(new Float32Array(count * 3));
+
+  const positions = useMemo(() => new Float32Array(count * 3), []);
+
+  useFrame((_s, delta) => {
+    if (!ref.current) return;
+    const posAttr = ref.current.geometry.attributes.position;
+    const lt = lifetimes.current;
+    const vel = velocities.current;
+
+    for (let i = 0; i < count; i++) {
+      lt[i] -= delta;
+      if (lt[i] <= 0) {
+        if (playerState.isMoving) {
+          const spread = 0.4;
+          posAttr.setXYZ(
+            i,
+            playerState.x + (Math.sin(i * 7.31) * 2 - 1) * spread,
+            0.05,
+            playerState.z + (Math.sin(i * 13.7) * 2 - 1) * spread,
+          );
+          vel[i * 3] = (Math.sin(i * 3.7) * 2 - 1) * 0.3;
+          vel[i * 3 + 1] = 0.15 + Math.sin(i * 5.1) * 0.1;
+          vel[i * 3 + 2] = (Math.sin(i * 9.2) * 2 - 1) * 0.3;
+          lt[i] = 1.5 + Math.sin(i * 2.3) * 0.5;
+        } else {
+          posAttr.setXYZ(i, 0, -10, 0);
+          lt[i] = 0.1;
+        }
+      } else {
+        const x = posAttr.getX(i) + vel[i * 3] * delta;
+        const y = posAttr.getY(i) + vel[i * 3 + 1] * delta;
+        const z = posAttr.getZ(i) + vel[i * 3 + 2] * delta;
+        vel[i * 3 + 1] -= 0.08 * delta;
+        posAttr.setXYZ(i, x, Math.max(0, y), z);
+      }
+    }
+    posAttr.needsUpdate = true;
+    (ref.current.material as THREE.PointsMaterial).opacity =
+      playerState.isMoving ? 0.35 : 0;
+  });
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} count={count} />
+      </bufferGeometry>
+      <pointsMaterial
+        color="#b8b0a0"
+        size={0.06}
+        transparent
+        opacity={0.35}
+        depthWrite={false}
+        sizeAttenuation
+      />
+    </points>
+  );
+}
+
+function Footprints() {
+  const texture = useLoader(THREE.TextureLoader, "/textures/bootprint.jpg");
+  const maxPrints = 60;
+  const meshRef = useRef<THREE.InstancedMesh>(null);
+  const printCount = useRef(0);
+  const lastPrintPos = useRef(new THREE.Vector3(999, 0, 999));
+  const stepSide = useRef(0);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+
+  useFrame(() => {
+    if (!meshRef.current) return;
+    const px = playerState.x;
+    const pz = playerState.z;
+    const dx = px - lastPrintPos.current.x;
+    const dz = pz - lastPrintPos.current.z;
+    const dist = Math.sqrt(dx * dx + dz * dz);
+
+    if (dist > 1.2 && playerState.isMoving) {
+      const idx = printCount.current % maxPrints;
+      const side = stepSide.current === 0 ? -1 : 1;
+      const perpX = -Math.sin(playerState.heading) * 0.15 * side;
+      const perpZ = Math.cos(playerState.heading) * 0.15 * side;
+
+      dummy.position.set(px + perpX, 0.01, pz + perpZ);
+      dummy.rotation.set(-Math.PI / 2, 0, playerState.heading + Math.PI);
+      dummy.scale.set(0.15, 0.25, 1);
+      dummy.updateMatrix();
+      meshRef.current.setMatrixAt(idx, dummy.matrix);
+      meshRef.current.instanceMatrix.needsUpdate = true;
+      meshRef.current.count = Math.min(printCount.current + 1, maxPrints);
+
+      lastPrintPos.current.set(px, 0, pz);
+      printCount.current++;
+      stepSide.current = 1 - stepSide.current;
+    }
+  });
+
+  return (
+    <instancedMesh ref={meshRef} args={[undefined, undefined, maxPrints]} frustumCulled={false}>
+      <planeGeometry args={[1, 1]} />
+      <meshBasicMaterial
+        map={texture}
+        transparent
+        opacity={0.4}
+        depthWrite={false}
+        side={THREE.DoubleSide}
+      />
+    </instancedMesh>
+  );
+}
 
 function PlayerController() {
   const { camera } = useThree();
@@ -166,6 +423,8 @@ function PlayerController() {
   const keys = useRef<Record<string, boolean>>({});
   const isPointerLocked = useRef(false);
   const phaseRef = useRef(useGameStore.getState().phase);
+  const bobPhase = useRef(0);
+  const wasOnGround = useRef(true);
 
   useEffect(() => {
     const unsub = useGameStore.subscribe((s) => {
@@ -218,11 +477,13 @@ function PlayerController() {
   useFrame((_state, delta) => {
     if (phaseRef.current === "inspect") {
       velocity.current.set(0, 0, 0);
+      playerState.isMoving = false;
       return;
     }
 
     const k = keys.current;
-    const speed = k["ShiftLeft"] || k["ShiftRight"] ? 4 : 2;
+    const running = k["ShiftLeft"] || k["ShiftRight"];
+    const speed = running ? RUN_SPEED : WALK_SPEED;
     _moveDir.set(0, 0, 0);
 
     if (k["KeyW"] || k["ArrowUp"]) _moveDir.z -= 1;
@@ -230,14 +491,16 @@ function PlayerController() {
     if (k["KeyA"] || k["ArrowLeft"]) _moveDir.x -= 1;
     if (k["KeyD"] || k["ArrowRight"]) _moveDir.x += 1;
 
-    if (_moveDir.length() > 0) {
+    const isMoving = _moveDir.length() > 0;
+
+    if (isMoving) {
       _moveDir.normalize();
       _moveDir.applyQuaternion(camera.quaternion);
       _moveDir.y = 0;
       _moveDir.normalize();
     }
 
-    velocity.current.lerp(_moveDir.multiplyScalar(speed), delta * 3);
+    velocity.current.lerp(_moveDir.multiplyScalar(speed), delta * 2.5);
     camera.position.x += velocity.current.x * delta;
     camera.position.z += velocity.current.z * delta;
 
@@ -252,8 +515,25 @@ function PlayerController() {
 
     if (camera.position.y < GROUND_Y + EYE_HEIGHT) {
       camera.position.y = GROUND_Y + EYE_HEIGHT;
+      if (!wasOnGround.current && verticalVel.current < -0.5) {
+        gameAudio.playThud();
+      }
       verticalVel.current = 0;
     }
+    wasOnGround.current = onGround;
+
+    if (isMoving && onGround) {
+      bobPhase.current += delta * BOB_FREQ * (running ? 1.3 : 1);
+      camera.position.y += Math.sin(bobPhase.current) * BOB_AMP;
+    } else {
+      bobPhase.current = 0;
+    }
+
+    playerState.x = camera.position.x;
+    playerState.z = camera.position.z;
+    playerState.heading = euler.current.y;
+    playerState.isMoving = isMoving && onGround;
+    playerState.speed = velocity.current.length();
   });
 
   return null;
@@ -378,6 +658,11 @@ function SurfaceSceneContent({
         />
       ))}
 
+      <DustParticles />
+      <Suspense fallback={null}>
+        <Footprints />
+      </Suspense>
+
       <ProximityDetector setNearObjectId={setNearObjectId} />
       <PlayerController />
       <InspectCamera />
@@ -434,6 +719,52 @@ function InspectOverlay() {
   );
 }
 
+function MiniRadar({ found }: { found: string[] }) {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick((n) => n + 1), 200);
+    return () => clearInterval(id);
+  }, []);
+
+  const px = playerState.x;
+  const pz = playerState.z;
+  const heading = playerState.heading;
+  const radarRange = 50;
+
+  return (
+    <svg viewBox="0 0 100 100" className="h-24 w-24 opacity-80">
+      <circle cx="50" cy="50" r="48" fill="none" stroke="#ffd36e" strokeWidth="0.5" strokeOpacity="0.3" />
+      <circle cx="50" cy="50" r="32" fill="none" stroke="#ffd36e" strokeWidth="0.3" strokeOpacity="0.2" />
+      <circle cx="50" cy="50" r="16" fill="none" stroke="#ffd36e" strokeWidth="0.3" strokeOpacity="0.15" />
+      <line x1="50" y1="2" x2="50" y2="12" stroke="#00d4ff" strokeWidth="1.5" strokeOpacity="0.6" />
+      {/* LM at origin */}
+      {(() => {
+        const dx = (0 - px) / radarRange;
+        const dz = (0 - pz) / radarRange;
+        const rx = dx * Math.cos(-heading) - dz * Math.sin(-heading);
+        const rz = dx * Math.sin(-heading) + dz * Math.cos(-heading);
+        const sx = 50 + rx * 45;
+        const sy = 50 - rz * 45;
+        if (sx > 5 && sx < 95 && sy > 5 && sy < 95) {
+          return <rect x={sx - 3} y={sy - 3} width="6" height="6" fill="#66ff99" opacity="0.8" />;
+        }
+        return null;
+      })()}
+      {OBJECTS.filter((o) => o.id !== "descent-stage" && !found.includes(o.id)).map((obj) => {
+        const dx = (obj.position[0] - px) / radarRange;
+        const dz = (obj.position[2] - pz) / radarRange;
+        const rx = dx * Math.cos(-heading) - dz * Math.sin(-heading);
+        const rz = dx * Math.sin(-heading) + dz * Math.cos(-heading);
+        const sx = 50 + rx * 45;
+        const sy = 50 - rz * 45;
+        if (sx < 2 || sx > 98 || sy < 2 || sy > 98) return null;
+        return <circle key={obj.id} cx={sx} cy={sy} r="3" fill="#ffd36e" opacity="0.9" />;
+      })}
+      <circle cx="50" cy="50" r="2.5" fill="#00d4ff" />
+    </svg>
+  );
+}
+
 function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
   const { t } = useTranslation();
   const phase = useGameStore((s) => s.phase);
@@ -446,6 +777,27 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
 
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(null);
+  const [evaSeconds, setEvaSeconds] = useState(0);
+  const [, setHudTick] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setEvaSeconds((s) => s + 1);
+      setHudTick((n) => n + 1);
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const evaTime = useMemo(() => {
+    const m = Math.floor(evaSeconds / 60);
+    const s = evaSeconds % 60;
+    return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  }, [evaSeconds]);
+
+  const distFromLM = useMemo(() => {
+    return Math.sqrt(playerState.x * playerState.x + playerState.z * playerState.z).toFixed(1);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [evaSeconds]);
 
   const narration = useMemo(() => {
     if (found.length >= TOTAL_OBJECTS) {
@@ -506,31 +858,68 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex flex-col">
-      {/* Top: objects found */}
-      <div className="mx-auto mt-4 rounded-lg bg-space-950/80 px-4 py-2 text-center backdrop-blur">
-        <p className="text-sm text-regolith-400">
+      {/* Helmet visor vignette */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.4) 85%, rgba(0,0,0,0.7) 100%)",
+          borderRadius: "8px",
+        }}
+      />
+
+      {/* Top-left: EVA time + distance from LM */}
+      <div className="absolute left-4 top-4 flex flex-col gap-1">
+        <div className="rounded bg-space-950/70 px-3 py-1.5 backdrop-blur">
+          <p className="font-mono text-xs text-regolith-400">
+            {t("surface.eva")} <span className="text-signal">{evaTime}</span>
+          </p>
+        </div>
+        <div className="rounded bg-space-950/70 px-3 py-1.5 backdrop-blur">
+          <p className="font-mono text-xs text-regolith-400">
+            {t("surface.distLM")} <span className="text-ok">{distFromLM}m</span>
+          </p>
+        </div>
+      </div>
+
+      {/* Top-center: objects found */}
+      <div className="mx-auto mt-4 rounded-lg bg-space-950/70 px-5 py-2 text-center backdrop-blur">
+        <p className="font-mono text-sm text-regolith-200">
           {t("surface.objectCount", { found: found.length, total: TOTAL_OBJECTS })}
         </p>
       </div>
 
+      {/* Top-right: mini radar */}
+      <div className="absolute right-4 top-4 rounded-lg bg-space-950/60 p-1 backdrop-blur">
+        <MiniRadar found={found} />
+      </div>
+
       {/* XP toast */}
       {toast && (
-        <div className="mx-auto mt-4 animate-pulse rounded-lg bg-signal/20 px-5 py-2 text-center backdrop-blur">
+        <div className="mx-auto mt-4 rounded-lg bg-signal/20 px-5 py-2 text-center backdrop-blur">
           <p className="font-display text-lg font-bold text-signal">{toast}</p>
+        </div>
+      )}
+
+      {/* Crosshair */}
+      {phase !== "inspect" && (
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="h-0.5 w-4 rounded-full bg-regolith-200/30" />
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-0.5 rounded-full bg-regolith-200/30" />
         </div>
       )}
 
       {/* Interaction prompt */}
       {nearObj && !found.includes(nearObj.id) && phase !== "inspect" && (
-        <div className="mx-auto mt-auto mb-32 rounded-lg bg-space-950/90 px-6 py-3 text-center backdrop-blur">
+        <div className="mx-auto mt-auto mb-32 rounded-xl bg-space-950/90 px-8 py-4 text-center backdrop-blur-md border border-space-700/50">
           <p className="font-display text-lg text-signal">
             [E] {t("surface.inspectPrompt")} {nearObj.name}
           </p>
+          <p className="mt-1 text-xs text-regolith-400">{t("surface.scanHint")}</p>
         </div>
       )}
 
       {phase === "flagReady" && (
-        <div className="mx-auto mt-auto mb-32 rounded-lg bg-signal/20 px-6 py-3 text-center backdrop-blur">
+        <div className="mx-auto mt-auto mb-32 rounded-xl bg-signal/20 px-8 py-4 text-center backdrop-blur-md border border-signal/30">
           <p className="animate-pulse font-display text-lg text-signal">
             [F] {t("surface.flagPrompt")}
           </p>
@@ -538,8 +927,8 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
       )}
 
       {phase === "flagPlanted" && (
-        <div className="mx-auto mt-auto mb-32 rounded-lg bg-signal/20 px-6 py-3 text-center backdrop-blur">
-          <p className="animate-pulse font-display text-lg text-signal">
+        <div className="mx-auto mt-auto mb-32 rounded-xl bg-ok/20 px-8 py-4 text-center backdrop-blur-md border border-ok/30">
+          <p className="animate-pulse font-display text-lg text-ok">
             [L] {t("surface.launchPrompt")}
           </p>
         </div>
@@ -547,7 +936,7 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
 
       {/* Bottom narration bar */}
       <div className="mt-auto px-4 pb-4">
-        <div className="mx-auto max-w-2xl rounded-lg bg-space-950/85 px-6 py-3 backdrop-blur">
+        <div className="mx-auto max-w-2xl rounded-lg bg-space-950/85 px-6 py-3 backdrop-blur-md border border-space-700/30">
           <div className="flex items-baseline gap-3">
             <span className="shrink-0 text-xs font-bold tracking-widest text-signal">
               {t("surface.eva")}

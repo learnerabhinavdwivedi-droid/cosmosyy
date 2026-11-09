@@ -123,6 +123,78 @@ export function playSuccess(): void {
   });
 }
 
+let breathingInterval: ReturnType<typeof setInterval> | null = null;
+
+export function startBreathing(): void {
+  if (breathingInterval) return;
+  const breathe = () => {
+    const c = getCtx();
+    const dur = 2.8;
+    const noise = c.createBufferSource();
+    const bufSize = c.sampleRate * dur;
+    const buf = c.createBuffer(1, bufSize, c.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) {
+      data[i] = (Math.random() * 2 - 1);
+    }
+    noise.buffer = buf;
+    noise.loop = false;
+
+    const bp = c.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.value = 400;
+    bp.Q.value = 0.8;
+
+    const env = c.createGain();
+    const t = c.currentTime;
+    env.gain.setValueAtTime(0.001, t);
+    env.gain.exponentialRampToValueAtTime(0.025, t + 0.6);
+    env.gain.exponentialRampToValueAtTime(0.015, t + 1.0);
+    env.gain.exponentialRampToValueAtTime(0.001, t + 1.8);
+    env.gain.setValueAtTime(0.001, t + 1.9);
+    env.gain.exponentialRampToValueAtTime(0.02, t + 2.2);
+    env.gain.exponentialRampToValueAtTime(0.001, t + 2.7);
+
+    noise.connect(bp);
+    bp.connect(env);
+    env.connect(getMaster());
+    noise.start(t);
+    noise.stop(t + dur);
+  };
+  breathe();
+  breathingInterval = setInterval(breathe, 3200);
+}
+
+export function stopBreathing(): void {
+  if (breathingInterval) {
+    clearInterval(breathingInterval);
+    breathingInterval = null;
+  }
+}
+
+export function playFootstep(): void {
+  const c = getCtx();
+  const dur = 0.12;
+  const bufSize = c.sampleRate * dur;
+  const buf = c.createBuffer(1, bufSize, c.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < bufSize; i++) {
+    const t = i / c.sampleRate;
+    data[i] = (Math.random() * 2 - 1) * Math.exp(-t * 25) * 0.4;
+  }
+  const source = c.createBufferSource();
+  source.buffer = buf;
+  const filter = c.createBiquadFilter();
+  filter.type = "lowpass";
+  filter.frequency.value = 800;
+  const gain = c.createGain();
+  gain.gain.value = 0.15;
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(getMaster());
+  source.start();
+}
+
 export const gameAudio = {
   unlock,
   setVolume,
@@ -133,4 +205,7 @@ export const gameAudio = {
   stopEngine,
   playCountdown,
   playSuccess,
+  startBreathing,
+  stopBreathing,
+  playFootstep,
 } as const;

@@ -45,8 +45,10 @@
     "narrationStart": "Walk to the golden beacons, Commander {{name}}. Scan what was left behind.",
     "narrationProgress": "{{found}} of {{total}} objects scanned. Keep searching.",
     "narrationAllFound": "All objects found. Plant your flag and launch home.",
-    "controlHints": "Click to look · WASD move · Shift run · E inspect · ` debug",
-    "eva": "EVA"
+    "controlHints": "Click to look · WASD move · Shift run · Space jump · E scan",
+    "eva": "EVA",
+    "distLM": "LM",
+    "scanHint": "Approach and press E to scan this artifact"
   },
   "inspect": {
     "back": "Back",
@@ -70,7 +72,10 @@
     "totalEarned": "Total earned",
     "currentRank": "Current rank",
     "xpTotal": "{{xp}} XP total",
-    "backToMissions": "Back to missions"
+    "xpTotalSuffix": "XP total",
+    "backToMissions": "Back to missions",
+    "missionSuccess": "Mission Successful",
+    "nextMission": "Next Mission: {{mission}}"
   },
   "ranks": {
     "cadet": "Cadet",
