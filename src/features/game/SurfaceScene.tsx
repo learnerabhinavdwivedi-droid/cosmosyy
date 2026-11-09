@@ -1,12 +1,22 @@
-import { useRef, useEffect, useState, useCallback, Suspense, useMemo } from "react";
+import {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  Suspense,
+  useMemo,
+} from "react";
 import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import { Stars, Text } from "@react-three/drei";
-import { Physics, RigidBody, CuboidCollider } from "@react-three/rapier";
+import { Physics } from "@react-three/rapier";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { LunarModule } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
-import { getApollo11SunPosition, getApollo11EarthPosition } from "./sunPosition";
+import {
+  getApollo11SunPosition,
+  getApollo11EarthPosition,
+} from "./sunPosition";
 import missionData from "../../../content/missions/apollo-11.json";
 import * as THREE from "three";
 
@@ -27,75 +37,73 @@ const OBJECTS: HeritageObjectDef[] = missionData.objects.map((o) => ({
 }));
 
 const TOTAL_OBJECTS = OBJECTS.length;
+const SCAN_RANGE = 5;
 
 function HeritageMarker({
   obj,
   isFound,
   isNear,
-  onApproach,
-  onLeave,
 }: {
   obj: HeritageObjectDef;
   isFound: boolean;
   isNear: boolean;
-  onApproach: () => void;
-  onLeave: () => void;
 }) {
-  const glowRef = useRef<THREE.Mesh>(null);
+  const ringRef = useRef<THREE.Mesh>(null);
+  const beamRef = useRef<THREE.Mesh>(null);
 
-  useFrame((_state, delta) => {
-    if (glowRef.current && !isFound) {
-      glowRef.current.rotation.y += delta * 2;
-      const s = 1 + Math.sin(Date.now() * 0.003) * 0.15;
-      glowRef.current.scale.setScalar(s);
+  useFrame(() => {
+    if (ringRef.current && !isFound) {
+      (ringRef.current.material as THREE.MeshBasicMaterial).opacity =
+        0.5 + Math.sin(Date.now() * 0.004) * 0.3;
+    }
+    if (beamRef.current) {
+      (beamRef.current.material as THREE.MeshBasicMaterial).opacity = isNear
+        ? 0.4
+        : 0.15;
     }
   });
 
-  // TEMPORARY: placeholder markers until real object models exist
-  // The descent-stage uses the LM model itself (rendered separately)
   if (obj.id === "descent-stage") return null;
+
+  const ringColor = isFound ? "#66ff99" : "#ffd36e";
 
   return (
     <group position={obj.position}>
-      <RigidBody type="fixed" colliders={false}>
-        <CuboidCollider
-          args={[2, 2, 2]}
-          sensor
-          onIntersectionEnter={onApproach}
-          onIntersectionExit={onLeave}
-        />
-      </RigidBody>
-
-      {/* TEMPORARY placeholder geometry — replace with real models */}
-      <mesh castShadow position={[0, 0.4, 0]}>
-        <cylinderGeometry args={[0.3, 0.4, 0.8, 8]} />
-        <meshStandardMaterial
-          color={isFound ? "#4a4a4a" : "#cccccc"}
-          roughness={0.7}
-          metalness={0.3}
-          emissive={isNear && !isFound ? "#f59e0b" : "#000000"}
-          emissiveIntensity={isNear && !isFound ? 0.3 : 0}
+      {/* Golden torus ring on the ground */}
+      <mesh
+        ref={ringRef}
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, 0.08, 0]}
+      >
+        <torusGeometry args={[1.2, 0.05, 8, 48]} />
+        <meshBasicMaterial
+          color={ringColor}
+          transparent
+          opacity={0.8}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
         />
       </mesh>
 
-      {/* Floating indicator */}
+      {/* Vertical beam */}
       {!isFound && (
-        <mesh ref={glowRef} position={[0, 1.5, 0]}>
-          <octahedronGeometry args={[0.2]} />
-          <meshStandardMaterial
-            color="#f59e0b"
-            emissive="#f59e0b"
-            emissiveIntensity={1}
+        <mesh ref={beamRef} position={[0, 4, 0]}>
+          <cylinderGeometry args={[0.03, 0.03, 8, 6]} />
+          <meshBasicMaterial
+            color="#ffd36e"
             transparent
-            opacity={0.8}
+            opacity={0.2}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
           />
         </mesh>
       )}
 
+      {/* Name label */}
       <Text
-        position={[0, 2, 0]}
-        fontSize={0.25}
-        color={isFound ? "#666666" : "#ffffff"}
+        position={[0, 2.2, 0]}
+        fontSize={0.28}
+        color={isFound ? "#66ff99" : "#ffffff"}
         anchorX="center"
         anchorY="bottom"
         outlineWidth={0.02}
@@ -106,6 +114,39 @@ function HeritageMarker({
       </Text>
     </group>
   );
+}
+
+function ProximityDetector({
+  setNearObjectId,
+}: {
+  setNearObjectId: (id: string | null) => void;
+}) {
+  const { camera } = useThree();
+  const found = useGameStore((s) => s.objectsFoundThisRun);
+  const prevNearest = useRef<string | null>(null);
+
+  useFrame(() => {
+    let nearest: string | null = null;
+    let minDist = SCAN_RANGE;
+
+    for (const obj of OBJECTS) {
+      if (found.includes(obj.id)) continue;
+      const dx = camera.position.x - obj.position[0];
+      const dz = camera.position.z - obj.position[2];
+      const dist = Math.sqrt(dx * dx + dz * dz);
+      if (dist < minDist) {
+        minDist = dist;
+        nearest = obj.id;
+      }
+    }
+
+    if (nearest !== prevNearest.current) {
+      prevNearest.current = nearest;
+      setNearObjectId(nearest);
+    }
+  });
+
+  return null;
 }
 
 function PlayerController() {
@@ -141,7 +182,6 @@ function PlayerController() {
     window.addEventListener("mousemove", onMouseMove);
     document.addEventListener("pointerlockchange", onPointerLockChange);
 
-    // Start near the LM, looking at it
     camera.position.set(5, 1.7, 10);
     euler.current.y = -0.4;
     camera.quaternion.setFromEuler(euler.current);
@@ -156,7 +196,6 @@ function PlayerController() {
 
   useFrame((_state, delta) => {
     const k = keys.current;
-    // Lunar gravity means slower, bouncier movement
     const speed = k["ShiftLeft"] || k["ShiftRight"] ? 4 : 2;
     const moveDir = new THREE.Vector3();
 
@@ -172,7 +211,6 @@ function PlayerController() {
       moveDir.normalize();
     }
 
-    // Slower acceleration for lunar gravity feel
     velocity.current.lerp(moveDir.multiplyScalar(speed), delta * 3);
     camera.position.addScaledVector(velocity.current, delta);
     camera.position.y = 1.7;
@@ -200,7 +238,6 @@ function EarthInSky() {
 
 function SunLight() {
   const sunData = useMemo(() => getApollo11SunPosition(), []);
-  const lightRef = useRef<THREE.DirectionalLight>(null);
 
   useEffect(() => {
     if (import.meta.env.DEV) {
@@ -212,7 +249,6 @@ function SunLight() {
 
   return (
     <directionalLight
-      ref={lightRef}
       position={sunData.direction}
       intensity={3.0}
       color="#fff5e0"
@@ -231,11 +267,11 @@ function SunLight() {
 }
 
 function SurfaceSceneContent({
-  nearObjectId,
   setNearObjectId,
+  nearObjectId,
 }: {
-  nearObjectId: string | null;
   setNearObjectId: (id: string | null) => void;
+  nearObjectId: string | null;
 }) {
   const found = useGameStore((s) => s.objectsFoundThisRun);
 
@@ -250,38 +286,32 @@ function SurfaceSceneContent({
         speed={0}
       />
 
-      {/* Real sun position from astronomy-engine, no ambient fill */}
       <ambientLight intensity={0.02} color="#333344" />
       <SunLight />
 
-      {/* Earth in the lunar sky */}
       <Suspense fallback={null}>
         <EarthInSky />
       </Suspense>
 
-      {/* NASA STL terrain + fallback ground */}
       <Suspense fallback={<GroundPlane />}>
         <Terrain />
       </Suspense>
       <GroundPlane />
 
-      {/* NASA LM model at centre of Tranquility Base */}
       <Suspense fallback={null}>
         <LunarModule position={[0, 0, 0]} scale={1} />
       </Suspense>
 
-      {/* Heritage objects (TEMPORARY placeholders except LM) */}
       {OBJECTS.map((obj) => (
         <HeritageMarker
           key={obj.id}
           obj={obj}
           isFound={found.includes(obj.id)}
           isNear={nearObjectId === obj.id}
-          onApproach={() => setNearObjectId(obj.id)}
-          onLeave={() => setNearObjectId(null)}
         />
       ))}
 
+      <ProximityDetector setNearObjectId={setNearObjectId} />
       <PlayerController />
     </>
   );
@@ -332,6 +362,22 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
   const addXp = useAppStore((s) => s.addXp);
   const findObject = useAppStore((s) => s.findObject);
   const missionId = useGameStore((s) => s.missionId);
+  const playerName = useAppStore((s) => s.player.name);
+
+  const [toast, setToast] = useState<string | null>(null);
+  const [narration, setNarration] = useState(
+    `Walk to the golden beacons, Commander ${playerName || ""}. Scan what was left behind.`,
+  );
+
+  useEffect(() => {
+    if (found.length > 0 && found.length < TOTAL_OBJECTS) {
+      setNarration(
+        `${found.length} of ${TOTAL_OBJECTS} objects scanned. Keep searching.`,
+      );
+    } else if (found.length >= TOTAL_OBJECTS) {
+      setNarration("All objects found. Plant your flag and launch home.");
+    }
+  }, [found.length]);
 
   const handleInteract = useCallback(() => {
     if (!nearObjectId || found.includes(nearObjectId) || !missionId) return;
@@ -340,6 +386,9 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
     findObject(missionId, nearObjectId);
     addXp(missionId, obj?.xp ?? 50);
     send("START_INSPECT", { objectId: nearObjectId });
+
+    setToast(`+${obj?.xp ?? 50} XP — ${obj?.name ?? nearObjectId}`);
+    setTimeout(() => setToast(null), 2500);
   }, [nearObjectId, found, missionId, addFoundObject, findObject, addXp, send]);
 
   const handleFlag = useCallback(() => {
@@ -347,6 +396,8 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
     useAppStore.getState().plantFlag(missionId);
     addXp(missionId, 100);
     send("PLANT_FLAG");
+    setToast("+100 XP — Flag planted!");
+    setTimeout(() => setToast(null), 2500);
   }, [missionId, addXp, send]);
 
   const handleLaunch = useCallback(() => {
@@ -382,7 +433,14 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
         </p>
       </div>
 
-      {/* Centre: interaction prompt */}
+      {/* XP toast */}
+      {toast && (
+        <div className="mx-auto mt-4 animate-pulse rounded-lg bg-signal/20 px-5 py-2 text-center backdrop-blur">
+          <p className="font-display text-lg font-bold text-signal">{toast}</p>
+        </div>
+      )}
+
+      {/* Interaction prompt */}
       {nearObj && !found.includes(nearObj.id) && phase !== "inspect" && (
         <div className="mx-auto mt-auto mb-32 rounded-lg bg-space-950/90 px-6 py-3 text-center backdrop-blur">
           <p className="font-display text-lg text-signal">
@@ -394,7 +452,7 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
       {phase === "flagReady" && (
         <div className="mx-auto mt-auto mb-32 rounded-lg bg-signal/20 px-6 py-3 text-center backdrop-blur">
           <p className="animate-pulse font-display text-lg text-signal">
-            [F] Plant the flag — all objects found!
+            [F] Plant the flag
           </p>
         </div>
       )}
@@ -407,10 +465,25 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
         </div>
       )}
 
+      {/* Bottom narration bar */}
+      <div className="mt-auto px-4 pb-4">
+        <div className="mx-auto max-w-2xl rounded-lg bg-space-950/85 px-6 py-3 backdrop-blur">
+          <div className="flex items-baseline gap-3">
+            <span className="shrink-0 text-xs font-bold tracking-widest text-signal">
+              EVA
+            </span>
+            <p className="text-sm leading-relaxed text-regolith-200">
+              {narration}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Bottom left: controls hint */}
-      <div className="mt-auto mb-4 ml-4">
+      <div className="mb-2 ml-4">
         <p className="text-xs text-regolith-400/60">
-          Click to look · WASD move · Shift run · E inspect · ` debug
+          Click to look · WASD move · Shift run · E inspect
+          · ` debug
         </p>
       </div>
     </div>
@@ -430,7 +503,12 @@ export function SurfaceScene() {
       <div className="h-full w-full" onClick={handleCanvasClick}>
         <Canvas
           shadows
-          camera={{ position: [5, 1.7, 10], fov: 70, near: 0.1, far: 2000 }}
+          camera={{
+            position: [5, 1.7, 10],
+            fov: 70,
+            near: 0.1,
+            far: 2000,
+          }}
           gl={{
             antialias: true,
             toneMapping: THREE.AgXToneMapping,

@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { Button } from "@/components/ui/button";
+import missionData from "../../../content/missions/apollo-11.json";
 
 const XP_LAND = 50;
 const XP_COMPLETE = 100;
+const TOTAL_OBJECTS = missionData.objects.length;
 
 export function ReportScreen() {
   const send = useGameStore((s) => s.send);
@@ -42,7 +44,7 @@ export function ReportScreen() {
           <div className="flex items-center justify-between border-b border-space-700 pb-2">
             <span className="text-regolith-400">Objects found</span>
             <span className="font-mono text-regolith-200">
-              {found.length} / 5
+              {found.length} / {TOTAL_OBJECTS}
             </span>
           </div>
           <div className="flex items-center justify-between border-b border-space-700 pb-2">
