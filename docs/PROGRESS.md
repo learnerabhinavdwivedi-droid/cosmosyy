@@ -23,3 +23,8 @@
 | 2026-11-09 | P1-T10 | done | i18next: en.json with all UI strings; i18n/index.ts init; imported in main.tsx; tests 16/16; build passes | A11-01 |
 | 2026-11-09 | A11-07 | done | KeyPrompt component: top-centre bar, blink animation, flash on press, touch-tappable, reduced-motion support | A11-11 |
 | 2026-11-09 | A11-11 | partial | Mission Select page: name input (2-16 chars), 6 mission cards (A11 available, rest locked), XP/rank display, starfield bg; tests 16/16 | A11-01 |
+| 2026-11-09 | AUDIT | done | docs/AUDIT-A11.md: every spec step audited against localhost; all 11 steps fail, zero game logic exists | STEP-A |
+| 2026-11-09 | STEP-A | done | Asset pipeline: NASA GLBs optimised (astronaut 763→71KB), Earth/bootprint textures, STL terrain → public/; apollo-11.json content with 5 objects; LICENCES.md updated | STEP-B |
+| 2026-11-09 | STEP-B+C | done | LM PBR materials (Kapton gold descent, grey ascent, black legs); sun from astronomy-engine at EVA time; 4096 shadow map; Earth in sky; AgX tone mapping; near-zero ambient | STEP-D |
+| 2026-11-09 | FLOW | done | Game state machine (14 phases, zustand); GameShell phase-router; FlightScene (3D, Earth texture, auto-advance); SurfaceScene (STL terrain, LM model, FPS, interact); ReportScreen (XP); DebugPanel (backtick); all inputs wired (WASD/E/F/L/Esc); tests 16/16 | VERIFY |
+| 2026-11-09 | ASSETS-2 | done | Downloaded+converted NASA SVS Moon textures (color 4K WebP, elevation 2K PNG), LROC orthophoto (450MB→4K WebP), LROC shapefile (7 real equipment positions); FlightScene Moon now uses real textures; fixed GameShell navigation race condition; favicon added; 0 console errors; tests 16/16 | next: visual polish |

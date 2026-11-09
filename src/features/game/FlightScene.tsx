@@ -51,6 +51,8 @@ function Earth() {
 function Moon() {
   const ref = useRef<THREE.Mesh>(null);
   const phase = useGameStore((s) => s.phase);
+  const colorMap = useLoader(THREE.TextureLoader, "/textures/moon-color-4k.webp");
+  const dispMap = useLoader(THREE.TextureLoader, "/textures/moon-elevation-2k.png");
 
   const targetScale = useMemo(() => {
     if (phase === "flight" || phase === "coast") return 0.5;
@@ -68,9 +70,11 @@ function Moon() {
 
   return (
     <mesh ref={ref} position={[5, 1, -20]}>
-      <sphereGeometry args={[3, 64, 64]} />
+      <sphereGeometry args={[3, 128, 128]} />
       <meshStandardMaterial
-        color="#a0a0a0"
+        map={colorMap}
+        displacementMap={dispMap}
+        displacementScale={0.15}
         roughness={0.95}
         metalness={0}
       />

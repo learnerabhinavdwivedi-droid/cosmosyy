@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
@@ -15,6 +15,7 @@ export default function GameShell() {
   const setMission = useGameStore((s) => s.setMission);
   const gameMission = useGameStore((s) => s.missionId);
   const playerName = useAppStore((s) => s.player.name);
+  const prevPhase = useRef(phase);
 
   useEffect(() => {
     if (!playerName) {
@@ -23,16 +24,15 @@ export default function GameShell() {
     }
     if (missionId && gameMission !== missionId) {
       setMission(missionId);
-      if (phase === "select") {
-        send("LAUNCH_MISSION");
-      }
+      send("LAUNCH_MISSION");
     }
-  }, [missionId, gameMission, phase, playerName, navigate, setMission, send]);
+  }, [missionId, gameMission, playerName, navigate, setMission, send]);
 
   useEffect(() => {
-    if (phase === "select") {
+    if (phase === "select" && prevPhase.current !== "select") {
       navigate("/");
     }
+    prevPhase.current = phase;
   }, [phase, navigate]);
 
   const isFlightPhase = [

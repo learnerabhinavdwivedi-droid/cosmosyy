@@ -16,8 +16,9 @@
   },
   "terrain": {
     "model": "/terrain/apollo11-site.stl",
+    "ortho": "/terrain/apollo11-ortho-4k.webp",
     "metersPerUnit": 1,
-    "note": "NASA 3D-Resources Apollo 11 Landing Site relief model"
+    "note": "NASA 3D-Resources Apollo 11 Landing Site relief model; LROC NAC DTM 50cm orthophoto"
   },
   "objects": [
     {
@@ -26,39 +27,55 @@
       "position": [0, 0, 0],
       "description": "Lower half of the Lunar Module Eagle. Served as the launch platform for the ascent stage. Bears a stainless-steel plaque: \"Here men from the planet Earth first set foot upon the Moon July 1969, A.D. We came in peace for all mankind.\"",
       "xp": 50,
-      "source": "NASA-3D-Resources Apollo Lunar Module"
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)"
     },
     {
       "id": "flag",
       "name": "American Flag",
-      "position": [8, 0, 2],
-      "description": "Planted by Armstrong and Aldrin approximately 8 metres east of the LM. The nylon flag had a horizontal rod to keep it extended in the vacuum. After decades of unfiltered UV, it is almost certainly bleached white.",
+      "position": [-7.05, 0, 7.30],
+      "description": "Planted by Armstrong and Aldrin approximately 8 metres from the LM. The nylon flag had a horizontal rod to keep it extended in the vacuum. After decades of unfiltered UV, it is almost certainly bleached white.",
       "xp": 50,
-      "source": "Apollo Lunar Surface Journal, AS11-40-5874"
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT; AS11-40-5874"
     },
     {
       "id": "lrrr",
       "name": "Laser Ranging Retroreflector",
-      "position": [1, 0, -20],
+      "position": [-1.61, 0, -21.36],
       "description": "An array of 100 fused-silica corner-cube prisms. Still in use today — observatories on Earth fire a laser pulse at it and measure the round-trip time to track the Moon's orbit to centimetre precision.",
       "xp": 50,
-      "source": "ALSJ photogrammetry; LROC shapefile APOLLO_11"
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)"
     },
     {
-      "id": "pse",
-      "name": "Passive Seismic Experiment",
-      "position": [-5, 0, -17],
+      "id": "psep",
+      "name": "Passive Seismic Experiment Package",
+      "position": [0.67, 0, -28.12],
       "description": "Solar-powered seismometer deployed by Aldrin. Detected moonquakes, meteorite impacts, and the vibration from the ascent stage liftoff. Operated for 21 days before its power ran out.",
       "xp": 50,
-      "source": "ALSJ photogrammetry; LROC shapefile APOLLO_11"
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)"
     },
     {
       "id": "tv-camera",
       "name": "TV Camera",
-      "position": [18, 0, 1],
-      "description": "The Westinghouse black-and-white TV camera that broadcast the first moonwalk to 600 million viewers. Armstrong set it on a tripod east of the LM to film the EVA.",
+      "position": [-15.83, 0, 19.00],
+      "description": "The Westinghouse black-and-white TV camera that broadcast the first moonwalk to 600 million viewers. Armstrong set it on a tripod to film the EVA.",
       "xp": 50,
-      "source": "ALSJ traverse map; AS11-40-5952"
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)"
+    },
+    {
+      "id": "mesa",
+      "name": "MESA (Modular Equipment Stowage)",
+      "position": [-1.99, 0, 1.12],
+      "description": "The fold-down equipment bay on the LM descent stage. Armstrong's first step onto the Moon was captured by a TV camera mounted here. Stored tools, sample bags, and the US flag.",
+      "xp": 50,
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)"
+    },
+    {
+      "id": "swc",
+      "name": "Solar Wind Composition Experiment",
+      "position": [-4.02, 0, 7.88],
+      "description": "An aluminium foil sheet deployed on a pole, facing the Sun. Collected solar wind particles (helium, neon, argon) for 77 minutes, then rolled up and returned to Earth for analysis.",
+      "xp": 50,
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)"
     }
   ],
   "models": {
@@ -101,5 +118,5 @@
       "licence": "Public domain (NASA media policy)"
     }
   ],
-  "_note": "Object positions are approximate, from ALSJ photogrammetry and traverse maps. Exact positions pending LROC Apollo 11 shapefile data."
+  "_note": "Object positions in metres east/north of LM, from LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019, LPS L, Abstract #3089). Mapped on NAC_DTM_APOLLO11 orthophoto."
 }
