@@ -7,6 +7,7 @@ import { useGameStore, type GamePhase } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { DebugPanel } from "@/components/DebugPanel";
 import { gameAudio } from "@/lib/gameAudio";
+import { preloadNarration, playNarration, stopNarration, unlockAudio } from "@/lib/narration";
 import { FlightScene } from "./FlightScene";
 import { SurfaceScene } from "./SurfaceScene";
 import { ReportScreen } from "./ReportScreen";
@@ -23,6 +24,10 @@ function GameAudioController() {
   const prevPhase = useRef<GamePhase>("select");
 
   useEffect(() => {
+    preloadNarration();
+  }, []);
+
+  useEffect(() => {
     const unsub = useGameStore.subscribe((s) => {
       const phase = s.phase;
       const prev = prevPhase.current;
@@ -31,9 +36,16 @@ function GameAudioController() {
 
       if (phase === "flight" && prev === "select") {
         gameAudio.unlock();
+        unlockAudio();
         gameAudio.playCountdown();
-        setTimeout(() => gameAudio.startEngine(), 1600);
+        setTimeout(() => {
+          gameAudio.startEngine();
+          playNarration(phase);
+        }, 1600);
+        return;
       }
+
+      playNarration(phase);
 
       if (ENGINE_PHASES.has(phase) && !ENGINE_PHASES.has(prev)) {
         gameAudio.startEngine();
@@ -62,6 +74,7 @@ function GameAudioController() {
 
       if (phase === "report") {
         gameAudio.stopEngine();
+        stopNarration();
         gameAudio.playSuccess();
       }
     });

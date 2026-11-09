@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppStore } from "@/store/useAppStore";
 import { gameAudio } from "@/lib/gameAudio";
+import { unlockAudio, preloadNarration } from "@/lib/narration";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -156,6 +157,8 @@ export default function MissionSelectPage() {
   const handleLaunch = (missionId: string) => {
     if (!playerName) return;
     gameAudio.unlock();
+    unlockAudio();
+    preloadNarration();
     startMission(missionId);
     navigate(`/play/${missionId}`);
   };

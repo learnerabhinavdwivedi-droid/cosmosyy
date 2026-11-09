@@ -29,6 +29,12 @@ Every asset, font, and non-MIT library used in this project.
 | ESA imagery | ESA (sci.esa.int) | CC BY-SA 3.0 IGO [verify] | Do NOT ship in H1 until licence confirmed per-asset |
 | ISRO imagery | ISRO (isro.gov.in) | [verify] | Reuse terms unclear; do NOT ship in H1 until confirmed |
 
+## Audio
+
+| Item | Source | Licence | Notes |
+| --- | --- | --- |--- |
+| Flight narration TTS (11 MP3s) | Generated with edge-tts (Microsoft Edge TTS API) | Microsoft Services Agreement | Neural voice en-US-GuyNeural; generated locally, not redistributed as service output |
+
 ## Fonts
 
 | Font | Source | Licence |
