@@ -90,27 +90,27 @@ function camTarget(
 }
 
 const DUR: Record<string, number> = {
-  flight: 7,
-  coast: 7,
-  orbit: 6,
+  flight: 14,
+  coast: 13,
+  orbit: 12,
   targetLocked: 4,
-  descent: 8,
-  touchdown: 4,
-  stepOut: 3,
+  descent: 13,
+  touchdown: 12,
+  stepOut: 12,
 };
 
 const BEAT_EVENTS = [
-  { from: "flight" as GamePhase, event: "START_COAST" as const, delay: 7000 },
-  { from: "coast" as GamePhase, event: "REACH_ORBIT" as const, delay: 7000 },
-  { from: "orbit" as GamePhase, event: "LOCK_TARGET" as const, delay: 6000 },
+  { from: "flight" as GamePhase, event: "START_COAST" as const, delay: 14000 },
+  { from: "coast" as GamePhase, event: "REACH_ORBIT" as const, delay: 13000 },
+  { from: "orbit" as GamePhase, event: "LOCK_TARGET" as const, delay: 12000 },
   // targetLocked: GATE — player presses Space to BEGIN_DESCENT
   {
     from: "descent" as GamePhase,
     event: "TOUCH_DOWN" as const,
-    delay: 8000,
+    delay: 13000,
   },
   // touchdown: GATE — player presses Space to OPEN_HATCH
-  { from: "stepOut" as GamePhase, event: "STEP_OUT" as const, delay: 3000 },
+  { from: "stepOut" as GamePhase, event: "STEP_OUT" as const, delay: 12000 },
 ];
 
 type NarrationSet = Record<string, string>;
