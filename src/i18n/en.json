@@ -18,7 +18,20 @@
     "speed1x": "1×",
     "speed3x": "3×",
     "beginDescent": "Begin descent",
-    "openHatch": "Open hatch"
+    "openHatch": "Open hatch",
+    "ascentNarration": "Ascent stage separating — heading home",
+    "commander": "Commander {{name}}",
+    "alt": "ALT {{alt}} m",
+    "altContact": "ALT 0 m — CONTACT",
+    "phaseLabels": {
+      "flight": "Trans-Lunar Injection",
+      "coast": "Translunar Coast",
+      "orbit": "Lunar Orbit Insertion",
+      "targetLocked": "Target Locked",
+      "descent": "Powered Descent",
+      "touchdown": "The Eagle Has Landed",
+      "stepOut": "Opening Hatch"
+    }
   },
   "surface": {
     "inspectPrompt": "Inspect",
@@ -27,21 +40,37 @@
     "freeCam": "Free camera",
     "photoMode": "Photo mode",
     "photoModeExit": "Photo mode — P to exit",
-    "help": "Help"
+    "help": "Help",
+    "objectCount": "Objects: {{found}} / {{total}}",
+    "narrationStart": "Walk to the golden beacons, Commander {{name}}. Scan what was left behind.",
+    "narrationProgress": "{{found}} of {{total}} objects scanned. Keep searching.",
+    "narrationAllFound": "All objects found. Plant your flag and launch home.",
+    "controlHints": "Click to look · WASD move · Shift run · E inspect · ` debug",
+    "eva": "EVA"
   },
   "inspect": {
     "back": "Back",
     "hotspot": "Hotspot {{number}}",
-    "source": "Source"
+    "source": "Source",
+    "pressEsc": "Press ESC to return"
   },
   "report": {
-    "heading": "Mission Report",
+    "heading": "Mission Complete",
     "subheading": "Everything you found is still there today.",
     "xpEarned": "XP earned",
     "rank": "Rank",
     "replay": "Replay {{mission}}",
     "next": "Next mission: {{mission}}",
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "objectsFound": "Objects found",
+    "landingXp": "Landing XP",
+    "objectsXp": "Objects XP",
+    "flagPlanted": "Flag planted",
+    "missionComplete": "Mission complete",
+    "totalEarned": "Total earned",
+    "currentRank": "Current rank",
+    "xpTotal": "{{xp}} XP total",
+    "backToMissions": "Back to missions"
   },
   "ranks": {
     "cadet": "Cadet",

@@ -1,4 +1,5 @@
 import { useRef, useEffect, useMemo, useState, Suspense } from "react";
+import { useTranslation } from "react-i18next";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 import { useGameStore, type GamePhase } from "@/store/useGameStore";
@@ -15,90 +16,76 @@ const ease = (t: number) => {
   return x * x * (3 - 2 * x);
 };
 
-function orbitPos(angle: number): THREE.Vector3 {
-  return new THREE.Vector3(
+const ORBIT_A0 = Math.PI;
+const ORBIT_A1 = Math.PI * 1.8;
+
+const WP_FLIGHT_A = new THREE.Vector3(-20, 1, -16);
+const WP_FLIGHT_B = new THREE.Vector3(-4, 3, -17);
+const WP_COAST_B = new THREE.Vector3(9, 1.5, -20);
+const WP_ORBIT_END = new THREE.Vector3();
+const WP_TARGET_B = new THREE.Vector3(28, 3, -20);
+const WP_LAND = new THREE.Vector3(28, 0.2, -20);
+
+const _orbitOut = new THREE.Vector3();
+function orbitPos(angle: number, out: THREE.Vector3): THREE.Vector3 {
+  return out.set(
     MOON.x + ORBIT_R * Math.cos(angle),
     1,
     MOON.z + ORBIT_R * Math.sin(angle),
   );
 }
 
-const ORBIT_A0 = Math.PI;
-const ORBIT_A1 = Math.PI * 1.8;
-
+const _shipOut = new THREE.Vector3();
 function shipPos(phase: string, p: number): THREE.Vector3 {
   const t = ease(p);
-  const v = new THREE.Vector3();
+  const v = _shipOut;
   switch (phase) {
     case "flight":
-      v.lerpVectors(
-        new THREE.Vector3(-20, 1, -16),
-        new THREE.Vector3(-4, 3, -17),
-        t,
-      );
+      v.lerpVectors(WP_FLIGHT_A, WP_FLIGHT_B, t);
       break;
     case "coast":
-      v.lerpVectors(
-        new THREE.Vector3(-4, 3, -17),
-        new THREE.Vector3(9, 1.5, -20),
-        t,
-      );
+      v.lerpVectors(WP_FLIGHT_B, WP_COAST_B, t);
       break;
     case "orbit":
-      v.copy(orbitPos(ORBIT_A0 + (ORBIT_A1 - ORBIT_A0) * t));
+      orbitPos(ORBIT_A0 + (ORBIT_A1 - ORBIT_A0) * t, v);
       break;
     case "targetLocked":
-      v.lerpVectors(orbitPos(ORBIT_A1), new THREE.Vector3(28, 3, -20), t);
+      orbitPos(ORBIT_A1, WP_ORBIT_END);
+      v.lerpVectors(WP_ORBIT_END, WP_TARGET_B, t);
       break;
     case "descent":
-      v.lerpVectors(
-        new THREE.Vector3(28, 3, -20),
-        new THREE.Vector3(28, 0.2, -20),
-        t,
-      );
+      v.lerpVectors(WP_TARGET_B, WP_LAND, t);
       break;
     default:
-      v.set(28, 0.2, -20);
+      v.copy(WP_LAND);
   }
   return v;
 }
+
+const CAM_OFFSETS: Record<string, [number, number, number]> = {
+  flight: [5, 3, 10],
+  coast: [4, 4, 9],
+  targetLocked: [3, 6, 8],
+  descent: [7, 8, 6],
+};
+const _camPos = new THREE.Vector3();
+const _camLook = new THREE.Vector3();
+const ORBIT_CAM_POS = new THREE.Vector3(42, 12, -5);
+const MOON_LOOK = new THREE.Vector3(MOON.x, MOON.y + 1, MOON.z);
 
 function camTarget(
   phase: string,
   sp: THREE.Vector3,
 ): { pos: THREE.Vector3; look: THREE.Vector3 } {
-  switch (phase) {
-    case "flight":
-      return {
-        pos: sp.clone().add(new THREE.Vector3(5, 3, 10)),
-        look: sp.clone(),
-      };
-    case "coast":
-      return {
-        pos: sp.clone().add(new THREE.Vector3(4, 4, 9)),
-        look: sp.clone(),
-      };
-    case "orbit":
-      return {
-        pos: new THREE.Vector3(42, 12, -5),
-        look: MOON.clone().add(new THREE.Vector3(0, 1, 0)),
-      };
-    case "targetLocked":
-      return {
-        pos: sp.clone().add(new THREE.Vector3(3, 6, 8)),
-        look: sp.clone(),
-      };
-    case "descent":
-      return {
-        pos: sp.clone().add(new THREE.Vector3(7, 8, 6)),
-        look: sp.clone(),
-      };
-    default:
-      return {
-        pos: sp.clone().add(new THREE.Vector3(8, 4, 10)),
-        look: sp.clone(),
-      };
+  if (phase === "orbit") {
+    _camPos.copy(ORBIT_CAM_POS);
+    _camLook.copy(MOON_LOOK);
+  } else {
+    const off = CAM_OFFSETS[phase] ?? [8, 4, 10];
+    _camPos.set(sp.x + off[0], sp.y + off[1], sp.z + off[2]);
+    _camLook.copy(sp);
   }
+  return { pos: _camPos, look: _camLook };
 }
 
 const DUR: Record<string, number> = {
@@ -115,21 +102,13 @@ const BEAT_EVENTS = [
   { from: "flight" as GamePhase, event: "START_COAST" as const, delay: 7000 },
   { from: "coast" as GamePhase, event: "REACH_ORBIT" as const, delay: 7000 },
   { from: "orbit" as GamePhase, event: "LOCK_TARGET" as const, delay: 6000 },
-  {
-    from: "targetLocked" as GamePhase,
-    event: "BEGIN_DESCENT" as const,
-    delay: 4000,
-  },
+  // targetLocked: GATE — player presses Space to BEGIN_DESCENT
   {
     from: "descent" as GamePhase,
     event: "TOUCH_DOWN" as const,
     delay: 8000,
   },
-  {
-    from: "touchdown" as GamePhase,
-    event: "OPEN_HATCH" as const,
-    delay: 4000,
-  },
+  // touchdown: GATE — player presses Space to OPEN_HATCH
   { from: "stepOut" as GamePhase, event: "STEP_OUT" as const, delay: 3000 },
 ];
 
@@ -210,93 +189,132 @@ function MoonSphere() {
 
 function LandingMarker() {
   const ref = useRef<THREE.Mesh>(null);
-  const phase = useGameStore((s) => s.phase);
-  const show = ["orbit", "targetLocked", "descent"].includes(phase);
-  useFrame(() => {
-    if (ref.current) {
+  const groupRef = useRef<THREE.Group>(null);
+  const phaseRef = useRef(useGameStore.getState().phase);
+
+  useEffect(
+    () => useGameStore.subscribe((s) => (phaseRef.current = s.phase)),
+    [],
+  );
+
+  useFrame((_, _dt, frame) => {
+    const show =
+      phaseRef.current === "orbit" ||
+      phaseRef.current === "targetLocked" ||
+      phaseRef.current === "descent";
+    if (groupRef.current) groupRef.current.visible = show;
+    if (ref.current && show) {
       (ref.current.material as THREE.MeshBasicMaterial).opacity =
         0.5 + Math.sin(Date.now() * 0.005) * 0.35;
     }
   });
-  if (!show) return null;
   return (
-    <mesh
-      ref={ref}
-      position={[28, 0.5, -20]}
-      rotation={[-Math.PI / 2, 0, 0]}
-    >
-      <ringGeometry args={[0.5, 0.8, 32]} />
-      <meshBasicMaterial
-        color="#ffd36e"
-        transparent
-        opacity={0.8}
-        side={THREE.DoubleSide}
-        blending={THREE.AdditiveBlending}
-        depthWrite={false}
-      />
-    </mesh>
+    <group ref={groupRef}>
+      <mesh
+        ref={ref}
+        position={[28, 0.5, -20]}
+        rotation={[-Math.PI / 2, 0, 0]}
+      >
+        <ringGeometry args={[0.5, 0.8, 32]} />
+        <meshBasicMaterial
+          color="#ffd36e"
+          transparent
+          opacity={0.8}
+          side={THREE.DoubleSide}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
   );
 }
 
 function OrbitPath() {
-  const phase = useGameStore((s) => s.phase);
-  const show = phase === "orbit" || phase === "targetLocked";
+  const groupRef = useRef<THREE.Group>(null);
+  const phaseRef = useRef(useGameStore.getState().phase);
+
+  useEffect(
+    () => useGameStore.subscribe((s) => (phaseRef.current = s.phase)),
+    [],
+  );
+
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.visible =
+        phaseRef.current === "orbit" || phaseRef.current === "targetLocked";
+    }
+  });
+
   const geo = useMemo(() => {
     const pts: THREE.Vector3[] = [];
+    const _p = new THREE.Vector3();
     for (let i = 0; i <= 96; i++) {
-      pts.push(orbitPos((i / 96) * Math.PI * 2));
+      orbitPos((i / 96) * Math.PI * 2, _p);
+      pts.push(_p.clone());
     }
-    const g = new THREE.BufferGeometry().setFromPoints(pts);
-    return g;
+    return new THREE.BufferGeometry().setFromPoints(pts);
   }, []);
-  if (!show) return null;
+
   return (
-    <line geometry={geo}>
-      <lineBasicMaterial color="#6ee7ff" transparent opacity={0.3} />
-    </line>
+    <group ref={groupRef}>
+      <line geometry={geo}>
+        <lineBasicMaterial color="#6ee7ff" transparent opacity={0.3} />
+      </line>
+    </group>
   );
 }
+
+const _shipCopy = new THREE.Vector3();
+const _aheadCopy = new THREE.Vector3();
 
 function FlightAnimator() {
   const { camera } = useThree();
   const shipRef = useRef<THREE.Group>(null);
   const flameRef = useRef<THREE.Mesh>(null);
-  const phase = useGameStore((s) => s.phase);
-  const prevPhase = useRef(phase);
+  const phaseRef = useRef(useGameStore.getState().phase);
   const elapsed = useRef(0);
   const lookRef = useRef(new THREE.Vector3(0, 0, -10));
 
-  useEffect(() => {
-    if (phase !== prevPhase.current) {
-      prevPhase.current = phase;
-      elapsed.current = 0;
-    }
-  }, [phase]);
+  useEffect(
+    () =>
+      useGameStore.subscribe((s) => {
+        if (s.phase !== phaseRef.current) {
+          phaseRef.current = s.phase;
+          elapsed.current = 0;
+        }
+      }),
+    [],
+  );
 
   useFrame((_, dt) => {
+    const phase = phaseRef.current;
     elapsed.current += dt;
     const dur = DUR[phase] || 5;
     const progress = Math.min(elapsed.current / dur, 1);
 
-    const sp = shipPos(phase, progress);
+    _shipCopy.copy(shipPos(phase, progress));
 
     if (shipRef.current) {
-      shipRef.current.position.copy(sp);
-      const ahead = shipPos(phase, Math.min(progress + 0.03, 1));
-      const dir = ahead.clone().sub(sp);
-      if (dir.length() > 0.001) shipRef.current.lookAt(ahead);
+      shipRef.current.position.copy(_shipCopy);
+      _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.03, 1)));
+      const dx = _aheadCopy.x - _shipCopy.x;
+      const dy = _aheadCopy.y - _shipCopy.y;
+      const dz = _aheadCopy.z - _shipCopy.z;
+      if (dx * dx + dy * dy + dz * dz > 0.000001)
+        shipRef.current.lookAt(_aheadCopy);
     }
 
-    const ct = camTarget(phase, sp);
+    const ct = camTarget(phase, _shipCopy);
     camera.position.lerp(ct.pos, dt * 1.5);
     lookRef.current.lerp(ct.look, dt * 2);
     camera.lookAt(lookRef.current);
 
-    const powered = ["flight", "targetLocked", "descent"].includes(phase);
+    const powered =
+      phase === "flight" || phase === "targetLocked" || phase === "descent";
     if (flameRef.current) {
       flameRef.current.visible = powered;
       if (powered)
-        flameRef.current.scale.z = 0.8 + Math.sin(Date.now() * 0.05) * 0.2;
+        flameRef.current.scale.z = 0.8 + Math.sin(elapsed.current * 12) * 0.2;
     }
   });
 
@@ -371,9 +389,10 @@ function FlightContent() {
 /* ---- HUD ---- */
 
 function FlightHUD() {
+  const { t } = useTranslation();
   const phase = useGameStore((s) => s.phase);
   const playerName = useAppStore((s) => s.player.name);
-  const label = PHASE_LABEL[phase] ?? "";
+  const label = t(`flight.phaseLabels.${phase}`, { defaultValue: "" });
   const narration = getNarration(phase, playerName);
 
   const phases = [
@@ -416,16 +435,16 @@ function FlightHUD() {
         </div>
         <div className="text-right">
           <p className="text-xs text-regolith-400">
-            Commander {playerName}
+            {t("flight.commander", { name: playerName })}
           </p>
           {phase === "descent" && (
             <p className="font-mono text-lg font-bold text-signal">
-              ALT {alt.toLocaleString()} m
+              {t("flight.alt", { alt: alt.toLocaleString() })}
             </p>
           )}
           {phase === "touchdown" && (
             <p className="font-mono text-lg font-bold text-signal">
-              ALT 0 m — CONTACT
+              {t("flight.altContact")}
             </p>
           )}
         </div>
@@ -454,7 +473,7 @@ function FlightHUD() {
         <div className="mx-auto max-w-2xl rounded-lg bg-space-950/85 px-6 py-4 backdrop-blur">
           <div className="flex items-baseline gap-3">
             <span className="shrink-0 text-xs font-bold tracking-widest text-signal">
-              {PHASE_LABEL[phase]?.toUpperCase() ?? "FLIGHT"}
+              {label.toUpperCase() || "FLIGHT"}
             </span>
             <p className="text-base leading-relaxed text-regolith-200">
               {narration}
@@ -468,7 +487,13 @@ function FlightHUD() {
 
 /* ---- Main ---- */
 
+const GATES: Partial<Record<GamePhase, { event: "BEGIN_DESCENT" | "OPEN_HATCH"; labelKey: string }>> = {
+  targetLocked: { event: "BEGIN_DESCENT", labelKey: "flight.beginDescent" },
+  touchdown: { event: "OPEN_HATCH", labelKey: "flight.openHatch" },
+};
+
 export function FlightScene() {
+  const { t } = useTranslation();
   const phase = useGameStore((s) => s.phase);
   const send = useGameStore((s) => s.send);
 
@@ -478,6 +503,21 @@ export function FlightScene() {
     const timer = setTimeout(() => send(beat.event), beat.delay);
     return () => clearTimeout(timer);
   }, [phase, send]);
+
+  useEffect(() => {
+    const gate = GATES[phase];
+    if (!gate) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.code === "Space") {
+        e.preventDefault();
+        send(gate.event);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [phase, send]);
+
+  const gate = GATES[phase];
 
   return (
     <div className="relative h-screen w-full">
@@ -489,6 +529,16 @@ export function FlightScene() {
         <FlightContent />
       </Canvas>
       <FlightHUD />
+      {gate && (
+        <div className="absolute inset-x-0 bottom-24 z-20 flex justify-center">
+          <button
+            onClick={() => send(gate.event)}
+            className="animate-pulse rounded-lg border border-signal/60 bg-signal/20 px-8 py-3 font-display text-lg font-semibold text-signal backdrop-blur transition hover:bg-signal/30"
+          >
+            [Space] {t(gate.labelKey)}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

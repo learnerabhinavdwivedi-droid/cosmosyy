@@ -6,12 +6,12 @@ import {
   Suspense,
   useMemo,
 } from "react";
+import { useTranslation } from "react-i18next";
 import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import { Stars, Text } from "@react-three/drei";
-import { Physics } from "@react-three/rapier";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
-import { LunarModule } from "./LunarModule";
+import { LMDescent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
 import {
   getApollo11SunPosition,
@@ -149,12 +149,32 @@ function ProximityDetector({
   return null;
 }
 
+const LUNAR_G = 1.62;
+const EYE_HEIGHT = 1.7;
+const GROUND_Y = 0;
+const JUMP_V0 = 1.8;
+const _moveDir = new THREE.Vector3();
+const _lookTarget = new THREE.Vector3();
+const _currentLook = new THREE.Vector3();
+
 function PlayerController() {
   const { camera } = useThree();
   const velocity = useRef(new THREE.Vector3());
+  const verticalVel = useRef(0);
   const euler = useRef(new THREE.Euler(0, 0, 0, "YXZ"));
   const keys = useRef<Record<string, boolean>>({});
   const isPointerLocked = useRef(false);
+  const phaseRef = useRef(useGameStore.getState().phase);
+
+  useEffect(() => {
+    const unsub = useGameStore.subscribe((s) => {
+      phaseRef.current = s.phase;
+      if (s.phase === "inspect") {
+        document.exitPointerLock();
+      }
+    });
+    return unsub;
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -182,7 +202,7 @@ function PlayerController() {
     window.addEventListener("mousemove", onMouseMove);
     document.addEventListener("pointerlockchange", onPointerLockChange);
 
-    camera.position.set(5, 1.7, 10);
+    camera.position.set(5, EYE_HEIGHT, 10);
     euler.current.y = -0.4;
     camera.quaternion.setFromEuler(euler.current);
 
@@ -195,26 +215,72 @@ function PlayerController() {
   }, [camera]);
 
   useFrame((_state, delta) => {
-    const k = keys.current;
-    const speed = k["ShiftLeft"] || k["ShiftRight"] ? 4 : 2;
-    const moveDir = new THREE.Vector3();
-
-    if (k["KeyW"] || k["ArrowUp"]) moveDir.z -= 1;
-    if (k["KeyS"] || k["ArrowDown"]) moveDir.z += 1;
-    if (k["KeyA"] || k["ArrowLeft"]) moveDir.x -= 1;
-    if (k["KeyD"] || k["ArrowRight"]) moveDir.x += 1;
-
-    if (moveDir.length() > 0) {
-      moveDir.normalize();
-      moveDir.applyQuaternion(camera.quaternion);
-      moveDir.y = 0;
-      moveDir.normalize();
+    if (phaseRef.current === "inspect") {
+      velocity.current.set(0, 0, 0);
+      return;
     }
 
-    velocity.current.lerp(moveDir.multiplyScalar(speed), delta * 3);
-    camera.position.addScaledVector(velocity.current, delta);
-    camera.position.y = 1.7;
+    const k = keys.current;
+    const speed = k["ShiftLeft"] || k["ShiftRight"] ? 4 : 2;
+    _moveDir.set(0, 0, 0);
+
+    if (k["KeyW"] || k["ArrowUp"]) _moveDir.z -= 1;
+    if (k["KeyS"] || k["ArrowDown"]) _moveDir.z += 1;
+    if (k["KeyA"] || k["ArrowLeft"]) _moveDir.x -= 1;
+    if (k["KeyD"] || k["ArrowRight"]) _moveDir.x += 1;
+
+    if (_moveDir.length() > 0) {
+      _moveDir.normalize();
+      _moveDir.applyQuaternion(camera.quaternion);
+      _moveDir.y = 0;
+      _moveDir.normalize();
+    }
+
+    velocity.current.lerp(_moveDir.multiplyScalar(speed), delta * 3);
+    camera.position.x += velocity.current.x * delta;
+    camera.position.z += velocity.current.z * delta;
+
+    const onGround = camera.position.y <= GROUND_Y + EYE_HEIGHT + 0.01;
+
+    if (k["Space"] && onGround) {
+      verticalVel.current = JUMP_V0;
+    }
+
+    verticalVel.current -= LUNAR_G * delta;
+    camera.position.y += verticalVel.current * delta;
+
+    if (camera.position.y < GROUND_Y + EYE_HEIGHT) {
+      camera.position.y = GROUND_Y + EYE_HEIGHT;
+      verticalVel.current = 0;
+    }
   });
+
+  return null;
+}
+
+function InspectCamera() {
+  const { camera } = useThree();
+  const inspecting = useGameStore((s) => s.inspecting);
+  const phase = useGameStore((s) => s.phase);
+  const lerpProgress = useRef(0);
+
+  useFrame((_state, delta) => {
+    if (phase !== "inspect" || !inspecting.objectId) return;
+    const obj = OBJECTS.find((o) => o.id === inspecting.objectId);
+    if (!obj) return;
+
+    lerpProgress.current = Math.min(lerpProgress.current + delta * 2, 1);
+
+    _lookTarget.set(obj.position[0], obj.position[1] + 1, obj.position[2]);
+    camera.getWorldDirection(_currentLook);
+    _currentLook.add(camera.position);
+    _currentLook.lerp(_lookTarget, lerpProgress.current * 0.08);
+    camera.lookAt(_currentLook);
+  });
+
+  useEffect(() => {
+    lerpProgress.current = 0;
+  }, [inspecting.objectId]);
 
   return null;
 }
@@ -299,7 +365,7 @@ function SurfaceSceneContent({
       <GroundPlane />
 
       <Suspense fallback={null}>
-        <LunarModule position={[0, 0, 0]} scale={1} />
+        <LMDescent position={[0, 0, 0]} scale={1} />
       </Suspense>
 
       {OBJECTS.map((obj) => (
@@ -313,41 +379,54 @@ function SurfaceSceneContent({
 
       <ProximityDetector setNearObjectId={setNearObjectId} />
       <PlayerController />
+      <InspectCamera />
     </>
   );
 }
 
 function InspectOverlay() {
+  const { t } = useTranslation();
   const objectId = useGameStore((s) => s.inspecting.objectId);
   const send = useGameStore((s) => s.send);
   const obj = OBJECTS.find((o) => o.id === objectId);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") send("EXIT_INSPECT");
     };
     window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    const timer = requestAnimationFrame(() => setVisible(true));
+    return () => {
+      window.removeEventListener("keydown", handler);
+      cancelAnimationFrame(timer);
+      setVisible(false);
+    };
   }, [send]);
 
   if (!obj) return null;
 
   return (
-    <div className="absolute inset-0 z-20 flex items-center justify-center bg-space-950/80 backdrop-blur-sm">
-      <div className="mx-4 max-w-lg rounded-xl border border-space-700 bg-space-900 p-8">
-        <h2 className="font-display text-2xl font-bold text-regolith-200">
+    <div className="absolute inset-0 z-20 flex items-end justify-end pointer-events-none">
+      <div className="absolute inset-0 bg-space-950/40" />
+      <div
+        className={`pointer-events-auto relative m-4 w-80 rounded-xl border border-space-700 bg-space-900/95 p-6 backdrop-blur-md transition-all duration-300 ${visible ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"}`}
+      >
+        <h2 className="font-display text-xl font-bold text-regolith-200">
           {obj.name}
         </h2>
-        <p className="mt-4 leading-relaxed text-regolith-400">
+        <p className="mt-3 text-sm leading-relaxed text-regolith-400">
           {obj.description}
         </p>
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-4 flex items-center gap-3">
           <span className="rounded bg-signal/20 px-2 py-1 text-xs text-signal">
             +{obj.xp} XP
           </span>
-          <span className="text-xs text-regolith-400">
-            Press ESC to return
-          </span>
+        </div>
+        <div className="mt-4 border-t border-space-700 pt-3">
+          <p className="text-xs text-regolith-400/60">
+            {t("inspect.pressEsc")}
+          </p>
         </div>
       </div>
     </div>
@@ -355,50 +434,48 @@ function InspectOverlay() {
 }
 
 function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
+  const { t } = useTranslation();
   const phase = useGameStore((s) => s.phase);
   const found = useGameStore((s) => s.objectsFoundThisRun);
   const send = useGameStore((s) => s.send);
   const addFoundObject = useGameStore((s) => s.addFoundObject);
-  const addXp = useAppStore((s) => s.addXp);
   const findObject = useAppStore((s) => s.findObject);
   const missionId = useGameStore((s) => s.missionId);
   const playerName = useAppStore((s) => s.player.name);
 
   const [toast, setToast] = useState<string | null>(null);
-  const [narration, setNarration] = useState(
-    `Walk to the golden beacons, Commander ${playerName || ""}. Scan what was left behind.`,
-  );
+  const toastTimer = useRef<ReturnType<typeof setTimeout>>(null);
 
-  useEffect(() => {
-    if (found.length > 0 && found.length < TOTAL_OBJECTS) {
-      setNarration(
-        `${found.length} of ${TOTAL_OBJECTS} objects scanned. Keep searching.`,
-      );
-    } else if (found.length >= TOTAL_OBJECTS) {
-      setNarration("All objects found. Plant your flag and launch home.");
+  const narration = useMemo(() => {
+    if (found.length >= TOTAL_OBJECTS) {
+      return t("surface.narrationAllFound");
     }
-  }, [found.length]);
+    if (found.length > 0) {
+      return t("surface.narrationProgress", { found: found.length, total: TOTAL_OBJECTS });
+    }
+    return t("surface.narrationStart", { name: playerName || "" });
+  }, [found.length, playerName, t]);
 
   const handleInteract = useCallback(() => {
     if (!nearObjectId || found.includes(nearObjectId) || !missionId) return;
     const obj = OBJECTS.find((o) => o.id === nearObjectId);
     addFoundObject(nearObjectId);
     findObject(missionId, nearObjectId);
-    addXp(missionId, obj?.xp ?? 50);
     send("START_INSPECT", { objectId: nearObjectId });
 
-    setToast(`+${obj?.xp ?? 50} XP — ${obj?.name ?? nearObjectId}`);
-    setTimeout(() => setToast(null), 2500);
-  }, [nearObjectId, found, missionId, addFoundObject, findObject, addXp, send]);
+    setToast(t("xp.object", { amount: obj?.xp ?? 50, name: obj?.name ?? nearObjectId }));
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(null), 2500);
+  }, [nearObjectId, found, missionId, addFoundObject, findObject, send, t]);
 
   const handleFlag = useCallback(() => {
     if (!missionId) return;
     useAppStore.getState().plantFlag(missionId);
-    addXp(missionId, 100);
     send("PLANT_FLAG");
-    setToast("+100 XP — Flag planted!");
-    setTimeout(() => setToast(null), 2500);
-  }, [missionId, addXp, send]);
+    setToast(t("xp.flag", { amount: 100 }));
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(null), 2500);
+  }, [missionId, send, t]);
 
   const handleLaunch = useCallback(() => {
     send("LAUNCH_HOME");
@@ -429,7 +506,7 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
       {/* Top: objects found */}
       <div className="mx-auto mt-4 rounded-lg bg-space-950/80 px-4 py-2 text-center backdrop-blur">
         <p className="text-sm text-regolith-400">
-          Objects: {found.length} / {TOTAL_OBJECTS}
+          {t("surface.objectCount", { found: found.length, total: TOTAL_OBJECTS })}
         </p>
       </div>
 
@@ -444,7 +521,7 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
       {nearObj && !found.includes(nearObj.id) && phase !== "inspect" && (
         <div className="mx-auto mt-auto mb-32 rounded-lg bg-space-950/90 px-6 py-3 text-center backdrop-blur">
           <p className="font-display text-lg text-signal">
-            [E] Inspect {nearObj.name}
+            [E] {t("surface.inspectPrompt")} {nearObj.name}
           </p>
         </div>
       )}
@@ -452,7 +529,7 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
       {phase === "flagReady" && (
         <div className="mx-auto mt-auto mb-32 rounded-lg bg-signal/20 px-6 py-3 text-center backdrop-blur">
           <p className="animate-pulse font-display text-lg text-signal">
-            [F] Plant the flag
+            [F] {t("surface.flagPrompt")}
           </p>
         </div>
       )}
@@ -460,7 +537,7 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
       {phase === "flagPlanted" && (
         <div className="mx-auto mt-auto mb-32 rounded-lg bg-signal/20 px-6 py-3 text-center backdrop-blur">
           <p className="animate-pulse font-display text-lg text-signal">
-            [L] Launch home
+            [L] {t("surface.launchPrompt")}
           </p>
         </div>
       )}
@@ -470,7 +547,7 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
         <div className="mx-auto max-w-2xl rounded-lg bg-space-950/85 px-6 py-3 backdrop-blur">
           <div className="flex items-baseline gap-3">
             <span className="shrink-0 text-xs font-bold tracking-widest text-signal">
-              EVA
+              {t("surface.eva")}
             </span>
             <p className="text-sm leading-relaxed text-regolith-200">
               {narration}
@@ -482,8 +559,7 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
       {/* Bottom left: controls hint */}
       <div className="mb-2 ml-4">
         <p className="text-xs text-regolith-400/60">
-          Click to look · WASD move · Shift run · E inspect
-          · ` debug
+          {t("surface.controlHints")}
         </p>
       </div>
     </div>
@@ -516,12 +592,10 @@ export function SurfaceScene() {
           }}
         >
           <color attach="background" args={["#000000"]} />
-          <Physics gravity={[0, -1.62, 0]}>
-            <SurfaceSceneContent
-              nearObjectId={nearObjectId}
-              setNearObjectId={setNearObjectId}
-            />
-          </Physics>
+          <SurfaceSceneContent
+            nearObjectId={nearObjectId}
+            setNearObjectId={setNearObjectId}
+          />
         </Canvas>
       </div>
       <SurfaceHUD nearObjectId={nearObjectId} />

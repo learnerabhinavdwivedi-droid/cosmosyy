@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ const XP_COMPLETE = 100;
 const TOTAL_OBJECTS = missionData.objects.length;
 
 export function ReportScreen() {
+  const { t } = useTranslation();
   const send = useGameStore((s) => s.send);
   const missionId = useGameStore((s) => s.missionId);
   const found = useGameStore((s) => s.objectsFoundThisRun);
@@ -20,7 +22,7 @@ export function ReportScreen() {
   useEffect(() => {
     if (missionId) {
       completeMission(missionId);
-      addXp(missionId, XP_LAND + XP_COMPLETE);
+      addXp(missionId, XP_LAND);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -33,7 +35,7 @@ export function ReportScreen() {
     <div className="flex min-h-screen flex-col items-center justify-center px-4">
       <div className="w-full max-w-md rounded-xl border border-space-700 bg-space-900/90 p-8 backdrop-blur">
         <h1 className="text-center font-display text-3xl font-bold text-regolith-200">
-          Mission Complete
+          {t("report.heading")}
         </h1>
         <p className="mt-1 text-center text-regolith-400">
           {missionId?.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
@@ -42,30 +44,30 @@ export function ReportScreen() {
         {/* Stats */}
         <div className="mt-6 space-y-3">
           <div className="flex items-center justify-between border-b border-space-700 pb-2">
-            <span className="text-regolith-400">Objects found</span>
+            <span className="text-regolith-400">{t("report.objectsFound")}</span>
             <span className="font-mono text-regolith-200">
               {found.length} / {TOTAL_OBJECTS}
             </span>
           </div>
           <div className="flex items-center justify-between border-b border-space-700 pb-2">
-            <span className="text-regolith-400">Landing XP</span>
+            <span className="text-regolith-400">{t("report.landingXp")}</span>
             <span className="font-mono text-ok">+{XP_LAND}</span>
           </div>
           <div className="flex items-center justify-between border-b border-space-700 pb-2">
-            <span className="text-regolith-400">Objects XP</span>
+            <span className="text-regolith-400">{t("report.objectsXp")}</span>
             <span className="font-mono text-ok">+{objectXp}</span>
           </div>
           <div className="flex items-center justify-between border-b border-space-700 pb-2">
-            <span className="text-regolith-400">Flag planted</span>
+            <span className="text-regolith-400">{t("report.flagPlanted")}</span>
             <span className="font-mono text-ok">+{flagXp}</span>
           </div>
           <div className="flex items-center justify-between border-b border-space-700 pb-2">
-            <span className="text-regolith-400">Mission complete</span>
+            <span className="text-regolith-400">{t("report.missionComplete")}</span>
             <span className="font-mono text-ok">+{XP_COMPLETE}</span>
           </div>
           <div className="flex items-center justify-between pt-1">
             <span className="font-semibold text-regolith-200">
-              Total earned
+              {t("report.totalEarned")}
             </span>
             <span className="font-mono text-lg font-bold text-signal">
               +{missionXp} XP
@@ -76,12 +78,12 @@ export function ReportScreen() {
         {/* Rank */}
         <div className="mt-6 rounded-lg bg-space-800 p-4 text-center">
           <p className="text-xs uppercase tracking-wide text-regolith-400">
-            Current rank
+            {t("report.currentRank")}
           </p>
           <p className="mt-1 font-display text-2xl font-bold text-signal">
             {getRank()}
           </p>
-          <p className="mt-1 text-sm text-regolith-400">{totalXp} XP total</p>
+          <p className="mt-1 text-sm text-regolith-400">{t("report.xpTotal", { xp: totalXp })}</p>
         </div>
 
         {/* Actions */}
@@ -90,7 +92,7 @@ export function ReportScreen() {
             onClick={() => send("BACK_TO_SELECT")}
             className="flex-1 bg-space-700 text-regolith-200 hover:bg-space-600"
           >
-            Back to missions
+            {t("report.backToMissions")}
           </Button>
         </div>
       </div>
