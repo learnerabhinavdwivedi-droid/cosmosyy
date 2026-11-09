@@ -155,7 +155,7 @@ export default function MissionSelectPage() {
   const handleLaunch = (missionId: string) => {
     if (!playerName) return;
     startMission(missionId);
-    void navigate(`/flight/${missionId}`);
+    navigate(`/flight/${missionId}`);
   };
 
   return (
