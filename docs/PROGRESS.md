@@ -13,3 +13,4 @@
 | 2026-11-09 | REPLAN-2 | done | 10-phases.md rewritten with A11-01–A11-14 task cards (Apollo 11 only, A1 quality) | P1-T01 |
 | 2026-11-09 | P1-T01 | done | Mission Archive tokens in tokens.css; dark-first palette; Tailwind @theme mapped; build passes | P1-T02 |
 | 2026-11-09 | P1-T02 | done | Fontsource: Inter Variable, Barlow Condensed 400/600/700, JetBrains Mono Variable; offline fonts; build passes | P1-T03 |
+| 2026-11-09 | P1-T03 | done | shadcn/ui: button, input, label, dialog, sheet, slider, switch, sonner, tooltip, progress; cn() util; build passes | P1-T04 |
