@@ -113,45 +113,87 @@ const BEAT_EVENTS = [
   { from: "stepOut" as GamePhase, event: "STEP_OUT" as const, delay: 3000 },
 ];
 
-function getNarration(phase: GamePhase, playerName: string, mission: MissionSpec | null): string {
-  const n = playerName || "Commander";
-  if (!mission) return "";
-  const site = mission.site;
-  const lat = mission.landing.lat;
-  const lon = mission.landing.lon;
-  const lmName = mission.lm || "the Lunar Module";
-  const cmName = mission.cm || "the Command Module";
-  const cmp = mission.crew.cmp.split(" ").pop() || "the CMP";
-  const cdr = mission.crew.commander.split(" ").pop() || "Commander";
-  const lmpName = mission.crew.lmp.split(" ").pop() || "the LMP";
+type NarrationSet = Record<string, string>;
 
-  switch (phase) {
-    case "flight":
-      return "Welcome aboard, " + n + ". " + mission.name + " is bound for the Moon. Your job: land at " + site + ", then find what was left behind.";
-    case "coast":
-      return cmp + " stays in orbit aboard " + cmName + ". You ride " + lmName + " down with " + cdr + " and " + lmpName + ". 240,000 miles to go.";
-    case "orbit":
-      return "Lunar Orbit Insertion complete. The far side was silent and dark. Now the surface fills your window.";
-    case "targetLocked":
-      return "Target locked: " + Math.abs(lat).toFixed(2) + String.fromCharCode(176) + " " + (lat >= 0 ? "North" : "South") + ", " + Math.abs(lon).toFixed(2) + String.fromCharCode(176) + " " + (lon >= 0 ? "East" : "West") + ". " + site + ". Undocking " + lmName + " for powered descent.";
-    case "descent":
-      return lmName + "'s descent engine firing. Altitude dropping. Almost there.";
-    case "touchdown":
-      return "Contact light. Engine stop. " + lmName + " has landed. " + mission.date + ".";
-    case "stepOut":
-      return "Cabin depressurised. Opening the hatch. One small step, " + n + ".";
-    default:
-      return "";
+const MISSION_NARRATION: Record<string, (n: string) => NarrationSet> = {
+  "apollo-11": (n) => ({
+    flight: "Welcome aboard, " + n + ". Apollo 11 is bound for the Moon. Three days, 240,000 miles. Your mission: land at the Sea of Tranquility and find what Armstrong and Aldrin left behind.",
+    coast: "Collins stays in orbit aboard Columbia. You ride Eagle down with Armstrong and Aldrin. No human has ever attempted a lunar landing before.",
+    orbit: "Lunar Orbit Insertion complete. The far side was silent and dark. Now the Sea of Tranquility fills your window.",
+    targetLocked: "Target locked: Tranquility Base. 0.67 degrees North, 23.47 degrees East. Undocking Eagle for powered descent.",
+    descent: "Eagle's descent engine firing. Program alarms, 1202, 1202. Ignore them. Armstrong takes manual control. Fuel running low. Almost there.",
+    touchdown: "Contact light. Engine stop. The Eagle has landed. Tranquility Base, July 20, 1969. Houston, we copy you on the ground.",
+    stepOut: "Cabin depressurised. Opening the hatch. That's one small step for man, " + n + ". One giant leap for mankind.",
+  }),
+  "apollo-12": (n) => ({
+    flight: "Welcome aboard, " + n + ". Apollo 12 is bound for the Ocean of Storms. Thirty-six seconds after launch, lightning struck the Saturn V twice. All telemetry went haywire. But the crew kept flying.",
+    coast: "Gordon stays in orbit aboard Yankee Clipper. You ride Intrepid down with Conrad and Bean. Target: a precision landing beside Surveyor 3, the unmanned probe that landed two years ago.",
+    orbit: "Lunar Orbit Insertion complete. The Ocean of Storms stretches below, vast and grey. Surveyor 3 is down there somewhere, waiting.",
+    targetLocked: "Target locked: 3.01 degrees South, 23.42 degrees West. Ocean of Storms. Conrad is threading the needle, aiming Intrepid right next to Surveyor 3.",
+    descent: "Intrepid's descent engine firing. Conrad grins: he can see the crater. Bean calls out the numbers. Right on target.",
+    touchdown: "Contact light. Intrepid has landed. November 19, 1969. Conrad's first words: Whoopee! Man, that may have been a small one for Neil, but that's a long one for me.",
+    stepOut: "Cabin depressurised. Opening the hatch. The Ocean of Storms awaits, " + n + ". Surveyor 3 is just a short walk away.",
+  }),
+  "apollo-14": (n) => ({
+    flight: "Welcome aboard, " + n + ". Apollo 14 is bound for Fra Mauro, the highlands target Apollo 13 never reached. Shepard is back. America's first astronaut, now commanding a Moon mission at age 47.",
+    coast: "Roosa stays in orbit aboard Kitty Hawk. You ride Antares down with Shepard and Mitchell. After the Apollo 13 abort, NASA needs this landing to succeed.",
+    orbit: "Lunar Orbit Insertion complete. Fra Mauro's rolling hills are visible below. This ancient impact site holds secrets about the Moon's formation.",
+    targetLocked: "Target locked: 3.65 degrees South, 17.47 degrees West. Fra Mauro formation. A computer abort signal fires, but it's a false alarm. Mitchell patches the software. Undocking Antares.",
+    descent: "Antares is descending. The landing radar locks on late, 18,000 feet. Shepard takes manual control. The highlands rise to meet you.",
+    touchdown: "Contact light. Antares has landed at Fra Mauro. February 5, 1971. Shepard: It's been a long way, but we're here.",
+    stepOut: "Cabin depressurised. Opening the hatch. Walk the hills of Fra Mauro, " + n + ". And yes, Shepard brought his golf club.",
+  }),
+  "apollo-15": (n) => ({
+    flight: "Welcome aboard, " + n + ". Apollo 15 is the first J-mission: longer stays, more science, and the first lunar rover. Destination: the Hadley-Apennine region, where mountains meet a winding canyon.",
+    coast: "Worden stays in orbit aboard Endeavour running a full science bay. You ride Falcon down with Scott and Irwin. The rover is folded up in the descent stage, ready to deploy.",
+    orbit: "Lunar Orbit Insertion complete. The Apennine mountains tower 15,000 feet above the plain. Hadley Rille carves a sinuous channel along the base. Extraordinary.",
+    targetLocked: "Target locked: 26.13 degrees North, 3.63 degrees East. Hadley-Apennine. Undocking Falcon. Scott and Irwin will drive farther from the LM than anyone before.",
+    descent: "Falcon's descent engine firing. The Apennine Front looms ahead, a wall of mountains. Scott guides Falcon between the peaks and the rille.",
+    touchdown: "Contact light. Falcon has landed at Hadley. July 30, 1971. Scott: Okay, Houston. The Falcon is on the plain at Hadley.",
+    stepOut: "Cabin depressurised. Opening the hatch. The mountains surround you, " + n + ". Time to unpack the rover and explore.",
+  }),
+  "apollo-16": (n) => ({
+    flight: "Welcome aboard, " + n + ". Apollo 16 targets the Descartes Highlands, a region scientists believe is volcanic. Young and Duke will test that theory on the ground.",
+    coast: "Mattingly stays in orbit aboard Casper. You ride Orion down with Young and Duke. But in orbit, a problem: Casper's engine gimbal shakes. Mission Control debates an abort for six anxious hours.",
+    orbit: "Lunar Orbit Insertion complete. The Descartes Highlands roll out below, ancient and cratered. Houston gives the go. The landing is on.",
+    targetLocked: "Target locked: 8.97 degrees South, 15.50 degrees East. Descartes Highlands. Undocking Orion after the longest hold in Apollo history.",
+    descent: "Orion's descent engine firing. The highlands approach. Young and Duke are finally going down, six hours late but on target.",
+    touchdown: "Contact light. Orion has landed at Descartes. April 21, 1972. Young: Orion is finally here, Houston. Fantastic.",
+    stepOut: "Cabin depressurised. Opening the hatch. Welcome to the Descartes Highlands, " + n + ". Young will set the lunar high-jump record here.",
+  }),
+  "apollo-17": (n) => ({
+    flight: "Welcome aboard, " + n + ". Apollo 17. The last mission. The final crew to leave Earth for the Moon. This is history's closing chapter on the lunar surface.",
+    coast: "Evans stays in orbit aboard America. You ride Challenger down with Cernan and Schmitt. Schmitt is a geologist, the only scientist to walk on another world.",
+    orbit: "Lunar Orbit Insertion complete. Taurus-Littrow valley is a dark slash between towering massifs. It was chosen for its geological diversity: old highlands and young volcanic fill.",
+    targetLocked: "Target locked: 20.19 degrees North, 30.77 degrees East. Taurus-Littrow. Undocking Challenger for the final crewed lunar descent in the 20th century.",
+    descent: "Challenger's descent engine firing. The massifs rise on either side. Cernan guides the last crewed lander down between them.",
+    touchdown: "Contact light. Challenger has landed at Taurus-Littrow. December 11, 1972. Cernan: Houston, the Challenger has landed.",
+    stepOut: "Cabin depressurised. Opening the hatch. The last footprints, " + n + ". Make them count. Schmitt's geologist eyes are already scanning the regolith.",
+  }),
+};
+
+function getNarration(phase: GamePhase, playerName: string, mission: MissionSpec | null): string {
+  if (!mission) return "";
+  const n = playerName || "Commander";
+  const set = MISSION_NARRATION[mission.id];
+  if (set) {
+    const text = set(n)[phase];
+    if (text) return text;
   }
+  return "";
 }
 
-const PHASE_LABEL: Record<string, string> = {
+function getTouchdownLabel(mission: MissionSpec | null): string {
+  const lm = mission?.lm || "LM";
+  return lm + " Has Landed";
+}
+
+const PHASE_LABELS: Record<string, string> = {
   flight: "Trans-Lunar Injection",
   coast: "Translunar Coast",
   orbit: "Lunar Orbit Insertion",
   targetLocked: "Target Locked",
   descent: "Powered Descent",
-  touchdown: "The Eagle Has Landed",
   stepOut: "Opening Hatch",
 };
 
@@ -405,7 +447,9 @@ function FlightHUD() {
   const missionId = useGameStore((s) => s.missionId);
   const playerName = useAppStore((s) => s.player.name);
   const mission = useMemo(() => getMissionOrNull(missionId), [missionId]);
-  const label = t(`flight.phaseLabels.${phase}`, { defaultValue: "" });
+  const label = phase === "touchdown"
+    ? getTouchdownLabel(mission)
+    : (PHASE_LABELS[phase] || t(`flight.phaseLabels.${phase}`, { defaultValue: "" }));
   const narration = getNarration(phase, playerName, mission);
 
   const phases = [
