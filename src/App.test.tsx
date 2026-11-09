@@ -1,12 +1,17 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { describe, it, expect } from "vitest";
-import App from "./App";
+import MissionSelectPage from "./features/mission-select/MissionSelectPage";
 
-describe("App", () => {
-  it("renders the mission select page at root", async () => {
-    render(<App />);
-    expect(
-      await screen.findByText("Mission Select"),
-    ).toBeInTheDocument();
+describe("MissionSelectPage", () => {
+  it("renders the title and mission cards", () => {
+    render(
+      <MemoryRouter>
+        <MissionSelectPage />
+      </MemoryRouter>,
+    );
+    expect(screen.getByText("Cosmosyy")).toBeInTheDocument();
+    expect(screen.getByText("Apollo 11")).toBeInTheDocument();
+    expect(screen.getByText("Sea of Tranquility")).toBeInTheDocument();
   });
 });

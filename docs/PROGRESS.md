@@ -21,3 +21,5 @@
 | 2026-11-09 | P1-T08 | done | Zod schemas: Source, Hotspot, HeritageObject, NarrationCue, FlightBeat, MissionSpec; validate-content.ts via tsx; CI ready | P1-T09 |
 | 2026-11-09 | P1-T09 | deferred | Storybook deferred — not blocking A11; will add if time | — |
 | 2026-11-09 | P1-T10 | done | i18next: en.json with all UI strings; i18n/index.ts init; imported in main.tsx; tests 16/16; build passes | A11-01 |
+| 2026-11-09 | A11-07 | done | KeyPrompt component: top-centre bar, blink animation, flash on press, touch-tappable, reduced-motion support | A11-11 |
+| 2026-11-09 | A11-11 | partial | Mission Select page: name input (2-16 chars), 6 mission cards (A11 available, rest locked), XP/rank display, starfield bg; tests 16/16 | A11-01 |
