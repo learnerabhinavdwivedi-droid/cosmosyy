@@ -1,0 +1,93 @@
+{
+  "app": {
+    "title": "Cosmosyy",
+    "tagline": "Walk where they walked. Find what they left behind."
+  },
+  "missionSelect": {
+    "heading": "Choose Your Mission",
+    "enterName": "Enter your name",
+    "namePlaceholder": "Commander…",
+    "locked": "Locked",
+    "available": "Available",
+    "completed": "Completed",
+    "launch": "Launch Mission"
+  },
+  "flight": {
+    "skip": "Skip",
+    "pause": "Pause",
+    "speed1x": "1×",
+    "speed3x": "3×",
+    "beginDescent": "Begin descent",
+    "openHatch": "Open hatch"
+  },
+  "surface": {
+    "inspectPrompt": "Inspect",
+    "flagPrompt": "Plant flag",
+    "launchPrompt": "Launch home",
+    "freeCam": "Free camera",
+    "photoMode": "Photo mode",
+    "photoModeExit": "Photo mode — P to exit",
+    "help": "Help"
+  },
+  "inspect": {
+    "back": "Back",
+    "hotspot": "Hotspot {{number}}",
+    "source": "Source"
+  },
+  "report": {
+    "heading": "Mission Report",
+    "subheading": "Everything you found is still there today.",
+    "xpEarned": "XP earned",
+    "rank": "Rank",
+    "replay": "Replay {{mission}}",
+    "next": "Next mission: {{mission}}",
+    "comingSoon": "Coming soon"
+  },
+  "ranks": {
+    "cadet": "Cadet",
+    "pilot": "Pilot",
+    "commander": "Commander"
+  },
+  "xp": {
+    "land": "+{{amount}} XP — Landed!",
+    "object": "+{{amount}} XP — {{name}} found!",
+    "flag": "+{{amount}} XP — Flag planted!",
+    "complete": "+{{amount}} XP — Mission complete!"
+  },
+  "settings": {
+    "heading": "Settings",
+    "volume": "Volume",
+    "captions": "Captions",
+    "quality": "Quality",
+    "qualityLow": "Low",
+    "qualityMedium": "Medium",
+    "qualityHigh": "High",
+    "reducedMotion": "Reduced motion",
+    "controlHints": "Control hints"
+  },
+  "controls": {
+    "heading": "Controls",
+    "move": "Move",
+    "run": "Run",
+    "jump": "Jump",
+    "inspect": "Inspect",
+    "flag": "Plant flag",
+    "launch": "Launch",
+    "freeCam": "Free camera",
+    "photo": "Photo mode",
+    "help": "Help",
+    "back": "Back / Pause"
+  },
+  "loading": {
+    "heading": "Loading…",
+    "didYouKnow": "Did you know?"
+  },
+  "credits": {
+    "heading": "Credits",
+    "builtWith": "Built with"
+  },
+  "error": {
+    "heading": "Something went wrong",
+    "reload": "Reload"
+  }
+}
