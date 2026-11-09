@@ -1,42 +1,67 @@
 import { Howl, Howler } from "howler";
 import type { GamePhase } from "@/store/useGameStore";
 
-const NARRATION_FILES: Partial<Record<GamePhase, string>> = {
-  flight: "/audio/narration/flight.mp3",
-  coast: "/audio/narration/coast.mp3",
-  orbit: "/audio/narration/orbit.mp3",
-  targetLocked: "/audio/narration/targetLocked.mp3",
-  descent: "/audio/narration/descent.mp3",
-  touchdown: "/audio/narration/touchdown.mp3",
-  stepOut: "/audio/narration/stepOut.mp3",
-  explore: "/audio/narration/explore.mp3",
-  flagReady: "/audio/narration/flagReady.mp3",
-  flagPlanted: "/audio/narration/flagPlanted.mp3",
-  launch: "/audio/narration/launch.mp3",
-};
+const NARRATED_PHASES: GamePhase[] = [
+  "flight", "coast", "orbit", "targetLocked", "descent",
+  "touchdown", "stepOut", "explore", "flagReady", "flagPlanted", "launch",
+];
+
+function narrationPath(missionId: string, phase: GamePhase): string {
+  return `/audio/narration/${missionId}/${phase}.mp3`;
+}
+
+function fallbackPath(phase: GamePhase): string {
+  return `/audio/narration/${phase}.mp3`;
+}
 
 const howls = new Map<string, Howl>();
 let currentNarration: Howl | null = null;
 let volume = 0.9;
+let activeMissionId = "apollo-11";
 
-export function preloadNarration(): void {
-  for (const [phase, src] of Object.entries(NARRATION_FILES)) {
-    if (howls.has(phase)) continue;
+function getKey(missionId: string, phase: GamePhase): string {
+  return `${missionId}:${phase}`;
+}
+
+export function preloadNarration(missionId?: string): void {
+  const id = missionId || activeMissionId;
+  activeMissionId = id;
+
+  for (const phase of NARRATED_PHASES) {
+    const key = getKey(id, phase);
+    if (howls.has(key)) continue;
+
+    const primary = narrationPath(id, phase);
+    const fallback = fallbackPath(phase);
+
     howls.set(
-      phase,
-      new Howl({ src: [src], preload: true, volume }),
+      key,
+      new Howl({
+        src: [primary, fallback],
+        preload: true,
+        volume,
+      }),
     );
   }
 }
 
-export function playNarration(phase: GamePhase): void {
+export function playNarration(phase: GamePhase, missionId?: string): void {
+  const id = missionId || activeMissionId;
+
   if (currentNarration) {
     currentNarration.fade(currentNarration.volume(), 0, 300);
     const prev = currentNarration;
     setTimeout(() => prev.stop(), 350);
   }
 
-  const howl = howls.get(phase);
+  const key = getKey(id, phase);
+  let howl = howls.get(key);
+
+  if (!howl) {
+    const fallbackKey = getKey("apollo-11", phase);
+    howl = howls.get(fallbackKey);
+  }
+
   if (!howl) return;
   currentNarration = howl;
   howl.volume(volume);

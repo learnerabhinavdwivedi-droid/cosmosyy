@@ -1,0 +1,92 @@
+{
+  "id": "apollo-17",
+  "name": "Apollo 17",
+  "site": "Taurus-Littrow",
+  "date": "1972-12-11",
+  "evaSunTime": "1972-12-11T23:54:00Z",
+  "crew": {
+    "commander": "Eugene A. Cernan",
+    "lmp": "Harrison H. Schmitt",
+    "cmp": "Ronald E. Evans"
+  },
+  "lm": "Challenger",
+  "cm": "America",
+  "landing": {
+    "lat": 20.1908,
+    "lon": 30.7717,
+    "label": "Taurus-Littrow Valley"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null,
+    "metersPerUnit": 1,
+    "note": "Generic moon surface — no site-specific DTM available yet"
+  },
+  "objects": [
+    {
+      "id": "descent-stage",
+      "name": "Challenger Descent Stage",
+      "position": [0, 0, 0],
+      "description": "Lower half of Lunar Module Challenger. The last crewed spacecraft to land on the Moon. Cernan and Schmitt spent a record 75 hours on the surface with three EVAs totalling 22 hours.",
+      "xp": 50,
+      "source": "LROC imagery; Apollo 17 Traverse Map (NASA)"
+    },
+    {
+      "id": "flag",
+      "name": "American Flag",
+      "position": [-5, 0, 7],
+      "description": "The last flag planted on the Moon. Cernan's final words on the surface: 'We leave as we came and, God willing, as we shall return, with peace and hope for all mankind.'",
+      "xp": 50,
+      "source": "AS17-134-20382; Apollo 17 EVA-3 transcript"
+    },
+    {
+      "id": "lrv",
+      "name": "Lunar Roving Vehicle (LRV-3)",
+      "position": [100, 0, 25],
+      "description": "The third and final lunar rover. Cernan set the unofficial lunar speed record of 17.1 km/h on this vehicle. Parked at its final TV position to film the last human departure from the Moon.",
+      "xp": 50,
+      "source": "AS17-143-21933; LROC imagery"
+    },
+    {
+      "id": "alsep",
+      "name": "ALSEP Central Station",
+      "position": [-65, 0, -185],
+      "description": "Apollo 17's experiment suite — the most advanced of all Apollo packages. Included a lunar seismic profiling experiment, gravimeter, atmospheric composition experiment, and surface electrical properties experiment.",
+      "xp": 50,
+      "source": "Apollo 17 ALSEP deployment map (NASA)"
+    },
+    {
+      "id": "lrrr",
+      "name": "Laser Ranging Retroreflector",
+      "position": [-60, 0, -180],
+      "description": "The last retroreflector placed on the Moon. Together with the Apollo 11, 14, and 15 reflectors plus two French-built reflectors on Soviet Lunokhod rovers, it forms a network still used for precision measurements.",
+      "xp": 50,
+      "source": "Apollo 17 ALSEP deployment map (NASA)"
+    },
+    {
+      "id": "orange-soil",
+      "name": "Orange Soil Discovery Site",
+      "position": [45, 0, -120],
+      "description": "At Shorty Crater, Schmitt — the only geologist to walk on the Moon — discovered orange soil: tiny beads of volcanic glass erupted 3.7 billion years ago. One of the most important geological finds of the programme.",
+      "xp": 50,
+      "source": "AS17-137-20990; Apollo 17 Preliminary Science Report"
+    }
+  ],
+  "models": {
+    "lm": "/models/lunar-module.glb",
+    "astronaut": "/models/astronaut.glb"
+  },
+  "textures": {
+    "earth": "/textures/earth.jpg",
+    "bootprint": "/textures/bootprint.jpg"
+  },
+  "sources": [
+    {
+      "asset": "models/nasa-apollo-lunar-module.glb",
+      "credit": "NASA",
+      "url": "https://github.com/nasa/NASA-3D-Resources",
+      "licence": "Public domain (NASA media policy)"
+    }
+  ],
+  "_note": "Equipment positions approximate, based on Apollo 17 traverse maps and LROC imagery. Orange soil site at Shorty Crater, ~1.6km from LM (scaled down for gameplay)."
+}

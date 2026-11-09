@@ -158,7 +158,7 @@ export default function MissionSelectPage() {
     if (!playerName) return;
     gameAudio.unlock();
     unlockAudio();
-    preloadNarration();
+    preloadNarration(missionId);
     startMission(missionId);
     navigate(`/play/${missionId}`);
   };

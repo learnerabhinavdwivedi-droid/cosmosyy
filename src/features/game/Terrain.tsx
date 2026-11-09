@@ -20,12 +20,9 @@ function generatePlanarUVs(geo: THREE.BufferGeometry) {
   geo.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
 }
 
-export function Terrain() {
-  const geometry = useLoader(STLLoader, "/terrain/apollo11-site.stl");
-  const orthoTex = useLoader(
-    THREE.TextureLoader,
-    "/terrain/apollo11-ortho-4k.webp",
-  );
+export function STLTerrain({ stlPath, orthoPath }: { stlPath: string; orthoPath: string }) {
+  const geometry = useLoader(STLLoader, stlPath);
+  const orthoTex = useLoader(THREE.TextureLoader, orthoPath);
 
   const processedGeometry = useMemo(() => {
     const geo = geometry.clone();
@@ -42,11 +39,7 @@ export function Terrain() {
     const targetSize = 200;
     const s = targetSize / maxDim;
     geo.scale(s, s * 0.5, s);
-
-    // STL is Z-up, rotate to Y-up
     geo.rotateX(-Math.PI / 2);
-
-    // Generate UVs after final transform for orthophoto mapping
     generatePlanarUVs(geo);
 
     return geo;
@@ -69,6 +62,36 @@ export function Terrain() {
       position={[0, -0.5, 0]}
     />
   );
+}
+
+export function GenericTerrain() {
+  const moonTex = useLoader(THREE.TextureLoader, "/textures/moon-color-4k.webp");
+
+  const material = useMemo(() => {
+    moonTex.colorSpace = THREE.SRGBColorSpace;
+    moonTex.wrapS = THREE.RepeatWrapping;
+    moonTex.wrapT = THREE.RepeatWrapping;
+    moonTex.repeat.set(8, 8);
+    return new THREE.MeshStandardMaterial({
+      map: moonTex,
+      roughness: 0.98,
+      metalness: 0.0,
+    });
+  }, [moonTex]);
+
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]} receiveShadow>
+      <planeGeometry args={[200, 200, 64, 64]} />
+      <primitive object={material} attach="material" />
+    </mesh>
+  );
+}
+
+export function Terrain({ stlPath, orthoPath }: { stlPath?: string | null; orthoPath?: string | null }) {
+  if (stlPath && orthoPath) {
+    return <STLTerrain stlPath={stlPath} orthoPath={orthoPath} />;
+  }
+  return <GenericTerrain />;
 }
 
 export function GroundPlane() {

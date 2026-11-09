@@ -1,0 +1,92 @@
+{
+  "id": "apollo-16",
+  "name": "Apollo 16",
+  "site": "Descartes Highlands",
+  "date": "1972-04-21",
+  "evaSunTime": "1972-04-21T16:47:00Z",
+  "crew": {
+    "commander": "John W. Young",
+    "lmp": "Charles M. Duke Jr.",
+    "cmp": "Thomas K. Mattingly II"
+  },
+  "lm": "Orion",
+  "cm": "Casper",
+  "landing": {
+    "lat": -8.9734,
+    "lon": 15.4986,
+    "label": "Descartes Highlands"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null,
+    "metersPerUnit": 1,
+    "note": "Generic moon surface — no site-specific DTM available yet"
+  },
+  "objects": [
+    {
+      "id": "descent-stage",
+      "name": "Orion Descent Stage",
+      "position": [0, 0, 0],
+      "description": "Lower half of Lunar Module Orion. Young and Duke explored the Descartes highlands — a region geologists hoped was volcanic but turned out to be impact breccia.",
+      "xp": 50,
+      "source": "LROC imagery; Apollo 16 Traverse Map (NASA)"
+    },
+    {
+      "id": "flag",
+      "name": "American Flag",
+      "position": [-5, 0, 6],
+      "description": "Planted during EVA-1. The famous photo of Young saluting the flag while jumping off the ground was taken by Duke — Young's feet are clearly off the surface in lunar gravity.",
+      "xp": 50,
+      "source": "AS16-113-18339; LROC imagery"
+    },
+    {
+      "id": "lrv",
+      "name": "Lunar Roving Vehicle (LRV-2)",
+      "position": [85, 0, -15],
+      "description": "The second rover on the Moon. Young and Duke drove it to a maximum distance of 4.5 km from the LM during their three EVAs, covering 26.7 km total. Its TV camera broadcast the ascent liftoff live.",
+      "xp": 50,
+      "source": "AS16-107-17446; LROC imagery"
+    },
+    {
+      "id": "alsep",
+      "name": "ALSEP Central Station",
+      "position": [-30, 0, -80],
+      "description": "Apollo 16's experiment package included a passive seismometer, active seismometer (with mortar-launched grenades), magnetometer, and heat flow experiment. Transmitted data until 1977.",
+      "xp": 50,
+      "source": "Apollo 16 ALSEP deployment map (NASA)"
+    },
+    {
+      "id": "uv-camera",
+      "name": "Far Ultraviolet Camera/Spectrograph",
+      "position": [-12, 0, 8],
+      "description": "The first telescope operated from another world. George Carruthers' UV camera photographed Earth's geocorona, the Milky Way, the Large Magellanic Cloud, and nebulae — all in wavelengths blocked by Earth's atmosphere.",
+      "xp": 50,
+      "source": "AS16-114-18439; Apollo 16 UV astronomy results"
+    },
+    {
+      "id": "family-photo",
+      "name": "Duke Family Photo",
+      "position": [20, 0, -40],
+      "description": "Charlie Duke left a plastic-wrapped family photo on the surface — a portrait of himself, his wife Dorothy, and their sons Charles and Tom. The back reads: 'This is the family of Astronaut Duke from Planet Earth. Landed on the Moon, April 1972.'",
+      "xp": 50,
+      "source": "AS16-117-18841; Duke interview transcripts"
+    }
+  ],
+  "models": {
+    "lm": "/models/lunar-module.glb",
+    "astronaut": "/models/astronaut.glb"
+  },
+  "textures": {
+    "earth": "/textures/earth.jpg",
+    "bootprint": "/textures/bootprint.jpg"
+  },
+  "sources": [
+    {
+      "asset": "models/nasa-apollo-lunar-module.glb",
+      "credit": "NASA",
+      "url": "https://github.com/nasa/NASA-3D-Resources",
+      "licence": "Public domain (NASA media policy)"
+    }
+  ],
+  "_note": "Equipment positions approximate, based on Apollo 16 traverse maps and LROC imagery."
+}

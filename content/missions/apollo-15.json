@@ -1,0 +1,92 @@
+{
+  "id": "apollo-15",
+  "name": "Apollo 15",
+  "site": "Hadley Rille",
+  "date": "1971-07-30",
+  "evaSunTime": "1971-07-31T13:13:00Z",
+  "crew": {
+    "commander": "David R. Scott",
+    "lmp": "James B. Irwin",
+    "cmp": "Alfred M. Worden"
+  },
+  "lm": "Falcon",
+  "cm": "Endeavour",
+  "landing": {
+    "lat": 26.1322,
+    "lon": 3.6339,
+    "label": "Hadley-Apennine"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null,
+    "metersPerUnit": 1,
+    "note": "Generic moon surface — no site-specific DTM available yet"
+  },
+  "objects": [
+    {
+      "id": "descent-stage",
+      "name": "Falcon Descent Stage",
+      "position": [0, 0, 0],
+      "description": "Lower half of Lunar Module Falcon. Apollo 15 was the first 'J-mission' — a longer stay with more science, a rover, and three EVAs totalling over 18 hours outside.",
+      "xp": 50,
+      "source": "LROC imagery; Apollo 15 Traverse Map (NASA)"
+    },
+    {
+      "id": "flag",
+      "name": "American Flag",
+      "position": [-6, 0, 5],
+      "description": "Planted during EVA-1 with the Hadley Delta mountain and Hadley Rille visible in the background. One of the most photographed flag plantings of the programme.",
+      "xp": 50,
+      "source": "AS15-88-11863; LROC imagery"
+    },
+    {
+      "id": "lrv",
+      "name": "Lunar Roving Vehicle (LRV-1)",
+      "position": [95, 0, -20],
+      "description": "The first car on the Moon. A battery-powered, wire-mesh-wheeled buggy that let Scott and Irwin drive up to 12 km from the LM. Top speed: 13 km/h. Its TV camera, aimed by Houston, filmed the ascent stage liftoff.",
+      "xp": 50,
+      "source": "AS15-88-11901; LROC M111578606RE"
+    },
+    {
+      "id": "alsep",
+      "name": "ALSEP Central Station",
+      "position": [-60, 0, -110],
+      "description": "Apollo 15's experiment suite included a heat flow experiment (drilled into the surface), a lunar dust detector, and a solar wind spectrometer. Powered by an RTG, it ran until 1977.",
+      "xp": 50,
+      "source": "Apollo 15 ALSEP deployment map (NASA)"
+    },
+    {
+      "id": "lrrr",
+      "name": "Laser Ranging Retroreflector",
+      "position": [-55, 0, -105],
+      "description": "The largest retroreflector left on the Moon — 300 corner cubes compared to 100 on Apollo 11 and 14. Still the primary target for lunar laser ranging experiments today.",
+      "xp": 50,
+      "source": "Apollo 15 ALSEP deployment map (NASA)"
+    },
+    {
+      "id": "fallen-astronaut",
+      "name": "Fallen Astronaut Memorial",
+      "position": [-58, 0, -108],
+      "description": "A small aluminium sculpture by Paul Van Hoeydonck, placed by Scott alongside a plaque listing 14 astronauts and cosmonauts who had died. The only artwork on another world.",
+      "xp": 50,
+      "source": "AS15-88-11894; Apollo 15 EVA-3 transcript"
+    }
+  ],
+  "models": {
+    "lm": "/models/lunar-module.glb",
+    "astronaut": "/models/astronaut.glb"
+  },
+  "textures": {
+    "earth": "/textures/earth.jpg",
+    "bootprint": "/textures/bootprint.jpg"
+  },
+  "sources": [
+    {
+      "asset": "models/nasa-apollo-lunar-module.glb",
+      "credit": "NASA",
+      "url": "https://github.com/nasa/NASA-3D-Resources",
+      "licence": "Public domain (NASA media policy)"
+    }
+  ],
+  "_note": "Equipment positions approximate, based on Apollo 15 traverse maps and LROC imagery. LRV parked at final TV position east of LM."
+}

@@ -12,32 +12,12 @@ import { Stars, Text } from "@react-three/drei";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { gameAudio } from "@/lib/gameAudio";
+import { getMission, type HeritageObject } from "@/lib/missionData";
 import { LMDescent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
-import {
-  getApollo11SunPosition,
-  getApollo11EarthPosition,
-} from "./sunPosition";
-import missionData from "../../../content/missions/apollo-11.json";
+import { getSunPosition, getEarthPosition } from "./sunPosition";
 import * as THREE from "three";
 
-interface HeritageObjectDef {
-  id: string;
-  name: string;
-  position: [number, number, number];
-  description: string;
-  xp: number;
-}
-
-const OBJECTS: HeritageObjectDef[] = missionData.objects.map((o) => ({
-  id: o.id,
-  name: o.name,
-  position: o.position as [number, number, number],
-  description: o.description,
-  xp: o.xp,
-}));
-
-const TOTAL_OBJECTS = OBJECTS.length;
 const SCAN_RANGE = 5;
 
 function HoloParticles({ color, speed }: { color: string; speed: number }) {
@@ -254,8 +234,10 @@ function HeritageMarker({
 
 function ProximityDetector({
   setNearObjectId,
+  objects,
 }: {
   setNearObjectId: (id: string | null) => void;
+  objects: HeritageObject[];
 }) {
   const { camera } = useThree();
   const found = useGameStore((s) => s.objectsFoundThisRun);
@@ -265,7 +247,7 @@ function ProximityDetector({
     let nearest: string | null = null;
     let minDist = SCAN_RANGE;
 
-    for (const obj of OBJECTS) {
+    for (const obj of objects) {
       if (found.includes(obj.id)) continue;
       const dx = camera.position.x - obj.position[0];
       const dz = camera.position.z - obj.position[2];
@@ -539,7 +521,7 @@ function PlayerController() {
   return null;
 }
 
-function InspectCamera() {
+function InspectCamera({ objects }: { objects: HeritageObject[] }) {
   const { camera } = useThree();
   const inspecting = useGameStore((s) => s.inspecting);
   const phase = useGameStore((s) => s.phase);
@@ -547,7 +529,7 @@ function InspectCamera() {
 
   useFrame((_state, delta) => {
     if (phase !== "inspect" || !inspecting.objectId) return;
-    const obj = OBJECTS.find((o) => o.id === inspecting.objectId);
+    const obj = objects.find((o) => o.id === inspecting.objectId);
     if (!obj) return;
 
     lerpProgress.current = Math.min(lerpProgress.current + delta * 2, 1);
@@ -566,9 +548,9 @@ function InspectCamera() {
   return null;
 }
 
-function EarthInSky() {
+function EarthInSky({ lat, lon }: { lat: number; lon: number }) {
   const texture = useLoader(THREE.TextureLoader, "/textures/earth.jpg");
-  const earthPos = useMemo(() => getApollo11EarthPosition(), []);
+  const earthPos = useMemo(() => getEarthPosition(lat, lon), [lat, lon]);
   const ref = useRef<THREE.Mesh>(null);
 
   useFrame((_state, delta) => {
@@ -583,8 +565,8 @@ function EarthInSky() {
   );
 }
 
-function SunLight() {
-  const sunData = useMemo(() => getApollo11SunPosition(), []);
+function SunLight({ lat, lon, evaDate }: { lat: number; lon: number; evaDate: string }) {
+  const sunData = useMemo(() => getSunPosition(lat, lon, evaDate), [lat, lon, evaDate]);
 
   useEffect(() => {
     if (import.meta.env.DEV) {
@@ -616,11 +598,15 @@ function SunLight() {
 function SurfaceSceneContent({
   setNearObjectId,
   nearObjectId,
+  missionId,
 }: {
   setNearObjectId: (id: string | null) => void;
   nearObjectId: string | null;
+  missionId: string;
 }) {
   const found = useGameStore((s) => s.objectsFoundThisRun);
+  const mission = useMemo(() => getMission(missionId), [missionId]);
+  const objects = mission.objects;
 
   return (
     <>
@@ -634,14 +620,14 @@ function SurfaceSceneContent({
       />
 
       <ambientLight intensity={0.02} color="#333344" />
-      <SunLight />
+      <SunLight lat={mission.landing.lat} lon={mission.landing.lon} evaDate={mission.evaSunTime} />
 
       <Suspense fallback={null}>
-        <EarthInSky />
+        <EarthInSky lat={mission.landing.lat} lon={mission.landing.lon} />
       </Suspense>
 
       <Suspense fallback={<GroundPlane />}>
-        <Terrain />
+        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} />
       </Suspense>
       <GroundPlane />
 
@@ -649,7 +635,7 @@ function SurfaceSceneContent({
         <LMDescent position={[0, 0, 0]} scale={1} />
       </Suspense>
 
-      {OBJECTS.map((obj) => (
+      {objects.map((obj) => (
         <HeritageMarker
           key={obj.id}
           obj={obj}
@@ -663,18 +649,18 @@ function SurfaceSceneContent({
         <Footprints />
       </Suspense>
 
-      <ProximityDetector setNearObjectId={setNearObjectId} />
+      <ProximityDetector setNearObjectId={setNearObjectId} objects={objects} />
       <PlayerController />
-      <InspectCamera />
+      <InspectCamera objects={objects} />
     </>
   );
 }
 
-function InspectOverlay() {
+function InspectOverlay({ objects }: { objects: HeritageObject[] }) {
   const { t } = useTranslation();
   const objectId = useGameStore((s) => s.inspecting.objectId);
   const send = useGameStore((s) => s.send);
-  const obj = OBJECTS.find((o) => o.id === objectId);
+  const obj = objects.find((o) => o.id === objectId);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -719,7 +705,7 @@ function InspectOverlay() {
   );
 }
 
-function MiniRadar({ found }: { found: string[] }) {
+function MiniRadar({ found, objects }: { found: string[]; objects: HeritageObject[] }) {
   const [, setTick] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setTick((n) => n + 1), 200);
@@ -750,7 +736,7 @@ function MiniRadar({ found }: { found: string[] }) {
         }
         return null;
       })()}
-      {OBJECTS.filter((o) => o.id !== "descent-stage" && !found.includes(o.id)).map((obj) => {
+      {objects.filter((o) => o.id !== "descent-stage" && !found.includes(o.id)).map((obj) => {
         const dx = (obj.position[0] - px) / radarRange;
         const dz = (obj.position[2] - pz) / radarRange;
         const rx = dx * Math.cos(-heading) - dz * Math.sin(-heading);
@@ -765,7 +751,7 @@ function MiniRadar({ found }: { found: string[] }) {
   );
 }
 
-function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
+function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; objects: HeritageObject[] }) {
   const { t } = useTranslation();
   const phase = useGameStore((s) => s.phase);
   const found = useGameStore((s) => s.objectsFoundThisRun);
@@ -800,18 +786,18 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
   }, [evaSeconds]);
 
   const narration = useMemo(() => {
-    if (found.length >= TOTAL_OBJECTS) {
+    if (found.length >= objects.length) {
       return t("surface.narrationAllFound");
     }
     if (found.length > 0) {
-      return t("surface.narrationProgress", { found: found.length, total: TOTAL_OBJECTS });
+      return t("surface.narrationProgress", { found: found.length, total: objects.length });
     }
     return t("surface.narrationStart", { name: playerName || "" });
   }, [found.length, playerName, t]);
 
   const handleInteract = useCallback(() => {
     if (!nearObjectId || found.includes(nearObjectId) || !missionId) return;
-    const obj = OBJECTS.find((o) => o.id === nearObjectId);
+    const obj = objects.find((o) => o.id === nearObjectId);
     addFoundObject(nearObjectId);
     findObject(missionId, nearObjectId);
     send("START_INSPECT", { objectId: nearObjectId });
@@ -849,12 +835,12 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
   }, [phase, handleInteract, handleFlag, handleLaunch]);
 
   useEffect(() => {
-    if (found.length >= TOTAL_OBJECTS && phase === "explore") {
+    if (found.length >= objects.length && phase === "explore") {
       send("ALL_FOUND");
     }
   }, [found.length, phase, send]);
 
-  const nearObj = OBJECTS.find((o) => o.id === nearObjectId);
+  const nearObj = objects.find((o) => o.id === nearObjectId);
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex flex-col">
@@ -884,13 +870,13 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
       {/* Top-center: objects found */}
       <div className="mx-auto mt-4 rounded-lg bg-space-950/70 px-5 py-2 text-center backdrop-blur">
         <p className="font-mono text-sm text-regolith-200">
-          {t("surface.objectCount", { found: found.length, total: TOTAL_OBJECTS })}
+          {t("surface.objectCount", { found: found.length, total: objects.length })}
         </p>
       </div>
 
       {/* Top-right: mini radar */}
       <div className="absolute right-4 top-4 rounded-lg bg-space-950/60 p-1 backdrop-blur">
-        <MiniRadar found={found} />
+        <MiniRadar found={found} objects={objects} />
       </div>
 
       {/* XP toast */}
@@ -960,7 +946,9 @@ function SurfaceHUD({ nearObjectId }: { nearObjectId: string | null }) {
 
 export function SurfaceScene() {
   const phase = useGameStore((s) => s.phase);
+  const missionId = useGameStore((s) => s.missionId);
   const [nearObjectId, setNearObjectId] = useState<string | null>(null);
+  const mission = useMemo(() => getMission(missionId ?? "apollo-11"), [missionId]);
 
   const handleCanvasClick = useCallback(() => {
     document.body.requestPointerLock();
@@ -987,11 +975,12 @@ export function SurfaceScene() {
           <SurfaceSceneContent
             nearObjectId={nearObjectId}
             setNearObjectId={setNearObjectId}
+            missionId={missionId ?? "apollo-11"}
           />
         </Canvas>
       </div>
-      <SurfaceHUD nearObjectId={nearObjectId} />
-      {phase === "inspect" && <InspectOverlay />}
+      <SurfaceHUD nearObjectId={nearObjectId} objects={mission.objects} />
+      {phase === "inspect" && <InspectOverlay objects={mission.objects} />}
     </div>
   );
 }

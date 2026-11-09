@@ -1,0 +1,92 @@
+{
+  "id": "apollo-14",
+  "name": "Apollo 14",
+  "site": "Fra Mauro",
+  "date": "1971-02-05",
+  "evaSunTime": "1971-02-05T14:42:00Z",
+  "crew": {
+    "commander": "Alan B. Shepard Jr.",
+    "lmp": "Edgar D. Mitchell",
+    "cmp": "Stuart A. Roosa"
+  },
+  "lm": "Antares",
+  "cm": "Kitty Hawk",
+  "landing": {
+    "lat": -3.6453,
+    "lon": -17.4714,
+    "label": "Fra Mauro"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null,
+    "metersPerUnit": 1,
+    "note": "Generic moon surface — no site-specific DTM available yet"
+  },
+  "objects": [
+    {
+      "id": "descent-stage",
+      "name": "Antares Descent Stage",
+      "position": [0, 0, 0],
+      "description": "Lower half of Lunar Module Antares. After a tense manual landing following a computer abort signal, Shepard and Mitchell touched down at Fra Mauro — the original target for the ill-fated Apollo 13.",
+      "xp": 50,
+      "source": "LROC imagery; Apollo 14 Traverse Map (NASA)"
+    },
+    {
+      "id": "flag",
+      "name": "American Flag",
+      "position": [-5.0, 0, 5.5],
+      "description": "Planted during EVA-1 near the Lunar Module. Shepard, America's first man in space, was now the oldest person to walk on the Moon at age 47.",
+      "xp": 50,
+      "source": "AS14-66-9232; LROC imagery"
+    },
+    {
+      "id": "alsep",
+      "name": "ALSEP Central Station",
+      "position": [-55, 0, -170],
+      "description": "Apollo 14's experiment package included an active seismometer, a charged particle detector, and a cold cathode ion gauge. Powered by a plutonium RTG, it operated until 1977.",
+      "xp": 50,
+      "source": "Apollo 14 ALSEP deployment map (NASA)"
+    },
+    {
+      "id": "lrrr",
+      "name": "Laser Ranging Retroreflector",
+      "position": [-48, 0, -165],
+      "description": "An array of 100 fused-silica corner cubes, identical to the Apollo 11 unit. Still operational today — Earth-based observatories bounce laser pulses off it to measure the Earth-Moon distance with millimetre precision.",
+      "xp": 50,
+      "source": "Apollo 14 ALSEP deployment map (NASA)"
+    },
+    {
+      "id": "met",
+      "name": "MET (Modular Equipment Transporter)",
+      "position": [15, 0, -60],
+      "description": "Nicknamed the 'lunar rickshaw,' this two-wheeled hand cart carried tools, cameras, and sample bags during the EVAs. It was the only wheeled vehicle used before the Lunar Roving Vehicle of Apollo 15.",
+      "xp": 50,
+      "source": "AS14-68-9405; Apollo 14 surface photos"
+    },
+    {
+      "id": "golf-balls",
+      "name": "Shepard's Golf Balls",
+      "position": [8, 0, 12],
+      "description": "Alan Shepard attached a 6-iron head to a sample tool handle and hit two golf balls on live TV, famously claiming one went 'miles and miles.' Analysis later estimated about 40 yards. The balls are still out there.",
+      "xp": 50,
+      "source": "AS14-66-9337; Apollo 14 TV footage transcript"
+    }
+  ],
+  "models": {
+    "lm": "/models/lunar-module.glb",
+    "astronaut": "/models/astronaut.glb"
+  },
+  "textures": {
+    "earth": "/textures/earth.jpg",
+    "bootprint": "/textures/bootprint.jpg"
+  },
+  "sources": [
+    {
+      "asset": "models/nasa-apollo-lunar-module.glb",
+      "credit": "NASA",
+      "url": "https://github.com/nasa/NASA-3D-Resources",
+      "licence": "Public domain (NASA media policy)"
+    }
+  ],
+  "_note": "Equipment positions approximate, based on Apollo 14 traverse maps. Golf ball position is estimated from TV footage."
+}

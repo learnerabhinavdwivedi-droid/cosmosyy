@@ -4,6 +4,7 @@ import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 import { useGameStore, type GamePhase } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
+import { getMissionOrNull, type MissionSpec } from "@/lib/missionData";
 import * as THREE from "three";
 
 const EARTH = new THREE.Vector3(-28, 0, -20);
@@ -112,23 +113,33 @@ const BEAT_EVENTS = [
   { from: "stepOut" as GamePhase, event: "STEP_OUT" as const, delay: 3000 },
 ];
 
-function getNarration(phase: GamePhase, name: string): string {
-  const n = name || "Commander";
+function getNarration(phase: GamePhase, playerName: string, mission: MissionSpec | null): string {
+  const n = playerName || "Commander";
+  if (!mission) return "";
+  const site = mission.site;
+  const lat = mission.landing.lat;
+  const lon = mission.landing.lon;
+  const lmName = mission.lm || "the Lunar Module";
+  const cmName = mission.cm || "the Command Module";
+  const cmp = mission.crew.cmp.split(" ").pop() || "the CMP";
+  const cdr = mission.crew.commander.split(" ").pop() || "Commander";
+  const lmpName = mission.crew.lmp.split(" ").pop() || "the LMP";
+
   switch (phase) {
     case "flight":
-      return `Welcome aboard, ${n}. Apollo 11 is bound for the Moon. Your job: land at the Sea of Tranquility, then find what was left behind.`;
+      return "Welcome aboard, " + n + ". " + mission.name + " is bound for the Moon. Your job: land at " + site + ", then find what was left behind.";
     case "coast":
-      return `Michael Collins stays in orbit aboard Columbia. You ride Eagle down with Armstrong and Aldrin. 240,000 miles to go.`;
+      return cmp + " stays in orbit aboard " + cmName + ". You ride " + lmName + " down with " + cdr + " and " + lmpName + ". 240,000 miles to go.";
     case "orbit":
-      return `Lunar Orbit Insertion complete. The far side was silent and dark. Now the surface fills your window.`;
+      return "Lunar Orbit Insertion complete. The far side was silent and dark. Now the surface fills your window.";
     case "targetLocked":
-      return `Target locked: 0.67° North, 23.47° East. Sea of Tranquility. Undocking Eagle for powered descent.`;
+      return "Target locked: " + Math.abs(lat).toFixed(2) + String.fromCharCode(176) + " " + (lat >= 0 ? "North" : "South") + ", " + Math.abs(lon).toFixed(2) + String.fromCharCode(176) + " " + (lon >= 0 ? "East" : "West") + ". " + site + ". Undocking " + lmName + " for powered descent.";
     case "descent":
-      return `Eagle’s descent engine firing. Altitude dropping. Program alarms — ignore them. Almost there.`;
+      return lmName + "'s descent engine firing. Altitude dropping. Almost there.";
     case "touchdown":
-      return `Contact light. Engine stop. “The Eagle has landed.” July 20, 1969.`;
+      return "Contact light. Engine stop. " + lmName + " has landed. " + mission.date + ".";
     case "stepOut":
-      return `Cabin depressurised. Opening the hatch. One small step, ${n}.`;
+      return "Cabin depressurised. Opening the hatch. One small step, " + n + ".";
     default:
       return "";
   }
@@ -391,9 +402,11 @@ function FlightContent() {
 function FlightHUD() {
   const { t } = useTranslation();
   const phase = useGameStore((s) => s.phase);
+  const missionId = useGameStore((s) => s.missionId);
   const playerName = useAppStore((s) => s.player.name);
+  const mission = useMemo(() => getMissionOrNull(missionId), [missionId]);
   const label = t(`flight.phaseLabels.${phase}`, { defaultValue: "" });
-  const narration = getNarration(phase, playerName);
+  const narration = getNarration(phase, playerName, mission);
 
   const phases = [
     "flight",
@@ -427,7 +440,7 @@ function FlightHUD() {
       <div className="flex items-start justify-between px-4 pt-4">
         <div>
           <p className="text-xs font-medium tracking-wide text-regolith-400">
-            APOLLO 11
+            {mission?.name?.toUpperCase() || "APOLLO"}
           </p>
           <p className="font-display text-lg font-semibold text-signal">
             {label}

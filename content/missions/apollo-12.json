@@ -1,0 +1,92 @@
+{
+  "id": "apollo-12",
+  "name": "Apollo 12",
+  "site": "Ocean of Storms",
+  "date": "1969-11-19",
+  "evaSunTime": "1969-11-19T11:32:00Z",
+  "crew": {
+    "commander": "Charles \"Pete\" Conrad Jr.",
+    "lmp": "Alan L. Bean",
+    "cmp": "Richard F. Gordon Jr."
+  },
+  "lm": "Intrepid",
+  "cm": "Yankee Clipper",
+  "landing": {
+    "lat": -3.0124,
+    "lon": -23.4216,
+    "label": "Ocean of Storms"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null,
+    "metersPerUnit": 1,
+    "note": "Generic moon surface — no site-specific DTM available yet"
+  },
+  "objects": [
+    {
+      "id": "descent-stage",
+      "name": "Intrepid Descent Stage",
+      "position": [0, 0, 0],
+      "description": "Lower half of Lunar Module Intrepid. Conrad and Bean landed just 163 metres from their target — the unmanned Surveyor 3 probe that had been sitting on the Moon since April 1967.",
+      "xp": 50,
+      "source": "LROC imagery; Apollo 12 Traverse Map (NASA)"
+    },
+    {
+      "id": "flag",
+      "name": "American Flag",
+      "position": [-4.5, 0, 6.2],
+      "description": "Planted by Conrad and Bean during EVA-1. Like all Apollo flags, it has a horizontal rod to keep it extended. Bleached white by decades of UV radiation.",
+      "xp": 50,
+      "source": "AS12-47-6897; LROC M175428601RE"
+    },
+    {
+      "id": "alsep",
+      "name": "ALSEP Central Station",
+      "position": [-40, 0, -125],
+      "description": "The Apollo Lunar Surface Experiments Package — a suite of scientific instruments powered by a plutonium-238 RTG. Included a seismometer, magnetometer, solar wind spectrometer, and more. Transmitted data to Earth until September 1977.",
+      "xp": 50,
+      "source": "Apollo 12 ALSEP deployment map (NASA)"
+    },
+    {
+      "id": "surveyor-3",
+      "name": "Surveyor 3",
+      "position": [50, 0, -155],
+      "description": "NASA's unmanned probe that soft-landed on 20 April 1967, two and a half years before Apollo 12. Conrad and Bean walked to it, inspected it, and cut off its TV camera to bring back to Earth. The rest of Surveyor 3 is still here.",
+      "xp": 50,
+      "source": "AS12-48-7100; LROC imagery"
+    },
+    {
+      "id": "s-band-antenna",
+      "name": "S-Band Antenna",
+      "position": [3.2, 0, -5.8],
+      "description": "An erectable S-band antenna deployed near the LM to provide a high-gain communication link with Mission Control. Replaced the small LM antenna for better TV and data transmission.",
+      "xp": 50,
+      "source": "AS12-46-6726; Apollo 12 surface photos"
+    },
+    {
+      "id": "hand-tool-carrier",
+      "name": "Hand Tool Carrier",
+      "position": [-8.5, 0, 3.1],
+      "description": "A small carrier holding geological hand tools used during the EVAs — tongs, a scoop, core tubes, and sample bags. Left behind to save weight for the lunar samples being brought home.",
+      "xp": 50,
+      "source": "Apollo 12 EVA checklist (NASA)"
+    }
+  ],
+  "models": {
+    "lm": "/models/lunar-module.glb",
+    "astronaut": "/models/astronaut.glb"
+  },
+  "textures": {
+    "earth": "/textures/earth.jpg",
+    "bootprint": "/textures/bootprint.jpg"
+  },
+  "sources": [
+    {
+      "asset": "models/nasa-apollo-lunar-module.glb",
+      "credit": "NASA",
+      "url": "https://github.com/nasa/NASA-3D-Resources",
+      "licence": "Public domain (NASA media policy)"
+    }
+  ],
+  "_note": "Equipment positions approximate, based on Apollo 12 traverse maps and LROC imagery. Surveyor 3 position from LROC data (~163m from LM)."
+}

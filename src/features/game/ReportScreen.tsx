@@ -4,11 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore, getNextMissionId } from "@/store/useAppStore";
 import { Button } from "@/components/ui/button";
-import missionData from "../../../content/missions/apollo-11.json";
+import { getMission } from "@/lib/missionData";
 
 const XP_LAND = 50;
 const XP_COMPLETE = 100;
-const TOTAL_OBJECTS = missionData.objects.length;
 
 function AnimatedNumber({ target, duration = 1200 }: { target: number; duration?: number }) {
   const [display, setDisplay] = useState(0);
@@ -42,6 +41,9 @@ export function ReportScreen() {
   const addXp = useAppStore((s) => s.addXp);
   const startMission = useAppStore((s) => s.startMission);
 
+  const mission = useMemo(() => getMission(missionId ?? "apollo-11"), [missionId]);
+  const TOTAL_OBJECTS = mission.objects.length;
+
   const [showContent, setShowContent] = useState(false);
   const [showStats, setShowStats] = useState(false);
 
@@ -65,9 +67,7 @@ export function ReportScreen() {
 
   const nextMissionId = useMemo(() => missionId ? getNextMissionId(missionId) : null, [missionId]);
 
-  const missionName = missionId
-    ?.replace("-", " ")
-    .replace(/\b\w/g, (l) => l.toUpperCase()) ?? "";
+  const missionName = mission.name;
 
   const handleNextMission = () => {
     if (!nextMissionId) return;

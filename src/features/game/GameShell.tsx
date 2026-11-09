@@ -13,7 +13,8 @@ import { SurfaceScene } from "./SurfaceScene";
 import { ReportScreen } from "./ReportScreen";
 import { LMDescent, LMAscent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
-import { getApollo11SunPosition } from "./sunPosition";
+import { getSunPosition } from "./sunPosition";
+import { getMission } from "@/lib/missionData";
 import * as THREE from "three";
 
 const FLIGHT_PHASES = new Set<string>(["flight", "coast", "orbit", "targetLocked", "descent", "touchdown", "stepOut"]);
@@ -22,9 +23,14 @@ const ENGINE_PHASES = new Set<string>(["flight", "targetLocked", "descent", "lau
 
 function GameAudioController() {
   const prevPhase = useRef<GamePhase>("select");
+  const missionIdRef = useRef(useGameStore.getState().missionId);
 
   useEffect(() => {
-    preloadNarration();
+    const unsub = useGameStore.subscribe((s) => {
+      missionIdRef.current = s.missionId;
+    });
+    preloadNarration(missionIdRef.current ?? undefined);
+    return unsub;
   }, []);
 
   useEffect(() => {
@@ -33,19 +39,21 @@ function GameAudioController() {
       const prev = prevPhase.current;
       if (phase === prev) return;
       prevPhase.current = phase;
+      const mid = s.missionId ?? undefined;
 
       if (phase === "flight" && prev === "select") {
+        preloadNarration(mid);
         gameAudio.unlock();
         unlockAudio();
         gameAudio.playCountdown();
         setTimeout(() => {
           gameAudio.startEngine();
-          playNarration(phase);
+          playNarration(phase, mid);
         }, 1600);
         return;
       }
 
-      playNarration(phase);
+      playNarration(phase, mid);
 
       if (ENGINE_PHASES.has(phase) && !ENGINE_PHASES.has(prev)) {
         gameAudio.startEngine();
@@ -205,7 +213,9 @@ function AscentAnimator() {
 }
 
 function LaunchSceneContent() {
-  const sunData = getApollo11SunPosition();
+  const missionId = useGameStore((s) => s.missionId);
+  const mission = getMission(missionId ?? "apollo-11");
+  const sunData = getSunPosition(mission.landing.lat, mission.landing.lon, mission.evaSunTime);
 
   return (
     <>
@@ -217,7 +227,7 @@ function LaunchSceneContent() {
         color="#fff5e0"
       />
       <Suspense fallback={null}>
-        <Terrain />
+        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} />
       </Suspense>
       <GroundPlane />
       <Suspense fallback={null}>
