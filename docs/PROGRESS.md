@@ -9,3 +9,6 @@
 | 2026-11-08 | P0-T04 | done | Tailwind 4.3.5 + tokens.css (light/dark); @theme inline; build pass | P0-T05 |
 | 2026-11-08 | P0-T05 | done | oxlint + Prettier + Vitest 3.2.4 + CI workflow; all checks green | P0-T06 |
 | 2026-11-08 | P0-T06 | done | api/guide.ts: fail-closed, CORS allowlist, rate limit 20/h, Zod validation | P0 GATE |
+| 2026-11-09 | REPLAN | done | Scope changed to game-only (ADR 0004); removed museum/Mars/exam/cert/registry; 10-phases.md rewritten with 50+ task cards for 6 Apollo missions; AGENTS.md updated | P1-T01 |
+| 2026-11-09 | REPLAN-2 | done | 10-phases.md rewritten with A11-01–A11-14 task cards (Apollo 11 only, A1 quality) | P1-T01 |
+| 2026-11-09 | P1-T01 | done | Mission Archive tokens in tokens.css; dark-first palette; Tailwind @theme mapped; build passes | P1-T02 |
