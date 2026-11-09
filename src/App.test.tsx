@@ -3,8 +3,10 @@ import { describe, it, expect } from "vitest";
 import App from "./App";
 
 describe("App", () => {
-  it("renders the title", () => {
+  it("renders the mission select page at root", async () => {
     render(<App />);
-    expect(screen.getByText("Cosmosyy")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Mission Select"),
+    ).toBeInTheDocument();
   });
 });

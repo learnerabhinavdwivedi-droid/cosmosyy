@@ -1,12 +1,22 @@
-function App() {
+import { Suspense } from "react";
+import { RouterProvider } from "react-router-dom";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { router } from "@/router";
+
+function Loading() {
   return (
-    <div className="min-h-screen bg-bg text-fg flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-primary">Cosmosyy</h1>
-        <p className="mt-2 text-fg-muted">Explore the solar system</p>
-      </div>
+    <div className="flex min-h-screen items-center justify-center bg-bg text-fg">
+      <p className="text-fg-muted">Loading…</p>
     </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={<Loading />}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </ErrorBoundary>
+  );
+}

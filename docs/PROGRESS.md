@@ -17,3 +17,4 @@
 | 2026-11-09 | P1-T04 | done | 3D+game deps: three 0.187, R3F 9.8, drei 10.7, Rapier 2.2, ecctrl 2.0, Theatre 0.7, Howler, zustand 5, i18next, motion, react-router, three.quarks, astronomy-engine, Playwright, axe; build passes | P1-T05 |
 | 2026-11-09 | P1-T05 | done | zustand store: player, settings, progress, session; XP/rank system; persist key cosmosyy-v1; tests 16/16 | P1-T06 |
 | 2026-11-09 | P1-T06 | done | Audio service: Howler.js wrapper; register/play/stop/narrate; bus volumes (master/sfx/narration/music); duck; mute; caption callback; lint+typecheck pass | P1-T07 |
+| 2026-11-09 | P1-T07 | done | Routes: /, /flight/:id, /site/:id, /report/:id, /credits, /settings; lazy code-split; ErrorBoundary; tests 16/16; build passes | P1-T08 |
