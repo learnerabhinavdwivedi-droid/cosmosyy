@@ -15,6 +15,11 @@ Every asset, font, and non-MIT library used in this project.
 | --- | --- | --- | --- |
 | Earth Blue Marble | NASA Visible Earth (visibleearth.nasa.gov) | Public domain | US government work — preferred for H1 |
 | Moon surface map | USGS Astrogeology (astrogeology.usgs.gov) | Public domain | US government work — preferred for H1 |
+| Apollo Lunar Module GLB | NASA 3D Resources (github.com/nasa/NASA-3D-Resources) | Public domain | US government work; optimised with gltf-transform |
+| Astronaut GLB | NASA 3D Resources (github.com/nasa/NASA-3D-Resources) | Public domain | US government work; generic EMU suit, temporary stand-in |
+| Apollo 11 Landing Site STL | NASA 3D Resources (github.com/nasa/NASA-3D-Resources) | Public domain | US government work; 3D-printable relief model |
+| Earth texture (A) | NASA 3D Resources (github.com/nasa/NASA-3D-Resources) | Public domain | US government work |
+| Apollo Bootprint texture | NASA 3D Resources (github.com/nasa/NASA-3D-Resources) | Public domain | US government work |
 | Mars surface map | NASA/JPL (solarsystem.nasa.gov) | Public domain | US government work — preferred for H1 |
 | Planet texture pack (non-Earth/Moon/Mars) | Solar System Scope (solarsystemscope.com/textures) | CC BY 4.0 | Credit: "Textures by Solar System Scope" |
 | ESA imagery | ESA (sci.esa.int) | CC BY-SA 3.0 IGO [verify] | Do NOT ship in H1 until licence confirmed per-asset |
@@ -24,7 +29,7 @@ Every asset, font, and non-MIT library used in this project.
 
 | Font | Source | Licence |
 | --- | --- | --- |
-| Space Grotesk (variable) | Fontsource / Google Fonts | OFL-1.1 (SIL Open Font License) |
+| Barlow Condensed | Fontsource / Google Fonts | OFL-1.1 (SIL Open Font License) |
 | Inter (variable) | Fontsource / Google Fonts | OFL-1.1 |
 | JetBrains Mono (variable) | Fontsource / JetBrains | OFL-1.1 |
 

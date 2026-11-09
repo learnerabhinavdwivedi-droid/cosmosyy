@@ -1,0 +1,105 @@
+{
+  "id": "apollo-11",
+  "name": "Apollo 11",
+  "site": "Sea of Tranquility",
+  "date": "1969-07-20",
+  "evaSunTime": "1969-07-21T02:56:00Z",
+  "crew": {
+    "commander": "Neil A. Armstrong",
+    "lmp": "Edwin E. \"Buzz\" Aldrin Jr.",
+    "cmp": "Michael Collins"
+  },
+  "landing": {
+    "lat": 0.67409,
+    "lon": 23.47298,
+    "label": "Tranquility Base"
+  },
+  "terrain": {
+    "model": "/terrain/apollo11-site.stl",
+    "metersPerUnit": 1,
+    "note": "NASA 3D-Resources Apollo 11 Landing Site relief model"
+  },
+  "objects": [
+    {
+      "id": "descent-stage",
+      "name": "Eagle Descent Stage",
+      "position": [0, 0, 0],
+      "description": "Lower half of the Lunar Module Eagle. Served as the launch platform for the ascent stage. Bears a stainless-steel plaque: \"Here men from the planet Earth first set foot upon the Moon July 1969, A.D. We came in peace for all mankind.\"",
+      "xp": 50,
+      "source": "NASA-3D-Resources Apollo Lunar Module"
+    },
+    {
+      "id": "flag",
+      "name": "American Flag",
+      "position": [8, 0, 2],
+      "description": "Planted by Armstrong and Aldrin approximately 8 metres east of the LM. The nylon flag had a horizontal rod to keep it extended in the vacuum. After decades of unfiltered UV, it is almost certainly bleached white.",
+      "xp": 50,
+      "source": "Apollo Lunar Surface Journal, AS11-40-5874"
+    },
+    {
+      "id": "lrrr",
+      "name": "Laser Ranging Retroreflector",
+      "position": [1, 0, -20],
+      "description": "An array of 100 fused-silica corner-cube prisms. Still in use today — observatories on Earth fire a laser pulse at it and measure the round-trip time to track the Moon's orbit to centimetre precision.",
+      "xp": 50,
+      "source": "ALSJ photogrammetry; LROC shapefile APOLLO_11"
+    },
+    {
+      "id": "pse",
+      "name": "Passive Seismic Experiment",
+      "position": [-5, 0, -17],
+      "description": "Solar-powered seismometer deployed by Aldrin. Detected moonquakes, meteorite impacts, and the vibration from the ascent stage liftoff. Operated for 21 days before its power ran out.",
+      "xp": 50,
+      "source": "ALSJ photogrammetry; LROC shapefile APOLLO_11"
+    },
+    {
+      "id": "tv-camera",
+      "name": "TV Camera",
+      "position": [18, 0, 1],
+      "description": "The Westinghouse black-and-white TV camera that broadcast the first moonwalk to 600 million viewers. Armstrong set it on a tripod east of the LM to film the EVA.",
+      "xp": 50,
+      "source": "ALSJ traverse map; AS11-40-5952"
+    }
+  ],
+  "models": {
+    "lm": "/models/lunar-module.glb",
+    "astronaut": "/models/astronaut.glb"
+  },
+  "textures": {
+    "earth": "/textures/earth.jpg",
+    "bootprint": "/textures/bootprint.jpg"
+  },
+  "sources": [
+    {
+      "asset": "models/nasa-apollo-lunar-module.glb",
+      "credit": "NASA",
+      "url": "https://github.com/nasa/NASA-3D-Resources",
+      "licence": "Public domain (NASA media policy)"
+    },
+    {
+      "asset": "models/nasa-astronaut.glb",
+      "credit": "NASA",
+      "url": "https://github.com/nasa/NASA-3D-Resources",
+      "licence": "Public domain (NASA media policy)"
+    },
+    {
+      "asset": "terrain/nasa-apollo11-landing-site.stl",
+      "credit": "NASA",
+      "url": "https://github.com/nasa/NASA-3D-Resources",
+      "licence": "Public domain (NASA media policy)"
+    },
+    {
+      "asset": "textures/nasa-earth-a.jpg",
+      "credit": "NASA",
+      "url": "https://github.com/nasa/NASA-3D-Resources",
+      "licence": "Public domain (NASA media policy)"
+    },
+    {
+      "asset": "textures/nasa-apollo-bootprint.jpg",
+      "credit": "NASA",
+      "url": "https://github.com/nasa/NASA-3D-Resources",
+      "licence": "Public domain (NASA media policy)"
+    }
+  ],
+  "_note": "Object positions are approximate, from ALSJ photogrammetry and traverse maps. Exact positions pending LROC Apollo 11 shapefile data."
+}

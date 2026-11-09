@@ -4,9 +4,7 @@ import { createBrowserRouter } from "react-router-dom";
 const MissionSelectPage = lazy(
   () => import("@/features/mission-select/MissionSelectPage"),
 );
-const FlightPage = lazy(() => import("@/features/flight/FlightPage"));
-const SitePage = lazy(() => import("@/features/site/SitePage"));
-const ReportPage = lazy(() => import("@/features/report/ReportPage"));
+const GameShell = lazy(() => import("@/features/game/GameShell"));
 const CreditsPage = lazy(() => import("@/features/credits/CreditsPage"));
 const SettingsPage = lazy(() => import("@/features/settings/SettingsPage"));
 
@@ -28,9 +26,7 @@ function withSuspense(Component: React.ComponentType) {
 
 export const router = createBrowserRouter([
   { path: "/", element: withSuspense(MissionSelectPage) },
-  { path: "/flight/:missionId", element: withSuspense(FlightPage) },
-  { path: "/site/:missionId", element: withSuspense(SitePage) },
-  { path: "/report/:missionId", element: withSuspense(ReportPage) },
+  { path: "/play/:missionId", element: withSuspense(GameShell) },
   { path: "/credits", element: withSuspense(CreditsPage) },
   { path: "/settings", element: withSuspense(SettingsPage) },
 ]);
