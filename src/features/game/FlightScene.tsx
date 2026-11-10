@@ -6,6 +6,7 @@ import { Effects } from "./Effects";
 import { useGameStore, type GamePhase } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { getMissionOrNull, type MissionSpec } from "@/lib/missionData";
+import { gameAudio } from "@/lib/gameAudio";
 import * as THREE from "three";
 
 const EARTH = new THREE.Vector3(-28, 0, -20);
@@ -31,6 +32,7 @@ const WP_LAND = new THREE.Vector3(28, 0.2, -20);
 const LAND_SCENE = new THREE.Vector3(100, 0, 0);
 const LAND_DROP_START = 12;
 const LAND_CUT_AT = 0.3;
+const STAGE_SEP_AT = 0.35;
 
 const _orbitOut = new THREE.Vector3();
 function orbitPos(angle: number, out: THREE.Vector3): THREE.Vector3 {
@@ -91,9 +93,19 @@ function camTarget(
     _camPos.set(sp.x + 2, sp.y + 1.2, sp.z + 5);
     _camLook.copy(sp);
   } else if (phase === "coast") {
-    const pullback = 5 + progress * 6;
-    _camPos.set(sp.x + 3, sp.y + 2 + progress * 3, sp.z + pullback);
-    _camLook.copy(sp);
+    if (progress < STAGE_SEP_AT) {
+      const pullback = 5 + progress * 4;
+      _camPos.set(sp.x + 3, sp.y + 1.5, sp.z + pullback);
+      _camLook.copy(sp);
+    } else if (progress < STAGE_SEP_AT + 0.2) {
+      const sepT = (progress - STAGE_SEP_AT) / 0.2;
+      _camPos.set(sp.x + 4 + sepT * 4, sp.y + 2 + sepT * 2, sp.z + 8 + sepT * 3);
+      _camLook.copy(sp);
+    } else {
+      const pullback = 6 + (progress - 0.55) * 8;
+      _camPos.set(sp.x + 3, sp.y + 2 + progress * 3, sp.z + pullback);
+      _camLook.copy(sp);
+    }
   } else if (phase === "targetLocked") {
     _camPos.set(sp.x + 2, sp.y - 0.5, sp.z + 4);
     _camLook.copy(sp);
@@ -371,15 +383,21 @@ function FlightAnimator() {
   const saturnRef = useRef<THREE.Group>(null);
   const lmRef = useRef<THREE.Group>(null);
   const flameRef = useRef<THREE.Mesh>(null);
+  const boosterRef = useRef<THREE.Group>(null);
   const phaseRef = useRef(useGameStore.getState().phase);
   const elapsed = useRef(0);
   const lookRef = useRef(new THREE.Vector3(0, 0, -10));
   const landingCut = useRef(false);
+  const separated = useRef(false);
+  const sepPos = useRef(new THREE.Vector3());
+  const sepDir = useRef(new THREE.Vector3());
+  const sepTime = useRef(0);
 
   const { scene: saturnScene } = useGLTF("/models/saturn-v.glb");
   const { scene: lmScene } = useGLTF("/models/lunar-module.glb");
   const saturnClone = useMemo(() => saturnScene.clone(true), [saturnScene]);
   const lmClone = useMemo(() => lmScene.clone(true), [lmScene]);
+  const boosterClone = useMemo(() => saturnScene.clone(true), [saturnScene]);
 
   useEffect(
     () =>
@@ -387,6 +405,10 @@ function FlightAnimator() {
         if (s.phase !== phaseRef.current) {
           phaseRef.current = s.phase;
           elapsed.current = 0;
+          if (s.phase === "flight") {
+            separated.current = false;
+            sepTime.current = 0;
+          }
         }
       }),
     [],
@@ -403,6 +425,19 @@ function FlightAnimator() {
     const inLandingScene = (phase === "descent" && progress >= LAND_CUT_AT)
       || phase === "touchdown" || phase === "stepOut";
 
+    if (phase === "coast" && progress >= STAGE_SEP_AT && !separated.current) {
+      separated.current = true;
+      sepTime.current = 0;
+      sepPos.current.copy(_shipCopy);
+      _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.05, 1)));
+      sepDir.current.subVectors(_shipCopy, _aheadCopy).normalize();
+      gameAudio.playStaging();
+    }
+
+    if (separated.current) {
+      sepTime.current += dt;
+    }
+
     if (shipRef.current) {
       shipRef.current.position.copy(_shipCopy);
       if (inLandingScene) {
@@ -414,6 +449,25 @@ function FlightAnimator() {
         const dz = _aheadCopy.z - _shipCopy.z;
         if (dx * dx + dy * dy + dz * dz > 0.000001)
           shipRef.current.lookAt(_aheadCopy);
+      }
+    }
+
+    if (boosterRef.current) {
+      if (separated.current && phase !== "flight") {
+        boosterRef.current.visible = true;
+        const t = sepTime.current;
+        const drift = t * 1.2;
+        boosterRef.current.position.set(
+          sepPos.current.x + sepDir.current.x * drift,
+          sepPos.current.y + sepDir.current.y * drift - t * 0.1,
+          sepPos.current.z + sepDir.current.z * drift,
+        );
+        boosterRef.current.rotation.x = Math.PI / 2 + t * 0.15;
+        boosterRef.current.rotation.z = t * 0.08;
+        const fade = Math.max(0.15, 1 - t * 0.12);
+        boosterRef.current.scale.setScalar(0.5 * fade);
+      } else {
+        boosterRef.current.visible = false;
       }
     }
 
@@ -431,8 +485,8 @@ function FlightAnimator() {
 
     if (phase === "flight" || phase === "coast") landingCut.current = false;
 
-    const useLM = phase === "orbit" || phase === "targetLocked" || phase === "descent"
-      || phase === "touchdown" || phase === "stepOut";
+    const useLM = separated.current || phase === "orbit" || phase === "targetLocked"
+      || phase === "descent" || phase === "touchdown" || phase === "stepOut";
     if (saturnRef.current) saturnRef.current.visible = !useLM;
     if (lmRef.current) {
       lmRef.current.visible = useLM;
@@ -463,28 +517,35 @@ function FlightAnimator() {
   });
 
   return (
-    <group ref={shipRef}>
-      <group ref={saturnRef} scale={0.5} rotation={[Math.PI / 2, 0, 0]}>
-        <primitive object={saturnClone} />
+    <>
+      <group ref={shipRef}>
+        <group ref={saturnRef} scale={0.5} rotation={[Math.PI / 2, 0, 0]}>
+          <primitive object={saturnClone} />
+        </group>
+        <group ref={lmRef} scale={0.2} rotation={[Math.PI / 2, 0, 0]} visible={false}>
+          <primitive object={lmClone} />
+        </group>
+        <mesh
+          ref={flameRef}
+          rotation={[-Math.PI / 2, 0, 0]}
+          position={[0, 0, 1.5]}
+        >
+          <coneGeometry args={[0.2, 2, 12]} />
+          <meshBasicMaterial
+            color="#ffb36b"
+            transparent
+            opacity={0.85}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </mesh>
       </group>
-      <group ref={lmRef} scale={0.2} rotation={[Math.PI / 2, 0, 0]} visible={false}>
-        <primitive object={lmClone} />
+      <group ref={boosterRef} visible={false}>
+        <group scale={0.5} rotation={[Math.PI / 2, 0, 0]}>
+          <primitive object={boosterClone} />
+        </group>
       </group>
-      <mesh
-        ref={flameRef}
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, 0, 1.5]}
-      >
-        <coneGeometry args={[0.2, 2, 12]} />
-        <meshBasicMaterial
-          color="#ffb36b"
-          transparent
-          opacity={0.85}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </mesh>
-    </group>
+    </>
   );
 }
 

@@ -72,6 +72,42 @@ export function playRadioBeep(): void {
   playQuindar();
 }
 
+export function playStaging(): void {
+  const c = getCtx();
+  const t = c.currentTime;
+
+  const clank = c.createBufferSource();
+  clank.buffer = makeNoise(c, 0.4);
+  const clankBp = c.createBiquadFilter();
+  clankBp.type = "bandpass";
+  clankBp.frequency.value = 1800;
+  clankBp.Q.value = 2;
+  const clankEnv = c.createGain();
+  clankEnv.gain.setValueAtTime(0.3, t);
+  clankEnv.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+  clank.connect(clankBp);
+  clankBp.connect(clankEnv);
+  clankEnv.connect(getMaster());
+  clank.start(t);
+  clank.stop(t + 0.4);
+
+  const hiss = c.createBufferSource();
+  hiss.buffer = makeNoise(c, 1.2);
+  const hissBp = c.createBiquadFilter();
+  hissBp.type = "bandpass";
+  hissBp.frequency.value = 4000;
+  hissBp.Q.value = 0.4;
+  const hissEnv = c.createGain();
+  hissEnv.gain.setValueAtTime(0.001, t + 0.1);
+  hissEnv.gain.exponentialRampToValueAtTime(0.08, t + 0.2);
+  hissEnv.gain.exponentialRampToValueAtTime(0.001, t + 1.1);
+  hiss.connect(hissBp);
+  hissBp.connect(hissEnv);
+  hissEnv.connect(getMaster());
+  hiss.start(t);
+  hiss.stop(t + 1.2);
+}
+
 export function playAirlock(): void {
   const c = getCtx();
   const t = c.currentTime;
@@ -441,6 +477,7 @@ export const gameAudio = {
   playBeep,
   playQuindar,
   playRadioBeep,
+  playStaging,
   playAirlock,
   playThud,
   startEngine,
