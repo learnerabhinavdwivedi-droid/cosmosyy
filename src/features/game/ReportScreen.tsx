@@ -202,14 +202,16 @@ export function ReportScreen() {
             {nextMissionId && (
               <Button
                 onClick={handleNextMission}
-                className="w-full bg-signal text-space-950 hover:bg-signal/90 font-semibold text-base py-3"
+                aria-label={`Start next mission: ${nextMissionId.replace("apollo-", "Apollo ")}`}
+                className="w-full bg-signal text-space-950 hover:bg-signal/90 font-semibold text-base py-3 focus-visible:ring-2 focus-visible:ring-signal"
               >
                 {t("report.nextMission", { mission: nextMissionId.replace("apollo-", "Apollo ") })}
               </Button>
             )}
             <Button
               onClick={() => send("BACK_TO_SELECT")}
-              className="w-full bg-space-700 text-regolith-200 hover:bg-space-600"
+              aria-label="Return to mission select"
+              className="w-full bg-space-700 text-regolith-200 hover:bg-space-600 focus-visible:ring-2 focus-visible:ring-signal"
             >
               {t("report.backToMissions")}
             </Button>

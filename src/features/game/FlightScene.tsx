@@ -142,13 +142,13 @@ const DUR: Record<string, number> = {
 };
 
 const BEAT_EVENTS = [
-  { from: "flight" as GamePhase, event: "START_COAST" as const, delay: 20000 },
-  { from: "coast" as GamePhase, event: "REACH_ORBIT" as const, delay: 18000 },
-  { from: "orbit" as GamePhase, event: "LOCK_TARGET" as const, delay: 16000 },
+  { from: "flight" as GamePhase, event: "START_COAST" as const, delay: 16000 },
+  { from: "coast" as GamePhase, event: "REACH_ORBIT" as const, delay: 14000 },
+  { from: "orbit" as GamePhase, event: "LOCK_TARGET" as const, delay: 12000 },
   // targetLocked: GATE — player presses Space to BEGIN_DESCENT
-  { from: "descent" as GamePhase, event: "TOUCH_DOWN" as const, delay: 17000 },
+  { from: "descent" as GamePhase, event: "TOUCH_DOWN" as const, delay: 14000 },
   // touchdown: GATE — player presses Space to OPEN_HATCH
-  { from: "stepOut" as GamePhase, event: "STEP_OUT" as const, delay: 16000 },
+  { from: "stepOut" as GamePhase, event: "STEP_OUT" as const, delay: 10000 },
 ];
 
 type NarrationSet = Record<string, string>;

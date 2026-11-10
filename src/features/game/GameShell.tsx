@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, Suspense } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 import { useGameStore, type GamePhase } from "@/store/useGameStore";
@@ -147,23 +147,44 @@ function SceneFade({ phase }: { phase: string }) {
 export default function GameShell() {
   const { missionId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isDemo = searchParams.get("demo") === "1";
   const phase = useGameStore((s) => s.phase);
   const send = useGameStore((s) => s.send);
   const setMission = useGameStore((s) => s.setMission);
   const gameMission = useGameStore((s) => s.missionId);
   const playerName = useAppStore((s) => s.player.name);
   const prevPhase = useRef(phase);
+  const demoSkipped = useRef(false);
 
   useEffect(() => {
-    if (!playerName) {
+    if (!playerName && !isDemo) {
       navigate("/");
       return;
+    }
+    if (isDemo && !playerName) {
+      useAppStore.getState().setPlayerName("Commander");
     }
     if (missionId && gameMission !== missionId) {
       setMission(missionId);
       send("LAUNCH_MISSION");
     }
-  }, [missionId, gameMission, playerName, navigate, setMission, send]);
+  }, [missionId, gameMission, playerName, navigate, setMission, send, isDemo]);
+
+  useEffect(() => {
+    if (isDemo && phase === "flight" && !demoSkipped.current) {
+      demoSkipped.current = true;
+      const steps: Array<Parameters<typeof send>[0]> = [
+        "START_COAST", "REACH_ORBIT", "LOCK_TARGET",
+        "BEGIN_DESCENT", "TOUCH_DOWN", "OPEN_HATCH", "STEP_OUT",
+      ];
+      let delay = 0;
+      for (const step of steps) {
+        delay += 100;
+        setTimeout(() => send(step), delay);
+      }
+    }
+  }, [isDemo, phase, send]);
 
   useEffect(() => {
     if (phase === "select" && prevPhase.current !== "select") {
@@ -183,6 +204,11 @@ export default function GameShell() {
       {phase === "report" && <ReportScreen />}
       <SceneFade phase={phase} />
       <GameAudioController />
+      {isDemo && (
+        <div className="pointer-events-none fixed left-4 bottom-4 z-[60] rounded-full bg-warn/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-warn backdrop-blur">
+          Demo Mode
+        </div>
+      )}
       <DebugPanel />
     </div>
   );

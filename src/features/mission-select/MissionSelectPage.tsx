@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import { useAppStore } from "@/store/useAppStore";
@@ -157,7 +157,8 @@ function MissionCard({
       {!isLocked && (
         <Button
           onClick={onLaunch}
-          className="mt-4 w-full bg-signal text-space-950 hover:bg-signal/90 font-semibold"
+          aria-label={`Launch ${mission.name} mission to ${mission.site}`}
+          className="mt-4 w-full bg-signal text-space-950 hover:bg-signal/90 font-semibold focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-space-900"
         >
           {t("missionSelect.launch")}
         </Button>
@@ -176,7 +177,18 @@ export default function MissionSelectPage() {
   const getRank = useAppStore((s) => s.getRank);
   const startMission = useAppStore((s) => s.startMission);
 
+  const [searchParams] = useSearchParams();
+  const isDemo = searchParams.get("demo") === "1";
   const [nameInput, setNameInput] = useState(playerName);
+
+  useEffect(() => {
+    if (isDemo) {
+      if (!playerName) setPlayerName("Commander");
+      startMission("apollo-11");
+      navigate("/play/apollo-11?demo=1");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDemo]);
 
   const handleNameSubmit = () => {
     const trimmed = nameInput.trim();
@@ -244,12 +256,14 @@ export default function MissionSelectPage() {
                 onKeyDown={(e) => e.key === "Enter" && handleNameSubmit()}
                 placeholder={t("missionSelect.namePlaceholder")}
                 maxLength={16}
-                className="border-space-700 bg-space-800 text-regolith-200 placeholder:text-regolith-400/50 focus:border-signal"
+                aria-label="Commander name"
+                className="border-space-700 bg-space-800 text-regolith-200 placeholder:text-regolith-400/50 focus:border-signal focus-visible:ring-2 focus-visible:ring-signal"
               />
               <Button
                 onClick={handleNameSubmit}
                 disabled={nameInput.trim().length < 2}
-                className="bg-signal text-space-950 hover:bg-signal/90 font-semibold disabled:opacity-40"
+                aria-label="Confirm name"
+                className="bg-signal text-space-950 hover:bg-signal/90 font-semibold disabled:opacity-40 focus-visible:ring-2 focus-visible:ring-signal"
               >
                 GO
               </Button>
