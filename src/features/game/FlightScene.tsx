@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Stars, useGLTF } from "@react-three/drei";
 import { Effects } from "./Effects";
+import { EarthAtmosphere } from "./EarthAtmosphere";
 import { useGameStore, type GamePhase } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { getMissionOrNull, type MissionSpec } from "@/lib/missionData";
@@ -34,7 +35,6 @@ const LAND_DROP_START = 12;
 const LAND_CUT_AT = 0.3;
 const STAGE_SEP_AT = 0.35;
 
-const _orbitOut = new THREE.Vector3();
 function orbitPos(angle: number, out: THREE.Vector3): THREE.Vector3 {
   return out.set(
     MOON.x + ORBIT_R * Math.cos(angle),
@@ -238,17 +238,7 @@ const PHASE_LABELS: Record<string, string> = {
 /* ---- 3D ---- */
 
 function EarthSphere() {
-  const ref = useRef<THREE.Mesh>(null);
-  const tex = useLoader(THREE.TextureLoader, "/textures/earth.jpg");
-  useFrame((_, dt) => {
-    if (ref.current) ref.current.rotation.y += dt * 0.05;
-  });
-  return (
-    <mesh ref={ref} position={EARTH.toArray()}>
-      <sphereGeometry args={[5, 64, 64]} />
-      <meshStandardMaterial map={tex} />
-    </mesh>
-  );
+  return <EarthAtmosphere radius={5} position={EARTH} rotationSpeed={0.05} />;
 }
 
 function MoonSphere() {
@@ -307,7 +297,7 @@ function LandingMarker() {
     [],
   );
 
-  useFrame((_, _dt, frame) => {
+  useFrame(() => {
     const show =
       phaseRef.current === "orbit" ||
       phaseRef.current === "targetLocked" ||
@@ -365,11 +355,14 @@ function OrbitPath() {
     return new THREE.BufferGeometry().setFromPoints(pts);
   }, []);
 
+  const lineObj = useMemo(() => {
+    const mat = new THREE.LineBasicMaterial({ color: "#6ee7ff", transparent: true, opacity: 0.3 });
+    return new THREE.Line(geo, mat);
+  }, [geo]);
+
   return (
     <group ref={groupRef}>
-      <line geometry={geo}>
-        <lineBasicMaterial color="#6ee7ff" transparent opacity={0.3} />
-      </line>
+      <primitive object={lineObj} />
     </group>
   );
 }
@@ -605,15 +598,28 @@ function LandingGround() {
 function FlightContent() {
   return (
     <>
-      <ambientLight intensity={0.15} />
-      <directionalLight position={[30, 20, -40]} intensity={1.8} />
+      <ambientLight intensity={0.12} />
+      <hemisphereLight args={["#8899aa", "#22252a", 0.15]} />
+      <directionalLight position={[30, 20, -40]} intensity={2.2} color="#fff8e1" />
+      {/* Distant Sun Disc */}
+      <group position={[150, 100, -200]}>
+        <mesh>
+          <sphereGeometry args={[8, 32, 32]} />
+          <meshBasicMaterial color="#ffffff" />
+        </mesh>
+        <mesh scale={[1.8, 1.8, 1.8]}>
+          <sphereGeometry args={[8, 32, 32]} />
+          <meshBasicMaterial color="#fff4d0" transparent opacity={0.35} />
+        </mesh>
+      </group>
       <Stars
         radius={300}
-        depth={60}
-        count={6000}
-        factor={4}
+        depth={80}
+        count={8000}
+        factor={5}
+        saturation={0.6}
         fade
-        speed={0}
+        speed={0.2}
       />
       <Suspense fallback={null}>
         <EarthSphere />
@@ -778,7 +784,7 @@ export function FlightScene() {
       >
         <color attach="background" args={["#020408"]} />
         <FlightContent />
-        <Effects bloom bloomThreshold={0.8} bloomIntensity={0.7} />
+        <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} />
       </Canvas>
       <FlightHUD />
       {gate && (

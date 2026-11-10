@@ -232,13 +232,25 @@ function LaunchSceneContent() {
 
   return (
     <>
-      <Stars radius={300} depth={60} count={5000} factor={4} fade speed={0} />
-      <ambientLight intensity={0.02} color="#333344" />
+      <Stars radius={300} depth={80} count={8000} factor={5} saturation={0.6} fade speed={0.1} />
+      <ambientLight intensity={0.04} color="#333344" />
+      <hemisphereLight args={["#667788", "#222228", 0.08]} />
       <directionalLight
         position={sunData.direction}
         intensity={3.0}
         color="#fff5e0"
       />
+      {/* Sun Disc in Lunar Sky */}
+      <group position={[sunData.direction[0] * 3, sunData.direction[1] * 3, sunData.direction[2] * 3]}>
+        <mesh>
+          <sphereGeometry args={[14, 32, 32]} />
+          <meshBasicMaterial color="#ffffff" />
+        </mesh>
+        <mesh scale={[2.2, 2.2, 2.2]}>
+          <sphereGeometry args={[14, 32, 32]} />
+          <meshBasicMaterial color="#fff4d0" transparent opacity={0.35} />
+        </mesh>
+      </group>
       <Suspense fallback={null}>
         <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} />
       </Suspense>
@@ -273,7 +285,7 @@ function LaunchScene() {
       >
         <color attach="background" args={["#000000"]} />
         <LaunchSceneContent />
-        <Effects bloom bloomThreshold={0.8} bloomIntensity={0.6} />
+        <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} />
       </Canvas>
       <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-end pb-12">
         <div className="rounded-lg bg-space-950/85 px-6 py-3 backdrop-blur">

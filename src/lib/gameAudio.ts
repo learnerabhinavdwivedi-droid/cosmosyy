@@ -210,7 +210,8 @@ export function startEngine(): void {
   lfo.frequency.value = 2;
   lfoG.gain.value = 6;
   lfo.connect(lfoG);
-  lfoG.connect(oscs[0].frequency);
+  const osc0 = oscs[0];
+  if (osc0) lfoG.connect(osc0.frequency);
   lfo.start(t);
   oscs.push(lfo);
 
@@ -352,7 +353,8 @@ export function startSpaceDrone(): void {
   lfo.frequency.value = 0.08;
   lfoG.gain.value = 3;
   lfo.connect(lfoG);
-  lfoG.connect(oscs[2].frequency);
+  const osc2 = oscs[2];
+  if (osc2) lfoG.connect(osc2.frequency);
   lfo.start(t);
   oscs.push(lfo);
 

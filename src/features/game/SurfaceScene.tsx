@@ -12,10 +12,12 @@ import { Stars, Text } from "@react-three/drei";
 import { Effects } from "./Effects";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
+import { Howl } from "howler";
 import { gameAudio } from "@/lib/gameAudio";
 import { getMission, type HeritageObject } from "@/lib/missionData";
 import { LMDescent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
+import { EarthAtmosphere } from "./EarthAtmosphere";
 import { getSunPosition, getEarthPosition } from "./sunPosition";
 import * as THREE from "three";
 
@@ -38,6 +40,7 @@ function HoloParticles({ color, speed }: { color: string; speed: number }) {
   useFrame(() => {
     if (!ref.current) return;
     const posAttr = ref.current.geometry.attributes.position;
+    if (!posAttr) return;
     const t = Date.now() * 0.001 * speed;
     for (let i = 0; i < count; i++) {
       const baseAngle = (i / count) * Math.PI * 2;
@@ -76,7 +79,7 @@ function HeritageMarker({
   isFound,
   isNear,
 }: {
-  obj: HeritageObjectDef;
+  obj: HeritageObject;
   isFound: boolean;
   isNear: boolean;
 }) {
@@ -295,12 +298,17 @@ function DustParticles() {
   useFrame((_s, delta) => {
     if (!ref.current) return;
     const posAttr = ref.current.geometry.attributes.position;
+    if (!posAttr) return;
     const lt = lifetimes.current;
     const vel = velocities.current;
+    if (!lt || !vel) return;
 
     for (let i = 0; i < count; i++) {
-      lt[i] -= delta;
-      if (lt[i] <= 0) {
+      const currentLt = lt[i];
+      if (currentLt === undefined) continue;
+      const newLt = currentLt - delta;
+      lt[i] = newLt;
+      if (newLt <= 0) {
         if (playerState.isMoving) {
           const spread = 0.4;
           posAttr.setXYZ(
@@ -318,10 +326,13 @@ function DustParticles() {
           lt[i] = 0.1;
         }
       } else {
-        const x = posAttr.getX(i) + vel[i * 3] * delta;
-        const y = posAttr.getY(i) + vel[i * 3 + 1] * delta;
-        const z = posAttr.getZ(i) + vel[i * 3 + 2] * delta;
-        vel[i * 3 + 1] -= 0.08 * delta;
+        const vx = vel[i * 3] ?? 0;
+        const vy = vel[i * 3 + 1] ?? 0;
+        const vz = vel[i * 3 + 2] ?? 0;
+        const x = posAttr.getX(i) + vx * delta;
+        const y = posAttr.getY(i) + vy * delta;
+        const z = posAttr.getZ(i) + vz * delta;
+        vel[i * 3 + 1] = vy - 0.08 * delta;
         posAttr.setXYZ(i, x, Math.max(0, y), z);
       }
     }
@@ -365,6 +376,7 @@ function AmbientDust() {
   useFrame(() => {
     if (!ref.current) return;
     const posAttr = ref.current.geometry.attributes.position;
+    if (!posAttr) return;
     const t = Date.now() * 0.0001;
     for (let i = 0; i < count; i++) {
       const baseY = 0.1 + (i % 7) * 0.15;
@@ -595,20 +607,8 @@ function InspectCamera({ objects }: { objects: HeritageObject[] }) {
 }
 
 function EarthInSky({ lat, lon }: { lat: number; lon: number }) {
-  const texture = useLoader(THREE.TextureLoader, "/textures/earth.jpg");
   const earthPos = useMemo(() => getEarthPosition(lat, lon), [lat, lon]);
-  const ref = useRef<THREE.Mesh>(null);
-
-  useFrame((_state, delta) => {
-    if (ref.current) ref.current.rotation.y += delta * 0.01;
-  });
-
-  return (
-    <mesh ref={ref} position={earthPos}>
-      <sphereGeometry args={[8, 64, 64]} />
-      <meshBasicMaterial map={texture} />
-    </mesh>
-  );
+  return <EarthAtmosphere radius={8} position={earthPos} rotationSpeed={0.01} />;
 }
 
 function SunLight({ lat, lon, evaDate }: { lat: number; lon: number; evaDate: string }) {
@@ -623,21 +623,34 @@ function SunLight({ lat, lon, evaDate }: { lat: number; lon: number; evaDate: st
   }, [sunData]);
 
   return (
-    <directionalLight
-      position={sunData.direction}
-      intensity={3.0}
-      color="#fff5e0"
-      castShadow
-      shadow-mapSize-width={4096}
-      shadow-mapSize-height={4096}
-      shadow-camera-near={1}
-      shadow-camera-far={300}
-      shadow-camera-left={-60}
-      shadow-camera-right={60}
-      shadow-camera-top={60}
-      shadow-camera-bottom={-60}
-      shadow-bias={-0.0002}
-    />
+    <>
+      <directionalLight
+        position={sunData.direction}
+        intensity={3.0}
+        color="#fff5e0"
+        castShadow
+        shadow-mapSize-width={4096}
+        shadow-mapSize-height={4096}
+        shadow-camera-near={1}
+        shadow-camera-far={300}
+        shadow-camera-left={-60}
+        shadow-camera-right={60}
+        shadow-camera-top={60}
+        shadow-camera-bottom={-60}
+        shadow-bias={-0.0002}
+      />
+      {/* Sun Disc & Corona in the Lunar Sky */}
+      <group position={[sunData.direction[0] * 3, sunData.direction[1] * 3, sunData.direction[2] * 3]}>
+        <mesh>
+          <sphereGeometry args={[14, 32, 32]} />
+          <meshBasicMaterial color="#ffffff" />
+        </mesh>
+        <mesh scale={[2.2, 2.2, 2.2]}>
+          <sphereGeometry args={[14, 32, 32]} />
+          <meshBasicMaterial color="#fff4d0" transparent opacity={0.35} />
+        </mesh>
+      </group>
+    </>
   );
 }
 
@@ -658,14 +671,16 @@ function SurfaceSceneContent({
     <>
       <Stars
         radius={300}
-        depth={60}
-        count={5000}
-        factor={4}
+        depth={80}
+        count={8000}
+        factor={5}
+        saturation={0.6}
         fade
-        speed={0}
+        speed={0.1}
       />
 
-      <ambientLight intensity={0.02} color="#333344" />
+      <ambientLight intensity={0.04} color="#333344" />
+      <hemisphereLight args={["#667788", "#222228", 0.08]} />
       <SunLight lat={mission.landing.lat} lon={mission.landing.lon} evaDate={mission.evaSunTime} />
 
       <Suspense fallback={null}>
@@ -703,12 +718,13 @@ function SurfaceSceneContent({
   );
 }
 
-function InspectOverlay({ objects }: { objects: HeritageObject[] }) {
+function InspectOverlay({ objects, missionId }: { objects: HeritageObject[]; missionId: string }) {
   const { t } = useTranslation();
   const objectId = useGameStore((s) => s.inspecting.objectId);
   const send = useGameStore((s) => s.send);
   const obj = objects.find((o) => o.id === objectId);
   const [visible, setVisible] = useState(false);
+  const howlRef = useRef<Howl | null>(null);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -722,6 +738,20 @@ function InspectOverlay({ objects }: { objects: HeritageObject[] }) {
       setVisible(false);
     };
   }, [send]);
+
+  useEffect(() => {
+    if (!objectId) return;
+    const src = `/audio/heritage/${missionId}/${objectId}.mp3`;
+    const howl = new Howl({ src: [src], volume: 0.85 });
+    howlRef.current = howl;
+    gameAudio.playQuindar();
+    setTimeout(() => howl.play(), 350);
+    return () => {
+      howl.fade(howl.volume(), 0, 400);
+      setTimeout(() => howl.unload(), 500);
+      howlRef.current = null;
+    };
+  }, [objectId, missionId]);
 
   if (!obj) return null;
 
@@ -1025,11 +1055,11 @@ export function SurfaceScene() {
             setNearObjectId={setNearObjectId}
             missionId={missionId ?? "apollo-11"}
           />
-          <Effects bloom vignette bloomIntensity={0.4} vignetteDarkness={0.6} />
+          <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} vignetteDarkness={0.6} />
         </Canvas>
       </div>
       <SurfaceHUD nearObjectId={nearObjectId} objects={mission.objects} />
-      {phase === "inspect" && <InspectOverlay objects={mission.objects} />}
+      {phase === "inspect" && <InspectOverlay objects={mission.objects} missionId={missionId ?? "apollo-11"} />}
     </div>
   );
 }

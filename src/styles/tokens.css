@@ -19,6 +19,17 @@
   --warn-500: #F2B33D;
   --bad-500: #E5484D;
 
+  /* Space & Astronomy tokens */
+  --sun: #FFF8E1;
+  --sun-ambient: #8899AA;
+  --lunar-shadow: #222228;
+  --earth-halo: #38BDF8;
+  --flame-core: #BBF0FF;
+  --flame-outer: #FF9933;
+  --beacon-gold: #FFD36E;
+  --scan-blue: #00D4FF;
+  --found-green: #66FF99;
+
   /* Semantic tokens — components use these */
   --bg: var(--space-950);
   --surface: var(--space-900);
@@ -120,4 +131,24 @@
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 107, 44, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(255, 107, 44, 0.7); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
