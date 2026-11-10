@@ -471,6 +471,54 @@ export function stopLunarHum(): void {
   }, 2200);
 }
 
+export function playProximityPing(): void {
+  const c = getCtx();
+  const t = c.currentTime;
+  const osc = c.createOscillator();
+  const gain = c.createGain();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(880, t);
+  osc.frequency.exponentialRampToValueAtTime(1320, t + 0.08);
+  gain.gain.setValueAtTime(0.06, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+  osc.connect(gain);
+  gain.connect(getMaster());
+  osc.start(t);
+  osc.stop(t + 0.2);
+}
+
+export function playScanTick(): void {
+  const c = getCtx();
+  const t = c.currentTime;
+  const osc = c.createOscillator();
+  const gain = c.createGain();
+  osc.type = "triangle";
+  osc.frequency.value = 1200;
+  gain.gain.setValueAtTime(0.04, t);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+  osc.connect(gain);
+  gain.connect(getMaster());
+  osc.start(t);
+  osc.stop(t + 0.06);
+}
+
+export function playScanComplete(): void {
+  const c = getCtx();
+  const t = c.currentTime;
+  for (let i = 0; i < 3; i++) {
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 660 + i * 220;
+    gain.gain.setValueAtTime(0.08, t + i * 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.08 + 0.15);
+    osc.connect(gain);
+    gain.connect(getMaster());
+    osc.start(t + i * 0.08);
+    osc.stop(t + i * 0.08 + 0.2);
+  }
+}
+
 // ── export ───────────────────────────────────────────────────
 
 export const gameAudio = {
@@ -493,4 +541,7 @@ export const gameAudio = {
   stopSpaceDrone,
   startLunarHum,
   stopLunarHum,
+  playProximityPing,
+  playScanTick,
+  playScanComplete,
 } as const;

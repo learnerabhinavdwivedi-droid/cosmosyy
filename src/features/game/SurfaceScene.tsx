@@ -74,59 +74,51 @@ function HoloParticles({ color, speed }: { color: string; speed: number }) {
   );
 }
 
+const NAME_VISIBLE_RANGE = 8;
+const PROXIMITY_RANGE = 15;
+
 function HeritageMarker({
   obj,
   isFound,
   isNear,
+  distance,
 }: {
   obj: HeritageObject;
   isFound: boolean;
   isNear: boolean;
+  distance: number;
 }) {
   const outerRingRef = useRef<THREE.Mesh>(null);
   const innerRingRef = useRef<THREE.Mesh>(null);
-  const beamRef = useRef<THREE.Mesh>(null);
   const pulseRef = useRef<THREE.Mesh>(null);
-  const scanRef = useRef<THREE.Mesh>(null);
 
   useFrame(() => {
     const t = Date.now() * 0.001;
 
     if (outerRingRef.current) {
       outerRingRef.current.rotation.z = t * 0.5;
+      const baseOpacity = isNear ? 0.5 : 0.2;
       (outerRingRef.current.material as THREE.MeshBasicMaterial).opacity =
-        0.6 + Math.sin(t * 3) * 0.2;
+        baseOpacity + Math.sin(t * 3) * 0.1;
     }
     if (innerRingRef.current) {
       innerRingRef.current.rotation.z = -t * 0.8;
+      const baseOpacity = isNear ? 0.4 : 0.15;
       (innerRingRef.current.material as THREE.MeshBasicMaterial).opacity =
-        0.5 + Math.sin(t * 2 + 1) * 0.2;
-    }
-    if (beamRef.current) {
-      const beamOpacity = isNear ? 0.35 + Math.sin(t * 4) * 0.15 : 0.12;
-      (beamRef.current.material as THREE.MeshBasicMaterial).opacity = beamOpacity;
+        baseOpacity + Math.sin(t * 2 + 1) * 0.1;
     }
     if (pulseRef.current) {
       const pulseScale = 1 + Math.sin(t * 2) * 0.3;
       pulseRef.current.scale.set(pulseScale, 1, pulseScale);
       (pulseRef.current.material as THREE.MeshBasicMaterial).opacity =
-        0.15 + Math.sin(t * 2) * 0.1;
-    }
-    if (scanRef.current) {
-      if (isNear) {
-        const scanY = (t * 1.5) % 3;
-        scanRef.current.position.y = scanY;
-        (scanRef.current.material as THREE.MeshBasicMaterial).opacity = 0.3;
-      } else {
-        (scanRef.current.material as THREE.MeshBasicMaterial).opacity = 0;
-      }
+        isNear ? 0.12 : 0.05;
     }
   });
 
   if (obj.id === "descent-stage") return null;
 
   const baseColor = isFound ? "#66ff99" : isNear ? "#00d4ff" : "#ffd36e";
-  const beamColor = isFound ? "#66ff99" : "#ffd36e";
+  const showName = distance < NAME_VISIBLE_RANGE;
 
   return (
     <group position={obj.position}>
@@ -135,11 +127,11 @@ function HeritageMarker({
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, 0.1, 0]}
       >
-        <torusGeometry args={[1.5, 0.04, 8, 48]} />
+        <torusGeometry args={[1.2, 0.03, 8, 48]} />
         <meshBasicMaterial
           color={baseColor}
           transparent
-          opacity={0.7}
+          opacity={0.3}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
@@ -150,11 +142,11 @@ function HeritageMarker({
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, 0.15, 0]}
       >
-        <torusGeometry args={[0.9, 0.03, 8, 32]} />
+        <torusGeometry args={[0.7, 0.02, 8, 32]} />
         <meshBasicMaterial
           color={baseColor}
           transparent
-          opacity={0.5}
+          opacity={0.2}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
@@ -165,71 +157,33 @@ function HeritageMarker({
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, 0.05, 0]}
       >
-        <circleGeometry args={[2, 32]} />
+        <circleGeometry args={[1.5, 32]} />
         <meshBasicMaterial
           color={baseColor}
           transparent
-          opacity={0.15}
+          opacity={0.08}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           side={THREE.DoubleSide}
         />
       </mesh>
 
-      {!isFound && (
-        <mesh ref={beamRef} position={[0, 5, 0]}>
-          <cylinderGeometry args={[0.08, 0.15, 10, 8]} />
-          <meshBasicMaterial
-            color={beamColor}
-            transparent
-            opacity={0.15}
-            blending={THREE.AdditiveBlending}
-            depthWrite={false}
-          />
-        </mesh>
-      )}
-
       {isNear && !isFound && (
-        <mesh ref={scanRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-          <torusGeometry args={[0.6, 0.02, 6, 24]} />
-          <meshBasicMaterial
-            color="#00d4ff"
-            transparent
-            opacity={0.3}
-            blending={THREE.AdditiveBlending}
-            depthWrite={false}
-          />
-        </mesh>
+        <HoloParticles color={baseColor} speed={2} />
       )}
 
-      {!isFound && (
-        <HoloParticles color={baseColor} speed={isNear ? 2 : 0.8} />
-      )}
-
-      <Text
-        position={[0, 2.8, 0]}
-        fontSize={0.32}
-        color={isFound ? "#66ff99" : "#ffffff"}
-        anchorX="center"
-        anchorY="bottom"
-        outlineWidth={0.03}
-        outlineColor="#000000"
-      >
-        {obj.name}
-        {isFound ? " ✓" : ""}
-      </Text>
-
-      {isNear && !isFound && (
+      {showName && (
         <Text
-          position={[0, 2.4, 0]}
-          fontSize={0.2}
-          color="#00d4ff"
+          position={[0, 2.2, 0]}
+          fontSize={0.28}
+          color={isFound ? "#66ff99" : "#ffffff"}
           anchorX="center"
           anchorY="bottom"
-          outlineWidth={0.02}
+          outlineWidth={0.03}
           outlineColor="#000000"
         >
-          {"[E] SCAN"}
+          {obj.name}
+          {isFound ? " ✓" : ""}
         </Text>
       )}
     </group>
@@ -238,29 +192,55 @@ function HeritageMarker({
 
 function ProximityDetector({
   setNearObjectId,
+  setObjectDistances,
   objects,
 }: {
   setNearObjectId: (id: string | null) => void;
+  setObjectDistances: (d: Record<string, number>) => void;
   objects: HeritageObject[];
 }) {
   const { camera } = useThree();
   const found = useGameStore((s) => s.objectsFoundThisRun);
   const prevNearest = useRef<string | null>(null);
+  const prevProximity = useRef<Set<string>>(new Set());
+  const lastPingTime = useRef(0);
 
   useFrame(() => {
     let nearest: string | null = null;
     let minDist = SCAN_RANGE;
+    const distances: Record<string, number> = {};
+    const nowInProximity = new Set<string>();
 
     for (const obj of objects) {
-      if (found.includes(obj.id)) continue;
       const dx = camera.position.x - obj.position[0];
       const dz = camera.position.z - obj.position[2];
       const dist = Math.sqrt(dx * dx + dz * dz);
+      distances[obj.id] = dist;
+
+      if (found.includes(obj.id) || obj.id === "descent-stage") continue;
+
+      if (dist < PROXIMITY_RANGE) {
+        nowInProximity.add(obj.id);
+      }
+
       if (dist < minDist) {
         minDist = dist;
         nearest = obj.id;
       }
     }
+
+    setObjectDistances(distances);
+
+    for (const id of nowInProximity) {
+      if (!prevProximity.current.has(id)) {
+        const now = Date.now();
+        if (now - lastPingTime.current > 2000) {
+          gameAudio.playProximityPing();
+          lastPingTime.current = now;
+        }
+      }
+    }
+    prevProximity.current = nowInProximity;
 
     if (nearest !== prevNearest.current) {
       prevNearest.current = nearest;
@@ -656,11 +636,15 @@ function SunLight({ lat, lon, evaDate }: { lat: number; lon: number; evaDate: st
 
 function SurfaceSceneContent({
   setNearObjectId,
+  setObjectDistances,
   nearObjectId,
+  objectDistances,
   missionId,
 }: {
   setNearObjectId: (id: string | null) => void;
+  setObjectDistances: (d: Record<string, number>) => void;
   nearObjectId: string | null;
+  objectDistances: Record<string, number>;
   missionId: string;
 }) {
   const found = useGameStore((s) => s.objectsFoundThisRun);
@@ -702,6 +686,7 @@ function SurfaceSceneContent({
           obj={obj}
           isFound={found.includes(obj.id)}
           isNear={nearObjectId === obj.id}
+          distance={objectDistances[obj.id] ?? 999}
         />
       ))}
 
@@ -711,7 +696,7 @@ function SurfaceSceneContent({
         <Footprints />
       </Suspense>
 
-      <ProximityDetector setNearObjectId={setNearObjectId} objects={objects} />
+      <ProximityDetector setNearObjectId={setNearObjectId} setObjectDistances={setObjectDistances} objects={objects} />
       <PlayerController />
       <InspectCamera objects={objects} />
     </>
@@ -723,6 +708,7 @@ function InspectOverlay({ objects, missionId }: { objects: HeritageObject[]; mis
   const objectId = useGameStore((s) => s.inspecting.objectId);
   const send = useGameStore((s) => s.send);
   const obj = objects.find((o) => o.id === objectId);
+  const mission = useMemo(() => getMission(missionId), [missionId]);
   const [visible, setVisible] = useState(false);
   const howlRef = useRef<Howl | null>(null);
 
@@ -756,24 +742,53 @@ function InspectOverlay({ objects, missionId }: { objects: HeritageObject[]; mis
   if (!obj) return null;
 
   return (
-    <div className="absolute inset-0 z-20 flex items-end justify-end pointer-events-none">
-      <div className="absolute inset-0 bg-space-950/40" />
+    <div className="absolute inset-0 z-20 flex items-center justify-end pointer-events-none">
+      <div className="absolute inset-0 bg-space-950/50" />
       <div
-        className={`pointer-events-auto relative m-4 w-80 rounded-xl border border-space-700 bg-space-900/95 p-6 backdrop-blur-md transition-all duration-300 ${visible ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"}`}
+        className={`pointer-events-auto relative m-4 w-96 max-h-[85vh] overflow-y-auto rounded-2xl border border-space-600/60 bg-space-900/95 backdrop-blur-xl transition-all duration-500 ${visible ? "translate-x-0 opacity-100" : "translate-x-12 opacity-0"}`}
       >
-        <h2 className="font-display text-xl font-bold text-regolith-200">
-          {obj.name}
-        </h2>
-        <p className="mt-3 text-sm leading-relaxed text-regolith-400">
-          {obj.description}
-        </p>
-        <div className="mt-4 flex items-center gap-3">
-          <span className="rounded bg-signal/20 px-2 py-1 text-xs text-signal">
-            +{obj.xp} XP
-          </span>
+        {/* Header stripe */}
+        <div className="border-b border-space-700/50 bg-space-800/40 px-6 py-4">
+          <p className="text-xs font-medium uppercase tracking-widest text-signal/80">
+            {t("inspect.missionLabel", { mission: mission.name, site: mission.site })}
+          </p>
+          <h2 className="mt-1 font-display text-2xl font-bold text-regolith-100">
+            {obj.name}
+          </h2>
         </div>
-        <div className="mt-4 border-t border-space-700 pt-3">
-          <p className="text-xs text-regolith-400/60">
+
+        {/* Body */}
+        <div className="px-6 py-5">
+          <p className="text-sm leading-relaxed text-regolith-300">
+            {obj.description}
+          </p>
+
+          {/* XP Badge */}
+          <div className="mt-5 flex items-center gap-3">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-signal/15 px-3 py-1.5 text-sm font-bold text-signal">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <polygon points="7,1 8.8,5.2 13.4,5.5 9.9,8.5 11,13 7,10.6 3,13 4.1,8.5 0.6,5.5 5.2,5.2" fill="currentColor" />
+              </svg>
+              +{obj.xp} XP
+            </span>
+          </div>
+
+          {/* Source citation */}
+          {obj.source && (
+            <div className="mt-5 rounded-lg bg-space-800/50 px-4 py-3 border border-space-700/30">
+              <p className="text-xs font-medium uppercase tracking-wider text-regolith-400/60 mb-1">
+                {t("inspect.source")}
+              </p>
+              <p className="text-xs leading-relaxed text-regolith-400">
+                {obj.source}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="border-t border-space-700/40 px-6 py-3">
+          <p className="text-xs text-regolith-400/50">
             {t("inspect.pressEsc")}
           </p>
         </div>
@@ -783,9 +798,9 @@ function InspectOverlay({ objects, missionId }: { objects: HeritageObject[]; mis
 }
 
 function MiniRadar({ found, objects }: { found: string[]; objects: HeritageObject[] }) {
-  const [, setTick] = useState(0);
+  const [tick, setTick] = useState(0);
   useEffect(() => {
-    const id = setInterval(() => setTick((n) => n + 1), 200);
+    const id = setInterval(() => setTick((n) => n + 1), 500);
     return () => clearInterval(id);
   }, []);
 
@@ -793,12 +808,20 @@ function MiniRadar({ found, objects }: { found: string[]; objects: HeritageObjec
   const pz = playerState.z;
   const heading = playerState.heading;
   const radarRange = 50;
+  const sweepAngle = ((tick * 12) % 360) * (Math.PI / 180);
 
   return (
     <svg viewBox="0 0 100 100" className="h-24 w-24 opacity-80">
       <circle cx="50" cy="50" r="48" fill="none" stroke="#ffd36e" strokeWidth="0.5" strokeOpacity="0.3" />
       <circle cx="50" cy="50" r="32" fill="none" stroke="#ffd36e" strokeWidth="0.3" strokeOpacity="0.2" />
       <circle cx="50" cy="50" r="16" fill="none" stroke="#ffd36e" strokeWidth="0.3" strokeOpacity="0.15" />
+      {/* Sweep line */}
+      <line
+        x1="50" y1="50"
+        x2={50 + Math.sin(sweepAngle) * 46}
+        y2={50 - Math.cos(sweepAngle) * 46}
+        stroke="#00d4ff" strokeWidth="1" strokeOpacity="0.25"
+      />
       <line x1="50" y1="2" x2="50" y2="12" stroke="#00d4ff" strokeWidth="1.5" strokeOpacity="0.6" />
       {/* LM at origin */}
       {(() => {
@@ -813,17 +836,68 @@ function MiniRadar({ found, objects }: { found: string[]; objects: HeritageObjec
         }
         return null;
       })()}
+      {/* Directional pings — show direction arc, not exact position */}
       {objects.filter((o) => o.id !== "descent-stage" && !found.includes(o.id)).map((obj) => {
         const dx = (obj.position[0] - px) / radarRange;
         const dz = (obj.position[2] - pz) / radarRange;
         const rx = dx * Math.cos(-heading) - dz * Math.sin(-heading);
         const rz = dx * Math.sin(-heading) + dz * Math.cos(-heading);
-        const sx = 50 + rx * 45;
-        const sy = 50 - rz * 45;
-        if (sx < 2 || sx > 98 || sy < 2 || sy > 98) return null;
-        return <circle key={obj.id} cx={sx} cy={sy} r="3" fill="#ffd36e" opacity="0.9" />;
+        const dist = Math.sqrt(rx * rx + rz * rz);
+        if (dist < 0.01) return null;
+        const nx = rx / dist;
+        const nz = rz / dist;
+        const pingDist = Math.min(dist, 1) * 40;
+        const pingX = 50 + nx * pingDist;
+        const pingY = 50 - nz * pingDist;
+        const pulsePhase = (tick + obj.id.length) % 4;
+        const pulseR = 2.5 + pulsePhase * 0.5;
+        const pulseOpacity = 0.7 - pulsePhase * 0.12;
+        return (
+          <circle
+            key={obj.id}
+            cx={pingX} cy={pingY}
+            r={pulseR}
+            fill="#ffd36e"
+            opacity={Math.max(0.2, pulseOpacity)}
+          />
+        );
       })}
       <circle cx="50" cy="50" r="2.5" fill="#00d4ff" />
+    </svg>
+  );
+}
+
+const SCAN_HOLD_DURATION = 1.5;
+
+function ScanMeter({ progress }: { progress: number }) {
+  const r = 22;
+  const circumference = 2 * Math.PI * r;
+  const offset = circumference * (1 - progress);
+
+  return (
+    <svg
+      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+      width="56"
+      height="56"
+      viewBox="0 0 56 56"
+    >
+      <circle
+        cx="28" cy="28" r={r}
+        fill="none"
+        stroke="rgba(0, 212, 255, 0.15)"
+        strokeWidth="3"
+      />
+      <circle
+        cx="28" cy="28" r={r}
+        fill="none"
+        stroke="#00d4ff"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeDasharray={circumference}
+        strokeDashoffset={offset}
+        transform="rotate(-90 28 28)"
+        style={{ transition: "stroke-dashoffset 0.05s linear" }}
+      />
     </svg>
   );
 }
@@ -842,6 +916,10 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(null);
   const [evaSeconds, setEvaSeconds] = useState(0);
   const [, setHudTick] = useState(0);
+  const [scanProgress, setScanProgress] = useState(0);
+  const scanStartTime = useRef<number | null>(null);
+  const scanAnimFrame = useRef<number>(0);
+  const lastTickTime = useRef(0);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -872,18 +950,18 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
     return t("surface.narrationStart", { name: playerName || "" });
   }, [found.length, playerName, t]);
 
-  const handleInteract = useCallback(() => {
+  const completeScan = useCallback(() => {
     if (!nearObjectId || found.includes(nearObjectId) || !missionId) return;
     const obj = objects.find((o) => o.id === nearObjectId);
     addFoundObject(nearObjectId);
     findObject(missionId, nearObjectId);
     send("START_INSPECT", { objectId: nearObjectId });
-    gameAudio.playRadioBeep();
+    gameAudio.playScanComplete();
 
     setToast(t("xp.object", { amount: obj?.xp ?? 50, name: obj?.name ?? nearObjectId }));
     if (toastTimer.current) clearTimeout(toastTimer.current);
     toastTimer.current = setTimeout(() => setToast(null), 2500);
-  }, [nearObjectId, found, missionId, addFoundObject, findObject, send, t]);
+  }, [nearObjectId, found, missionId, addFoundObject, findObject, send, t, objects]);
 
   const handleFlag = useCallback(() => {
     if (!missionId) return;
@@ -900,16 +978,55 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
   }, [send]);
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "e" || e.key === "E") handleInteract();
-      if ((e.key === "f" || e.key === "F") && phase === "flagReady")
-        handleFlag();
-      if ((e.key === "l" || e.key === "L") && phase === "flagPlanted")
-        handleLaunch();
+    const animateScan = () => {
+      if (scanStartTime.current === null) return;
+      const elapsed = (Date.now() - scanStartTime.current) / 1000;
+      const progress = Math.min(elapsed / SCAN_HOLD_DURATION, 1);
+      setScanProgress(progress);
+
+      const now = Date.now();
+      if (now - lastTickTime.current > 200) {
+        gameAudio.playScanTick();
+        lastTickTime.current = now;
+      }
+
+      if (progress >= 1) {
+        scanStartTime.current = null;
+        setScanProgress(0);
+        completeScan();
+        return;
+      }
+      scanAnimFrame.current = requestAnimationFrame(animateScan);
     };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [phase, handleInteract, handleFlag, handleLaunch]);
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.key === "e" || e.key === "E") && !e.repeat) {
+        if (nearObjectId && !found.includes(nearObjectId) && missionId && phase !== "inspect") {
+          scanStartTime.current = Date.now();
+          lastTickTime.current = 0;
+          scanAnimFrame.current = requestAnimationFrame(animateScan);
+        }
+      }
+      if ((e.key === "f" || e.key === "F") && phase === "flagReady") handleFlag();
+      if ((e.key === "l" || e.key === "L") && phase === "flagPlanted") handleLaunch();
+    };
+
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key === "e" || e.key === "E") {
+        scanStartTime.current = null;
+        cancelAnimationFrame(scanAnimFrame.current);
+        setScanProgress(0);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+      cancelAnimationFrame(scanAnimFrame.current);
+    };
+  }, [phase, nearObjectId, found, missionId, completeScan, handleFlag, handleLaunch]);
 
   useEffect(() => {
     if (found.length >= objects.length && phase === "explore") {
@@ -918,6 +1035,7 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
   }, [found.length, phase, send]);
 
   const nearObj = objects.find((o) => o.id === nearObjectId);
+  const isScanning = scanProgress > 0;
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex flex-col">
@@ -963,11 +1081,12 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
         </div>
       )}
 
-      {/* Crosshair */}
+      {/* Crosshair + Scan Meter */}
       {phase !== "inspect" && (
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="h-0.5 w-4 rounded-full bg-regolith-200/30" />
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-0.5 rounded-full bg-regolith-200/30" />
+          {isScanning && <ScanMeter progress={scanProgress} />}
         </div>
       )}
 
@@ -975,7 +1094,7 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
       {nearObj && !found.includes(nearObj.id) && phase !== "inspect" && (
         <div className="mx-auto mt-auto mb-32 rounded-xl bg-space-950/90 px-8 py-4 text-center backdrop-blur-md border border-space-700/50">
           <p className="font-display text-lg text-signal">
-            [E] {t("surface.inspectPrompt")} {nearObj.name}
+            {isScanning ? t("surface.scanning") : `[Hold E] ${t("surface.inspectPrompt")} ${nearObj.name}`}
           </p>
           <p className="mt-1 text-xs text-regolith-400">{t("surface.scanHint")}</p>
         </div>
@@ -1025,6 +1144,7 @@ export function SurfaceScene() {
   const phase = useGameStore((s) => s.phase);
   const missionId = useGameStore((s) => s.missionId);
   const [nearObjectId, setNearObjectId] = useState<string | null>(null);
+  const [objectDistances, setObjectDistances] = useState<Record<string, number>>({});
   const mission = useMemo(() => getMission(missionId ?? "apollo-11"), [missionId]);
 
   const handleCanvasClick = useCallback(() => {
@@ -1053,6 +1173,8 @@ export function SurfaceScene() {
           <SurfaceSceneContent
             nearObjectId={nearObjectId}
             setNearObjectId={setNearObjectId}
+            setObjectDistances={setObjectDistances}
+            objectDistances={objectDistances}
             missionId={missionId ?? "apollo-11"}
           />
           <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} vignetteDarkness={0.6} />

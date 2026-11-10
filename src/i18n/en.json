@@ -45,16 +45,19 @@
     "narrationStart": "Walk to the golden beacons, Commander {{name}}. Scan what was left behind.",
     "narrationProgress": "{{found}} of {{total}} objects scanned. Keep searching.",
     "narrationAllFound": "All objects found. Plant your flag and launch home.",
-    "controlHints": "Click to look · WASD move · Shift run · Space jump · E scan",
+    "controlHints": "Click to look · WASD move · Shift run · Space jump · Hold E scan",
     "eva": "EVA",
     "distLM": "LM",
-    "scanHint": "Approach and press E to scan this artifact"
+    "scanHint": "Hold E to scan this artifact",
+    "scanning": "Scanning…",
+    "proximityAlert": "Artifact nearby"
   },
   "inspect": {
     "back": "Back",
     "hotspot": "Hotspot {{number}}",
     "source": "Source",
-    "pressEsc": "Press ESC to return"
+    "pressEsc": "Press [ESC] to return",
+    "missionLabel": "{{mission}} · {{site}}"
   },
   "report": {
     "heading": "Mission Complete",
