@@ -43,3 +43,7 @@ storybook-static/
 # Misc
 *.tgz
 .cache/
+
+# raw downloads (large source assets)
+assets-src/
+test-screenshots/

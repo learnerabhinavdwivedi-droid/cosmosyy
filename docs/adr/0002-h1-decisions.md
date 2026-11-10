@@ -1,53 +1,56 @@
-# ADR 0002 — H1 Decisions
+# ADR 0002 — H1 Decisions (v4)
 
 **Status:** Accepted
 **Date:** 2026-11-08
-**Context:** Owner answered A5 open decisions before P0. These override the defaults in `10-phases.md` section A5.
+**Context:** Owner answered the v4 open questions (section 13.3) before P1. These override the defaults in `10-phases.md`.
 
 ## Decisions
 
-### Q1 · Planet texture source
-**Decision:** Prefer NASA/USGS public-domain maps for Earth, Moon, and Mars (the three H1 playable bodies). Use Solar System Scope (CC BY 4.0) for other planets in the hub where NASA/USGS maps are not readily available. Credit row required in LICENCES.md for every texture.
+### Q1 - Pre-event work allowed?
+**Decision:** Yes, assume allowed. Keep a dated commit history as proof.
 
-**Why:** Public-domain textures have no attribution requirements and no licence risk. Solar System Scope CC BY 4.0 is fine with credit but is a fallback, not the default for H1 bodies.
+### Q2 - Primary age group
+**Decision:** 12-18.
 
-### Q2 · Certificate format
+### Q3 - Desktop-first or phone-first for judging?
+**Decision:** Desktop-first. Phone must work (museum lane + globe); site missions may ask to rotate to landscape.
+
+### Q4 - Hosting platform
+**Decision:** Vercel. Simplest for a Vite app + one serverless function.
+
+### Q5 - Ingenuity as mission 17?
+**Decision:** Yes. Story pin in H1, promoted to playable mini flight in H2.
+
+### Q6 - Narration voice
+**Decision:** Kokoro (free, Apache-2.0). Pre-render to `.ogg` files. Same pipeline works if owner buys ElevenLabs later.
+
+### Q7 - Project licence
+**Decision:** Code: Apache-2.0. Original text and art: CC BY 4.0. NASA data stays under NASA media terms.
+
+### Q8 - Testers
+**Decision:** Owner + 1 friend.
+
+## Additional decisions (carried from v3 session)
+
+### Certificate format
 **Decision:** html-to-image for PNG + jsPDF for PDF. Never hand-draw on HTML Canvas.
-
-**Why:** Hand-drawn canvas is on the never-build list (ADR 0001). html-to-image captures a styled React component as-is; jsPDF wraps it in a downloadable PDF. Both are proven libraries.
-
-### Q3 · Player name prompt
-**Decision:** Accept default. Show once on first visit with a skip option. Default name: "Explorer".
-
-### Q4 · Hub planet sizes
-**Decision:** Accept default. 50× exaggerated; true-scale toggle deferred to H2.
-
-### Q5 · Quiz pass threshold
-**Decision:** Accept default. 7/10.
-
-### Q6 · Guide chat history
-**Decision:** Accept default. Last 3 exchanges in memory, cleared on body change.
-
-### Q7 · Saturn rings in H1?
-**Decision:** Accept default. Deferred to H2.
-
-### Q8 · Spacecraft in H1?
-**Decision:** Accept default. Deferred to H2.
-
-## Additional decisions
+**Why:** Canvas drawing is on the never-build list (ADR 0001).
 
 ### Licence policy for ESA and ISRO assets
-**Decision:** Any ESA or ISRO imagery must have a row in LICENCES.md marked `[verify]`. Do NOT ship any such asset in H1 until its licence is confirmed per-asset. ESA images are typically CC BY-SA 3.0 IGO (not public domain). ISRO image reuse terms are unclear.
-
-**Why:** Only NASA/USGS imagery (US government work) is reliably public domain. Assuming all space agency imagery is free is a licence risk.
+**Decision:** Any ESA or ISRO imagery must have a row in LICENCES.md marked `[verify]`. Do NOT ship in H1 until licence confirmed per-asset. ESA images are typically CC BY-SA 3.0 IGO. ISRO reuse terms unclear.
+**Why:** Only NASA/USGS imagery (US government work) is reliably public domain.
 
 ### Package manager
-**Decision:** pnpm everywhere. CI uses `pnpm install --frozen-lockfile`. `pnpm-lock.yaml` is committed. `package.json` includes `"packageManager"` and `"engines"` fields.
+**Decision:** pnpm everywhere. CI uses `pnpm install --frozen-lockfile`. `pnpm-lock.yaml` committed.
+
+### Texture sources
+**Decision:** Prefer NASA/USGS public-domain for Moon and Mars (CGI Moon Kit, USGS mosaics, LROC, HiRISE). No Solar System Scope needed (no generic planets in this project).
 
 ## Consequences
 
-- Earth, Moon, Mars textures sourced from NASA/USGS (public domain) — no attribution required but credited anyway
-- Other planet textures from Solar System Scope — credit row required
-- Certificate uses html-to-image + jsPDF — no canvas drawing code
-- ESA/ISRO assets blocked from H1 shipping until licence verified per-asset
-- pnpm is the only supported package manager; npm/yarn commands will not work
+- Deadline: feature freeze Sat 14 Nov 09:00 IST; event 14-15 Nov
+- Desktop-first judging; phone gets museum lane + globe at minimum
+- Kokoro TTS pre-rendered to files; no browser TTS
+- Certificate via html-to-image + jsPDF
+- ESA/ISRO assets blocked until licence verified
+- pnpm is the only supported package manager

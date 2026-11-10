@@ -52,17 +52,12 @@ interface AppState {
 }
 
 const DEFAULT_MISSIONS: Record<string, MissionProgress> = {
-  "apollo-11": {
-    status: "available",
-    xp: 0,
-    flagPlanted: false,
-    objectsFound: [],
-  },
-  "apollo-12": { status: "locked", xp: 0, flagPlanted: false, objectsFound: [] },
-  "apollo-14": { status: "locked", xp: 0, flagPlanted: false, objectsFound: [] },
-  "apollo-15": { status: "locked", xp: 0, flagPlanted: false, objectsFound: [] },
-  "apollo-16": { status: "locked", xp: 0, flagPlanted: false, objectsFound: [] },
-  "apollo-17": { status: "locked", xp: 0, flagPlanted: false, objectsFound: [] },
+  "apollo-11": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "apollo-12": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "apollo-14": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "apollo-15": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "apollo-16": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "apollo-17": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
 };
 
 export const XP_LAND = 50;
@@ -77,7 +72,7 @@ export const MISSION_ORDER = [
 
 export function getNextMissionId(currentId: string): string | null {
   const idx = MISSION_ORDER.indexOf(currentId);
-  if (idx >= 0 && idx < MISSION_ORDER.length - 1) return MISSION_ORDER[idx + 1];
+  if (idx >= 0 && idx < MISSION_ORDER.length - 1) return MISSION_ORDER[idx + 1] ?? null;
   return null;
 }
 
@@ -177,9 +172,11 @@ export const useAppStore = create<AppState>()(
           const idx = MISSION_ORDER.indexOf(missionId);
           if (idx >= 0 && idx < MISSION_ORDER.length - 1) {
             const nextId = MISSION_ORDER[idx + 1];
-            const next = updatedMissions[nextId];
-            if (next && next.status === "locked") {
-              updatedMissions[nextId] = { ...next, status: "available" };
+            if (nextId) {
+              const next = updatedMissions[nextId];
+              if (next && next.status === "locked") {
+                updatedMissions[nextId] = { ...next, status: "available" };
+              }
             }
           }
 
@@ -217,7 +214,7 @@ export const useAppStore = create<AppState>()(
       },
     }),
     {
-      name: "cosmosyy-v1",
+      name: "cosmosyy-v2",
       partialize: (state) => ({
         player: state.player,
         settings: state.settings,

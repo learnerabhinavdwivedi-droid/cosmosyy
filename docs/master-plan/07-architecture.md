@@ -1,310 +1,370 @@
-# 07 — Architecture · Cosmosyy
+# 07 — Architecture
 
-## Principles
+## 7.1 Principles
 
-1. **Browser-first, server-lite** — The SPA holds all content as JSON, renders 3D client-side, and works offline. The server is one Vercel function for the AI guide.
-2. **One source of types** — Zod schemas in `src/content/schema.ts` define every record. CI validates every JSON file against them.
-3. **Use, don't build** — Three.js for 3D, shadcn for UI, Workbox for offline, Gemini for AI. No custom physics, camera math, or UI primitives.
-4. **Fail closed** — The serverless function refuses to start without `GEMINI_API_KEY`. No fallback to "allow all" when env is missing.
-5. **Data is content, not code** — New bodies, missions, and quiz questions are JSON files, not new components or routes.
+1. **Data drives everything.** A mission is a data file. The engine never contains a mission name.
+2. **One fact, one place.** Objects live in `content/objects/`; missions reference them by ID. The museum, the game and the exam all read the same object.
+3. **Feature folders.** Each product module (section 01.3) is a folder with its own components, hooks and routes.
+4. **Explicit states.** Anything with steps (mission flow, scan, Mass Budget) is an XState machine.
+5. **3D is lazy.** No route loads three.js until it needs it.
 
-## System diagram
+---
 
-```
-BROWSER (React SPA, PWA)
-├─ features/            Route-based modules (hub, body, guide, missions, timeline, settings)
-├─ components/          Layer 1 (shadcn) + Layer 2 (cosmo)
-├─ store/               zustand + persist (visited, settings, player name)
-├─ content/*.json       Zod-validated body data, timeline, quiz — bundled at build
-└─ TanStack Query       Cache for API responses + content queries
-
-        ↕ HTTPS (fetch)
-
-VERCEL SERVERLESS (/api/guide)
-├─ Zod validation       Request body: { bodyId, question, lang }
-├─ Rate limit           20 req/hour/IP (in-memory sliding window)
-├─ CORS                 Allowlist: production domain + localhost
-├─ Context injection    Only the requested body's sourced facts sent to Gemini
-└─ Gemini 2.0 Flash     max_tokens: 300, JSON mode, temperature: 0.2
-
-        ↕ HTTPS
-
-GOOGLE AI (Gemini free tier)
-
-NO DATABASE — all persistent data is:
-  - Content: static JSON in repo, validated by Zod at build
-  - User state: localStorage via zustand persist (visited, settings, name)
-  - AI cache: pre-generated FAQ answers in content JSON
-```
-
-## Folder tree
+## 7.2 Folder structure (target)
 
 ```
 cosmosyy/
-├─ .github/workflows/   ci.yml (lint, typecheck, test, build, validate-content)
-├─ .agents/rules/       project.md (workspace rules for AI agents)
-├─ api/                 guide.ts (Vercel serverless function)
+├─ AGENTS.md                      # rules for every AI agent (section 12)
+├─ .agents/rules/project.md
 ├─ docs/
-│  ├─ master-plan/      00–13 plan files
-│  ├─ adr/              Architecture Decision Records
-│  ├─ PROGRESS.md
-│  ├─ LICENCES.md
-│  ├─ IDEAS.md
-│  └─ SETUP-CHECKLIST.md
-├─ public/
-│  ├─ textures/         Planet textures (AVIF/WebP, processed from source)
-│  ├─ models/           Spacecraft GLTF/GLB (KTX2 compressed)
-│  ├─ fonts/            Fontsource output (woff2, subsetted)
-│  └─ icons/            PWA icons, favicon
+│  ├─ master-plan/                # this plan (00–13 .md + PDF)
+│  ├─ PROGRESS.md                 # one line per finished task
+│  ├─ SETUP-CHECKLIST.md          # section 06 as ticks
+│  ├─ LICENCES.md                 # licence register (section 11)
+│  └─ adr/                        # architecture decision records
+├─ assets-src/                    # raw downloads, git-ignored
 ├─ scripts/
-│  ├─ validate-content.ts   Zod validation of all content JSON
-│  ├─ process-textures.ts   sharp: source → AVIF/WebP at 640/1280/1920
-│  └─ generate-faqs.ts      Pre-generate cached AI answers for top 5 questions per body
-├─ src/                 (see 04-ui-ux F10 for full layout)
-│  ├─ app/
-│  ├─ styles/
-│  ├─ i18n/
-│  ├─ components/ui/
-│  ├─ components/cosmo/
-│  ├─ lib/
-│  ├─ store/
-│  ├─ hooks/
-│  ├─ content/          schema.ts + *.json
-│  └─ features/         hub/ body/ guide/ missions/ timeline/ settings/
-├─ tests/               Playwright e2e + axe
-├─ .env.example         GEMINI_API_KEY=
-├─ .env.local           (not committed) actual key
-├─ .gitignore
-├─ AGENTS.md
-├─ package.json
-├─ tsconfig.json
-├─ vite.config.ts
-├─ tailwind.config.ts   (if needed beyond @theme in tokens.css)
-└─ vercel.json          Rewrites: /api/* → serverless; /* → index.html
+│  ├─ terrain/make-heightmap.ps1  # GDAL commands (section 08)
+│  ├─ media.ts                    # sharp image pipeline
+│  ├─ models.ts                   # gltf-transform batch
+│  ├─ narration/render.py         # Kokoro TTS batch
+│  └─ validate-content.ts         # Zod check, run in CI
+├─ content/
+│  ├─ objects/<objectId>.json     # Heritage records (16 → 40+)
+│  ├─ missions/<missionId>.ts     # MissionSpec files (17)
+│  ├─ questions/<objectId>.json   # exam questions per object
+│  ├─ briefing.json
+│  └─ schema.ts                   # Zod schemas (single source of types)
+├─ public/
+│  ├─ models/                     # optimised GLB only
+│  ├─ terrain/<site>/height.png, color.ktx2, meta.json
+│  ├─ globes/moon/, globes/mars/
+│  ├─ media/                      # resized photos (avif/webp)
+│  ├─ audio/<lang>/*.ogg + *.vtt
+│  ├─ fx/*.json                   # three.quarks effects
+│  ├─ theatre/*.json              # Theatre.js states
+│  └─ draco/, basis/              # decoders served locally
+├─ api/
+│  └─ archivist.ts                # serverless function (Gemini)
+├─ src/
+│  ├─ app/        (App.tsx, router.tsx, providers.tsx, ErrorBoundary.tsx)
+│  ├─ styles/     (tokens.css, globals.css)
+│  ├─ i18n/       (index.ts, en.json, hi.json)
+│  ├─ components/ui/   # shadcn generated
+│  ├─ components/cf/   # project components (section 04.4)
+│  ├─ lib/        (audio.ts, rocketEquation.ts, geo.ts, quality.ts, content.ts)
+│  ├─ store/      (useAppStore.ts)
+│  ├─ three/      # shared 3D: Lighting, Sky, Loader, PostFX, Footprints, Dust, Astronaut
+│  └─ features/
+│     ├─ prologue/      (M1)
+│     ├─ briefing/      (M2)
+│     ├─ archive/       (M3: map, catalogue, object, timeline)
+│     ├─ expedition/    (M4)
+│     │  ├─ suit/
+│     │  ├─ globe/
+│     │  ├─ site/       (SiteScene, Terrain, Player, Interactable, ScanSystem)
+│     │  ├─ massBudget/
+│     │  ├─ descent/    (Mars sequencer)
+│     │  ├─ log/
+│     │  └─ machines/   (missionMachine.ts, scanMachine.ts)
+│     ├─ exam/          (M5)
+│     ├─ registry/      (M6: download page)
+│     └─ settings/
+├─ tests/ (unit/, e2e/)
+├─ .storybook/
+└─ .github/workflows/ci.yml
 ```
 
-## Routes
+---
 
-| Path | Module | Lazy | Description |
-| --- | --- | --- | --- |
-| `/` | hub | No (entry point) | Solar system 3D hub |
-| `/body/:id` | body | Yes | Body detail with 3D + info card |
-| `/guide` | guide | Yes | AI guide chat (standalone) |
-| `/missions` | missions | Yes | Missions log |
-| `/quiz` | missions | Yes | Quiz flow |
-| `/certificate` | missions | Yes | Certificate download |
-| `/timeline` | timeline | Yes | Mission timeline |
-| `/settings` | settings | Yes | Settings sheet |
+## 7.3 Routes
 
-Route parameter `:id` matches body IDs from content schema (e.g., `earth`, `moon`, `mars`).
+| Path | Feature | Loads 3D? |
+|---|---|---|
+| `/` | prologue | Yes |
+| `/briefing` | briefing | Small (slider only, no three) |
+| `/start` | choose path | No |
+| `/archive`, `/archive/map`, `/archive/catalogue`, `/archive/timeline` | archive | Map tab only |
+| `/archive/:objectId` | archive object | 3D viewer lazy |
+| `/expedition/suit` | expedition | Yes (turntable) |
+| `/expedition/:body` (`moon`, `mars`) | globe | Yes |
+| `/expedition/site/:missionId` | site | Yes |
+| `/expedition/transition` | chapter transition | Yes |
+| `/expedition/exam` | exam | No |
+| `/expedition/certificate` | exam | No |
+| `/registry` | registry | No |
+| `/credits`, `/about`, `/settings` | static | No |
 
-## Content schema
+Old routes (`/explore`, `/object/:id`, `/play/...`) redirect to the new ones so nothing 404s.
 
-`src/content/schema.ts` — single source of types, validated at build by `scripts/validate-content.ts`.
+---
 
-```typescript
-import { z } from "zod";
+## 7.4 Content schema (Zod, `content/schema.ts`)
+
+```ts
+import { z } from 'zod';
 
 export const Source = z.object({
   title: z.string(),
   url: z.string().url(),
-  publisher: z.string(),
-  accessed: z.string().date(),
+  publisher: z.string(),            // "NASA", "LROC/ASU", "USGS"...
+  accessed: z.string(),             // ISO date
 });
 
-export const Fact = z.object({
-  text: z.string(),
-  source: Source,
-});
-
-export const FAQ = z.object({
-  question: z.string(),
-  answer: z.string(),
+export const HeritageObject = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  catalogue: z.string().regex(/^CF-[A-Z0-9]+-\d{3}$/),   // CF-A11-003
+  name: z.string(),
+  missionId: z.string(),
+  body: z.enum(['moon', 'mars']),
+  category: z.enum([
+    'descent-stage', 'ascent-stage', 'rover', 'lander', 'experiment',
+    'aeroshell', 'parachute', 'equipment', 'impact-site', 'helicopter', 'symbol',
+  ]),
+  year: z.number().int(),
+  coordinates: z.object({
+    lat: z.number(),
+    lon: z.number().min(-180).max(180),
+  }).optional(),
+  coordinateUncertaintyM: z.number().optional(),
+  verification: z.enum(['CONFIRMED', 'APPROXIMATE', 'UNRESOLVED']),
+  massKg: z.object({ value: z.number(), source: Source }).optional(),
+  whatItDid: z.string().max(400),
+  whyItStayed: z.string().max(400),
+  whereNow: z.string().max(300),
+  interpretation: z.string().max(600),     // first-person text, labelled in UI
+  thenImage: z.object({ src: z.string(), alt: z.string(), credit: z.string() }),
+  nowImage: z.object({ src: z.string(), alt: z.string(), credit: z.string() }).optional(),
+  model: z.object({ src: z.string(), credit: z.string(), licence: z.string() }).optional(),
   sources: z.array(Source).min(1),
+  factCheckedBy: z.string().optional(),     // name + date after review
 });
 
-export const QuizQuestion = z.object({
-  question: z.string(),
-  options: z.array(z.string()).length(4),
-  correct: z.number().int().min(0).max(3),
-  explanation: z.string(),
-  source: Source,
-});
-
-export const Orbit = z.object({
-  semiMajorAxisAU: z.number(),
-  eccentricity: z.number(),
-  inclinationDeg: z.number(),
-  periodDays: z.number(),
-});
-
-export const Physical = z.object({
-  radiusKm: z.number(),
-  massKg: z.string(), // scientific notation string: "5.972e24"
-  gravityMs2: z.number(),
-  dayLengthHours: z.number(),
-  averageTempC: z.number().optional(),
-});
-
-export const Mission = z.object({
-  name: z.string(),
-  year: z.number().int(),
-  agency: z.string(),
-  description: z.string(),
-  source: Source,
-});
-
-export const Body = z.object({
-  id: z.string().regex(/^[a-z][a-z0-9-]*$/),
-  name: z.string(),
-  type: z.enum(["star", "planet", "dwarf-planet", "moon", "spacecraft"]),
-  parent: z.string().nullable(),
-  orbit: Orbit.optional(), // Sun has no orbit
-  physical: Physical,
-  texture: z.object({
-    diffuse: z.string(),   // path relative to public/textures/
-    normal: z.string().optional(),
-    specular: z.string().optional(),
+export const Interactable = z.object({
+  objectId: z.string(),
+  required: z.boolean(),
+  position: z.tuple([z.number(), z.number(), z.number()]),   // metres, site frame
+  rotationY: z.number().default(0),
+  scale: z.number().default(1),
+  radius: z.number().default(3),
+  cameraShot: z.object({
+    position: z.tuple([z.number(), z.number(), z.number()]),
+    target: z.tuple([z.number(), z.number(), z.number()]),
   }),
-  facts: z.array(Fact).min(1),
-  faqs: z.array(FAQ).min(3),
-  quiz: z.array(QuizQuestion).min(3),
-  missions: z.array(Mission),
-  summary: z.string().max(200), // one-line description for lists
 });
 
-export const TimelineEvent = z.object({
-  year: z.number().int(),
+export const MassItem = z.object({
+  id: z.string(),
+  objectId: z.string().optional(),
+  label: z.string(),
+  massKg: z.number(),
+  required: z.boolean(),
+  lesson: z.string(),
+  source: Source.optional(),
+});
+
+export const MissionSpec = z.object({
+  id: z.string(),
   name: z.string(),
-  agency: z.string(),
-  description: z.string(),
-  bodyId: z.string().nullable(),
-  source: Source,
+  year: z.number(),
+  body: z.enum(['moon', 'mars']),
+  tier: z.enum(['hero', 'mission', 'story']),
+  order: z.number(),                            // position on the trail
+  site: z.object({ name: z.string(), lat: z.number(), lon: z.number() }),
+  landingUtc: z.string(),                       // for astronomy-engine sun angle
+  terrain: z.object({
+    heightmap: z.string(),
+    color: z.string(),
+    sizeM: z.number(),
+    heightScaleM: z.number(),
+    detail: z.string().optional(),
+  }).optional(),
+  spawn: z.tuple([z.number(), z.number(), z.number()]),
+  lander: z.object({
+    model: z.string(),
+    position: z.tuple([z.number(), z.number(), z.number()]),
+    rotationY: z.number(),
+  }).optional(),
+  interactables: z.array(Interactable),
+  challenge: z.discriminatedUnion('kind', [
+    z.object({
+      kind: z.literal('massBudget'),
+      requiredDeltaV: z.number(),
+      ispS: z.number(),
+      dryMassKg: z.number(),
+      propellantKg: z.number(),
+      items: z.array(MassItem),
+    }),
+    z.object({
+      kind: z.literal('descentSequence'),
+      steps: z.array(z.object({
+        id: z.string(),
+        label: z.string(),
+        objectId: z.string().optional(),
+      })),
+    }),
+    z.object({
+      kind: z.literal('choice'),
+      prompt: z.string(),
+      options: z.array(z.object({
+        label: z.string(),
+        correct: z.boolean(),
+        explanation: z.string(),
+      })),
+    }),
+    z.object({ kind: z.literal('none') }),
+  ]),
+  lesson: z.string(),
+  narration: z.array(z.object({ cue: z.string(), audio: z.string() })).default([]),
 });
-
-export type BodyType = z.infer<typeof Body>;
-export type TimelineEventType = z.infer<typeof TimelineEvent>;
 ```
 
-## State machines
+TypeScript types are inferred (`z.infer<typeof MissionSpec>`). `scripts/validate-content.ts` loads every file, validates it and checks cross-references (every objectId exists, every image file exists, every mission order unique). CI fails on any error.
 
-### App navigation state
+---
 
+## 7.5 Example mission file (shape, values illustrative)
+
+```ts
+// content/missions/apollo-11.ts
+import type { MissionSpecT } from '../schema';
+
+export default {
+  id: 'apollo-11', name: 'Apollo 11', year: 1969, body: 'moon', tier: 'hero', order: 2,
+  site: { name: 'Tranquility Base', lat: 0.6741, lon: 23.4730 },
+  landingUtc: '1969-07-20T20:17:40Z',
+  terrain: {
+    heightmap: '/terrain/apollo11/height.png',
+    color: '/terrain/apollo11/color.ktx2',
+    sizeM: 400, heightScaleM: 12,
+    detail: '/textures/regolith_detail.ktx2',
+  },
+  spawn: [4, 0, 6],
+  lander: { model: '/models/lm-descent.glb', position: [0, 0, 0], rotationY: 0 /* [verify heading] */ },
+  interactables: [
+    { objectId: 'a11-descent-stage', required: true, position: [0,0,0], radius: 5,
+      cameraShot: { position: [8, 3, 8], target: [0, 1.5, 0] } },
+    { objectId: 'a11-lrrr', required: true, position: [/* from LROC traverse map */ 0,0,0],
+      cameraShot: { position: [2, 1.6, 2], target: [0, 0.3, 0] } },
+    // seismometer, flag, jettisoned PLSS/overshoes ...
+  ],
+  challenge: {
+    kind: 'massBudget',
+    requiredDeltaV: 1850 /* [verify] */,
+    ispS: 311 /* [verify] */,
+    dryMassKg: 0 /* [verify] */,
+    propellantKg: 0 /* [verify] */,
+    items: [ /* ... */ ],
+  },
+  lesson: 'Everything on this plain stayed so that two people and 21.5 kg of Moon could leave.',
+} satisfies MissionSpecT;
 ```
-idle → hub_loading → hub_ready
-                       ↓ (select body)
-                   flying_to → body_ready
-                                 ↓ (back)
-                               flying_back → hub_ready
-                                 ↓ (ask guide)
-                               guide_open → body_ready (close)
-```
 
-Implemented with simple zustand state (not XState, since transitions are straightforward).
+Object positions at the Apollo sites must come from published traverse maps (LROC and the Apollo Lunar Surface Journal), scaled to metres in the site frame: +X east, +Z south, +Y up, origin at the lander.
 
-### Guide conversation state
+---
 
-```
-idle → sending → received → idle
-  ↓                ↓
-error ←──────── error
-  ↓
-retry → sending
-```
+## 7.6 App store (`src/store/useAppStore.ts`)
 
-### Quiz flow state
-
-```
-not_started → in_progress (question N) → answered → next_question → ... → complete
-                                                                          ↓
-                                                                    pass (≥7) → certificate
-                                                                    fail (<7) → retry → not_started
-```
-
-## Store
-
-`src/store/useAppStore.ts` — zustand with persist middleware.
-
-```typescript
+```ts
 interface AppState {
-  // Player
-  playerName: string;
-  setPlayerName: (name: string) => void;
-
-  // Visited bodies
-  visited: string[]; // body IDs
-  markVisited: (id: string) => void;
-
-  // Settings
-  theme: "light" | "dark" | "system";
-  setTheme: (theme: "light" | "dark" | "system") => void;
-  reducedMotion: boolean;
-  setReducedMotion: (v: boolean) => void;
-
-  // Quiz
-  bestScore: number | null;
-  setBestScore: (score: number) => void;
-
-  // Reset
-  resetProgress: () => void;
+  player: { name: string; createdAt: string | null };
+  settings: {
+    lang: 'en' | 'hi';
+    volume: { master: number; voice: number; music: number; fx: number };
+    captions: boolean;
+    quality: 'auto' | 'low' | 'medium' | 'high';
+    reducedMotion: boolean;
+    explainMaths: boolean;
+  };
+  progress: {
+    chapter: 'moon' | 'mars' | 'exam' | 'done';
+    missions: Record<string, {
+      status: 'locked' | 'available' | 'done';
+      completedAt?: string;
+    }>;
+    log: Array<{
+      objectId: string;
+      missionId: string;
+      at: string;
+      via: 'scan' | 'story';
+    }>;
+    exam: {
+      attempts: number;
+      best: number | null;
+      passedAt: string | null;
+      certId: string | null;
+    };
+  };
+  archive: { bookmarks: string[] };
+  session: { demoMode: boolean; prologueSeen: boolean };   // not persisted
+  // actions: setName, addLog, completeMission, setSetting, recordExam, reset ...
 }
 ```
 
-Persist key: `"cosmo-v1"`. Migrate function handles future schema changes.
+Persist everything except `session` under the key `cf-v4`, with a version and a migrate function so later changes don't wipe players' progress.
 
-## Services
+---
 
-### AI Guide (`api/guide.ts`)
+## 7.7 State machines
 
-```
-Input:  POST /api/guide { bodyId: string, question: string, lang: "en" }
-Validate: Zod schema
-Rate limit: 20 req/hour per IP (in-memory Map, sliding window)
-CORS: allowlist [production URL, http://localhost:5173]
-Auth: GEMINI_API_KEY from env (fail closed: 500 if missing)
-
-Process:
-  1. Load body data from bundled content (or import from content module)
-  2. Build prompt: system = "You are a space guide. Answer ONLY from these facts: {body.facts}. Cite your source. If the facts don't cover the question, say 'I don't have sourced information about that.'"
-  3. Call Gemini 2.0 Flash: max_tokens 300, temperature 0.2, JSON mode
-  4. Return { answer: string, sources: Source[] }
-
-Errors:
-  - Missing env: 500 "Guide unavailable"
-  - Invalid body: 400 "Unknown body"
-  - Rate limited: 429 "Too many questions" + Retry-After header
-  - Gemini error: 502 "Guide couldn't answer" + cached FAQs in response
-```
-
-### Content validation (`scripts/validate-content.ts`)
+### missionMachine (one per site visit)
 
 ```
-Input:  All *.json files in src/content/
-Process: Parse each against Body or TimelineEvent schema
-Output: Pass/fail per file; fail CI on any error
-Cross-checks:
-  - Every bodyId referenced in timeline exists as a body file
-  - Every body.parent references an existing body
-  - Texture files referenced in body.texture exist in public/textures/
-  - Quiz questions have exactly 4 options and correct index 0–3
+loading → descending → steppingOut → exploring ⇄ reading(objectId)
+exploring --(all required scanned)--> challengeReady
+challengeReady --START--> challenge --SUCCESS--> liftoff → report → done
+challenge --CANCEL--> exploring
+any --ERROR--> failed (shows retry + "back to globe")
 ```
 
-## Error handling
+### scanMachine (one per interactable)
 
-| Layer | Strategy |
-| --- | --- |
-| Route level | React Error Boundary per route; shows ErrorPanel with retry |
-| 3D canvas | Separate Error Boundary; falls back to "3D unavailable" + flat list |
-| API calls | TanStack Query retry (3 attempts, exponential backoff); error → ErrorPanel |
-| Content | Zod parse at build time; runtime: if a body file somehow fails, skip it with console.error |
-| Offline | TanStack Query `networkMode: "offlineFirst"`; show OfflineBanner; cached data works |
-| Unhandled | Sentry captures; user sees generic ErrorPanel with refresh button |
+```
+idle → inRange → holding(progress 0..1) → scanned
+```
 
-## Demo mode
+Leaving range or releasing returns to `inRange` / `idle`; `scanned` is final for the visit.
 
-`?demo=1` query parameter:
-- Skips name prompt
-- Marks Earth, Moon, Mars as visited
-- Opens hub → auto-flies to Earth → shows info card
-- Visible banner: "Demo Mode — exploring with sample data"
-- Reaches the best moment (Earth info card with guide) in under 20 s
+Machines live in `features/expedition/machines/` and are tested with Vitest by sending events and checking states, without rendering anything.
+
+---
+
+## 7.8 AI Archivist service
+
+One serverless function `api/archivist.ts` (Vercel or Cloudflare Pages Functions).
+
+**Input:** `{ objectId, question, lang }`
+
+Server loads that object's JSON and its sources, builds a grounded prompt ("Answer only from these facts; if unknown, say so"), calls Gemini via `@google/genai`, returns `{ answer, citedSources[] }`.
+
+Rate limit by IP (simple in-memory or KV, 20 requests/hour).
+
+Pre-generate answers for the 5 most likely questions per object into `content/faq/<objectId>.json`; the UI shows these instantly and offline. Only free-form questions hit the network.
+
+The old Python backend and `api/guide.ts` are retired after this works.
+
+---
+
+## 7.9 Errors and loading
+
+`app/ErrorBoundary.tsx` wraps every route and every `<Canvas>`. A 3D failure shows "This scene couldn't load" with Retry and "Read this mission's story instead".
+
+Each `<Canvas>` has `<Suspense fallback={<LoadingScreen/>}>`; the loading screen reads drei `useProgress`.
+
+Models are preloaded on the globe page for the selected mission (`useGLTF.preload`) so the dive feels instant.
+
+---
+
+## 7.10 Quality tiers
+
+`lib/quality.ts` runs a 2-second benchmark on first 3D load (average frame time on the globe) and picks a tier.
+
+| Setting | Low | Medium | High |
+|---|---|---|---|
+| Device pixel ratio cap | 1 | 1.5 | 2 |
+| Shadow map | 1024, one cascade | 2048 | 4096 |
+| Terrain segments | 128x128 | 256x256 | 512x512 |
+| Post-processing | Tone mapping only | + SMAA + bloom | + N8AO ambient occlusion |
+| Particles | 25% | 60% | 100% |
+| Footprints kept | 128 | 256 | 512 |
