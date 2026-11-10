@@ -347,6 +347,51 @@ function DustParticles() {
   );
 }
 
+function AmbientDust() {
+  const ref = useRef<THREE.Points>(null);
+  const count = 80;
+  const positions = useMemo(() => {
+    const arr = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * Math.PI * 2 * 3.7;
+      const r = 2 + (i % 17) * 1.8;
+      arr[i * 3] = Math.cos(a) * r;
+      arr[i * 3 + 1] = 0.1 + (i % 7) * 0.15;
+      arr[i * 3 + 2] = Math.sin(a) * r;
+    }
+    return arr;
+  }, []);
+
+  useFrame(() => {
+    if (!ref.current) return;
+    const posAttr = ref.current.geometry.attributes.position;
+    const t = Date.now() * 0.0001;
+    for (let i = 0; i < count; i++) {
+      const baseY = 0.1 + (i % 7) * 0.15;
+      const y = baseY + Math.sin(t * 2 + i * 0.5) * 0.08;
+      posAttr.setY(i, y);
+    }
+    posAttr.needsUpdate = true;
+    ref.current.rotation.y = t * 0.3;
+  });
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} count={count} />
+      </bufferGeometry>
+      <pointsMaterial
+        color="#a09888"
+        size={0.02}
+        transparent
+        opacity={0.2}
+        depthWrite={false}
+        sizeAttenuation
+      />
+    </points>
+  );
+}
+
 function Footprints() {
   const texture = useLoader(THREE.TextureLoader, "/textures/bootprint.jpg");
   const maxPrints = 60;
@@ -646,6 +691,7 @@ function SurfaceSceneContent({
       ))}
 
       <DustParticles />
+      <AmbientDust />
       <Suspense fallback={null}>
         <Footprints />
       </Suspense>
@@ -973,6 +1019,7 @@ export function SurfaceScene() {
           }}
         >
           <color attach="background" args={["#000000"]} />
+          <fogExp2 attach="fog" args={["#0a0a0a", 0.004]} />
           <SurfaceSceneContent
             nearObjectId={nearObjectId}
             setNearObjectId={setNearObjectId}

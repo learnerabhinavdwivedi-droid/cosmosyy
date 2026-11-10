@@ -49,6 +49,7 @@ function GameAudioController() {
         gameAudio.playCountdown();
         setTimeout(() => {
           gameAudio.startEngine();
+          gameAudio.startSpaceDrone();
           playNarration(phase, mid);
         }, 1600);
         return;
@@ -64,32 +65,43 @@ function GameAudioController() {
       }
 
       if (phase === "orbit" || phase === "coast") {
-        gameAudio.playRadioBeep();
+        gameAudio.playQuindar();
       }
 
       if (phase === "touchdown") {
         gameAudio.stopEngine();
         gameAudio.playThud();
+        gameAudio.stopSpaceDrone();
+      }
+
+      if (phase === "stepOut") {
+        gameAudio.playAirlock();
       }
 
       if (SURFACE_PHASES.has(phase) && !SURFACE_PHASES.has(prev)) {
         gameAudio.startBreathing();
+        gameAudio.startLunarHum();
       }
       if (!SURFACE_PHASES.has(phase) && SURFACE_PHASES.has(prev)) {
         gameAudio.stopBreathing();
+        gameAudio.stopLunarHum();
       }
 
       if (phase === "explore") {
-        gameAudio.playRadioBeep();
+        gameAudio.playQuindar();
       }
 
       if (phase === "launch") {
+        gameAudio.stopLunarHum();
+        gameAudio.stopBreathing();
         gameAudio.playCountdown();
         setTimeout(() => gameAudio.startEngine(), 1600);
       }
 
       if (phase === "report") {
         gameAudio.stopEngine();
+        gameAudio.stopSpaceDrone();
+        gameAudio.stopLunarHum();
         stopNarration();
         gameAudio.playSuccess();
       }
