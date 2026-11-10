@@ -53,6 +53,10 @@ export function ReportScreen() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const foundObjects = useMemo(() =>
+    mission.objects.filter((o) => found.includes(o.id)),
+    [mission.objects, found],
+  );
   const objectXp = found.length * 50;
   const flagXp = 100;
   const missionXp = XP_LAND + objectXp + flagXp + XP_COMPLETE;
@@ -118,7 +122,7 @@ export function ReportScreen() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          {/* Stats with staggered reveal */}
+          {/* XP Stats */}
           <div className="space-y-3">
             <div className="flex items-center justify-between border-b border-space-700 pb-2">
               <span className="text-regolith-400">{t("report.objectsFound")}</span>
@@ -151,6 +155,34 @@ export function ReportScreen() {
               </span>
             </div>
           </div>
+
+          {/* What stayed behind */}
+          {foundObjects.length > 0 && (
+            <motion.div
+              className="mt-6 rounded-lg bg-space-800/60 p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
+            >
+              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-regolith-400/70">
+                {t("report.whatStayedBehind")}
+              </p>
+              <div className="space-y-1.5">
+                {foundObjects.map((obj, i) => (
+                  <motion.div
+                    key={obj.id}
+                    className="flex items-center gap-2 text-sm"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 1.4 + i * 0.1 }}
+                  >
+                    <span className="text-ok">✓</span>
+                    <span className="text-regolith-300">{obj.name}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
 
           {/* Rank */}
           <div className="mt-6 rounded-lg bg-space-800 p-4 text-center">

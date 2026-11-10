@@ -64,34 +64,50 @@ export function STLTerrain({ stlPath, orthoPath }: { stlPath: string; orthoPath:
   );
 }
 
-export function GenericTerrain() {
+export function GenericTerrain({ lat, lon }: { lat?: number; lon?: number }) {
   const moonTex = useLoader(THREE.TextureLoader, "/textures/moon-color-4k.webp");
+  const elevTex = useLoader(THREE.TextureLoader, "/textures/moon-elevation-2k.png");
+
+  const uvOffset = useMemo(() => {
+    const u = ((lon ?? 0) + 180) / 360;
+    const v = ((lat ?? 0) + 90) / 180;
+    return [u * 4, v * 4] as const;
+  }, [lat, lon]);
 
   const material = useMemo(() => {
     moonTex.colorSpace = THREE.SRGBColorSpace;
     moonTex.wrapS = THREE.RepeatWrapping;
     moonTex.wrapT = THREE.RepeatWrapping;
     moonTex.repeat.set(8, 8);
+    moonTex.offset.set(uvOffset[0], uvOffset[1]);
+
+    elevTex.wrapS = THREE.RepeatWrapping;
+    elevTex.wrapT = THREE.RepeatWrapping;
+    elevTex.repeat.set(4, 4);
+    elevTex.offset.set(uvOffset[0] * 0.5, uvOffset[1] * 0.5);
+
     return new THREE.MeshStandardMaterial({
       map: moonTex,
+      displacementMap: elevTex,
+      displacementScale: 3.5,
       roughness: 0.98,
       metalness: 0.0,
     });
-  }, [moonTex]);
+  }, [moonTex, elevTex, uvOffset]);
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]} receiveShadow>
-      <planeGeometry args={[200, 200, 64, 64]} />
+      <planeGeometry args={[200, 200, 256, 256]} />
       <primitive object={material} attach="material" />
     </mesh>
   );
 }
 
-export function Terrain({ stlPath, orthoPath }: { stlPath?: string | null; orthoPath?: string | null }) {
+export function Terrain({ stlPath, orthoPath, lat, lon }: { stlPath?: string | null; orthoPath?: string | null; lat?: number; lon?: number }) {
   if (stlPath && orthoPath) {
     return <STLTerrain stlPath={stlPath} orthoPath={orthoPath} />;
   }
-  return <GenericTerrain />;
+  return <GenericTerrain lat={lat} lon={lon} />;
 }
 
 export function GroundPlane() {

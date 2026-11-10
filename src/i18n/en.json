@@ -77,6 +77,7 @@
     "xpTotal": "{{xp}} XP total",
     "xpTotalSuffix": "XP total",
     "backToMissions": "Back to missions",
+    "whatStayedBehind": "What stayed behind",
     "missionSuccess": "Mission Successful",
     "nextMission": "Next Mission: {{mission}}"
   },

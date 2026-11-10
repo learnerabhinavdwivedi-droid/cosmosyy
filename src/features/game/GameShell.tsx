@@ -252,7 +252,7 @@ function LaunchSceneContent() {
         </mesh>
       </group>
       <Suspense fallback={null}>
-        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} />
+        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} lat={mission.landing.lat} lon={mission.landing.lon} />
       </Suspense>
       <GroundPlane />
       <Suspense fallback={null}>

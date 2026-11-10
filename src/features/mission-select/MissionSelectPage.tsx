@@ -16,6 +16,8 @@ interface MissionCardData {
   site: string;
   date: string;
   crew: string;
+  hook: string;
+  objectCount: number;
 }
 
 const MISSIONS: MissionCardData[] = [
@@ -25,6 +27,8 @@ const MISSIONS: MissionCardData[] = [
     site: "Sea of Tranquility",
     date: "20 July 1969",
     crew: "Armstrong, Aldrin, Collins",
+    hook: "One small step — the first humans on the Moon.",
+    objectCount: 7,
   },
   {
     id: "apollo-12",
@@ -32,6 +36,8 @@ const MISSIONS: MissionCardData[] = [
     site: "Ocean of Storms",
     date: "19 November 1969",
     crew: "Conrad, Bean, Gordon",
+    hook: "Precision landing beside Surveyor 3.",
+    objectCount: 7,
   },
   {
     id: "apollo-14",
@@ -39,6 +45,8 @@ const MISSIONS: MissionCardData[] = [
     site: "Fra Mauro",
     date: "5 February 1971",
     crew: "Shepard, Mitchell, Roosa",
+    hook: "Shepard's lunar golf shot and the longest EVA walk.",
+    objectCount: 6,
   },
   {
     id: "apollo-15",
@@ -46,6 +54,8 @@ const MISSIONS: MissionCardData[] = [
     site: "Hadley Rille",
     date: "30 July 1971",
     crew: "Scott, Irwin, Worden",
+    hook: "First lunar rover — exploring the edge of a canyon.",
+    objectCount: 6,
   },
   {
     id: "apollo-16",
@@ -53,6 +63,8 @@ const MISSIONS: MissionCardData[] = [
     site: "Descartes Highlands",
     date: "21 April 1972",
     crew: "Young, Duke, Mattingly",
+    hook: "Into the lunar highlands for the first time.",
+    objectCount: 5,
   },
   {
     id: "apollo-17",
@@ -60,6 +72,8 @@ const MISSIONS: MissionCardData[] = [
     site: "Taurus–Littrow",
     date: "11 December 1972",
     crew: "Cernan, Schmitt, Evans",
+    hook: "The final Apollo mission — a geologist on the Moon.",
+    objectCount: 6,
   },
 ];
 
@@ -86,23 +100,28 @@ function StatusBadge({ status }: { status: MissionStatus }) {
 function MissionCard({
   mission,
   status,
+  objectsFound,
   onLaunch,
 }: {
   mission: MissionCardData;
   status: MissionStatus;
+  objectsFound: number;
   onLaunch: () => void;
 }) {
   const { t } = useTranslation();
   const isLocked = status === "locked";
+  const isCompleted = status === "completed";
 
   return (
-    <div
+    <motion.div
       className={cn(
-        "group relative flex flex-col rounded-xl border p-5 transition-all duration-200",
+        "group relative flex flex-col rounded-xl border p-5 transition-colors duration-200",
         isLocked
           ? "border-space-700/30 bg-space-900/40 opacity-50"
-          : "border-space-700/60 bg-space-800/60 hover:border-signal/40 hover:bg-space-800",
+          : "border-space-700/60 bg-space-800/60 hover:border-signal/40 hover:bg-space-800/80",
       )}
+      whileHover={isLocked ? undefined : { scale: 1.02, y: -2 }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
@@ -119,10 +138,21 @@ function MissionCard({
         <StatusBadge status={status} />
       </div>
 
-      <div className="mt-3 space-y-1 text-xs text-regolith-400">
-        <p>{mission.date}</p>
-        <p>{mission.crew}</p>
+      <p className="mt-2 text-xs italic text-regolith-400/80">{mission.hook}</p>
+
+      <div className="mt-3 flex items-center gap-3 text-xs text-regolith-400">
+        <span>{mission.date}</span>
+        <span className="text-space-700">|</span>
+        <span>{mission.crew}</span>
       </div>
+
+      {isCompleted && (
+        <div className="mt-3 flex items-center gap-2 text-xs">
+          <span className="rounded-full bg-ok/15 px-2.5 py-0.5 text-ok font-medium">
+            {objectsFound}/{mission.objectCount} artifacts
+          </span>
+        </div>
+      )}
 
       {!isLocked && (
         <Button
@@ -132,7 +162,7 @@ function MissionCard({
           {t("missionSelect.launch")}
         </Button>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -256,6 +286,7 @@ export default function MissionSelectPage() {
           {MISSIONS.map((mission, i) => {
             const progress = missions[mission.id];
             const status: MissionStatus = progress?.status ?? "locked";
+            const objectsFound = progress?.objectsFound?.length ?? 0;
             return (
               <motion.div
                 key={mission.id}
@@ -266,6 +297,7 @@ export default function MissionSelectPage() {
                 <MissionCard
                   mission={mission}
                   status={status}
+                  objectsFound={objectsFound}
                   onLaunch={() => handleLaunch(mission.id)}
                 />
               </motion.div>

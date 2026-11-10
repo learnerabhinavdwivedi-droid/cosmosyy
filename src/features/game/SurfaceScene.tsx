@@ -672,7 +672,7 @@ function SurfaceSceneContent({
       </Suspense>
 
       <Suspense fallback={<GroundPlane />}>
-        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} />
+        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} lat={mission.landing.lat} lon={mission.landing.lon} />
       </Suspense>
       <GroundPlane />
 
