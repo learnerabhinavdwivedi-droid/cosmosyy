@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore, getNextMissionId } from "@/store/useAppStore";
 import { Button } from "@/components/ui/button";
@@ -44,21 +45,12 @@ export function ReportScreen() {
   const mission = useMemo(() => getMission(missionId ?? "apollo-11"), [missionId]);
   const TOTAL_OBJECTS = mission.objects.length;
 
-  const [showContent, setShowContent] = useState(false);
-  const [showStats, setShowStats] = useState(false);
-
   useEffect(() => {
     if (missionId) {
       completeMission(missionId);
       addXp(missionId, XP_LAND);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const t1 = setTimeout(() => setShowContent(true), 300);
-    const t2 = setTimeout(() => setShowStats(true), 800);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   const objectXp = found.length * 50;
@@ -96,11 +88,19 @@ export function ReportScreen() {
         ))}
       </div>
 
-      <div
-        className={`relative z-10 w-full max-w-md transition-all duration-700 ${showContent ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+      <motion.div
+        className="relative z-10 w-full max-w-md"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
       >
         {/* Mission success banner */}
-        <div className="mb-6 text-center">
+        <motion.div
+          className="mb-6 text-center"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-ok">
             {t("report.missionSuccess")}
           </p>
@@ -110,11 +110,16 @@ export function ReportScreen() {
           <p className="mt-2 text-sm text-regolith-400">
             {t("report.subheading")}
           </p>
-        </div>
+        </motion.div>
 
-        <div className="rounded-xl border border-space-700 bg-space-900/90 p-8 backdrop-blur">
+        <motion.div
+          className="rounded-xl border border-space-700 bg-space-900/90 p-8 backdrop-blur"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
           {/* Stats with staggered reveal */}
-          <div className={`space-y-3 transition-all duration-500 ${showStats ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
+          <div className="space-y-3">
             <div className="flex items-center justify-between border-b border-space-700 pb-2">
               <span className="text-regolith-400">{t("report.objectsFound")}</span>
               <span className="font-mono text-regolith-200">
@@ -177,8 +182,8 @@ export function ReportScreen() {
               {t("report.backToMissions")}
             </Button>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

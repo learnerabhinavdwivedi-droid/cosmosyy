@@ -9,6 +9,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import { Stars, Text } from "@react-three/drei";
+import { Effects } from "./Effects";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { gameAudio } from "@/lib/gameAudio";
@@ -966,7 +967,7 @@ export function SurfaceScene() {
             far: 2000,
           }}
           gl={{
-            antialias: true,
+            antialias: false,
             toneMapping: THREE.AgXToneMapping,
             toneMappingExposure: 1.2,
           }}
@@ -977,6 +978,7 @@ export function SurfaceScene() {
             setNearObjectId={setNearObjectId}
             missionId={missionId ?? "apollo-11"}
           />
+          <Effects bloom vignette bloomIntensity={0.4} vignetteDarkness={0.6} />
         </Canvas>
       </div>
       <SurfaceHUD nearObjectId={nearObjectId} objects={mission.objects} />

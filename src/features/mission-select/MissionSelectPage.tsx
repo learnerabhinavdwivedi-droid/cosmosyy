@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { motion } from "motion/react";
 import { useAppStore } from "@/store/useAppStore";
 import { gameAudio } from "@/lib/gameAudio";
 import { unlockAudio, preloadNarration } from "@/lib/narration";
@@ -186,14 +187,19 @@ export default function MissionSelectPage() {
       {/* Content */}
       <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-8 sm:px-6">
         {/* Header */}
-        <header className="text-center">
+        <motion.header
+          className="text-center"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <h1 className="font-display text-5xl font-bold tracking-tight text-regolith-200 sm:text-6xl">
             {t("app.title")}
           </h1>
           <p className="mt-2 text-lg text-regolith-400">
             {t("app.tagline")}
           </p>
-        </header>
+        </motion.header>
 
         {/* Name input */}
         {!playerName ? (
@@ -247,16 +253,22 @@ export default function MissionSelectPage() {
 
         {/* Mission grid */}
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {MISSIONS.map((mission) => {
+          {MISSIONS.map((mission, i) => {
             const progress = missions[mission.id];
             const status: MissionStatus = progress?.status ?? "locked";
             return (
-              <MissionCard
+              <motion.div
                 key={mission.id}
-                mission={mission}
-                status={status}
-                onLaunch={() => handleLaunch(mission.id)}
-              />
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.15 + i * 0.07, ease: "easeOut" }}
+              >
+                <MissionCard
+                  mission={mission}
+                  status={status}
+                  onLaunch={() => handleLaunch(mission.id)}
+                />
+              </motion.div>
             );
           })}
         </div>

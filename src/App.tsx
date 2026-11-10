@@ -1,20 +1,13 @@
 import { Suspense } from "react";
 import { RouterProvider } from "react-router-dom";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { router } from "@/router";
-
-function Loading() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-bg text-fg">
-      <p className="text-fg-muted">Loading…</p>
-    </div>
-  );
-}
 
 export default function App() {
   return (
     <ErrorBoundary>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<LoadingScreen />}>
         <RouterProvider router={router} />
       </Suspense>
     </ErrorBoundary>

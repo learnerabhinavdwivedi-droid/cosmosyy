@@ -15,6 +15,7 @@ import { LMDescent, LMAscent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
 import { getSunPosition } from "./sunPosition";
 import { getMission } from "@/lib/missionData";
+import { Effects } from "./Effects";
 import * as THREE from "three";
 
 const FLIGHT_PHASES = new Set<string>(["flight", "coast", "orbit", "targetLocked", "descent", "touchdown", "stepOut"]);
@@ -256,10 +257,11 @@ function LaunchScene() {
     <div className="relative h-screen w-full">
       <Canvas
         camera={{ position: [15, 3, 15], fov: 55, near: 0.1, far: 2000 }}
-        gl={{ antialias: true, toneMapping: THREE.AgXToneMapping }}
+        gl={{ antialias: false, toneMapping: THREE.AgXToneMapping }}
       >
         <color attach="background" args={["#000000"]} />
         <LaunchSceneContent />
+        <Effects bloom bloomThreshold={0.8} bloomIntensity={0.6} />
       </Canvas>
       <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-end pb-12">
         <div className="rounded-lg bg-space-950/85 px-6 py-3 backdrop-blur">
