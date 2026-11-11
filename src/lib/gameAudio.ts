@@ -471,6 +471,91 @@ export function stopLunarHum(): void {
   }, 2200);
 }
 
+// ── ambient: mars wind (surface phases) ─────────────────────
+
+let marsWind: HumNodes | null = null;
+
+export function startMarsWind(): void {
+  if (marsWind) return;
+  const c = getCtx();
+  const t = c.currentTime;
+  const gain = c.createGain();
+  gain.gain.setValueAtTime(0, t);
+  gain.gain.linearRampToValueAtTime(1, t + 3);
+
+  const oscs: OscillatorNode[] = [];
+
+  const noiseSrc = c.createBufferSource();
+  noiseSrc.buffer = makeNoise(c, 10);
+  noiseSrc.loop = true;
+
+  const bp = c.createBiquadFilter();
+  bp.type = "bandpass";
+  bp.frequency.value = 250;
+  bp.Q.value = 0.4;
+
+  const lfo = c.createOscillator();
+  lfo.type = "sine";
+  lfo.frequency.value = 0.15;
+  const lfoG = c.createGain();
+  lfoG.gain.value = 120;
+  lfo.connect(lfoG);
+  lfoG.connect(bp.frequency);
+  lfo.start(t);
+  oscs.push(lfo);
+
+  const lfo2 = c.createOscillator();
+  lfo2.type = "sine";
+  lfo2.frequency.value = 0.07;
+  const lfo2G = c.createGain();
+  lfo2G.gain.value = 0.012;
+  lfo2.connect(lfo2G);
+  lfo2G.connect(gain.gain);
+  lfo2.start(t);
+  oscs.push(lfo2);
+
+  const noiseG = c.createGain();
+  noiseG.gain.value = 0.04;
+  noiseSrc.connect(bp);
+  bp.connect(noiseG);
+  noiseG.connect(gain);
+  noiseSrc.start(t);
+
+  gain.connect(getMaster());
+  marsWind = { oscs, noiseSrc, gain };
+}
+
+export function stopMarsWind(): void {
+  if (!marsWind || !ctx) return;
+  const t = ctx.currentTime;
+  marsWind.gain.gain.linearRampToValueAtTime(0, t + 2);
+  const w = marsWind;
+  marsWind = null;
+  setTimeout(() => {
+    for (const o of w.oscs) { try { o.stop(); } catch { /* ok */ } }
+    try { w.noiseSrc.stop(); } catch { /* ok */ }
+  }, 2200);
+}
+
+// ── data scan beep (Mars heritage) ──────────────────────────
+
+export function playDataScan(): void {
+  const c = getCtx();
+  const t = c.currentTime;
+  for (let i = 0; i < 4; i++) {
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.type = "square";
+    osc.frequency.value = 1400 + i * 100;
+    gain.gain.setValueAtTime(0.03, t + i * 0.06);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.06 + 0.04);
+    osc.connect(gain);
+    gain.connect(getMaster());
+    osc.start(t + i * 0.06);
+    osc.stop(t + i * 0.06 + 0.05);
+  }
+}
+
 export function playProximityPing(): void {
   const c = getCtx();
   const t = c.currentTime;
@@ -541,6 +626,9 @@ export const gameAudio = {
   stopSpaceDrone,
   startLunarHum,
   stopLunarHum,
+  startMarsWind,
+  stopMarsWind,
+  playDataScan,
   playProximityPing,
   playScanTick,
   playScanComplete,

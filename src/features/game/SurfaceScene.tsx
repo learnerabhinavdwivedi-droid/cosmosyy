@@ -82,11 +82,13 @@ function HeritageMarker({
   isFound,
   isNear,
   distance,
+  isMars,
 }: {
   obj: HeritageObject;
   isFound: boolean;
   isNear: boolean;
   distance: number;
+  isMars?: boolean;
 }) {
   const outerRingRef = useRef<THREE.Mesh>(null);
   const innerRingRef = useRef<THREE.Mesh>(null);
@@ -117,7 +119,9 @@ function HeritageMarker({
 
   if (obj.id === "descent-stage" || obj.hidden) return null;
 
-  const baseColor = isFound ? "#66ff99" : isNear ? "#00d4ff" : "#ffd36e";
+  const baseColor = isFound ? "#66ff99" : isNear
+    ? (isMars ? "#ff9944" : "#00d4ff")
+    : (isMars ? "#e8a050" : "#ffd36e");
   const showName = distance < NAME_VISIBLE_RANGE;
 
   return (
@@ -446,6 +450,90 @@ function Footprints() {
   );
 }
 
+function MarsBase({ missionId }: { missionId: string }) {
+  const isRover = missionId.startsWith("mars-spirit") || missionId.startsWith("mars-opportunity")
+    || missionId.startsWith("mars-curiosity") || missionId.startsWith("mars-perseverance");
+  const isLargeRover = missionId === "mars-curiosity" || missionId === "mars-perseverance";
+
+  if (isRover) {
+    const s = isLargeRover ? 1.0 : 0.65;
+    return (
+      <group position={[0, 0, 0]} scale={s}>
+        {/* Rover body */}
+        <mesh position={[0, 0.35, 0]}>
+          <boxGeometry args={[1.2, 0.4, 0.8]} />
+          <meshStandardMaterial color="#c8c0b0" metalness={0.5} roughness={0.4} />
+        </mesh>
+        {/* Mast */}
+        <mesh position={[0.3, 0.85, 0]}>
+          <cylinderGeometry args={[0.03, 0.03, 0.7, 6]} />
+          <meshStandardMaterial color="#aaa8a0" metalness={0.6} roughness={0.3} />
+        </mesh>
+        {/* Camera head */}
+        <mesh position={[0.3, 1.25, 0]}>
+          <boxGeometry args={[0.15, 0.1, 0.12]} />
+          <meshStandardMaterial color="#404040" metalness={0.7} roughness={0.3} />
+        </mesh>
+        {/* Wheels (6) */}
+        {([-0.5, 0, 0.5] as const).map((xOff) => (
+          [0.45, -0.45].map((zOff) => (
+            <mesh key={`${xOff}-${zOff}`} position={[xOff, 0.12, zOff]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.12, 0.12, 0.06, 12]} />
+              <meshStandardMaterial color="#555555" metalness={0.3} roughness={0.7} />
+            </mesh>
+          ))
+        ))}
+        {/* Solar panel (Spirit/Opportunity only) */}
+        {!isLargeRover && (
+          <mesh position={[0, 0.58, 0]}>
+            <boxGeometry args={[1.4, 0.02, 1.0]} />
+            <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.5} />
+          </mesh>
+        )}
+        {/* RTG arm (Curiosity/Perseverance only) */}
+        {isLargeRover && (
+          <mesh position={[-0.8, 0.35, 0]} rotation={[0, 0, -0.3]}>
+            <cylinderGeometry args={[0.06, 0.06, 0.6, 8]} />
+            <meshStandardMaterial color="#884422" metalness={0.3} roughness={0.6} />
+          </mesh>
+        )}
+      </group>
+    );
+  }
+
+  // Lander (Viking, Pathfinder)
+  const isPf = missionId === "mars-pathfinder";
+  return (
+    <group position={[0, 0, 0]}>
+      {/* Lander body */}
+      <mesh position={[0, 0.4, 0]}>
+        <cylinderGeometry args={[0.5, 0.6, 0.5, isPf ? 6 : 8]} />
+        <meshStandardMaterial color="#c8c0b0" metalness={0.5} roughness={0.4} />
+      </mesh>
+      {/* Legs (3) */}
+      {[0, 120, 240].map((deg) => {
+        const rad = (deg * Math.PI) / 180;
+        return (
+          <mesh key={deg} position={[Math.cos(rad) * 0.7, 0.12, Math.sin(rad) * 0.7]} rotation={[0, 0, Math.cos(rad) * 0.3]}>
+            <cylinderGeometry args={[0.03, 0.03, 0.5, 4]} />
+            <meshStandardMaterial color="#888888" metalness={0.6} roughness={0.4} />
+          </mesh>
+        );
+      })}
+      {/* Antenna dish */}
+      <mesh position={[0, 0.75, 0]}>
+        <cylinderGeometry args={[0.25, 0.08, 0.06, 12]} />
+        <meshStandardMaterial color="#d0d0d0" metalness={0.7} roughness={0.3} />
+      </mesh>
+      {/* Antenna mast */}
+      <mesh position={[0, 0.9, 0]}>
+        <cylinderGeometry args={[0.015, 0.015, 0.3, 4]} />
+        <meshStandardMaterial color="#aaaaaa" metalness={0.6} roughness={0.4} />
+      </mesh>
+    </group>
+  );
+}
+
 function PlayerController({ planet }: { planet?: string }) {
   const { camera } = useThree();
   const velocity = useRef(new THREE.Vector3());
@@ -633,15 +721,14 @@ function SunLight({ lat, lon, evaDate, planet }: { lat: number; lon: number; eva
         shadow-camera-bottom={-60}
         shadow-bias={-0.0002}
       />
-      {/* Sun Disc & Corona in the Lunar Sky */}
       <group position={[sunData.direction[0] * 3, sunData.direction[1] * 3, sunData.direction[2] * 3]}>
         <mesh>
-          <sphereGeometry args={[14, 32, 32]} />
+          <sphereGeometry args={[isMars ? 9 : 14, 32, 32]} />
           <meshBasicMaterial color="#ffffff" />
         </mesh>
         <mesh scale={[2.2, 2.2, 2.2]}>
-          <sphereGeometry args={[14, 32, 32]} />
-          <meshBasicMaterial color="#fff4d0" transparent opacity={0.35} />
+          <sphereGeometry args={[isMars ? 9 : 14, 32, 32]} />
+          <meshBasicMaterial color="#fff4d0" transparent opacity={isMars ? 0.25 : 0.35} />
         </mesh>
       </group>
     </>
@@ -670,11 +757,16 @@ function SurfaceSceneContent({
     <>
       {isMars ? (
         <>
-          <color attach="background" args={["#2a1a0e"]} />
-          <fog attach="fog" args={["#c4956a", 60, 250]} />
-          <Stars radius={300} depth={80} count={2000} factor={3} saturation={0.3} fade speed={0.05} />
-          <ambientLight intensity={0.12} color="#e8c4a0" />
-          <hemisphereLight args={["#c49060", "#3a2010", 0.15]} />
+          <color attach="background" args={["#c49470"]} />
+          <fog attach="fog" args={["#c4956a", 40, 200]} />
+          {/* Mars sky dome — butterscotch gradient */}
+          <mesh>
+            <sphereGeometry args={[500, 32, 32]} />
+            <meshBasicMaterial color="#b08060" side={THREE.BackSide} transparent opacity={0.7} />
+          </mesh>
+          <Stars radius={400} depth={80} count={300} factor={2} saturation={0.1} fade speed={0.02} />
+          <ambientLight intensity={0.15} color="#e8c4a0" />
+          <hemisphereLight args={["#c49060", "#3a2010", 0.2]} />
         </>
       ) : (
         <>
@@ -697,7 +789,9 @@ function SurfaceSceneContent({
       </Suspense>
       <GroundPlane planet={mission.planet} />
 
-      {!isMars && (
+      {isMars ? (
+        <MarsBase missionId={missionId} />
+      ) : (
         <Suspense fallback={null}>
           <LMDescent position={[0, 0, 0]} scale={1} />
         </Suspense>
@@ -710,6 +804,7 @@ function SurfaceSceneContent({
           isFound={found.includes(obj.id)}
           isNear={nearObjectId === obj.id}
           distance={objectDistances[obj.id] ?? 999}
+          isMars={isMars}
         />
       ))}
 
@@ -728,7 +823,7 @@ function SurfaceSceneContent({
   );
 }
 
-function InspectOverlay({ objects, missionId }: { objects: HeritageObject[]; missionId: string }) {
+function InspectOverlay({ objects, missionId, isMars }: { objects: HeritageObject[]; missionId: string; isMars?: boolean }) {
   const { t } = useTranslation();
   const objectId = useGameStore((s) => s.inspecting.objectId);
   const send = useGameStore((s) => s.send);
@@ -755,7 +850,11 @@ function InspectOverlay({ objects, missionId }: { objects: HeritageObject[]; mis
     const src = `/audio/heritage/${missionId}/${objectId}.mp3`;
     const howl = new Howl({ src: [src], volume: 0.85 });
     howlRef.current = howl;
-    gameAudio.playQuindar();
+    if (isMars) {
+      gameAudio.playDataScan();
+    } else {
+      gameAudio.playQuindar();
+    }
     setTimeout(() => howl.play(), 350);
     return () => {
       howl.fade(howl.volume(), 0, 400);
@@ -822,7 +921,7 @@ function InspectOverlay({ objects, missionId }: { objects: HeritageObject[]; mis
   );
 }
 
-function MiniRadar({ found, objects }: { found: string[]; objects: HeritageObject[] }) {
+function MiniRadar({ found, objects, isMars }: { found: string[]; objects: HeritageObject[]; isMars?: boolean }) {
   const [tick, setTick] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setTick((n) => n + 1), 500);
@@ -835,19 +934,23 @@ function MiniRadar({ found, objects }: { found: string[]; objects: HeritageObjec
   const radarRange = 50;
   const sweepAngle = ((tick * 12) % 360) * (Math.PI / 180);
 
+  const ringColor = isMars ? "#e8a050" : "#ffd36e";
+  const accentColor = isMars ? "#ff9944" : "#00d4ff";
+  const blipColor = isMars ? "#e8a050" : "#ffd36e";
+
   return (
     <svg viewBox="0 0 100 100" className="h-24 w-24 opacity-80">
-      <circle cx="50" cy="50" r="48" fill="none" stroke="#ffd36e" strokeWidth="0.5" strokeOpacity="0.3" />
-      <circle cx="50" cy="50" r="32" fill="none" stroke="#ffd36e" strokeWidth="0.3" strokeOpacity="0.2" />
-      <circle cx="50" cy="50" r="16" fill="none" stroke="#ffd36e" strokeWidth="0.3" strokeOpacity="0.15" />
+      <circle cx="50" cy="50" r="48" fill="none" stroke={ringColor} strokeWidth="0.5" strokeOpacity="0.3" />
+      <circle cx="50" cy="50" r="32" fill="none" stroke={ringColor} strokeWidth="0.3" strokeOpacity="0.2" />
+      <circle cx="50" cy="50" r="16" fill="none" stroke={ringColor} strokeWidth="0.3" strokeOpacity="0.15" />
       {/* Sweep line */}
       <line
         x1="50" y1="50"
         x2={50 + Math.sin(sweepAngle) * 46}
         y2={50 - Math.cos(sweepAngle) * 46}
-        stroke="#00d4ff" strokeWidth="1" strokeOpacity="0.25"
+        stroke={accentColor} strokeWidth="1" strokeOpacity="0.25"
       />
-      <line x1="50" y1="2" x2="50" y2="12" stroke="#00d4ff" strokeWidth="1.5" strokeOpacity="0.6" />
+      <line x1="50" y1="2" x2="50" y2="12" stroke={accentColor} strokeWidth="1.5" strokeOpacity="0.6" />
       {/* LM at origin */}
       {(() => {
         const dx = (0 - px) / radarRange;
@@ -857,7 +960,7 @@ function MiniRadar({ found, objects }: { found: string[]; objects: HeritageObjec
         const sx = 50 + rx * 45;
         const sy = 50 - rz * 45;
         if (sx > 5 && sx < 95 && sy > 5 && sy < 95) {
-          return <rect x={sx - 3} y={sy - 3} width="6" height="6" fill="#66ff99" opacity="0.8" />;
+          return <rect x={sx - 3} y={sy - 3} width="6" height="6" fill={isMars ? "#88cc66" : "#66ff99"} opacity="0.8" />;
         }
         return null;
       })()}
@@ -882,12 +985,12 @@ function MiniRadar({ found, objects }: { found: string[]; objects: HeritageObjec
             key={obj.id}
             cx={pingX} cy={pingY}
             r={pulseR}
-            fill="#ffd36e"
+            fill={blipColor}
             opacity={Math.max(0.2, pulseOpacity)}
           />
         );
       })}
-      <circle cx="50" cy="50" r="2.5" fill="#00d4ff" />
+      <circle cx="50" cy="50" r="2.5" fill={accentColor} />
     </svg>
   );
 }
@@ -1098,7 +1201,7 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
 
       {/* Top-right: mini radar */}
       <div className="absolute right-4 top-4 rounded-lg bg-space-950/60 p-1 backdrop-blur">
-        <MiniRadar found={found} objects={objects} />
+        <MiniRadar found={found} objects={objects} isMars={isMars} />
       </div>
 
       {/* XP toast */}
@@ -1208,7 +1311,7 @@ export function SurfaceScene() {
         </Canvas>
       </div>
       <SurfaceHUD nearObjectId={nearObjectId} objects={mission.objects} planet={mission.planet} missionType={mission.missionType} />
-      {phase === "inspect" && <InspectOverlay objects={mission.objects} missionId={missionId ?? "apollo-11"} />}
+      {phase === "inspect" && <InspectOverlay objects={mission.objects} missionId={missionId ?? "apollo-11"} isMars={mission.planet === "mars"} />}
     </div>
   );
 }

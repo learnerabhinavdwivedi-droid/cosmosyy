@@ -82,11 +82,16 @@ function GameAudioController() {
 
       if (SURFACE_PHASES.has(phase) && !SURFACE_PHASES.has(prev)) {
         if (!isRobotic) gameAudio.startBreathing();
-        gameAudio.startLunarHum();
+        if (missionSpec?.planet === "mars") {
+          gameAudio.startMarsWind();
+        } else {
+          gameAudio.startLunarHum();
+        }
       }
       if (!SURFACE_PHASES.has(phase) && SURFACE_PHASES.has(prev)) {
         if (!isRobotic) gameAudio.stopBreathing();
         gameAudio.stopLunarHum();
+        gameAudio.stopMarsWind();
       }
 
       if (phase === "explore") {
@@ -95,6 +100,7 @@ function GameAudioController() {
 
       if (phase === "launch") {
         gameAudio.stopLunarHum();
+        gameAudio.stopMarsWind();
         gameAudio.stopBreathing();
         gameAudio.playCountdown();
         setTimeout(() => gameAudio.startEngine(), 1600);
@@ -104,6 +110,7 @@ function GameAudioController() {
         gameAudio.stopEngine();
         gameAudio.stopSpaceDrone();
         gameAudio.stopLunarHum();
+        gameAudio.stopMarsWind();
         stopNarration();
         gameAudio.playSuccess();
       }
@@ -253,6 +260,61 @@ function AscentAnimator() {
   );
 }
 
+function MarsAscentAnimator() {
+  const ref = useRef<THREE.Group>(null);
+  const flameRef = useRef<THREE.Mesh>(null);
+  const elapsed = useRef(0);
+
+  useFrame((state, dt) => {
+    elapsed.current += dt;
+    const t = elapsed.current;
+    if (ref.current) {
+      ref.current.position.y = t * 3.0;
+      ref.current.rotation.z = Math.sin(t * 2) * 0.01;
+    }
+    if (flameRef.current) {
+      flameRef.current.scale.y = 0.6 + Math.sin(t * 12) * 0.2;
+    }
+    state.camera.position.y = 2 + t * 0.5;
+    state.camera.lookAt(0, t * 1.5, 0);
+  });
+
+  return (
+    <group ref={ref}>
+      {/* Probe body */}
+      <mesh>
+        <cylinderGeometry args={[0.25, 0.3, 1.0, 12]} />
+        <meshStandardMaterial color="#b8b8b8" metalness={0.7} roughness={0.3} />
+      </mesh>
+      {/* Antenna */}
+      <mesh position={[0, 0.55, 0]}>
+        <cylinderGeometry args={[0.2, 0.06, 0.06, 12]} />
+        <meshStandardMaterial color="#d0d0d0" metalness={0.8} roughness={0.2} />
+      </mesh>
+      {/* Solar panels */}
+      <mesh position={[0.85, 0, 0]}>
+        <boxGeometry args={[0.7, 0.015, 0.3]} />
+        <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.5} />
+      </mesh>
+      <mesh position={[-0.85, 0, 0]}>
+        <boxGeometry args={[0.7, 0.015, 0.3]} />
+        <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.5} />
+      </mesh>
+      {/* Flame */}
+      <mesh ref={flameRef} position={[0, -0.7, 0]} rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[0.2, 1.5, 8]} />
+        <meshBasicMaterial
+          color="#ffb36b"
+          transparent
+          opacity={0.85}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
 function LaunchSceneContent() {
   const missionId = useGameStore((s) => s.missionId);
   const mission = getMission(missionId ?? "apollo-11");
@@ -301,7 +363,7 @@ function LaunchSceneContent() {
           <LMDescent position={[0, 0, 0]} scale={1} />
         </Suspense>
       )}
-      <AscentAnimator />
+      {isMars ? <MarsAscentAnimator /> : <AscentAnimator />}
     </>
   );
 }
@@ -325,16 +387,14 @@ function LaunchScene() {
 
   return (
     <div className="relative h-screen w-full">
-      {!isRobotic && (
-        <Canvas
-          camera={{ position: [15, 3, 15], fov: 55, near: 0.1, far: 2000 }}
-          gl={{ antialias: false, toneMapping: THREE.AgXToneMapping }}
-        >
-          <color attach="background" args={["#000000"]} />
-          <LaunchSceneContent />
-          <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} />
-        </Canvas>
-      )}
+      <Canvas
+        camera={{ position: [15, 3, 15], fov: 55, near: 0.1, far: 2000 }}
+        gl={{ antialias: false, toneMapping: THREE.AgXToneMapping }}
+      >
+        <color attach="background" args={["#000000"]} />
+        <LaunchSceneContent />
+        <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} />
+      </Canvas>
       <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-end pb-12">
         <div className="rounded-lg bg-space-950/85 px-6 py-3 backdrop-blur">
           <p className="font-display text-lg text-regolith-200">
