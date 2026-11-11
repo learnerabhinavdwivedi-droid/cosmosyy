@@ -399,7 +399,7 @@ function MarsSphere() {
   );
 }
 
-function LandingMarker() {
+function LandingMarker({ isMars }: { isMars: boolean }) {
   const ref = useRef<THREE.Mesh>(null);
   const groupRef = useRef<THREE.Group>(null);
   const phaseRef = useRef(useGameStore.getState().phase);
@@ -429,7 +429,7 @@ function LandingMarker() {
       >
         <ringGeometry args={[0.5, 0.8, 32]} />
         <meshBasicMaterial
-          color="#ffd36e"
+          color={isMars ? "#ff6633" : "#ffd36e"}
           transparent
           opacity={0.8}
           side={THREE.DoubleSide}
@@ -441,7 +441,7 @@ function LandingMarker() {
   );
 }
 
-function OrbitPath() {
+function OrbitPath({ isMars }: { isMars: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const phaseRef = useRef(useGameStore.getState().phase);
 
@@ -468,9 +468,9 @@ function OrbitPath() {
   }, []);
 
   const lineObj = useMemo(() => {
-    const mat = new THREE.LineBasicMaterial({ color: "#6ee7ff", transparent: true, opacity: 0.3 });
+    const mat = new THREE.LineBasicMaterial({ color: isMars ? "#ff8855" : "#6ee7ff", transparent: true, opacity: 0.3 });
     return new THREE.Line(geo, mat);
-  }, [geo]);
+  }, [geo, isMars]);
 
   return (
     <group ref={groupRef}>
@@ -497,6 +497,8 @@ function FlightAnimator({ isMars }: { isMars: boolean }) {
   const sepPos = useRef(new THREE.Vector3());
   const sepDir = useRef(new THREE.Vector3());
   const sepTime = useRef(0);
+  const marsProbeRef = useRef<THREE.Group>(null);
+  const heatShieldRef = useRef<THREE.Mesh>(null);
 
   const { scene: saturnScene } = useGLTF("/models/saturn-v.glb");
   const { scene: lmScene } = useGLTF("/models/lunar-module.glb");
@@ -532,11 +534,13 @@ function FlightAnimator({ isMars }: { isMars: boolean }) {
 
     if (phase === "coast" && progress >= STAGE_SEP_AT && !separated.current) {
       separated.current = true;
-      sepTime.current = 0;
-      sepPos.current.copy(_shipCopy);
-      _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.05, 1)));
-      sepDir.current.subVectors(_shipCopy, _aheadCopy).normalize();
-      gameAudio.playStaging();
+      if (!isMars) {
+        sepTime.current = 0;
+        sepPos.current.copy(_shipCopy);
+        _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.05, 1)));
+        sepDir.current.subVectors(_shipCopy, _aheadCopy).normalize();
+        gameAudio.playStaging();
+      }
     }
 
     if (separated.current) {
@@ -558,7 +562,7 @@ function FlightAnimator({ isMars }: { isMars: boolean }) {
     }
 
     if (boosterRef.current) {
-      if (separated.current && phase !== "flight") {
+      if (!isMars && separated.current && phase !== "flight") {
         boosterRef.current.visible = true;
         const t = sepTime.current;
         const drift = t * 1.2;
@@ -590,22 +594,50 @@ function FlightAnimator({ isMars }: { isMars: boolean }) {
 
     if (phase === "flight" || phase === "coast") landingCut.current = false;
 
-    const useLM = !isMars && (separated.current || phase === "orbit" || phase === "targetLocked"
-      || phase === "descent" || phase === "touchdown" || phase === "stepOut");
-    if (saturnRef.current) saturnRef.current.visible = !useLM;
-    if (lmRef.current) {
-      lmRef.current.visible = useLM;
-      if (inLandingScene) {
-        lmRef.current.rotation.set(0, 0, 0);
-        lmRef.current.scale.setScalar(0.35);
-      } else {
-        lmRef.current.rotation.set(Math.PI / 2, 0, 0);
-        lmRef.current.scale.setScalar(0.2);
+    if (isMars) {
+      const showRocket = phase === "flight" || (phase === "coast" && !separated.current);
+      if (saturnRef.current) saturnRef.current.visible = showRocket;
+      if (lmRef.current) lmRef.current.visible = false;
+      if (marsProbeRef.current) {
+        marsProbeRef.current.visible = !showRocket;
+        if (inLandingScene) {
+          marsProbeRef.current.rotation.set(0, 0, 0);
+          marsProbeRef.current.scale.setScalar(0.6);
+        } else {
+          marsProbeRef.current.rotation.set(Math.PI / 2, 0, 0);
+          marsProbeRef.current.scale.setScalar(0.4);
+        }
       }
+      if (heatShieldRef.current) {
+        const inEntry = inLandingScene && phase === "descent" && progress < 0.65;
+        heatShieldRef.current.visible = inEntry;
+        if (inEntry) {
+          const heatIntensity = 0.3 + Math.sin(elapsed.current * 8) * 0.15;
+          (heatShieldRef.current.material as THREE.MeshBasicMaterial).opacity = heatIntensity;
+        }
+      }
+    } else {
+      const useLM = separated.current || phase === "orbit" || phase === "targetLocked"
+        || phase === "descent" || phase === "touchdown" || phase === "stepOut";
+      if (saturnRef.current) saturnRef.current.visible = !useLM;
+      if (lmRef.current) {
+        lmRef.current.visible = useLM;
+        if (inLandingScene) {
+          lmRef.current.rotation.set(0, 0, 0);
+          lmRef.current.scale.setScalar(0.35);
+        } else {
+          lmRef.current.rotation.set(Math.PI / 2, 0, 0);
+          lmRef.current.scale.setScalar(0.2);
+        }
+      }
+      if (marsProbeRef.current) marsProbeRef.current.visible = false;
+      if (heatShieldRef.current) heatShieldRef.current.visible = false;
     }
 
     const powered = phase === "flight" || phase === "targetLocked"
-      || (phase === "descent" && !(inLandingScene && progress > 0.85));
+      || (phase === "descent" && (isMars
+        ? (!inLandingScene || (progress > 0.55 && progress < 0.9))
+        : !(inLandingScene && progress > 0.85)));
     if (flameRef.current) {
       flameRef.current.visible = powered;
       if (powered) {
@@ -630,6 +662,36 @@ function FlightAnimator({ isMars }: { isMars: boolean }) {
         <group ref={lmRef} scale={0.2} rotation={[Math.PI / 2, 0, 0]} visible={false}>
           <primitive object={lmClone} />
         </group>
+        {/* Mars probe / cruise stage (generic representation) */}
+        <group ref={marsProbeRef} scale={0.4} rotation={[Math.PI / 2, 0, 0]} visible={false}>
+          <mesh>
+            <cylinderGeometry args={[0.25, 0.3, 1.0, 12]} />
+            <meshStandardMaterial color="#b8b8b8" metalness={0.7} roughness={0.3} />
+          </mesh>
+          <mesh position={[0, 0.55, 0]}>
+            <cylinderGeometry args={[0.2, 0.06, 0.06, 12]} />
+            <meshStandardMaterial color="#d0d0d0" metalness={0.8} roughness={0.2} />
+          </mesh>
+          <mesh position={[0.85, 0, 0]}>
+            <boxGeometry args={[0.7, 0.015, 0.3]} />
+            <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.5} />
+          </mesh>
+          <mesh position={[-0.85, 0, 0]}>
+            <boxGeometry args={[0.7, 0.015, 0.3]} />
+            <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.5} />
+          </mesh>
+        </group>
+        {/* Heat shield glow for Mars EDL */}
+        <mesh ref={heatShieldRef} visible={false}>
+          <sphereGeometry args={[0.5, 16, 16]} />
+          <meshBasicMaterial
+            color="#ff4400"
+            transparent
+            opacity={0.4}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </mesh>
         <mesh
           ref={flameRef}
           rotation={[-Math.PI / 2, 0, 0]}
@@ -795,8 +857,8 @@ function FlightContent() {
       <Suspense fallback={null}>
         {isMars ? <MarsSphere /> : <MoonSphere />}
       </Suspense>
-      <LandingMarker />
-      <OrbitPath />
+      <LandingMarker isMars={!!isMars} />
+      <OrbitPath isMars={!!isMars} />
       <Suspense fallback={null}>
         {isMars ? <MarsLandingGround /> : <LandingGround />}
       </Suspense>
@@ -831,19 +893,21 @@ function FlightHUD() {
   const idx = phases.indexOf(phase);
   const pct = Math.max(0, (idx / (phases.length - 1)) * 100);
 
-  const [alt, setAlt] = useState(15000);
+  const startAlt = planet === "mars" ? 125000 : 15000;
+  const [alt, setAlt] = useState(startAlt);
   useEffect(() => {
     if (phase !== "descent") {
-      setAlt(15000);
+      setAlt(startAlt);
       return;
     }
     const t0 = Date.now();
+    const dur = planet === "mars" ? 10000 : 8000;
     const interval = setInterval(() => {
-      const prog = Math.min((Date.now() - t0) / 8000, 1);
-      setAlt(Math.max(0, Math.round(15000 * (1 - prog))));
+      const prog = Math.min((Date.now() - t0) / dur, 1);
+      setAlt(Math.max(0, Math.round(startAlt * (1 - prog))));
     }, 80);
     return () => clearInterval(interval);
-  }, [phase]);
+  }, [phase, startAlt, planet]);
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex flex-col">

@@ -34,8 +34,9 @@ Every asset, font, and non-MIT library used in this project.
 
 | Item | Source | Licence | Notes |
 | --- | --- | --- |--- |
-| Flight narration TTS (11 MP3s) | Generated with edge-tts (Microsoft Edge TTS API) | Microsoft Services Agreement | Neural voice en-US-GuyNeural; generated locally, not redistributed as service output |
-| Heritage object narration TTS (37 MP3s) | Generated with edge-tts (Microsoft Edge TTS API) | Microsoft Services Agreement | Neural voice en-US-GuyNeural; one per heritage object across 6 missions |
+| Flight narration TTS (11 Apollo + 42 Mars MP3s) | Generated with edge-tts (Microsoft Edge TTS API) | Microsoft Services Agreement | Neural voice en-US-GuyNeural; generated locally, not redistributed as service output |
+| Mars surface narration TTS (4 MP3s) | Generated with edge-tts (Microsoft Edge TTS API) | Microsoft Services Agreement | Neural voice en-US-GuyNeural; shared Mars surface phase narration |
+| Heritage object narration TTS (37 Apollo + 36 Mars MP3s) | Generated with edge-tts (Microsoft Edge TTS API) | Microsoft Services Agreement | Neural voice en-US-GuyNeural; one per heritage object across 12 missions |
 
 ## Fonts
 

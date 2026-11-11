@@ -10,6 +10,11 @@ function narrationPath(missionId: string, phase: GamePhase): string {
   return `/audio/narration/${missionId}/${phase}.mp3`;
 }
 
+function planetFallbackPath(missionId: string, phase: GamePhase): string {
+  const planet = missionId.startsWith("mars-") ? "mars" : "moon";
+  return `/audio/narration/${planet}/${phase}.mp3`;
+}
+
 function fallbackPath(phase: GamePhase): string {
   return `/audio/narration/${phase}.mp3`;
 }
@@ -32,12 +37,13 @@ export function preloadNarration(missionId?: string): void {
     if (howls.has(key)) continue;
 
     const primary = narrationPath(id, phase);
+    const planetFb = planetFallbackPath(id, phase);
     const fallback = fallbackPath(phase);
 
     howls.set(
       key,
       new Howl({
-        src: [primary, fallback],
+        src: [primary, planetFb, fallback],
         preload: true,
         volume,
       }),
