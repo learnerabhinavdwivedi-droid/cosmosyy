@@ -1,0 +1,74 @@
+{
+  "id": "mars-opportunity",
+  "planet": "mars",
+  "name": "Opportunity (MER-B)",
+  "site": "Meridiani Planum",
+  "date": "2004-01-25",
+  "evaSunTime": "2004-01-25T12:00:00Z",
+  "missionType": "robotic",
+  "operator": "NASA / JPL",
+  "crew": {
+    "commander": "Steve Squyres",
+    "lmp": "Ray Arvidson",
+    "cmp": "John Callas"
+  },
+  "landing": {
+    "lat": -1.95,
+    "lon": 354.47,
+    "label": "Challenger Memorial Station"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null
+  },
+  "objects": [
+    {
+      "id": "op-rover",
+      "name": "Opportunity Rover",
+      "position": [0, 0, 0],
+      "description": "Opportunity landed on 25 January 2004 for a 90-sol mission and operated for nearly 15 years — over 55 times its planned lifetime. It drove 45.16 km across the Martian surface, the longest distance travelled by any off-Earth wheeled vehicle. A planet-wide dust storm in June 2018 blocked sunlight to its solar panels. Last contact: 10 June 2018.",
+      "xp": 60,
+      "source": "NASA/JPL Mars Exploration Rovers"
+    },
+    {
+      "id": "op-eagle-crater",
+      "name": "Eagle Crater",
+      "position": [5, 0, 2],
+      "description": "Opportunity landed inside Eagle Crater, a small 22-metre impact crater. Scientists called it a 'hole in one'. The crater walls exposed layered bedrock containing tiny haematite spherules nicknamed 'blueberries'. This was the first in-situ evidence that liquid water once existed on the Martian surface.",
+      "xp": 50,
+      "source": "NASA/JPL Mars Exploration Rovers"
+    },
+    {
+      "id": "op-blueberries",
+      "name": "Haematite 'Blueberries'",
+      "position": [3, 0, -3],
+      "description": "Scattered across Meridiani Planum, these small spherical concretions of grey haematite are typically 4–6 mm across. They formed inside water-saturated sedimentary rock and eroded out as the rock weathered. Their discovery was a landmark finding: definitive proof that Mars once had sustained liquid water on its surface.",
+      "xp": 50,
+      "source": "NASA/JPL Mars Exploration Rovers"
+    },
+    {
+      "id": "op-heat-shield",
+      "name": "Heat Shield",
+      "position": [-4, 0, 4],
+      "description": "Opportunity drove to examine its own heat shield, which had impacted the surface about 250 metres from the landing site. Near the heat shield, the rover found an iron-nickel meteorite, later named Heat Shield Rock — the first meteorite identified on another planet. It confirmed that the Martian atmosphere was once thicker.",
+      "xp": 50,
+      "source": "NASA/JPL Mars Exploration Rovers"
+    },
+    {
+      "id": "op-marathon-valley",
+      "name": "Marathon Valley",
+      "position": [-3, 0, -4],
+      "description": "In March 2015, Opportunity reached Marathon Valley on the rim of Endeavour Crater, having driven 42.195 km — a full marathon distance. The valley contained clay minerals detected from orbit by the Mars Reconnaissance Orbiter. Clay minerals form in near-neutral water, suggesting this area once had conditions more hospitable to life.",
+      "xp": 50,
+      "source": "NASA/JPL Mars Exploration Rovers"
+    },
+    {
+      "id": "op-perseverance-valley",
+      "name": "Perseverance Valley",
+      "position": [6, 0, -1],
+      "description": "Opportunity's final resting place is in Perseverance Valley, a shallow channel carved into the western rim of Endeavour Crater. The rover was studying how the valley formed — by water, wind, or ice — when the 2018 global dust storm ended its mission. The valley was named for the rover's remarkable longevity.",
+      "xp": 50,
+      "source": "NASA/JPL Mars Exploration Rovers"
+    }
+  ]
+}

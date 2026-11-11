@@ -1,0 +1,74 @@
+{
+  "id": "mars-perseverance",
+  "planet": "mars",
+  "name": "Perseverance (Mars 2020)",
+  "site": "Jezero Crater",
+  "date": "2021-02-18",
+  "evaSunTime": "2021-02-18T12:00:00Z",
+  "missionType": "robotic",
+  "operator": "NASA / JPL",
+  "crew": {
+    "commander": "Ken Farley",
+    "lmp": "Katie Stack Morgan",
+    "cmp": "Matt Wallace"
+  },
+  "landing": {
+    "lat": 18.44,
+    "lon": 77.45,
+    "label": "Octavia E. Butler Landing"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null
+  },
+  "objects": [
+    {
+      "id": "pe-rover",
+      "name": "Perseverance Rover",
+      "position": [0, 0, 0],
+      "description": "Perseverance landed on 18 February 2021 in Jezero Crater, a 45-km-wide ancient lake bed. Built on Curiosity's proven design but carrying new instruments, its primary mission is to search for signs of ancient microbial life and collect rock samples for future return to Earth. It also carries MOXIE, which demonstrated making oxygen from Martian CO₂.",
+      "xp": 60,
+      "source": "NASA/JPL Mars 2020"
+    },
+    {
+      "id": "pe-ingenuity",
+      "name": "Ingenuity Helicopter",
+      "position": [5, 0, 3],
+      "description": "Ingenuity was the first aircraft to achieve powered, controlled flight on another planet. Weighing just 1.8 kg, it made 72 flights over nearly three years, far exceeding its planned five-flight technology demonstration. On 18 January 2024, it damaged a rotor blade during its 72nd flight and was retired. It proved that aerial exploration of Mars is possible.",
+      "xp": 60,
+      "source": "NASA/JPL Mars 2020"
+    },
+    {
+      "id": "pe-sample-tubes",
+      "name": "Sample Cache Depot",
+      "position": [-3, 0, 4],
+      "description": "Perseverance has collected and sealed rock core samples in titanium tubes, then deposited backup copies at the Three Forks cache depot in Jezero Crater. Ten tubes rest on the surface in a carefully mapped pattern. A future Mars Sample Return mission aims to bring these tubes to Earth — they would be the first samples returned from another planet.",
+      "xp": 50,
+      "source": "NASA/JPL Mars 2020"
+    },
+    {
+      "id": "pe-delta",
+      "name": "Jezero Delta Remnant",
+      "position": [6, 0, -2],
+      "description": "Jezero Crater contains a well-preserved river delta where a river once flowed into the ancient lake. Perseverance explored the delta and found sedimentary rocks with organic molecules and minerals formed in water. The layered structure preserves evidence of changing water levels and environments over billions of years.",
+      "xp": 50,
+      "source": "NASA/JPL Mars 2020"
+    },
+    {
+      "id": "pe-supercam",
+      "name": "SuperCam Laser Marks",
+      "position": [-5, 0, -2],
+      "description": "SuperCam fires a laser at rocks from up to 7 metres away, vaporising a tiny spot and analysing the flash of light to determine chemical composition. It can also use Raman spectroscopy to identify minerals and organic compounds. The small pits left by the laser on Martian rocks are among the most precise human-made marks on another world.",
+      "xp": 50,
+      "source": "NASA/JPL Mars 2020"
+    },
+    {
+      "id": "pe-sky-crane",
+      "name": "Descent Stage Wreckage",
+      "position": [4, 0, -5],
+      "description": "Like Curiosity, Perseverance was lowered to the surface by a sky crane. The descent stage then flew 700 metres away and crashed. HiRISE orbital images show the dark debris field. Perseverance's cameras captured the first video of a Mars landing, showing the parachute deployment, heat shield separation, and sky crane sequence in stunning detail.",
+      "xp": 50,
+      "source": "NASA/JPL Mars 2020"
+    }
+  ]
+}

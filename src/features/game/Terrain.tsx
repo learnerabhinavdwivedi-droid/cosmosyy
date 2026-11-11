@@ -103,14 +103,50 @@ export function GenericTerrain({ lat, lon }: { lat?: number; lon?: number }) {
   );
 }
 
-export function Terrain({ stlPath, orthoPath, lat, lon }: { stlPath?: string | null; orthoPath?: string | null; lat?: number; lon?: number }) {
+export function MarsTerrain({ lat, lon }: { lat?: number; lon?: number }) {
+  const elevTex = useLoader(THREE.TextureLoader, "/textures/moon-elevation-2k.png");
+
+  const uvOffset = useMemo(() => {
+    const u = ((lon ?? 0) + 180) / 360;
+    const v = ((lat ?? 0) + 90) / 180;
+    return [u * 4, v * 4] as const;
+  }, [lat, lon]);
+
+  const material = useMemo(() => {
+    elevTex.wrapS = THREE.RepeatWrapping;
+    elevTex.wrapT = THREE.RepeatWrapping;
+    elevTex.repeat.set(4, 4);
+    elevTex.offset.set(uvOffset[0] * 0.5, uvOffset[1] * 0.5);
+
+    return new THREE.MeshStandardMaterial({
+      color: new THREE.Color("#a0522d"),
+      displacementMap: elevTex,
+      displacementScale: 4.0,
+      roughness: 0.92,
+      metalness: 0.05,
+    });
+  }, [elevTex, uvOffset]);
+
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]} receiveShadow>
+      <planeGeometry args={[200, 200, 256, 256]} />
+      <primitive object={material} attach="material" />
+    </mesh>
+  );
+}
+
+export function Terrain({ stlPath, orthoPath, lat, lon, planet }: { stlPath?: string | null; orthoPath?: string | null; lat?: number; lon?: number; planet?: string }) {
   if (stlPath && orthoPath) {
     return <STLTerrain stlPath={stlPath} orthoPath={orthoPath} />;
+  }
+  if (planet === "mars") {
+    return <MarsTerrain lat={lat} lon={lon} />;
   }
   return <GenericTerrain lat={lat} lon={lon} />;
 }
 
-export function GroundPlane() {
+export function GroundPlane({ planet }: { planet?: string }) {
+  const color = planet === "mars" ? "#6b3a2a" : "#3a3a3a";
   return (
     <mesh
       rotation={[-Math.PI / 2, 0, 0]}
@@ -118,7 +154,7 @@ export function GroundPlane() {
       receiveShadow
     >
       <planeGeometry args={[2000, 2000]} />
-      <meshStandardMaterial color="#3a3a3a" roughness={0.98} metalness={0} />
+      <meshStandardMaterial color={color} roughness={0.98} metalness={0} />
     </mesh>
   );
 }

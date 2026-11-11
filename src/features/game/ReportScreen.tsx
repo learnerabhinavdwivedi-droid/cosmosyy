@@ -62,6 +62,10 @@ export function ReportScreen() {
   const missionXp = XP_LAND + objectXp + flagXp + XP_COMPLETE;
 
   const nextMissionId = useMemo(() => missionId ? getNextMissionId(missionId) : null, [missionId]);
+  const nextMissionLabel = useMemo(() => {
+    if (!nextMissionId) return "";
+    try { return getMission(nextMissionId).name; } catch { return nextMissionId; }
+  }, [nextMissionId]);
 
   const missionName = mission.name;
 
@@ -202,10 +206,10 @@ export function ReportScreen() {
             {nextMissionId && (
               <Button
                 onClick={handleNextMission}
-                aria-label={`Start next mission: ${nextMissionId.replace("apollo-", "Apollo ")}`}
+                aria-label={`Start next mission: ${nextMissionLabel}`}
                 className="w-full bg-signal text-space-950 hover:bg-signal/90 font-semibold text-base py-3 focus-visible:ring-2 focus-visible:ring-signal"
               >
-                {t("report.nextMission", { mission: nextMissionId.replace("apollo-", "Apollo ") })}
+                {t("report.nextMission", { mission: nextMissionLabel })}
               </Button>
             )}
             <Button

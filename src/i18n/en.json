@@ -5,6 +5,9 @@
   },
   "missionSelect": {
     "heading": "Choose Your Mission",
+    "marsHeading": "Mars Exploration Missions",
+    "moonTab": "Moon",
+    "marsTab": "Mars",
     "enterName": "Enter your name",
     "namePlaceholder": "Commander…",
     "locked": "Locked",

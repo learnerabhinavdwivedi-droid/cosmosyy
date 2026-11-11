@@ -255,18 +255,31 @@ function LaunchSceneContent() {
   const missionId = useGameStore((s) => s.missionId);
   const mission = getMission(missionId ?? "apollo-11");
   const sunData = getSunPosition(mission.landing.lat, mission.landing.lon, mission.evaSunTime);
+  const isMars = mission.planet === "mars";
 
   return (
     <>
-      <Stars radius={300} depth={80} count={8000} factor={5} saturation={0.6} fade speed={0.1} />
-      <ambientLight intensity={0.04} color="#333344" />
-      <hemisphereLight args={["#667788", "#222228", 0.08]} />
+      {isMars ? (
+        <>
+          <color attach="background" args={["#2a1a0e"]} />
+          <fog attach="fog" args={["#c4956a", 60, 250]} />
+          <Stars radius={300} depth={80} count={2000} factor={3} saturation={0.3} fade speed={0.05} />
+          <ambientLight intensity={0.12} color="#e8c4a0" />
+          <hemisphereLight args={["#c49060", "#3a2010", 0.15]} />
+        </>
+      ) : (
+        <>
+          <Stars radius={300} depth={80} count={8000} factor={5} saturation={0.6} fade speed={0.1} />
+          <ambientLight intensity={0.04} color="#333344" />
+          <hemisphereLight args={["#667788", "#222228", 0.08]} />
+        </>
+      )}
       <directionalLight
         position={sunData.direction}
-        intensity={3.0}
-        color="#fff5e0"
+        intensity={isMars ? 2.0 : 3.0}
+        color={isMars ? "#ffe0b0" : "#fff5e0"}
       />
-      {/* Sun Disc in Lunar Sky */}
+      {/* Sun Disc */}
       <group position={[sunData.direction[0] * 3, sunData.direction[1] * 3, sunData.direction[2] * 3]}>
         <mesh>
           <sphereGeometry args={[14, 32, 32]} />
@@ -278,12 +291,14 @@ function LaunchSceneContent() {
         </mesh>
       </group>
       <Suspense fallback={null}>
-        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} lat={mission.landing.lat} lon={mission.landing.lon} />
+        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} lat={mission.landing.lat} lon={mission.landing.lon} planet={mission.planet} />
       </Suspense>
-      <GroundPlane />
-      <Suspense fallback={null}>
-        <LMDescent position={[0, 0, 0]} scale={1} />
-      </Suspense>
+      <GroundPlane planet={mission.planet} />
+      {!isMars && (
+        <Suspense fallback={null}>
+          <LMDescent position={[0, 0, 0]} scale={1} />
+        </Suspense>
+      )}
       <AscentAnimator />
     </>
   );

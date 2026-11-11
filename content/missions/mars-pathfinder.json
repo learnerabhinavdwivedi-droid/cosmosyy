@@ -1,0 +1,74 @@
+{
+  "id": "mars-pathfinder",
+  "planet": "mars",
+  "name": "Mars Pathfinder",
+  "site": "Ares Vallis",
+  "date": "1997-07-04",
+  "evaSunTime": "1997-07-04T12:00:00Z",
+  "missionType": "robotic",
+  "operator": "NASA / JPL",
+  "crew": {
+    "commander": "Tony Spear",
+    "lmp": "Matthew Golombek",
+    "cmp": "Brian Muirhead"
+  },
+  "landing": {
+    "lat": 19.33,
+    "lon": -33.55,
+    "label": "Sagan Memorial Station"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null
+  },
+  "objects": [
+    {
+      "id": "mp-base-station",
+      "name": "Pathfinder Base Station",
+      "position": [0, 0, 0],
+      "description": "The Mars Pathfinder base station, later named the Carl Sagan Memorial Station, was a low-cost lander that demonstrated a new airbag landing system. It bounced 15 times on the surface before coming to rest. The station served as a communications relay and carried the IMP camera and atmospheric instruments.",
+      "xp": 60,
+      "source": "NASA/JPL Mars Pathfinder"
+    },
+    {
+      "id": "mp-sojourner",
+      "name": "Sojourner Rover",
+      "position": [4, 0, 2],
+      "description": "Sojourner was the first rover to operate on another planet. Weighing just 10.6 kg (about the size of a microwave oven), it explored about 100 square metres of the surface over 83 sols. Sojourner carried an Alpha Proton X-ray Spectrometer to analyse rock compositions, finding that some rocks were similar to Earth's andesite.",
+      "xp": 60,
+      "source": "NASA/JPL Mars Pathfinder"
+    },
+    {
+      "id": "mp-ramp",
+      "name": "Deployment Ramp",
+      "position": [2, 0, 1],
+      "description": "After landing and deflating its airbags, Pathfinder opened its petals and deployed two ramps for Sojourner to drive down. The rear ramp was blocked by a partially deflated airbag, so engineers commanded Sojourner to use the front ramp. This was the first time a rover drove onto the surface of another planet.",
+      "xp": 50,
+      "source": "NASA/JPL Mars Pathfinder"
+    },
+    {
+      "id": "mp-imp-camera",
+      "name": "IMP Camera Mast",
+      "position": [-2, 0, -2],
+      "description": "The Imager for Mars Pathfinder (IMP) was a stereo camera mounted on a 1.5-metre mast. It captured over 16,500 images of the Martian landscape and provided the first 360-degree colour panoramas from Mars since Viking. The camera had 12 geology filters and 12 atmospheric filters for scientific analysis.",
+      "xp": 50,
+      "source": "NASA/JPL Mars Pathfinder"
+    },
+    {
+      "id": "mp-barnacle-bill",
+      "name": "Barnacle Bill Rock",
+      "position": [5, 0, -1],
+      "description": "The first rock analysed by Sojourner's APXS instrument was informally named 'Barnacle Bill'. Analysis revealed it was rich in silicon, similar to andesite found on Earth. This was surprising — scientists expected basaltic compositions. It suggested Mars had a more complex geological history than previously thought.",
+      "xp": 50,
+      "source": "NASA/JPL Mars Pathfinder"
+    },
+    {
+      "id": "mp-yogi",
+      "name": "Yogi Rock",
+      "position": [-4, 0, 3],
+      "description": "Yogi was a large rock near the Pathfinder landing site, about one metre tall. Sojourner spent several sols driving to and analysing Yogi. APXS measurements showed it had a basaltic composition, different from Barnacle Bill, indicating variety in the local geology. Wind-sculpted features on its surface showed evidence of aeolian erosion.",
+      "xp": 50,
+      "source": "NASA/JPL Mars Pathfinder"
+    }
+  ]
+}

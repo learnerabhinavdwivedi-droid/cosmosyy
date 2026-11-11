@@ -14,7 +14,7 @@ import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { Howl } from "howler";
 import { gameAudio } from "@/lib/gameAudio";
-import { getMission, type HeritageObject } from "@/lib/missionData";
+import { getMission, type HeritageObject, type Planet } from "@/lib/missionData";
 import { LMDescent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
 import { EarthAtmosphere } from "./EarthAtmosphere";
@@ -650,35 +650,44 @@ function SurfaceSceneContent({
   const found = useGameStore((s) => s.objectsFoundThisRun);
   const mission = useMemo(() => getMission(missionId), [missionId]);
   const objects = mission.objects;
+  const isMars = mission.planet === "mars";
 
   return (
     <>
-      <Stars
-        radius={300}
-        depth={80}
-        count={8000}
-        factor={5}
-        saturation={0.6}
-        fade
-        speed={0.1}
-      />
+      {isMars ? (
+        <>
+          <color attach="background" args={["#2a1a0e"]} />
+          <fog attach="fog" args={["#c4956a", 60, 250]} />
+          <Stars radius={300} depth={80} count={2000} factor={3} saturation={0.3} fade speed={0.05} />
+          <ambientLight intensity={0.12} color="#e8c4a0" />
+          <hemisphereLight args={["#c49060", "#3a2010", 0.15]} />
+        </>
+      ) : (
+        <>
+          <Stars radius={300} depth={80} count={8000} factor={5} saturation={0.6} fade speed={0.1} />
+          <ambientLight intensity={0.04} color="#333344" />
+          <hemisphereLight args={["#667788", "#222228", 0.08]} />
+        </>
+      )}
 
-      <ambientLight intensity={0.04} color="#333344" />
-      <hemisphereLight args={["#667788", "#222228", 0.08]} />
       <SunLight lat={mission.landing.lat} lon={mission.landing.lon} evaDate={mission.evaSunTime} />
 
-      <Suspense fallback={null}>
-        <EarthInSky lat={mission.landing.lat} lon={mission.landing.lon} />
-      </Suspense>
+      {!isMars && (
+        <Suspense fallback={null}>
+          <EarthInSky lat={mission.landing.lat} lon={mission.landing.lon} />
+        </Suspense>
+      )}
 
-      <Suspense fallback={<GroundPlane />}>
-        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} lat={mission.landing.lat} lon={mission.landing.lon} />
+      <Suspense fallback={<GroundPlane planet={mission.planet} />}>
+        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} lat={mission.landing.lat} lon={mission.landing.lon} planet={mission.planet} />
       </Suspense>
-      <GroundPlane />
+      <GroundPlane planet={mission.planet} />
 
-      <Suspense fallback={null}>
-        <LMDescent position={[0, 0, 0]} scale={1} />
-      </Suspense>
+      {!isMars && (
+        <Suspense fallback={null}>
+          <LMDescent position={[0, 0, 0]} scale={1} />
+        </Suspense>
+      )}
 
       {objects.map((obj) => (
         <HeritageMarker
@@ -692,9 +701,11 @@ function SurfaceSceneContent({
 
       <DustParticles />
       <AmbientDust />
-      <Suspense fallback={null}>
-        <Footprints />
-      </Suspense>
+      {!isMars && (
+        <Suspense fallback={null}>
+          <Footprints />
+        </Suspense>
+      )}
 
       <ProximityDetector setNearObjectId={setNearObjectId} setObjectDistances={setObjectDistances} objects={objects} />
       <PlayerController />

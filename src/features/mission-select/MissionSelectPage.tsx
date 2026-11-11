@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { MissionStatus } from "@/store/useAppStore";
 
+type PlanetTab = "moon" | "mars";
+
 interface MissionCardData {
   id: string;
   name: string;
@@ -20,7 +22,7 @@ interface MissionCardData {
   objectCount: number;
 }
 
-const MISSIONS: MissionCardData[] = [
+const MOON_MISSIONS: MissionCardData[] = [
   {
     id: "apollo-11",
     name: "Apollo 11",
@@ -73,6 +75,63 @@ const MISSIONS: MissionCardData[] = [
     date: "11 December 1972",
     crew: "Cernan, Schmitt, Evans",
     hook: "The final Apollo mission — a geologist on the Moon.",
+    objectCount: 6,
+  },
+];
+
+const MARS_MISSIONS: MissionCardData[] = [
+  {
+    id: "mars-viking1",
+    name: "Viking 1",
+    site: "Chryse Planitia",
+    date: "20 July 1976",
+    crew: "NASA / JPL",
+    hook: "The first successful landing on Mars — a new world in colour.",
+    objectCount: 6,
+  },
+  {
+    id: "mars-pathfinder",
+    name: "Mars Pathfinder",
+    site: "Ares Vallis",
+    date: "4 July 1997",
+    crew: "NASA / JPL",
+    hook: "Airbag landing and the first Mars rover: tiny Sojourner.",
+    objectCount: 6,
+  },
+  {
+    id: "mars-spirit",
+    name: "Spirit (MER-A)",
+    site: "Gusev Crater",
+    date: "4 January 2004",
+    crew: "NASA / JPL",
+    hook: "90 sols planned, 2,208 delivered. Stuck but never stopped.",
+    objectCount: 6,
+  },
+  {
+    id: "mars-opportunity",
+    name: "Opportunity (MER-B)",
+    site: "Meridiani Planum",
+    date: "25 January 2004",
+    crew: "NASA / JPL",
+    hook: "A marathon on Mars — 45 km in nearly 15 years.",
+    objectCount: 6,
+  },
+  {
+    id: "mars-curiosity",
+    name: "Curiosity (MSL)",
+    site: "Gale Crater",
+    date: "6 August 2012",
+    crew: "NASA / JPL",
+    hook: "Sky crane landing. Nuclear-powered. Climbing Mount Sharp.",
+    objectCount: 6,
+  },
+  {
+    id: "mars-perseverance",
+    name: "Perseverance",
+    site: "Jezero Crater",
+    date: "18 February 2021",
+    crew: "NASA / JPL",
+    hook: "Searching for ancient life. First Mars helicopter. Sample return.",
     objectCount: 6,
   },
 ];
@@ -180,6 +239,8 @@ export default function MissionSelectPage() {
   const [searchParams] = useSearchParams();
   const isDemo = searchParams.get("demo") === "1";
   const [nameInput, setNameInput] = useState(playerName);
+  const [planetTab, setPlanetTab] = useState<PlanetTab>("moon");
+  const activeMissions = planetTab === "mars" ? MARS_MISSIONS : MOON_MISSIONS;
 
   useEffect(() => {
     if (isDemo) {
@@ -290,16 +351,42 @@ export default function MissionSelectPage() {
           </div>
         )}
 
+        {/* Planet tabs */}
+        <div className="mx-auto mt-10 flex items-center gap-1 rounded-lg bg-space-800/60 p-1">
+          <button
+            onClick={() => setPlanetTab("moon")}
+            className={cn(
+              "rounded-md px-5 py-2 text-sm font-semibold transition-colors",
+              planetTab === "moon"
+                ? "bg-signal text-space-950"
+                : "text-regolith-400 hover:text-regolith-200",
+            )}
+          >
+            {t("missionSelect.moonTab")}
+          </button>
+          <button
+            onClick={() => setPlanetTab("mars")}
+            className={cn(
+              "rounded-md px-5 py-2 text-sm font-semibold transition-colors",
+              planetTab === "mars"
+                ? "bg-[#c1440e] text-white"
+                : "text-regolith-400 hover:text-regolith-200",
+            )}
+          >
+            {t("missionSelect.marsTab")}
+          </button>
+        </div>
+
         {/* Mission heading */}
-        <h2 className="mt-10 text-center font-display text-2xl font-semibold text-regolith-200">
-          {t("missionSelect.heading")}
+        <h2 className="mt-6 text-center font-display text-2xl font-semibold text-regolith-200">
+          {planetTab === "mars" ? t("missionSelect.marsHeading") : t("missionSelect.heading")}
         </h2>
 
         {/* Mission grid */}
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {MISSIONS.map((mission, i) => {
+          {activeMissions.map((mission, i) => {
             const progress = missions[mission.id];
-            const status: MissionStatus = progress?.status ?? "locked";
+            const status: MissionStatus = progress?.status ?? "available";
             const objectsFound = progress?.objectsFound?.length ?? 0;
             return (
               <motion.div

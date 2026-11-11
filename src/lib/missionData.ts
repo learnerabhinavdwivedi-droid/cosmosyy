@@ -4,6 +4,14 @@ import apollo14 from "../../content/missions/apollo-14.json";
 import apollo15 from "../../content/missions/apollo-15.json";
 import apollo16 from "../../content/missions/apollo-16.json";
 import apollo17 from "../../content/missions/apollo-17.json";
+import marsViking1 from "../../content/missions/mars-viking1.json";
+import marsPathfinder from "../../content/missions/mars-pathfinder.json";
+import marsSpirit from "../../content/missions/mars-spirit.json";
+import marsOpportunity from "../../content/missions/mars-opportunity.json";
+import marsCuriosity from "../../content/missions/mars-curiosity.json";
+import marsPerseverance from "../../content/missions/mars-perseverance.json";
+
+export type Planet = "moon" | "mars";
 
 export interface MissionCrew {
   commander: string;
@@ -22,11 +30,14 @@ export interface HeritageObject {
 
 export interface MissionSpec {
   id: string;
+  planet: Planet;
   name: string;
   site: string;
   date: string;
   evaSunTime: string;
   crew: MissionCrew;
+  missionType?: "crewed" | "robotic";
+  operator?: string;
   lm?: string;
   cm?: string;
   landing: { lat: number; lon: number; label: string };
@@ -41,6 +52,12 @@ const RAW: Record<string, unknown> = {
   "apollo-15": apollo15,
   "apollo-16": apollo16,
   "apollo-17": apollo17,
+  "mars-viking1": marsViking1,
+  "mars-pathfinder": marsPathfinder,
+  "mars-spirit": marsSpirit,
+  "mars-opportunity": marsOpportunity,
+  "mars-curiosity": marsCuriosity,
+  "mars-perseverance": marsPerseverance,
 };
 
 function parse(raw: unknown): MissionSpec {
@@ -58,17 +75,26 @@ function parse(raw: unknown): MissionSpec {
   }));
   return {
     id: r.id as string,
+    planet: (r.planet as Planet) ?? "moon",
     name: r.name as string,
     site: r.site as string,
     date: r.date as string,
     evaSunTime: r.evaSunTime as string,
     crew,
+    missionType: (r.missionType as "crewed" | "robotic") ?? "crewed",
+    operator: (r.operator as string) ?? undefined,
     lm: (r.lm as string) ?? undefined,
     cm: (r.cm as string) ?? undefined,
     landing,
     terrain,
     objects,
   };
+}
+
+export function getPlanet(missionId: string): Planet {
+  const raw = RAW[missionId];
+  if (!raw) return "moon";
+  return ((raw as Record<string, unknown>).planet as Planet) ?? "moon";
 }
 
 const CACHE = new Map<string, MissionSpec>();

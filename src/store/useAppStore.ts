@@ -58,6 +58,12 @@ const DEFAULT_MISSIONS: Record<string, MissionProgress> = {
   "apollo-15": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
   "apollo-16": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
   "apollo-17": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "mars-viking1": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "mars-pathfinder": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "mars-spirit": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "mars-opportunity": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "mars-curiosity": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "mars-perseverance": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
 };
 
 export const XP_LAND = 50;
@@ -65,14 +71,23 @@ export const XP_OBJECT = 50;
 export const XP_FLAG = 100;
 export const XP_COMPLETE = 100;
 
-export const MISSION_ORDER = [
+export const MOON_MISSION_ORDER = [
   "apollo-11", "apollo-12", "apollo-14",
   "apollo-15", "apollo-16", "apollo-17",
 ];
 
+export const MARS_MISSION_ORDER = [
+  "mars-viking1", "mars-pathfinder", "mars-spirit",
+  "mars-opportunity", "mars-curiosity", "mars-perseverance",
+];
+
+export const MISSION_ORDER = [...MOON_MISSION_ORDER, ...MARS_MISSION_ORDER];
+
 export function getNextMissionId(currentId: string): string | null {
-  const idx = MISSION_ORDER.indexOf(currentId);
-  if (idx >= 0 && idx < MISSION_ORDER.length - 1) return MISSION_ORDER[idx + 1] ?? null;
+  const isMars = currentId.startsWith("mars-");
+  const order = isMars ? MARS_MISSION_ORDER : MOON_MISSION_ORDER;
+  const idx = order.indexOf(currentId);
+  if (idx >= 0 && idx < order.length - 1) return order[idx + 1] ?? null;
   return null;
 }
 
@@ -169,9 +184,11 @@ export const useAppStore = create<AppState>()(
             },
           };
 
-          const idx = MISSION_ORDER.indexOf(missionId);
-          if (idx >= 0 && idx < MISSION_ORDER.length - 1) {
-            const nextId = MISSION_ORDER[idx + 1];
+          const isMars = missionId.startsWith("mars-");
+          const planetOrder = isMars ? MARS_MISSION_ORDER : MOON_MISSION_ORDER;
+          const idx = planetOrder.indexOf(missionId);
+          if (idx >= 0 && idx < planetOrder.length - 1) {
+            const nextId = planetOrder[idx + 1];
             if (nextId) {
               const next = updatedMissions[nextId];
               if (next && next.status === "locked") {
