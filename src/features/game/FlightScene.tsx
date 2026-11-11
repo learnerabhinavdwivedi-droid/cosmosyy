@@ -362,6 +362,8 @@ function MarsSphere() {
   const ref = useRef<THREE.Mesh>(null);
   const phaseRef = useRef(useGameStore.getState().phase);
   const elRef = useRef(0);
+  const color = useLoader(THREE.TextureLoader, "/textures/mars-color-2k.jpg");
+  const disp = useLoader(THREE.TextureLoader, "/textures/moon-elevation-2k.png");
 
   useEffect(
     () => useGameStore.subscribe((s) => {
@@ -387,9 +389,11 @@ function MarsSphere() {
     <mesh ref={ref} position={MOON.toArray()}>
       <sphereGeometry args={[MOON_R, 128, 128]} />
       <meshStandardMaterial
-        color="#c1440e"
-        roughness={0.85}
-        metalness={0.1}
+        map={color}
+        displacementMap={disp}
+        displacementScale={0.15}
+        roughness={0.9}
+        metalness={0}
       />
     </mesh>
   );
@@ -478,7 +482,7 @@ function OrbitPath() {
 const _shipCopy = new THREE.Vector3();
 const _aheadCopy = new THREE.Vector3();
 
-function FlightAnimator() {
+function FlightAnimator({ isMars }: { isMars: boolean }) {
   const { camera } = useThree();
   const shipRef = useRef<THREE.Group>(null);
   const saturnRef = useRef<THREE.Group>(null);
@@ -586,8 +590,8 @@ function FlightAnimator() {
 
     if (phase === "flight" || phase === "coast") landingCut.current = false;
 
-    const useLM = separated.current || phase === "orbit" || phase === "targetLocked"
-      || phase === "descent" || phase === "touchdown" || phase === "stepOut";
+    const useLM = !isMars && (separated.current || phase === "orbit" || phase === "targetLocked"
+      || phase === "descent" || phase === "touchdown" || phase === "stepOut");
     if (saturnRef.current) saturnRef.current.visible = !useLM;
     if (lmRef.current) {
       lmRef.current.visible = useLM;
@@ -704,6 +708,14 @@ function LandingGround() {
 }
 
 function MarsLandingGround() {
+  const tex = useLoader(THREE.TextureLoader, "/textures/mars-color-2k.jpg");
+  const clonedTex = useMemo(() => {
+    const t = tex.clone();
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(3, 3);
+    return t;
+  }, [tex]);
+
   const groupRef = useRef<THREE.Group>(null);
   const phaseRef = useRef(useGameStore.getState().phase);
   const elapsedRef = useRef(0);
@@ -733,9 +745,10 @@ function MarsLandingGround() {
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[60, 60, 1, 1]} />
         <meshStandardMaterial
-          color="#a0522d"
+          map={clonedTex}
           roughness={0.92}
           metalness={0}
+          color="#c08060"
         />
       </mesh>
       <ambientLight intensity={0.15} color="#e8c4a0" />
@@ -774,9 +787,11 @@ function FlightContent() {
         fade
         speed={0.2}
       />
-      <Suspense fallback={null}>
-        <EarthSphere />
-      </Suspense>
+      {!isMars && (
+        <Suspense fallback={null}>
+          <EarthSphere />
+        </Suspense>
+      )}
       <Suspense fallback={null}>
         {isMars ? <MarsSphere /> : <MoonSphere />}
       </Suspense>
@@ -785,7 +800,7 @@ function FlightContent() {
       <Suspense fallback={null}>
         {isMars ? <MarsLandingGround /> : <LandingGround />}
       </Suspense>
-      <FlightAnimator />
+      <FlightAnimator isMars={!!isMars} />
     </>
   );
 }
@@ -896,15 +911,22 @@ function FlightHUD() {
 
 /* ---- Main ---- */
 
-const GATES: Partial<Record<GamePhase, { event: "BEGIN_DESCENT" | "OPEN_HATCH"; labelKey: string }>> = {
-  targetLocked: { event: "BEGIN_DESCENT", labelKey: "flight.beginDescent" },
-  touchdown: { event: "OPEN_HATCH", labelKey: "flight.openHatch" },
-};
+function getGates(planet: Planet, missionType?: string): Partial<Record<GamePhase, { event: "BEGIN_DESCENT" | "OPEN_HATCH"; labelKey: string }>> {
+  const isMars = planet === "mars";
+  const isRobotic = missionType === "robotic";
+  return {
+    targetLocked: { event: "BEGIN_DESCENT", labelKey: isMars ? "flight.beginEntry" : "flight.beginDescent" },
+    touchdown: { event: "OPEN_HATCH", labelKey: isRobotic ? "flight.deployInstruments" : "flight.openHatch" },
+  };
+}
 
 export function FlightScene() {
   const { t } = useTranslation();
   const phase = useGameStore((s) => s.phase);
   const send = useGameStore((s) => s.send);
+  const missionId = useGameStore((s) => s.missionId);
+  const mission = useMemo(() => getMissionOrNull(missionId), [missionId]);
+  const gates = useMemo(() => getGates(mission?.planet ?? "moon", mission?.missionType), [mission]);
 
   useEffect(() => {
     const beat = BEAT_EVENTS.find((b) => b.from === phase);
@@ -914,7 +936,7 @@ export function FlightScene() {
   }, [phase, send]);
 
   useEffect(() => {
-    const gate = GATES[phase];
+    const gate = gates[phase];
     if (!gate) return;
     const handler = (e: KeyboardEvent) => {
       if (e.code === "Space") {
@@ -924,9 +946,9 @@ export function FlightScene() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [phase, send]);
+  }, [phase, send, gates]);
 
-  const gate = GATES[phase];
+  const gate = gates[phase];
 
   const showStepOutFade = phase === "stepOut";
 

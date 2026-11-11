@@ -104,6 +104,7 @@ export function GenericTerrain({ lat, lon }: { lat?: number; lon?: number }) {
 }
 
 export function MarsTerrain({ lat, lon }: { lat?: number; lon?: number }) {
+  const marsTex = useLoader(THREE.TextureLoader, "/textures/mars-color-2k.jpg");
   const elevTex = useLoader(THREE.TextureLoader, "/textures/moon-elevation-2k.png");
 
   const uvOffset = useMemo(() => {
@@ -113,19 +114,25 @@ export function MarsTerrain({ lat, lon }: { lat?: number; lon?: number }) {
   }, [lat, lon]);
 
   const material = useMemo(() => {
+    marsTex.colorSpace = THREE.SRGBColorSpace;
+    marsTex.wrapS = THREE.RepeatWrapping;
+    marsTex.wrapT = THREE.RepeatWrapping;
+    marsTex.repeat.set(8, 8);
+    marsTex.offset.set(uvOffset[0], uvOffset[1]);
+
     elevTex.wrapS = THREE.RepeatWrapping;
     elevTex.wrapT = THREE.RepeatWrapping;
     elevTex.repeat.set(4, 4);
     elevTex.offset.set(uvOffset[0] * 0.5, uvOffset[1] * 0.5);
 
     return new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#a0522d"),
+      map: marsTex,
       displacementMap: elevTex,
       displacementScale: 4.0,
       roughness: 0.92,
       metalness: 0.05,
     });
-  }, [elevTex, uvOffset]);
+  }, [marsTex, elevTex, uvOffset]);
 
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]} receiveShadow>

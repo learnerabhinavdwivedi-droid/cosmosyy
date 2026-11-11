@@ -25,7 +25,7 @@
     {
       "id": "cu-rover",
       "name": "Curiosity Rover",
-      "position": [0, 0, 0],
+      "position": [3, 0, -2],
       "description": "Curiosity is a car-sized rover that landed on 6 August 2012 using an audacious sky crane manoeuvre. Weighing 899 kg, it is powered by a plutonium-238 radioisotope thermoelectric generator, so unlike Spirit and Opportunity, dust storms cannot end its mission. Curiosity carries 10 science instruments and has been climbing Mount Sharp since 2014.",
       "xp": 60,
       "source": "NASA/JPL Mars Science Laboratory"
@@ -33,7 +33,7 @@
     {
       "id": "cu-sky-crane",
       "name": "Sky Crane Descent Stage",
-      "position": [8, 0, 4],
+      "position": [18, 0, 12],
       "description": "The sky crane hover stage lowered Curiosity on 7.6-metre nylon tethers, then flew away to crash-land 650 metres from the rover. This was the first use of the sky crane landing system. HiRISE images from orbit show the dark blast marks where its retrorockets hit the surface. The wreckage remains where it fell.",
       "xp": 50,
       "source": "NASA/JPL Mars Science Laboratory"
@@ -41,7 +41,7 @@
     {
       "id": "cu-drill-holes",
       "name": "Drill Holes",
-      "position": [3, 0, -2],
+      "position": [8, 0, -10],
       "description": "Curiosity has drilled dozens of holes into Martian bedrock, each about 1.6 cm wide and up to 6.5 cm deep. The powdered rock is delivered to the SAM and CheMin instruments inside the rover. Early drill samples at Yellowknife Bay revealed clay minerals and evidence of an ancient freshwater lake environment suitable for microbial life.",
       "xp": 50,
       "source": "NASA/JPL Mars Science Laboratory"
@@ -49,7 +49,7 @@
     {
       "id": "cu-yellowknife",
       "name": "Yellowknife Bay",
-      "position": [-5, 0, 2],
+      "position": [-14, 0, 7],
       "description": "Yellowknife Bay was the first major science target. Curiosity found mudstone containing clay minerals, sulphate minerals, and the chemical elements needed for life: carbon, hydrogen, nitrogen, oxygen, phosphorus, and sulphur. This discovery fulfilled the mission's primary goal: confirming that Mars once had environments habitable for microbes.",
       "xp": 50,
       "source": "NASA/JPL Mars Science Laboratory"
@@ -57,7 +57,7 @@
     {
       "id": "cu-calibration-target",
       "name": "MAHLI Calibration Target",
-      "position": [-2, 0, -4],
+      "position": [-6, 0, -15],
       "description": "Mounted on the rover's deck, the MAHLI calibration target includes a 1909 Lincoln penny (chosen for its fine detail), colour chips, a metric bar graphic, and a UV-fluorescent target. It is used to calibrate the Mars Hand Lens Imager. The penny belongs to principal investigator Ken Edgett — it is the only US coin on Mars.",
       "xp": 50,
       "source": "NASA/JPL Mars Science Laboratory"
@@ -65,7 +65,7 @@
     {
       "id": "cu-mount-sharp",
       "name": "Mount Sharp (Aeolis Mons)",
-      "position": [5, 0, 5],
+      "position": [15, 0, 18],
       "description": "Rising 5.5 km above the crater floor, Mount Sharp is a layered mountain of sedimentary rock. Each layer records a chapter of Mars's environmental history. As Curiosity climbs, it reads that history: from clay-rich layers (wet era) through sulphate layers (drying era) to dry oxidised layers at the top. It is a geological time machine.",
       "xp": 50,
       "source": "NASA/JPL Mars Science Laboratory"

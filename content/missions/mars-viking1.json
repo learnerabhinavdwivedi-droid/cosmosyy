@@ -25,7 +25,7 @@
     {
       "id": "v1-lander-body",
       "name": "Viking 1 Lander",
-      "position": [0, 0, 0],
+      "position": [2, 0, -3],
       "description": "The Viking 1 lander operated on the surface of Mars for over six years, from July 1976 to November 1982. It was the first spacecraft to successfully land on Mars and return images from the surface. The lander carried biology experiments, a gas chromatograph mass spectrometer, and cameras that captured the first colour photos from the Martian surface.",
       "xp": 60,
       "source": "NASA/JPL Viking Mission"
@@ -33,7 +33,7 @@
     {
       "id": "v1-sampler-arm",
       "name": "Soil Sampler Arm",
-      "position": [3, 0, 2],
+      "position": [10, 0, 8],
       "description": "The Viking lander's robotic arm could extend 3 metres to collect soil samples. It scooped Martian regolith and delivered it to three biology experiments designed to detect signs of life. The results were controversial — the Labeled Release experiment gave positive results, but scientists ultimately attributed them to chemical reactions in the soil.",
       "xp": 50,
       "source": "NASA/JPL Viking Mission"
@@ -41,7 +41,7 @@
     {
       "id": "v1-meteorology",
       "name": "Meteorology Station",
-      "position": [-4, 0, 1],
+      "position": [-12, 0, 5],
       "description": "Viking 1's meteorology boom measured temperature, wind speed, wind direction, and atmospheric pressure. It recorded the first Martian weather reports: temperatures ranging from -89°C at dawn to -31°C in the afternoon, with winds of 2–7 m/s. It also detected the first dust storms from ground level.",
       "xp": 50,
       "source": "NASA/JPL Viking Mission"
@@ -49,7 +49,7 @@
     {
       "id": "v1-cameras",
       "name": "Facsimile Cameras",
-      "position": [2, 0, -3],
+      "position": [6, 0, -14],
       "description": "Two facsimile cameras mounted on the lander captured the first panoramic images of the Martian surface. Each camera scanned vertically while the nodding mirror swept horizontally, building up images line by line. The cameras revealed a rock-strewn, rust-coloured desert beneath a butterscotch sky.",
       "xp": 50,
       "source": "NASA/JPL Viking Mission"
@@ -57,7 +57,7 @@
     {
       "id": "v1-antenna",
       "name": "High-Gain Antenna",
-      "position": [-2, 0, -4],
+      "position": [-8, 0, -16],
       "description": "The S-band high-gain antenna transmitted data directly to Earth at up to 16 kilobits per second. It also relayed data through the Viking Orbiter. The dish antenna is one of the most recognisable features of the Viking lander design.",
       "xp": 50,
       "source": "NASA/JPL Viking Mission"
@@ -65,7 +65,7 @@
     {
       "id": "v1-seismometer",
       "name": "Seismometer",
-      "position": [5, 0, -1],
+      "position": [16, 0, -6],
       "description": "The seismometer on Viking 1 was mounted on top of the lander, which meant it was sensitive to wind vibrations. Unlike its twin on Viking 2, which may have detected a marsquake, Viking 1's seismometer was unable to confirm any seismic events due to wind interference. The lesson informed the design of InSight's seismometer decades later.",
       "xp": 50,
       "source": "NASA/JPL Viking Mission"

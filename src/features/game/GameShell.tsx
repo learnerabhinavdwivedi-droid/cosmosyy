@@ -14,7 +14,7 @@ import { ReportScreen } from "./ReportScreen";
 import { LMDescent, LMAscent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
 import { getSunPosition } from "./sunPosition";
-import { getMission } from "@/lib/missionData";
+import { getMission, getMissionOrNull } from "@/lib/missionData";
 import { Effects } from "./Effects";
 import * as THREE from "three";
 
@@ -41,6 +41,8 @@ function GameAudioController() {
       if (phase === prev) return;
       prevPhase.current = phase;
       const mid = s.missionId ?? undefined;
+      const missionSpec = mid ? getMissionOrNull(mid) : null;
+      const isRobotic = missionSpec?.missionType === "robotic";
 
       if (phase === "flight" && prev === "select") {
         preloadNarration(mid);
@@ -75,15 +77,15 @@ function GameAudioController() {
       }
 
       if (phase === "stepOut") {
-        gameAudio.playAirlock();
+        if (!isRobotic) gameAudio.playAirlock();
       }
 
       if (SURFACE_PHASES.has(phase) && !SURFACE_PHASES.has(prev)) {
-        gameAudio.startBreathing();
+        if (!isRobotic) gameAudio.startBreathing();
         gameAudio.startLunarHum();
       }
       if (!SURFACE_PHASES.has(phase) && SURFACE_PHASES.has(prev)) {
-        gameAudio.stopBreathing();
+        if (!isRobotic) gameAudio.stopBreathing();
         gameAudio.stopLunarHum();
       }
 
@@ -307,31 +309,36 @@ function LaunchSceneContent() {
 function LaunchScene() {
   const { t } = useTranslation();
   const send = useGameStore((s) => s.send);
+  const missionId = useGameStore((s) => s.missionId);
+  const mission = getMission(missionId ?? "apollo-11");
+  const isRobotic = mission.missionType === "robotic";
   const [fade, setFade] = useState(false);
 
   useEffect(() => {
-    const fadeTimer = setTimeout(() => setFade(true), 4000);
-    const reportTimer = setTimeout(() => send("SHOW_REPORT"), 5000);
+    const fadeTimer = setTimeout(() => setFade(true), isRobotic ? 2500 : 4000);
+    const reportTimer = setTimeout(() => send("SHOW_REPORT"), isRobotic ? 3500 : 5000);
     return () => {
       clearTimeout(fadeTimer);
       clearTimeout(reportTimer);
     };
-  }, [send]);
+  }, [send, isRobotic]);
 
   return (
     <div className="relative h-screen w-full">
-      <Canvas
-        camera={{ position: [15, 3, 15], fov: 55, near: 0.1, far: 2000 }}
-        gl={{ antialias: false, toneMapping: THREE.AgXToneMapping }}
-      >
-        <color attach="background" args={["#000000"]} />
-        <LaunchSceneContent />
-        <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} />
-      </Canvas>
+      {!isRobotic && (
+        <Canvas
+          camera={{ position: [15, 3, 15], fov: 55, near: 0.1, far: 2000 }}
+          gl={{ antialias: false, toneMapping: THREE.AgXToneMapping }}
+        >
+          <color attach="background" args={["#000000"]} />
+          <LaunchSceneContent />
+          <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} />
+        </Canvas>
+      )}
       <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-end pb-12">
         <div className="rounded-lg bg-space-950/85 px-6 py-3 backdrop-blur">
           <p className="font-display text-lg text-regolith-200">
-            {t("flight.ascentNarration")}
+            {t(isRobotic ? "flight.missionEndNarration" : "flight.ascentNarration")}
           </p>
         </div>
       </div>

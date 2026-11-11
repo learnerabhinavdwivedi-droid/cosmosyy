@@ -26,6 +26,7 @@ export interface HeritageObject {
   description: string;
   xp: number;
   source?: string;
+  hidden?: boolean;
 }
 
 export interface MissionSpec {
@@ -72,6 +73,7 @@ function parse(raw: unknown): MissionSpec {
     description: o.description as string,
     xp: (o.xp as number) ?? 50,
     source: (o.source as string) ?? undefined,
+    hidden: (o.hidden as boolean) ?? undefined,
   }));
   return {
     id: r.id as string,

@@ -43,6 +43,7 @@ export function ReportScreen() {
   const startMission = useAppStore((s) => s.startMission);
 
   const mission = useMemo(() => getMission(missionId ?? "apollo-11"), [missionId]);
+  const isRobotic = mission.missionType === "robotic";
   const TOTAL_OBJECTS = mission.objects.length;
 
   useEffect(() => {
@@ -58,7 +59,7 @@ export function ReportScreen() {
     [mission.objects, found],
   );
   const objectXp = found.length * 50;
-  const flagXp = 100;
+  const flagXp = isRobotic ? 50 : 100;
   const missionXp = XP_LAND + objectXp + flagXp + XP_COMPLETE;
 
   const nextMissionId = useMemo(() => missionId ? getNextMissionId(missionId) : null, [missionId]);
@@ -143,7 +144,7 @@ export function ReportScreen() {
               <span className="font-mono text-ok">+{objectXp}</span>
             </div>
             <div className="flex items-center justify-between border-b border-space-700 pb-2">
-              <span className="text-regolith-400">{t("report.flagPlanted")}</span>
+              <span className="text-regolith-400">{t(isRobotic ? "report.surveyCompleted" : "report.flagPlanted")}</span>
               <span className="font-mono text-ok">+{flagXp}</span>
             </div>
             <div className="flex items-center justify-between border-b border-space-700 pb-2">

@@ -25,7 +25,7 @@
     {
       "id": "sp-rover",
       "name": "Spirit Rover",
-      "position": [0, 0, 0],
+      "position": [3, 0, -1],
       "description": "Spirit landed in Gusev Crater on 4 January 2004 for a planned 90-sol mission, but operated for over six years. In 2009, its right front wheel became stuck in soft soil at a site called 'Troy'. NASA spent months trying to free it before declaring Spirit a stationary research platform. Last contact was 22 March 2010.",
       "xp": 60,
       "source": "NASA/JPL Mars Exploration Rovers"
@@ -33,7 +33,7 @@
     {
       "id": "sp-columbia-hills",
       "name": "Columbia Hills",
-      "position": [6, 0, 3],
+      "position": [18, 0, 10],
       "description": "Spirit drove 3 km to reach the Columbia Hills, named for the seven astronauts lost in the Space Shuttle Columbia disaster. The hills proved to be a scientific treasure: Spirit found evidence that water had once altered the rocks here. Minerals like goethite and hematite confirmed past water activity.",
       "xp": 50,
       "source": "NASA/JPL Mars Exploration Rovers"
@@ -41,7 +41,7 @@
     {
       "id": "sp-home-plate",
       "name": "Home Plate Formation",
-      "position": [-3, 0, 5],
+      "position": [-10, 0, 16],
       "description": "Home Plate is a roughly circular plateau about 80 metres across in the Inner Basin of the Columbia Hills. Spirit found that it was composed of layered rocks with a volcanic origin, likely formed by explosive interaction between magma and water or ice. This was strong evidence for past hydrothermal activity.",
       "xp": 50,
       "source": "NASA/JPL Mars Exploration Rovers"
@@ -49,7 +49,7 @@
     {
       "id": "sp-wheel-tracks",
       "name": "Rover Wheel Tracks",
-      "position": [3, 0, -2],
+      "position": [10, 0, -8],
       "description": "Spirit's broken right front wheel, which stopped turning in 2006, inadvertently became a scientific tool. As Spirit dragged the wheel, it scraped away the surface layer to reveal bright white soil rich in silica — up to 90% pure SiO₂. This discovery suggested either hot springs or fumaroles once existed here.",
       "xp": 50,
       "source": "NASA/JPL Mars Exploration Rovers"
@@ -57,7 +57,7 @@
     {
       "id": "sp-bonneville",
       "name": "Bonneville Crater",
-      "position": [-5, 0, -3],
+      "position": [-15, 0, -10],
       "description": "Bonneville Crater was one of Spirit's first major waypoints, a 200-metre impact crater about 300 metres from the landing site. Scientists hoped to find exposed rock layers in its walls, but found mostly loose soil. The disappointment led to the decision to drive the 3 km to Columbia Hills — which turned out to be the right call.",
       "xp": 50,
       "source": "NASA/JPL Mars Exploration Rovers"
@@ -65,7 +65,7 @@
     {
       "id": "sp-heat-shield",
       "name": "Backshell and Parachute",
-      "position": [4, 0, -5],
+      "position": [12, 0, -17],
       "description": "Spirit's backshell and parachute landed about 300 metres from the rover. The airbag-enclosed lander bounced 28 times before coming to rest. These entry, descent, and landing components remain on the Martian surface as testament to the engineering that delivered Spirit safely to Gusev Crater.",
       "xp": 50,
       "source": "NASA/JPL Mars Exploration Rovers"
