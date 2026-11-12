@@ -263,9 +263,29 @@ const BOB_AMP = 0.03;
 const _moveDir = new THREE.Vector3();
 const _lookTarget = new THREE.Vector3();
 const _currentLook = new THREE.Vector3();
+const _groundRay = new THREE.Raycaster();
+const _rayDown = new THREE.Vector3(0, -1, 0);
+const _rayOrigin = new THREE.Vector3();
 
 const playerState = {
-  x: 5, z: 10, heading: 0, isMoving: false, speed: 0,
+  x: 5, z: 10, heading: -0.4, isMoving: false, speed: 0,
+};
+
+export function resetPlayerState() {
+  playerState.x = 5;
+  playerState.z = 10;
+  playerState.heading = -0.4;
+  playerState.isMoving = false;
+  playerState.speed = 0;
+}
+
+export const touchState = {
+  forward: false,
+  backward: false,
+  left: false,
+  right: false,
+  run: false,
+  jump: false,
 };
 
 function DustParticles() {
@@ -436,7 +456,11 @@ function Footprints() {
   );
 }
 
-function PlayerController() {
+function PlayerController({
+  terrainRef,
+}: {
+  terrainRef: React.RefObject<THREE.Mesh | null>;
+}) {
   const { camera } = useThree();
   const velocity = useRef(new THREE.Vector3());
   const verticalVel = useRef(0);
@@ -478,10 +502,50 @@ function PlayerController() {
       isPointerLocked.current = document.pointerLockElement !== null;
     };
 
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isTouchDrag = false;
+
+    const onTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      const target = e.target as HTMLElement | null;
+      if (target && target.closest("[data-touch-control]")) return;
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      isTouchDrag = true;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isTouchDrag) return;
+      const touch = e.touches[0];
+      if (!touch) return;
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+
+      euler.current.y -= dx * 0.0035;
+      euler.current.x -= dy * 0.0035;
+      euler.current.x = Math.max(
+        -Math.PI / 2,
+        Math.min(Math.PI / 2, euler.current.x),
+      );
+      camera.quaternion.setFromEuler(euler.current);
+    };
+
+    const onTouchEnd = () => {
+      isTouchDrag = false;
+    };
+
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
     window.addEventListener("mousemove", onMouseMove);
     document.addEventListener("pointerlockchange", onPointerLockChange);
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", onTouchEnd, { passive: true });
 
     camera.position.set(5, EYE_HEIGHT, 10);
     euler.current.y = -0.4;
@@ -492,6 +556,10 @@ function PlayerController() {
       window.removeEventListener("keyup", onKeyUp);
       window.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("pointerlockchange", onPointerLockChange);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
     };
   }, [camera]);
 
@@ -503,15 +571,18 @@ function PlayerController() {
     }
 
     const k = keys.current;
-    const running = k["ShiftLeft"] || k["ShiftRight"];
+    const running = k["ShiftLeft"] || k["ShiftRight"] || touchState.run;
     const speed = running ? RUN_SPEED : WALK_SPEED;
     _moveDir.set(0, 0, 0);
 
-    if (k["KeyW"] || k["ArrowUp"]) _moveDir.z -= 1;
-    if (k["KeyS"] || k["ArrowDown"]) _moveDir.z += 1;
-    if (k["KeyA"] || k["ArrowLeft"]) _moveDir.x -= 1;
-    if (k["KeyD"] || k["ArrowRight"]) _moveDir.x += 1;
+    const moveZ =
+      (k["KeyW"] || k["ArrowUp"] || touchState.forward ? -1 : 0) +
+      (k["KeyS"] || k["ArrowDown"] || touchState.backward ? 1 : 0);
+    const moveX =
+      (k["KeyA"] || k["ArrowLeft"] || touchState.left ? -1 : 0) +
+      (k["KeyD"] || k["ArrowRight"] || touchState.right ? 1 : 0);
 
+    _moveDir.set(moveX, 0, moveZ);
     const isMoving = _moveDir.length() > 0;
 
     if (isMoving) {
@@ -525,17 +596,28 @@ function PlayerController() {
     camera.position.x += velocity.current.x * delta;
     camera.position.z += velocity.current.z * delta;
 
-    const onGround = camera.position.y <= GROUND_Y + EYE_HEIGHT + 0.01;
+    let groundY = GROUND_Y;
+    if (terrainRef.current) {
+      _rayOrigin.set(camera.position.x, 80, camera.position.z);
+      _groundRay.set(_rayOrigin, _rayDown);
+      const hits = _groundRay.intersectObject(terrainRef.current, false);
+      if (hits.length > 0 && hits[0]) {
+        groundY = hits[0].point.y;
+      }
+    }
 
-    if (k["Space"] && onGround) {
+    const targetFloorY = groundY + EYE_HEIGHT;
+    const onGround = camera.position.y <= targetFloorY + 0.05;
+
+    if ((k["Space"] || touchState.jump) && onGround) {
       verticalVel.current = JUMP_V0;
     }
 
     verticalVel.current -= LUNAR_G * delta;
     camera.position.y += verticalVel.current * delta;
 
-    if (camera.position.y < GROUND_Y + EYE_HEIGHT) {
-      camera.position.y = GROUND_Y + EYE_HEIGHT;
+    if (camera.position.y < targetFloorY) {
+      camera.position.y = targetFloorY;
       if (!wasOnGround.current && verticalVel.current < -0.5) {
         gameAudio.playThud();
       }
@@ -543,7 +625,8 @@ function PlayerController() {
     }
     wasOnGround.current = onGround;
 
-    if (isMoving && onGround) {
+    const reducedMotion = useAppStore.getState().settings.reducedMotion;
+    if (isMoving && onGround && !reducedMotion) {
       bobPhase.current += delta * BOB_FREQ * (running ? 1.3 : 1);
       camera.position.y += Math.sin(bobPhase.current) * BOB_AMP;
     } else {
@@ -651,6 +734,7 @@ function SurfaceSceneContent({
   const found = useGameStore((s) => s.objectsFoundThisRun);
   const mission = useMemo(() => getMission(missionId), [missionId]);
   const objects = mission.objects;
+  const terrainRef = useRef<THREE.Mesh>(null);
 
   return (
     <>
@@ -673,7 +757,13 @@ function SurfaceSceneContent({
       </Suspense>
 
       <Suspense fallback={<GroundPlane />}>
-        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} lat={mission.landing.lat} lon={mission.landing.lon} />
+        <Terrain
+          ref={terrainRef}
+          stlPath={mission.terrain.model}
+          orthoPath={mission.terrain.ortho}
+          lat={mission.landing.lat}
+          lon={mission.landing.lon}
+        />
       </Suspense>
       <GroundPlane />
 
@@ -698,7 +788,7 @@ function SurfaceSceneContent({
       </Suspense>
 
       <ProximityDetector setNearObjectId={setNearObjectId} setObjectDistances={setObjectDistances} objects={objects} />
-      <PlayerController />
+      <PlayerController terrainRef={terrainRef} />
       <InspectCamera objects={objects} />
     </>
   );
@@ -903,6 +993,120 @@ function ScanMeter({ progress }: { progress: number }) {
   );
 }
 
+function TouchHUD({
+  onScanStart,
+  onScanEnd,
+  nearObjectId,
+  found,
+  phase,
+}: {
+  onScanStart: () => void;
+  onScanEnd: () => void;
+  nearObjectId: string | null;
+  found: string[];
+  phase: string;
+}) {
+  const [isTouch, setIsTouch] = useState(false);
+  const [runActive, setRunActive] = useState(false);
+
+  useEffect(() => {
+    setIsTouch(
+      typeof window !== "undefined" &&
+      ("ontouchstart" in window || navigator.maxTouchPoints > 0)
+    );
+  }, []);
+
+  if (!isTouch || phase === "inspect") return null;
+
+  return (
+    <div className="pointer-events-auto absolute inset-x-0 bottom-3 z-40 flex items-end justify-between px-3 pb-1">
+      {/* Left: D-pad */}
+      <div
+        data-touch-control="true"
+        className="grid grid-cols-3 gap-1 rounded-2xl border border-space-700/60 bg-space-950/80 p-1.5 backdrop-blur-md shadow-2xl"
+      >
+        <div />
+        <button
+          aria-label="Move Forward"
+          className="flex h-10 w-10 items-center justify-center rounded-xl bg-space-800 text-regolith-200 text-sm font-bold select-none touch-none active:bg-signal active:text-space-950 shadow transition"
+          onTouchStart={(e) => { e.preventDefault(); touchState.forward = true; }}
+          onTouchEnd={(e) => { e.preventDefault(); touchState.forward = false; }}
+        >
+          ▲
+        </button>
+        <div />
+        <button
+          aria-label="Move Left"
+          className="flex h-10 w-10 items-center justify-center rounded-xl bg-space-800 text-regolith-200 text-sm font-bold select-none touch-none active:bg-signal active:text-space-950 shadow transition"
+          onTouchStart={(e) => { e.preventDefault(); touchState.left = true; }}
+          onTouchEnd={(e) => { e.preventDefault(); touchState.left = false; }}
+        >
+          ◀
+        </button>
+        <button
+          aria-label="Toggle Run"
+          className={`flex h-10 w-10 items-center justify-center rounded-xl text-[10px] font-bold uppercase select-none touch-none shadow transition ${
+            runActive
+              ? "bg-signal text-space-950 border border-signal font-black"
+              : "bg-space-700/70 text-regolith-300"
+          }`}
+          onTouchStart={(e) => {
+            e.preventDefault();
+            const next = !runActive;
+            setRunActive(next);
+            touchState.run = next;
+          }}
+        >
+          {runActive ? "RUN" : "WALK"}
+        </button>
+        <button
+          aria-label="Move Right"
+          className="flex h-10 w-10 items-center justify-center rounded-xl bg-space-800 text-regolith-200 text-sm font-bold select-none touch-none active:bg-signal active:text-space-950 shadow transition"
+          onTouchStart={(e) => { e.preventDefault(); touchState.right = true; }}
+          onTouchEnd={(e) => { e.preventDefault(); touchState.right = false; }}
+        >
+          ▶
+        </button>
+        <div />
+        <button
+          aria-label="Move Backward"
+          className="flex h-10 w-10 items-center justify-center rounded-xl bg-space-800 text-regolith-200 text-sm font-bold select-none touch-none active:bg-signal active:text-space-950 shadow transition"
+          onTouchStart={(e) => { e.preventDefault(); touchState.backward = true; }}
+          onTouchEnd={(e) => { e.preventDefault(); touchState.backward = false; }}
+        >
+          ▼
+        </button>
+        <div />
+      </div>
+
+      {/* Right: Actions */}
+      <div data-touch-control="true" className="flex flex-col gap-2">
+        {nearObjectId && !found.includes(nearObjectId) && (
+          <button
+            aria-label="Scan Heritage Object"
+            className="flex h-12 w-12 items-center justify-center rounded-2xl border border-signal bg-signal/30 text-signal active:bg-signal active:text-space-950 text-xs font-bold uppercase backdrop-blur-md select-none touch-none shadow-lg animate-pulse"
+            onTouchStart={(e) => { e.preventDefault(); onScanStart(); }}
+            onTouchEnd={(e) => { e.preventDefault(); onScanEnd(); }}
+          >
+            SCAN
+          </button>
+        )}
+        <button
+          aria-label="Jump in Lunar Gravity"
+          className="flex h-12 w-12 items-center justify-center rounded-2xl border border-space-700 bg-space-800/90 text-regolith-100 active:bg-signal active:text-space-950 text-xs font-bold uppercase backdrop-blur-md select-none touch-none shadow"
+          onTouchStart={(e) => {
+            e.preventDefault();
+            touchState.jump = true;
+            setTimeout(() => { touchState.jump = false; }, 120);
+          }}
+        >
+          JUMP
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; objects: HeritageObject[] }) {
   const { t } = useTranslation();
   const phase = useGameStore((s) => s.phase);
@@ -978,35 +1182,45 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
     send("LAUNCH_HOME");
   }, [send]);
 
-  useEffect(() => {
-    const animateScan = () => {
-      if (scanStartTime.current === null) return;
-      const elapsed = (Date.now() - scanStartTime.current) / 1000;
-      const progress = Math.min(elapsed / SCAN_HOLD_DURATION, 1);
-      setScanProgress(progress);
+  const animateScan = useCallback(() => {
+    if (scanStartTime.current === null) return;
+    const elapsed = (Date.now() - scanStartTime.current) / 1000;
+    const progress = Math.min(elapsed / SCAN_HOLD_DURATION, 1);
+    setScanProgress(progress);
 
-      const now = Date.now();
-      if (now - lastTickTime.current > 200) {
-        gameAudio.playScanTick();
-        lastTickTime.current = now;
-      }
+    const now = Date.now();
+    if (now - lastTickTime.current > 200) {
+      gameAudio.playScanTick();
+      lastTickTime.current = now;
+    }
 
-      if (progress >= 1) {
-        scanStartTime.current = null;
-        setScanProgress(0);
-        completeScan();
-        return;
-      }
+    if (progress >= 1) {
+      scanStartTime.current = null;
+      setScanProgress(0);
+      completeScan();
+      return;
+    }
+    scanAnimFrame.current = requestAnimationFrame(animateScan);
+  }, [completeScan]);
+
+  const startScan = useCallback(() => {
+    if (nearObjectId && !found.includes(nearObjectId) && missionId && phase !== "inspect") {
+      scanStartTime.current = Date.now();
+      lastTickTime.current = 0;
       scanAnimFrame.current = requestAnimationFrame(animateScan);
-    };
+    }
+  }, [nearObjectId, found, missionId, phase, animateScan]);
 
+  const stopScan = useCallback(() => {
+    scanStartTime.current = null;
+    cancelAnimationFrame(scanAnimFrame.current);
+    setScanProgress(0);
+  }, []);
+
+  useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if ((e.key === "e" || e.key === "E") && !e.repeat) {
-        if (nearObjectId && !found.includes(nearObjectId) && missionId && phase !== "inspect") {
-          scanStartTime.current = Date.now();
-          lastTickTime.current = 0;
-          scanAnimFrame.current = requestAnimationFrame(animateScan);
-        }
+        startScan();
       }
       if ((e.key === "f" || e.key === "F") && phase === "flagReady") handleFlag();
       if ((e.key === "l" || e.key === "L") && phase === "flagPlanted") handleLaunch();
@@ -1014,9 +1228,7 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
 
     const onKeyUp = (e: KeyboardEvent) => {
       if (e.key === "e" || e.key === "E") {
-        scanStartTime.current = null;
-        cancelAnimationFrame(scanAnimFrame.current);
-        setScanProgress(0);
+        stopScan();
       }
     };
 
@@ -1027,7 +1239,7 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
       window.removeEventListener("keyup", onKeyUp);
       cancelAnimationFrame(scanAnimFrame.current);
     };
-  }, [phase, nearObjectId, found, missionId, completeScan, handleFlag, handleLaunch]);
+  }, [phase, startScan, stopScan, handleFlag, handleLaunch]);
 
   useEffect(() => {
     if (found.length >= objects.length && phase === "explore") {
@@ -1151,6 +1363,14 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
           {t("surface.controlHints")}
         </p>
       </div>
+
+      <TouchHUD
+        onScanStart={startScan}
+        onScanEnd={stopScan}
+        nearObjectId={nearObjectId}
+        found={found}
+        phase={phase}
+      />
     </div>
   );
 }
@@ -1158,19 +1378,31 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
 export function SurfaceScene() {
   const phase = useGameStore((s) => s.phase);
   const missionId = useGameStore((s) => s.missionId);
+  const quality = useAppStore((s) => s.settings.quality);
+  const dpr: [number, number] | number = quality === "high" ? [1, 2] : quality === "medium" ? [1, 1.5] : 1;
   const [nearObjectId, setNearObjectId] = useState<string | null>(null);
   const [objectDistances, setObjectDistances] = useState<Record<string, number>>({});
   const mission = useMemo(() => getMission(missionId ?? "apollo-11"), [missionId]);
 
+  useEffect(() => {
+    resetPlayerState();
+    return () => {
+      resetPlayerState();
+    };
+  }, [missionId]);
+
   const handleCanvasClick = useCallback(() => {
-    document.body.requestPointerLock();
+    if (typeof window !== "undefined" && !("ontouchstart" in window) && navigator.maxTouchPoints === 0) {
+      document.body.requestPointerLock();
+    }
   }, []);
 
   return (
     <div className="relative h-screen w-full">
       <div className="h-full w-full" onClick={handleCanvasClick}>
         <Canvas
-          shadows
+          dpr={dpr}
+          shadows={quality !== "low"}
           camera={{
             position: [5, 1.7, 10],
             fov: 70,

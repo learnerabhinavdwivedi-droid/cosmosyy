@@ -774,12 +774,14 @@ export function FlightScene() {
   }, [phase, send]);
 
   const gate = GATES[phase];
-
   const showStepOutFade = phase === "stepOut";
+  const quality = useAppStore((s) => s.settings.quality);
+  const dpr: [number, number] | number = quality === "high" ? [1, 2] : quality === "medium" ? [1, 1.5] : 1;
 
   return (
     <div className="relative h-screen w-full">
       <Canvas
+        dpr={dpr}
         camera={{ position: [-15, 3, -8], fov: 55, near: 0.1, far: 2000 }}
         gl={{ antialias: false }}
       >

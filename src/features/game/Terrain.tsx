@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, forwardRef } from "react";
 import { useLoader } from "@react-three/fiber";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
 import * as THREE from "three";
@@ -20,7 +20,10 @@ function generatePlanarUVs(geo: THREE.BufferGeometry) {
   geo.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
 }
 
-export function STLTerrain({ stlPath, orthoPath }: { stlPath: string; orthoPath: string }) {
+export const STLTerrain = forwardRef<
+  THREE.Mesh,
+  { stlPath: string; orthoPath: string }
+>(function STLTerrain({ stlPath, orthoPath }, ref) {
   const geometry = useLoader(STLLoader, stlPath);
   const orthoTex = useLoader(THREE.TextureLoader, orthoPath);
 
@@ -56,15 +59,19 @@ export function STLTerrain({ stlPath, orthoPath }: { stlPath: string; orthoPath:
 
   return (
     <mesh
+      ref={ref}
       geometry={processedGeometry}
       material={material}
       receiveShadow
       position={[0, -0.5, 0]}
     />
   );
-}
+});
 
-export function GenericTerrain({ lat, lon }: { lat?: number; lon?: number }) {
+export const GenericTerrain = forwardRef<
+  THREE.Mesh,
+  { lat?: number; lon?: number }
+>(function GenericTerrain({ lat, lon }, ref) {
   const moonTex = useLoader(THREE.TextureLoader, "/textures/moon-color-4k.webp");
   const elevTex = useLoader(THREE.TextureLoader, "/textures/moon-elevation-2k.png");
 
@@ -96,19 +103,32 @@ export function GenericTerrain({ lat, lon }: { lat?: number; lon?: number }) {
   }, [moonTex, elevTex, uvOffset]);
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]} receiveShadow>
+    <mesh
+      ref={ref}
+      rotation={[-Math.PI / 2, 0, 0]}
+      position={[0, -0.5, 0]}
+      receiveShadow
+    >
       <planeGeometry args={[200, 200, 256, 256]} />
       <primitive object={material} attach="material" />
     </mesh>
   );
-}
+});
 
-export function Terrain({ stlPath, orthoPath, lat, lon }: { stlPath?: string | null; orthoPath?: string | null; lat?: number; lon?: number }) {
-  if (stlPath && orthoPath) {
-    return <STLTerrain stlPath={stlPath} orthoPath={orthoPath} />;
+export const Terrain = forwardRef<
+  THREE.Mesh,
+  {
+    stlPath?: string | null;
+    orthoPath?: string | null;
+    lat?: number;
+    lon?: number;
   }
-  return <GenericTerrain lat={lat} lon={lon} />;
-}
+>(function Terrain({ stlPath, orthoPath, lat, lon }, ref) {
+  if (stlPath && orthoPath) {
+    return <STLTerrain ref={ref} stlPath={stlPath} orthoPath={orthoPath} />;
+  }
+  return <GenericTerrain ref={ref} lat={lat} lon={lon} />;
+});
 
 export function GroundPlane() {
   return (

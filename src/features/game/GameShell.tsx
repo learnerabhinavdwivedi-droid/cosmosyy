@@ -27,11 +27,18 @@ function GameAudioController() {
   const missionIdRef = useRef(useGameStore.getState().missionId);
 
   useEffect(() => {
-    const unsub = useGameStore.subscribe((s) => {
+    gameAudio.setVolume(useAppStore.getState().settings.volume);
+    const unsubAudio = useAppStore.subscribe((state) => {
+      gameAudio.setVolume(state.settings.volume);
+    });
+    const unsubGame = useGameStore.subscribe((s) => {
       missionIdRef.current = s.missionId;
     });
     preloadNarration(missionIdRef.current ?? undefined);
-    return unsub;
+    return () => {
+      unsubAudio();
+      unsubGame();
+    };
   }, []);
 
   useEffect(() => {
@@ -292,6 +299,8 @@ function LaunchSceneContent() {
 function LaunchScene() {
   const { t } = useTranslation();
   const send = useGameStore((s) => s.send);
+  const quality = useAppStore((s) => s.settings.quality);
+  const dpr: [number, number] | number = quality === "high" ? [1, 2] : quality === "medium" ? [1, 1.5] : 1;
   const [fade, setFade] = useState(false);
 
   useEffect(() => {
@@ -306,6 +315,7 @@ function LaunchScene() {
   return (
     <div className="relative h-screen w-full">
       <Canvas
+        dpr={dpr}
         camera={{ position: [15, 3, 15], fov: 55, near: 0.1, far: 2000 }}
         gl={{ antialias: false, toneMapping: THREE.AgXToneMapping }}
       >
