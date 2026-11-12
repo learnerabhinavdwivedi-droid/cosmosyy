@@ -1,7 +1,8 @@
-import { useRef, useEffect, useMemo, useState, Suspense } from "react";
+import { useRef, useEffect, useMemo, useState, Suspense, type RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Stars, useGLTF } from "@react-three/drei";
+import { damp, damp3, dampQ, cubic, sine } from "maath/easing";
 import { Effects } from "./Effects";
 import { EarthAtmosphere } from "./EarthAtmosphere";
 import { useGameStore, type GamePhase } from "@/store/useGameStore";
@@ -25,7 +26,7 @@ const ORBIT_A1 = Math.PI * 1.8;
 
 const WP_FLIGHT_A = new THREE.Vector3(-20, 1, -16);
 const WP_FLIGHT_B = new THREE.Vector3(-4, 3, -17);
-const WP_COAST_B = new THREE.Vector3(9, 1.5, -20);
+const WP_COAST_B = new THREE.Vector3(9, 1.0, -20);
 const WP_ORBIT_END = new THREE.Vector3();
 const WP_TARGET_B = new THREE.Vector3(28, 3, -20);
 const WP_LAND = new THREE.Vector3(28, 0.2, -20);
@@ -34,6 +35,7 @@ const LAND_SCENE = new THREE.Vector3(100, 0, 0);
 const LAND_DROP_START = 12;
 const LAND_CUT_AT = 0.3;
 const STAGE_SEP_AT = 0.35;
+const CRUISE_SEP_AT = 0.05;
 
 function orbitPos(angle: number, out: THREE.Vector3): THREE.Vector3 {
   return out.set(
@@ -45,11 +47,11 @@ function orbitPos(angle: number, out: THREE.Vector3): THREE.Vector3 {
 
 const _shipOut = new THREE.Vector3();
 function shipPos(phase: string, p: number): THREE.Vector3 {
-  const t = ease(p);
+  const t = sine.inOut(Math.max(0, Math.min(1, p)));
   const v = _shipOut;
   switch (phase) {
     case "flight":
-      v.lerpVectors(WP_FLIGHT_A, WP_FLIGHT_B, t);
+      v.lerpVectors(WP_FLIGHT_A, WP_FLIGHT_B, cubic.out(Math.max(0, Math.min(1, p))));
       break;
     case "coast":
       v.lerpVectors(WP_FLIGHT_B, WP_COAST_B, t);
@@ -59,14 +61,15 @@ function shipPos(phase: string, p: number): THREE.Vector3 {
       break;
     case "targetLocked":
       orbitPos(ORBIT_A1, WP_ORBIT_END);
-      v.lerpVectors(WP_ORBIT_END, WP_TARGET_B, t);
+      v.lerpVectors(WP_ORBIT_END, WP_TARGET_B, ease(p));
       break;
     case "descent":
       if (p < LAND_CUT_AT) {
-        v.lerpVectors(WP_TARGET_B, WP_LAND, t);
+        const preP = p / LAND_CUT_AT;
+        v.lerpVectors(WP_TARGET_B, WP_LAND, ease(preP));
       } else {
         const lp = (p - LAND_CUT_AT) / (1 - LAND_CUT_AT);
-        const height = LAND_DROP_START * (1 - ease(lp));
+        const height = LAND_DROP_START * (1 - cubic.out(Math.max(0, Math.min(1, lp))));
         v.set(LAND_SCENE.x, LAND_SCENE.y + 0.5 + height, LAND_SCENE.z);
       }
       break;
@@ -94,35 +97,40 @@ function camTarget(
     _camLook.copy(sp);
   } else if (phase === "coast") {
     if (progress < STAGE_SEP_AT) {
-      const pullback = 5 + progress * 4;
-      _camPos.set(sp.x + 3, sp.y + 1.5, sp.z + pullback);
+      const pullback = 5 + (progress / STAGE_SEP_AT) * 2;
+      _camPos.set(sp.x + 2.5, sp.y + 1.4, sp.z + pullback);
       _camLook.copy(sp);
-    } else if (progress < STAGE_SEP_AT + 0.2) {
-      const sepT = (progress - STAGE_SEP_AT) / 0.2;
-      _camPos.set(sp.x + 4 + sepT * 4, sp.y + 2 + sepT * 2, sp.z + 8 + sepT * 3);
+    } else if (progress < STAGE_SEP_AT + 0.25) {
+      const sepT = sine.inOut((progress - STAGE_SEP_AT) / 0.25);
+      _camPos.set(sp.x + 2.5 + sepT * 4.5, sp.y + 1.4 + sepT * 2.0, sp.z + 7 + sepT * 3.5);
       _camLook.copy(sp);
     } else {
-      const pullback = 6 + (progress - 0.55) * 8;
-      _camPos.set(sp.x + 3, sp.y + 2 + progress * 3, sp.z + pullback);
+      const tailT = ease((progress - (STAGE_SEP_AT + 0.25)) / (1 - (STAGE_SEP_AT + 0.25)));
+      _camPos.set(sp.x + 7 - tailT * 2, sp.y + 3.4 - tailT * 1.2, sp.z + 10.5 - tailT * 2.5);
       _camLook.copy(sp);
     }
   } else if (phase === "targetLocked") {
-    _camPos.set(sp.x + 2, sp.y - 0.5, sp.z + 4);
+    _camPos.set(sp.x + 3.0, sp.y + 1.2, sp.z + 5.2);
     _camLook.copy(sp);
   } else if (phase === "descent") {
     if (progress < LAND_CUT_AT) {
-      const close = 4 - progress * 4;
-      _camPos.set(sp.x + close, sp.y + 0.5 + (1 - progress) * 2, sp.z + close);
+      const preP = progress / LAND_CUT_AT;
+      _camPos.set(sp.x + 3.0 - preP * 1.2, sp.y + 1.2 + preP * 0.8, sp.z + 5.2 - preP * 1.4);
       _camLook.copy(sp);
     } else {
-      _camPos.set(LAND_SCENE.x + 6, LAND_SCENE.y + 2, LAND_SCENE.z + 6);
-      _camLook.set(LAND_SCENE.x, sp.y, LAND_SCENE.z);
+      const postP = ease((progress - LAND_CUT_AT) / (1 - LAND_CUT_AT));
+      _camPos.set(
+        LAND_SCENE.x + 6.5 - postP * 1.5,
+        LAND_SCENE.y + 2.6 - postP * 1.1,
+        LAND_SCENE.z + 6.5 - postP * 1.5,
+      );
+      _camLook.set(LAND_SCENE.x, Math.max(LAND_SCENE.y + 0.5, sp.y * 0.85 + 0.1), LAND_SCENE.z);
     }
   } else if (phase === "touchdown") {
     _camPos.set(LAND_SCENE.x + 5, LAND_SCENE.y + 1.5, LAND_SCENE.z + 5);
     _camLook.set(LAND_SCENE.x, LAND_SCENE.y + 0.5, LAND_SCENE.z);
   } else if (phase === "stepOut") {
-    _camPos.set(LAND_SCENE.x + 4, LAND_SCENE.y + 1, LAND_SCENE.z + 4);
+    _camPos.set(LAND_SCENE.x + 3.4, LAND_SCENE.y + 1.1, LAND_SCENE.z + 3.4);
     _camLook.set(LAND_SCENE.x, LAND_SCENE.y + 0.5, LAND_SCENE.z);
   } else {
     _camPos.set(sp.x + 3, sp.y + 2, sp.z + 5);
@@ -132,13 +140,13 @@ function camTarget(
 }
 
 const DUR: Record<string, number> = {
-  flight: 14,
-  coast: 13,
+  flight: 16,
+  coast: 14,
   orbit: 12,
   targetLocked: 4,
-  descent: 13,
+  descent: 14,
   touchdown: 12,
-  stepOut: 12,
+  stepOut: 10,
 };
 
 const BEAT_EVENTS = [
@@ -481,14 +489,24 @@ function OrbitPath({ isMars }: { isMars: boolean }) {
 
 const _shipCopy = new THREE.Vector3();
 const _aheadCopy = new THREE.Vector3();
+const _targetQuat = new THREE.Quaternion();
+const _lookMat = new THREE.Matrix4();
+const _up = new THREE.Vector3(0, 1, 0);
 
-function FlightAnimator({ isMars }: { isMars: boolean }) {
+function FlightAnimator({
+  isMars,
+  cutVeilRef,
+}: {
+  isMars: boolean;
+  cutVeilRef: RefObject<HTMLDivElement | null>;
+}) {
   const { camera } = useThree();
   const shipRef = useRef<THREE.Group>(null);
   const saturnRef = useRef<THREE.Group>(null);
   const lmRef = useRef<THREE.Group>(null);
   const flameRef = useRef<THREE.Mesh>(null);
   const boosterRef = useRef<THREE.Group>(null);
+  const sepFlashRef = useRef<THREE.Mesh>(null);
   const phaseRef = useRef(useGameStore.getState().phase);
   const elapsed = useRef(0);
   const lookRef = useRef(new THREE.Vector3(0, 0, -10));
@@ -497,8 +515,21 @@ function FlightAnimator({ isMars }: { isMars: boolean }) {
   const sepPos = useRef(new THREE.Vector3());
   const sepDir = useRef(new THREE.Vector3());
   const sepTime = useRef(0);
+
   const marsProbeRef = useRef<THREE.Group>(null);
+  const marsCruiseRef = useRef<THREE.Group>(null);
+  const marsCruiseSepRef = useRef<THREE.Group>(null);
+  const cruiseSeparated = useRef(false);
+  const cruiseSepPos = useRef(new THREE.Vector3());
+  const cruiseSepDir = useRef(new THREE.Vector3());
+  const cruiseSepTime = useRef(0);
+
+  const marsLanderRef = useRef<THREE.Group>(null);
+  const chuteRef = useRef<THREE.Group>(null);
   const heatShieldRef = useRef<THREE.Mesh>(null);
+  const shieldDropRef = useRef<THREE.Mesh>(null);
+  const shieldDropY = useRef(0);
+  const flameState = useRef({ scale: 0 });
 
   const { scene: saturnScene } = useGLTF("/models/saturn-v.glb");
   const { scene: lmScene } = useGLTF("/models/lunar-module.glb");
@@ -515,13 +546,18 @@ function FlightAnimator({ isMars }: { isMars: boolean }) {
           if (s.phase === "flight") {
             separated.current = false;
             sepTime.current = 0;
+            cruiseSeparated.current = false;
+            cruiseSepTime.current = 0;
+            shieldDropY.current = 0;
+            landingCut.current = false;
           }
         }
       }),
     [],
   );
 
-  useFrame((_, dt) => {
+  useFrame((_, rawDt) => {
+    const dt = Math.min(rawDt, 0.05);
     const phase = phaseRef.current;
     elapsed.current += dt;
     const dur = DUR[phase] || 5;
@@ -529,54 +565,125 @@ function FlightAnimator({ isMars }: { isMars: boolean }) {
 
     _shipCopy.copy(shipPos(phase, progress));
 
-    const inLandingScene = (phase === "descent" && progress >= LAND_CUT_AT)
-      || phase === "touchdown" || phase === "stepOut";
+    const inLandingScene =
+      (phase === "descent" && progress >= LAND_CUT_AT) ||
+      phase === "touchdown" ||
+      phase === "stepOut";
 
-    if (phase === "coast" && progress >= STAGE_SEP_AT && !separated.current) {
-      separated.current = true;
-      if (!isMars) {
-        sepTime.current = 0;
-        sepPos.current.copy(_shipCopy);
-        _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.05, 1)));
-        sepDir.current.subVectors(_shipCopy, _aheadCopy).normalize();
-        gameAudio.playStaging();
+    // Seamless cross-dissolve across orbital-to-landing teleport so zero jump is visible
+    if (cutVeilRef.current) {
+      let veil = 0;
+      if (phase === "descent") {
+        if (progress >= 0.22 && progress < LAND_CUT_AT) {
+          veil = ease((progress - 0.22) / (LAND_CUT_AT - 0.22));
+        } else if (progress >= LAND_CUT_AT && progress < 0.42) {
+          veil = 1 - ease((progress - LAND_CUT_AT) / 0.12);
+        }
       }
+      cutVeilRef.current.style.opacity = String(veil);
     }
 
+    // Stage 1 separation: launch booster detaches cleanly for BOTH Moon & Mars
+    if (phase === "coast" && progress >= STAGE_SEP_AT && !separated.current) {
+      separated.current = true;
+      sepTime.current = 0;
+      sepPos.current.copy(_shipCopy);
+      _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.05, 1)));
+      sepDir.current.subVectors(_shipCopy, _aheadCopy).normalize();
+      gameAudio.playStaging();
+    }
     if (separated.current) {
       sepTime.current += dt;
+    }
+
+    // Stage 2 Mars separation: Cruise/Orbiter stage separates from Entry Aeroshell/Lander
+    if (
+      isMars &&
+      phase === "descent" &&
+      progress >= CRUISE_SEP_AT &&
+      !inLandingScene &&
+      !cruiseSeparated.current
+    ) {
+      cruiseSeparated.current = true;
+      cruiseSepTime.current = 0;
+      cruiseSepPos.current.copy(_shipCopy);
+      _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.05, 1)));
+      cruiseSepDir.current.subVectors(_shipCopy, _aheadCopy).normalize();
+      gameAudio.playStaging();
+    }
+    if (cruiseSeparated.current) {
+      cruiseSepTime.current += dt;
     }
 
     if (shipRef.current) {
       shipRef.current.position.copy(_shipCopy);
       if (inLandingScene) {
-        shipRef.current.rotation.set(0, 0, 0);
+        shipRef.current.quaternion.identity();
       } else {
         _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.03, 1)));
-        const dx = _aheadCopy.x - _shipCopy.x;
-        const dy = _aheadCopy.y - _shipCopy.y;
-        const dz = _aheadCopy.z - _shipCopy.z;
-        if (dx * dx + dy * dy + dz * dz > 0.000001)
-          shipRef.current.lookAt(_aheadCopy);
+        if (_aheadCopy.distanceToSquared(_shipCopy) > 0.000001) {
+          _lookMat.lookAt(_shipCopy, _aheadCopy, _up);
+          _targetQuat.setFromRotationMatrix(_lookMat);
+          dampQ(shipRef.current.quaternion, _targetQuat, 0.14, dt);
+        }
       }
     }
 
+    // Stage 1 booster drift (now visible on Mars just like Moon)
     if (boosterRef.current) {
-      if (!isMars && separated.current && phase !== "flight") {
+      const showBooster =
+        separated.current &&
+        phase !== "flight" &&
+        !inLandingScene &&
+        phase !== "targetLocked" &&
+        sepTime.current < 16;
+      if (showBooster) {
         boosterRef.current.visible = true;
         const t = sepTime.current;
-        const drift = t * 1.2;
+        const drift = t * 1.35;
         boosterRef.current.position.set(
           sepPos.current.x + sepDir.current.x * drift,
-          sepPos.current.y + sepDir.current.y * drift - t * 0.1,
+          sepPos.current.y + sepDir.current.y * drift - t * 0.08,
           sepPos.current.z + sepDir.current.z * drift,
         );
-        boosterRef.current.rotation.x = Math.PI / 2 + t * 0.15;
-        boosterRef.current.rotation.z = t * 0.08;
-        const fade = Math.max(0.15, 1 - t * 0.12);
+        boosterRef.current.rotation.set(Math.PI / 2 + t * 0.14, t * 0.05, t * 0.09);
+        const fade = Math.max(0.12, 1 - t * 0.09);
         boosterRef.current.scale.setScalar(0.5 * fade);
       } else {
         boosterRef.current.visible = false;
+      }
+    }
+
+    // Stage separation RCS puff pulse
+    if (sepFlashRef.current) {
+      const active = separated.current && sepTime.current < 0.75 && !inLandingScene;
+      sepFlashRef.current.visible = active;
+      if (active) {
+        const ft = sepTime.current / 0.75;
+        sepFlashRef.current.position.copy(sepPos.current);
+        sepFlashRef.current.scale.setScalar(0.4 + ft * 2.4);
+        (sepFlashRef.current.material as THREE.MeshBasicMaterial).opacity = (1 - ft) * 0.65;
+      }
+    }
+
+    // Stage 2 Mars Cruise/Orbiter drift before atmospheric entry
+    if (marsCruiseSepRef.current) {
+      const showCruiseDrift =
+        isMars &&
+        cruiseSeparated.current &&
+        phase === "descent" &&
+        !inLandingScene;
+      marsCruiseSepRef.current.visible = showCruiseDrift;
+      if (showCruiseDrift) {
+        const t = cruiseSepTime.current;
+        const drift = t * 1.6;
+        marsCruiseSepRef.current.position.set(
+          cruiseSepPos.current.x + cruiseSepDir.current.x * drift,
+          cruiseSepPos.current.y + cruiseSepDir.current.y * drift + t * 0.12,
+          cruiseSepPos.current.z + cruiseSepDir.current.z * drift,
+        );
+        marsCruiseSepRef.current.rotation.set(Math.PI / 2 - t * 0.18, t * 0.12, t * 0.1);
+        marsCruiseSepRef.current.scale.setScalar(0.42 * Math.max(0.2, 1 - t * 0.15));
       }
     }
 
@@ -586,39 +693,61 @@ function FlightAnimator({ isMars }: { isMars: boolean }) {
       lookRef.current.copy(ct.look);
       landingCut.current = true;
     } else {
-      const lerpSpeed = inLandingScene ? dt * 2 : dt * 1.5;
-      camera.position.lerp(ct.pos, lerpSpeed);
-      lookRef.current.lerp(ct.look, dt * 2);
+      const smooth = phase === "orbit" ? 0.85 : inLandingScene ? 0.55 : 0.65;
+      damp3(camera.position, ct.pos, smooth, dt);
+      damp3(lookRef.current, ct.look, 0.45, dt);
     }
     camera.lookAt(lookRef.current);
 
     if (phase === "flight" || phase === "coast") landingCut.current = false;
 
     if (isMars) {
-      const showRocket = phase === "flight" || (phase === "coast" && !separated.current);
+      const showRocket =
+        phase === "flight" || (phase === "coast" && !separated.current);
       if (saturnRef.current) saturnRef.current.visible = showRocket;
       if (lmRef.current) lmRef.current.visible = false;
       if (marsProbeRef.current) {
-        marsProbeRef.current.visible = !showRocket;
-        if (inLandingScene) {
-          marsProbeRef.current.rotation.set(0, 0, 0);
-          marsProbeRef.current.scale.setScalar(0.6);
-        } else {
-          marsProbeRef.current.rotation.set(Math.PI / 2, 0, 0);
-          marsProbeRef.current.scale.setScalar(0.4);
+        marsProbeRef.current.visible = !showRocket && !inLandingScene;
+      }
+      if (marsCruiseRef.current) {
+        marsCruiseRef.current.visible = !cruiseSeparated.current && !inLandingScene;
+      }
+      if (marsLanderRef.current) {
+        marsLanderRef.current.visible = inLandingScene;
+      }
+      const inChutePhase = inLandingScene && phase === "descent" && progress < 0.58;
+      if (chuteRef.current) {
+        chuteRef.current.visible = inChutePhase;
+        if (inChutePhase) {
+          chuteRef.current.rotation.z = Math.sin(elapsed.current * 2.2) * 0.04;
         }
       }
       if (heatShieldRef.current) {
-        const inEntry = inLandingScene && phase === "descent" && progress < 0.65;
-        heatShieldRef.current.visible = inEntry;
-        if (inEntry) {
-          const heatIntensity = 0.3 + Math.sin(elapsed.current * 8) * 0.15;
+        heatShieldRef.current.visible = inChutePhase;
+        if (inChutePhase) {
+          const heatIntensity = 0.28 + Math.sin(elapsed.current * 8) * 0.12;
           (heatShieldRef.current.material as THREE.MeshBasicMaterial).opacity = heatIntensity;
         }
       }
+      if (shieldDropRef.current) {
+        const dropping = inLandingScene && phase === "descent" && progress >= 0.58 && shieldDropY.current > -18;
+        shieldDropRef.current.visible = dropping;
+        if (dropping) {
+          shieldDropY.current -= dt * 7.5;
+          shieldDropRef.current.position.set(0, -0.45 + shieldDropY.current, 0);
+          shieldDropRef.current.rotation.x += dt * 0.4;
+        } else if (!inLandingScene || progress < 0.58) {
+          shieldDropY.current = 0;
+        }
+      }
     } else {
-      const useLM = separated.current || phase === "orbit" || phase === "targetLocked"
-        || phase === "descent" || phase === "touchdown" || phase === "stepOut";
+      const useLM =
+        separated.current ||
+        phase === "orbit" ||
+        phase === "targetLocked" ||
+        phase === "descent" ||
+        phase === "touchdown" ||
+        phase === "stepOut";
       if (saturnRef.current) saturnRef.current.visible = !useLM;
       if (lmRef.current) {
         lmRef.current.visible = useLM;
@@ -631,21 +760,32 @@ function FlightAnimator({ isMars }: { isMars: boolean }) {
         }
       }
       if (marsProbeRef.current) marsProbeRef.current.visible = false;
+      if (marsLanderRef.current) marsLanderRef.current.visible = false;
+      if (chuteRef.current) chuteRef.current.visible = false;
       if (heatShieldRef.current) heatShieldRef.current.visible = false;
+      if (shieldDropRef.current) shieldDropRef.current.visible = false;
     }
 
-    const powered = phase === "flight" || phase === "targetLocked"
-      || (phase === "descent" && (isMars
-        ? (!inLandingScene || (progress > 0.55 && progress < 0.9))
-        : !(inLandingScene && progress > 0.85)));
+    const powered =
+      phase === "flight" ||
+      phase === "targetLocked" ||
+      (phase === "descent" &&
+        (isMars
+          ? !inLandingScene
+            ? progress < 0.12
+            : progress > 0.58 && progress < 0.94
+          : !(inLandingScene && progress > 0.9)));
+    damp(flameState.current, "scale", powered ? 1 : 0, 0.12, dt);
     if (flameRef.current) {
-      flameRef.current.visible = powered;
-      if (powered) {
-        flameRef.current.scale.z = 0.8 + Math.sin(elapsed.current * 12) * 0.2;
+      const s = flameState.current.scale;
+      flameRef.current.visible = s > 0.02;
+      if (s > 0.02) {
+        const flicker = 0.85 + Math.sin(elapsed.current * 14) * 0.15;
+        flameRef.current.scale.set(s, s, s * flicker);
       }
       if (inLandingScene) {
         flameRef.current.rotation.set(Math.PI, 0, 0);
-        flameRef.current.position.set(0, -1, 0);
+        flameRef.current.position.set(0, isMars ? -0.9 : -1, 0);
       } else {
         flameRef.current.rotation.set(-Math.PI / 2, 0, 0);
         flameRef.current.position.set(0, 0, 1.5);
@@ -662,36 +802,114 @@ function FlightAnimator({ isMars }: { isMars: boolean }) {
         <group ref={lmRef} scale={0.2} rotation={[Math.PI / 2, 0, 0]} visible={false}>
           <primitive object={lmClone} />
         </group>
-        {/* Mars probe / cruise stage (generic representation) */}
-        <group ref={marsProbeRef} scale={0.4} rotation={[Math.PI / 2, 0, 0]} visible={false}>
-          <mesh>
-            <cylinderGeometry args={[0.25, 0.3, 1.0, 12]} />
-            <meshStandardMaterial color="#b8b8b8" metalness={0.7} roughness={0.3} />
+
+        {/* Mars Cruise Ring + Entry Aeroshell/Lander stack (separates during descent!) */}
+        <group ref={marsProbeRef} scale={0.42} rotation={[Math.PI / 2, 0, 0]} visible={false}>
+          {/* Detachable Cruise Stage / Orbiter Ring */}
+          <group ref={marsCruiseRef} position={[0, -0.45, 0]}>
+            <mesh>
+              <cylinderGeometry args={[0.38, 0.38, 0.28, 16]} />
+              <meshStandardMaterial color="#b8b8b8" metalness={0.75} roughness={0.3} />
+            </mesh>
+            <mesh position={[0, -0.22, 0]}>
+              <cylinderGeometry args={[0.22, 0.08, 0.06, 12]} />
+              <meshStandardMaterial color="#d8d8d8" metalness={0.8} roughness={0.2} />
+            </mesh>
+            <mesh position={[0.92, 0, 0]}>
+              <boxGeometry args={[0.9, 0.015, 0.36]} />
+              <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.45} />
+            </mesh>
+            <mesh position={[-0.92, 0, 0]}>
+              <boxGeometry args={[0.9, 0.015, 0.36]} />
+              <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.45} />
+            </mesh>
+          </group>
+          {/* Conical Entry Aeroshell + Backshell + Heat Shield */}
+          <group position={[0, 0.15, 0]}>
+            <mesh position={[0, 0.12, 0]}>
+              <coneGeometry args={[0.52, 0.55, 16]} />
+              <meshStandardMaterial color="#d8d2c6" metalness={0.35} roughness={0.5} />
+            </mesh>
+            <mesh position={[0, -0.18, 0]} rotation={[Math.PI, 0, 0]}>
+              <coneGeometry args={[0.54, 0.14, 16]} />
+              <meshStandardMaterial color="#3c2a21" metalness={0.2} roughness={0.75} />
+            </mesh>
+          </group>
+        </group>
+
+        {/* Mars Surface Descent Pod / Lander + Parachute + Heat Shield Drop */}
+        <group ref={marsLanderRef} scale={0.62} visible={false}>
+          {/* Descent Stage / Sky Crane / Lander Deck */}
+          <mesh position={[0, 0.25, 0]}>
+            <cylinderGeometry args={[0.45, 0.58, 0.38, 8]} />
+            <meshStandardMaterial color="#c8b896" metalness={0.55} roughness={0.38} />
           </mesh>
+          {/* Gold Foil Thermal Belly */}
+          <mesh position={[0, 0.02, 0]}>
+            <cylinderGeometry args={[0.38, 0.32, 0.16, 8]} />
+            <meshStandardMaterial color="#d4a238" metalness={0.85} roughness={0.25} />
+          </mesh>
+          {/* 4 Landing Legs / Rocker Struts */}
+          {[45, 135, 225, 315].map((deg) => {
+            const rad = (deg * Math.PI) / 180;
+            return (
+              <mesh
+                key={deg}
+                position={[Math.cos(rad) * 0.52, -0.12, Math.sin(rad) * 0.52]}
+                rotation={[Math.sin(rad) * 0.35, 0, -Math.cos(rad) * 0.35]}
+              >
+                <cylinderGeometry args={[0.03, 0.02, 0.52, 6]} />
+                <meshStandardMaterial color="#888888" metalness={0.65} roughness={0.35} />
+              </mesh>
+            );
+          })}
+          {/* High-Gain Dish */}
           <mesh position={[0, 0.55, 0]}>
-            <cylinderGeometry args={[0.2, 0.06, 0.06, 12]} />
-            <meshStandardMaterial color="#d0d0d0" metalness={0.8} roughness={0.2} />
+            <cylinderGeometry args={[0.24, 0.08, 0.06, 12]} />
+            <meshStandardMaterial color="#e0ded8" metalness={0.75} roughness={0.25} />
           </mesh>
-          <mesh position={[0.85, 0, 0]}>
-            <boxGeometry args={[0.7, 0.015, 0.3]} />
-            <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.5} />
+
+          {/* Supersonic Parachute + Bridle */}
+          <group ref={chuteRef} position={[0, 2.3, 0]} visible={false}>
+            <mesh position={[0, 0.3, 0]}>
+              <sphereGeometry args={[1.15, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.52]} />
+              <meshStandardMaterial color="#e85828" roughness={0.65} side={THREE.DoubleSide} />
+            </mesh>
+            {[0, 90, 180, 270].map((deg) => {
+              const rad = (deg * Math.PI) / 180;
+              return (
+                <mesh
+                  key={deg}
+                  position={[Math.cos(rad) * 0.48, -0.8, Math.sin(rad) * 0.48]}
+                  rotation={[Math.sin(rad) * 0.25, 0, -Math.cos(rad) * 0.25]}
+                >
+                  <cylinderGeometry args={[0.008, 0.008, 1.9, 4]} />
+                  <meshBasicMaterial color="#cccccc" />
+                </mesh>
+              );
+            })}
+          </group>
+
+          {/* Heat shield entry plasma glow */}
+          <mesh ref={heatShieldRef} position={[0, -0.25, 0]} visible={false}>
+            <sphereGeometry args={[0.68, 16, 12, 0, Math.PI * 2, Math.PI * 0.45, Math.PI * 0.55]} />
+            <meshBasicMaterial
+              color="#ff5511"
+              transparent
+              opacity={0.35}
+              blending={THREE.AdditiveBlending}
+              side={THREE.DoubleSide}
+              depthWrite={false}
+            />
           </mesh>
-          <mesh position={[-0.85, 0, 0]}>
-            <boxGeometry args={[0.7, 0.015, 0.3]} />
-            <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.5} />
+
+          {/* Separated heat shield falling away */}
+          <mesh ref={shieldDropRef} position={[0, -0.45, 0]} rotation={[Math.PI, 0, 0]} visible={false}>
+            <coneGeometry args={[0.58, 0.16, 16]} />
+            <meshStandardMaterial color="#3c2a21" metalness={0.2} roughness={0.8} />
           </mesh>
         </group>
-        {/* Heat shield glow for Mars EDL */}
-        <mesh ref={heatShieldRef} visible={false}>
-          <sphereGeometry args={[0.5, 16, 16]} />
-          <meshBasicMaterial
-            color="#ff4400"
-            transparent
-            opacity={0.4}
-            blending={THREE.AdditiveBlending}
-            depthWrite={false}
-          />
-        </mesh>
+
         <mesh
           ref={flameRef}
           rotation={[-Math.PI / 2, 0, 0]}
@@ -707,10 +925,40 @@ function FlightAnimator({ isMars }: { isMars: boolean }) {
           />
         </mesh>
       </group>
+
+      {/* Stage 1 Rocket Booster drifting away cleanly (Moon & Mars) */}
       <group ref={boosterRef} visible={false}>
         <group scale={0.5} rotation={[Math.PI / 2, 0, 0]}>
           <primitive object={boosterClone} />
         </group>
+      </group>
+
+      {/* Separation RCS flash pulse */}
+      <mesh ref={sepFlashRef} visible={false}>
+        <sphereGeometry args={[0.4, 16, 16]} />
+        <meshBasicMaterial
+          color="#a8e6ff"
+          transparent
+          opacity={0.6}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Stage 2 Mars Cruise Stage separating away before entry */}
+      <group ref={marsCruiseSepRef} visible={false}>
+        <mesh>
+          <cylinderGeometry args={[0.38, 0.38, 0.28, 16]} />
+          <meshStandardMaterial color="#b8b8b8" metalness={0.75} roughness={0.3} />
+        </mesh>
+        <mesh position={[0.92, 0, 0]}>
+          <boxGeometry args={[0.9, 0.015, 0.36]} />
+          <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.45} />
+        </mesh>
+        <mesh position={[-0.92, 0, 0]}>
+          <boxGeometry args={[0.9, 0.015, 0.36]} />
+          <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.45} />
+        </mesh>
       </group>
     </>
   );
@@ -819,7 +1067,7 @@ function MarsLandingGround() {
   );
 }
 
-function FlightContent() {
+function FlightContent({ cutVeilRef }: { cutVeilRef: RefObject<HTMLDivElement | null> }) {
   const missionId = useGameStore((s) => s.missionId);
   const mission = useMemo(() => getMissionOrNull(missionId), [missionId]);
   const isMars = mission?.planet === "mars";
@@ -862,7 +1110,7 @@ function FlightContent() {
       <Suspense fallback={null}>
         {isMars ? <MarsLandingGround /> : <LandingGround />}
       </Suspense>
-      <FlightAnimator isMars={!!isMars} />
+      <FlightAnimator isMars={!!isMars} cutVeilRef={cutVeilRef} />
     </>
   );
 }
@@ -901,13 +1149,14 @@ function FlightHUD() {
       return;
     }
     const t0 = Date.now();
-    const dur = planet === "mars" ? 10000 : 8000;
+    const dur = 13600;
     const interval = setInterval(() => {
       const prog = Math.min((Date.now() - t0) / dur, 1);
-      setAlt(Math.max(0, Math.round(startAlt * (1 - prog))));
-    }, 80);
+      const shaped = 1 - Math.pow(prog, 1.35);
+      setAlt(Math.max(0, Math.round(startAlt * Math.max(0, shaped))));
+    }, 60);
     return () => clearInterval(interval);
-  }, [phase, startAlt, planet]);
+  }, [phase, startAlt]);
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex flex-col">
@@ -1012,20 +1261,40 @@ export function FlightScene() {
     return () => window.removeEventListener("keydown", handler);
   }, [phase, send, gates]);
 
-  const gate = gates[phase];
+  const cutVeilRef = useRef<HTMLDivElement | null>(null);
+  const [stepOutFading, setStepOutFading] = useState(false);
 
-  const showStepOutFade = phase === "stepOut";
+  useEffect(() => {
+    if (phase !== "stepOut") {
+      setStepOutFading(false);
+      return;
+    }
+    const timer = setTimeout(() => setStepOutFading(true), 7600);
+    return () => clearTimeout(timer);
+  }, [phase]);
+
+  const gate = gates[phase];
+  const isMars = mission?.planet === "mars";
 
   return (
     <div className="relative h-screen w-full">
       <Canvas
-        camera={{ position: [-15, 3, -8], fov: 55, near: 0.1, far: 2000 }}
+        camera={{ position: [-18, 2.2, -11], fov: 55, near: 0.1, far: 2000 }}
         gl={{ antialias: false }}
       >
         <color attach="background" args={["#020408"]} />
-        <FlightContent />
+        <FlightContent cutVeilRef={cutVeilRef} />
         <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} />
       </Canvas>
+      {/* Cross-dissolve veil across orbital-to-landing cut */}
+      <div
+        ref={cutVeilRef}
+        className="pointer-events-none absolute inset-0 z-20"
+        style={{
+          opacity: 0,
+          backgroundColor: isMars ? "#160a04" : "#000000",
+        }}
+      />
       <FlightHUD />
       {gate && (
         <div className="absolute inset-x-0 bottom-24 z-20 flex justify-center">
@@ -1037,9 +1306,9 @@ export function FlightScene() {
           </button>
         </div>
       )}
-      {showStepOutFade && (
-        <div className="absolute inset-0 z-30 animate-[fadeIn_2.5s_ease-in_forwards] bg-black opacity-0" />
-      )}
+      <div
+        className={`pointer-events-none absolute inset-0 z-30 bg-black transition-opacity duration-[2200ms] ease-in ${stepOutFading ? "opacity-100" : "opacity-0"}`}
+      />
     </div>
   );
 }

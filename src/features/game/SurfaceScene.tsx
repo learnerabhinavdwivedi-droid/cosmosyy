@@ -274,7 +274,6 @@ const BOB_FREQ = 6;
 const BOB_AMP = 0.03;
 const _moveDir = new THREE.Vector3();
 const _lookTarget = new THREE.Vector3();
-const _currentLook = new THREE.Vector3();
 
 const playerState = {
   x: 5, z: 10, heading: 0, isMoving: false, speed: 0,
@@ -538,24 +537,29 @@ function PlayerController({ planet }: { planet?: string }) {
   const { camera } = useThree();
   const velocity = useRef(new THREE.Vector3());
   const verticalVel = useRef(0);
+  const physY = useRef(GROUND_Y + EYE_HEIGHT);
   const euler = useRef(new THREE.Euler(0, 0, 0, "YXZ"));
   const keys = useRef<Record<string, boolean>>({});
   const isPointerLocked = useRef(false);
   const phaseRef = useRef(useGameStore.getState().phase);
   const bobPhase = useRef(0);
+  const bobOffset = useRef(0);
   const wasOnGround = useRef(true);
   const gravity = getSurfaceGravity(planet ?? "moon");
   const jumpV0 = getJumpV0(planet ?? "moon");
 
   useEffect(() => {
     const unsub = useGameStore.subscribe((s) => {
+      const prev = phaseRef.current;
       phaseRef.current = s.phase;
       if (s.phase === "inspect") {
         document.exitPointerLock();
+      } else if (prev === "inspect") {
+        euler.current.setFromQuaternion(camera.quaternion, "YXZ");
       }
     });
     return unsub;
-  }, []);
+  }, [camera]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -583,7 +587,8 @@ function PlayerController({ planet }: { planet?: string }) {
     window.addEventListener("mousemove", onMouseMove);
     document.addEventListener("pointerlockchange", onPointerLockChange);
 
-    camera.position.set(5, EYE_HEIGHT, 10);
+    physY.current = GROUND_Y + EYE_HEIGHT;
+    camera.position.set(5, physY.current, 10);
     euler.current.y = -0.4;
     camera.quaternion.setFromEuler(euler.current);
 
@@ -595,7 +600,8 @@ function PlayerController({ planet }: { planet?: string }) {
     };
   }, [camera]);
 
-  useFrame((_state, delta) => {
+  useFrame((_state, rawDelta) => {
+    const delta = Math.min(rawDelta, 0.05);
     if (phaseRef.current === "inspect") {
       velocity.current.set(0, 0, 0);
       playerState.isMoving = false;
@@ -621,39 +627,42 @@ function PlayerController({ planet }: { planet?: string }) {
       _moveDir.normalize();
     }
 
-    velocity.current.lerp(_moveDir.multiplyScalar(speed), delta * 2.5);
+    const accelFactor = 1 - Math.exp(-6 * delta);
+    velocity.current.lerp(_moveDir.multiplyScalar(speed), accelFactor);
     camera.position.x += velocity.current.x * delta;
     camera.position.z += velocity.current.z * delta;
 
-    const onGround = camera.position.y <= GROUND_Y + EYE_HEIGHT + 0.01;
+    const onGround = physY.current <= GROUND_Y + EYE_HEIGHT + 0.01;
 
     if (k["Space"] && onGround) {
       verticalVel.current = jumpV0;
     }
 
     verticalVel.current -= gravity * delta;
-    camera.position.y += verticalVel.current * delta;
+    physY.current += verticalVel.current * delta;
 
-    if (camera.position.y < GROUND_Y + EYE_HEIGHT) {
-      camera.position.y = GROUND_Y + EYE_HEIGHT;
+    if (physY.current < GROUND_Y + EYE_HEIGHT) {
+      physY.current = GROUND_Y + EYE_HEIGHT;
       if (!wasOnGround.current && verticalVel.current < -0.5) {
         gameAudio.playThud();
       }
       verticalVel.current = 0;
     }
-    wasOnGround.current = onGround;
+    wasOnGround.current = physY.current <= GROUND_Y + EYE_HEIGHT + 0.01;
 
-    if (isMoving && onGround) {
+    if (isMoving && wasOnGround.current) {
       bobPhase.current += delta * BOB_FREQ * (running ? 1.3 : 1);
-      camera.position.y += Math.sin(bobPhase.current) * BOB_AMP;
+      bobOffset.current = Math.sin(bobPhase.current) * BOB_AMP;
     } else {
       bobPhase.current = 0;
+      bobOffset.current *= Math.exp(-10 * delta);
     }
+    camera.position.y = physY.current + bobOffset.current;
 
     playerState.x = camera.position.x;
     playerState.z = camera.position.z;
     playerState.heading = euler.current.y;
-    playerState.isMoving = isMoving && onGround;
+    playerState.isMoving = isMoving && wasOnGround.current;
     playerState.speed = velocity.current.length();
   });
 
@@ -664,25 +673,26 @@ function InspectCamera({ objects }: { objects: HeritageObject[] }) {
   const { camera } = useThree();
   const inspecting = useGameStore((s) => s.inspecting);
   const phase = useGameStore((s) => s.phase);
-  const lerpProgress = useRef(0);
+  const smoothedLook = useRef(new THREE.Vector3());
 
-  useFrame((_state, delta) => {
+  useEffect(() => {
+    if (phase === "inspect") {
+      camera.getWorldDirection(smoothedLook.current);
+      smoothedLook.current.multiplyScalar(4).add(camera.position);
+    }
+  }, [phase, inspecting.objectId, camera]);
+
+  useFrame((_state, rawDelta) => {
     if (phase !== "inspect" || !inspecting.objectId) return;
     const obj = objects.find((o) => o.id === inspecting.objectId);
     if (!obj) return;
 
-    lerpProgress.current = Math.min(lerpProgress.current + delta * 2, 1);
-
-    _lookTarget.set(obj.position[0], obj.position[1] + 1, obj.position[2]);
-    camera.getWorldDirection(_currentLook);
-    _currentLook.add(camera.position);
-    _currentLook.lerp(_lookTarget, lerpProgress.current * 0.08);
-    camera.lookAt(_currentLook);
+    const dt = Math.min(rawDelta, 0.05);
+    const t = 1 - Math.exp(-5 * dt);
+    _lookTarget.set(obj.position[0], obj.position[1] + 0.85, obj.position[2]);
+    smoothedLook.current.lerp(_lookTarget, t);
+    camera.lookAt(smoothedLook.current);
   });
-
-  useEffect(() => {
-    lerpProgress.current = 0;
-  }, [inspecting.objectId]);
 
   return null;
 }
@@ -759,17 +769,18 @@ function SurfaceSceneContent({
         <>
           <color attach="background" args={["#c49470"]} />
           <fog attach="fog" args={["#c4956a", 40, 200]} />
-          {/* Mars sky dome — butterscotch gradient */}
+          {/* Mars sky dome — butterscotch atmosphere */}
           <mesh>
             <sphereGeometry args={[500, 32, 32]} />
-            <meshBasicMaterial color="#b08060" side={THREE.BackSide} transparent opacity={0.7} />
+            <meshBasicMaterial color="#b08060" side={THREE.BackSide} />
           </mesh>
-          <Stars radius={400} depth={80} count={300} factor={2} saturation={0.1} fade speed={0.02} />
-          <ambientLight intensity={0.15} color="#e8c4a0" />
-          <hemisphereLight args={["#c49060", "#3a2010", 0.2]} />
+          <ambientLight intensity={0.18} color="#e8c4a0" />
+          <hemisphereLight args={["#c49060", "#3a2010", 0.25]} />
         </>
       ) : (
         <>
+          <color attach="background" args={["#000000"]} />
+          <fogExp2 attach="fog" args={["#0a0a0a", 0.004]} />
           <Stars radius={300} depth={80} count={8000} factor={5} saturation={0.6} fade speed={0.1} />
           <ambientLight intensity={0.04} color="#333344" />
           <hemisphereLight args={["#667788", "#222228", 0.08]} />
@@ -1070,15 +1081,20 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [evaSeconds]);
 
+  const scannableCount = useMemo(
+    () => objects.filter((o) => !o.hidden && o.id !== "descent-stage").length,
+    [objects],
+  );
+
   const narration = useMemo(() => {
-    if (found.length >= objects.length) {
+    if (found.length >= scannableCount) {
       return t(isRobotic ? "surface.narrationAllFoundRobotic" : "surface.narrationAllFound");
     }
     if (found.length > 0) {
-      return t("surface.narrationProgress", { found: found.length, total: objects.length });
+      return t("surface.narrationProgress", { found: found.length, total: scannableCount });
     }
     return t(isMars ? "surface.narrationStartMars" : "surface.narrationStart", { name: playerName || "" });
-  }, [found.length, playerName, t, isMars, isRobotic]);
+  }, [found.length, scannableCount, playerName, t, isMars, isRobotic]);
 
   const completeScan = useCallback(() => {
     if (!nearObjectId || found.includes(nearObjectId) || !missionId) return;
@@ -1159,10 +1175,10 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
   }, [phase, nearObjectId, found, missionId, completeScan, handleFlag, handleLaunch]);
 
   useEffect(() => {
-    if (found.length >= objects.length && phase === "explore") {
+    if (found.length >= scannableCount && phase === "explore") {
       send("ALL_FOUND");
     }
-  }, [found.length, phase, send]);
+  }, [found.length, scannableCount, phase, send]);
 
   const nearObj = objects.find((o) => o.id === nearObjectId);
   const isScanning = scanProgress > 0;
@@ -1195,7 +1211,7 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
       {/* Top-center: objects found */}
       <div className="mx-auto mt-4 rounded-lg bg-space-950/70 px-5 py-2 text-center backdrop-blur">
         <p className="font-mono text-sm text-regolith-200">
-          {t("surface.objectCount", { found: found.length, total: objects.length })}
+          {t("surface.objectCount", { found: found.length, total: scannableCount })}
         </p>
       </div>
 
@@ -1298,8 +1314,6 @@ export function SurfaceScene() {
             toneMappingExposure: 1.2,
           }}
         >
-          <color attach="background" args={["#000000"]} />
-          <fogExp2 attach="fog" args={["#0a0a0a", 0.004]} />
           <SurfaceSceneContent
             nearObjectId={nearObjectId}
             setNearObjectId={setNearObjectId}

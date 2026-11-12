@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
+import { damp3 } from "maath/easing";
 import { useGameStore, type GamePhase } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { DebugPanel } from "@/components/DebugPanel";
@@ -25,13 +26,17 @@ const ENGINE_PHASES = new Set<string>(["flight", "targetLocked", "descent", "lau
 function GameAudioController() {
   const prevPhase = useRef<GamePhase>("select");
   const missionIdRef = useRef(useGameStore.getState().missionId);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const unsub = useGameStore.subscribe((s) => {
       missionIdRef.current = s.missionId;
     });
     preloadNarration(missionIdRef.current ?? undefined);
-    return unsub;
+    return () => {
+      unsub();
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -40,6 +45,10 @@ function GameAudioController() {
       const prev = prevPhase.current;
       if (phase === prev) return;
       prevPhase.current = phase;
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
       const mid = s.missionId ?? undefined;
       const missionSpec = mid ? getMissionOrNull(mid) : null;
       const isRobotic = missionSpec?.missionType === "robotic";
@@ -49,7 +58,8 @@ function GameAudioController() {
         gameAudio.unlock();
         unlockAudio();
         gameAudio.playCountdown();
-        setTimeout(() => {
+        timerRef.current = setTimeout(() => {
+          if (useGameStore.getState().phase !== "flight") return;
           gameAudio.startEngine();
           gameAudio.startSpaceDrone();
           playNarration(phase, mid);
@@ -103,7 +113,11 @@ function GameAudioController() {
         gameAudio.stopMarsWind();
         gameAudio.stopBreathing();
         gameAudio.playCountdown();
-        setTimeout(() => gameAudio.startEngine(), 1600);
+        timerRef.current = setTimeout(() => {
+          if (useGameStore.getState().phase === "launch") {
+            gameAudio.startEngine();
+          }
+        }, 1600);
       }
 
       if (phase === "report") {
@@ -123,7 +137,7 @@ function GameAudioController() {
 
 function SceneFade({ phase }: { phase: string }) {
   const prevPhase = useRef(phase);
-  const [opacity, setOpacity] = useState(0);
+  const [opaque, setOpaque] = useState(false);
 
   useEffect(() => {
     const prev = prevPhase.current;
@@ -137,18 +151,15 @@ function SceneFade({ phase }: { phase: string }) {
     const isLaunch = phase === "launch";
 
     if ((wasFlightScene && isSurfaceScene) || (wasLaunch && isReport) || (wasSurface && isLaunch)) {
-      setOpacity(1);
-      const timer = setTimeout(() => setOpacity(0), 600);
+      setOpaque(true);
+      const timer = setTimeout(() => setOpaque(false), 320);
       return () => clearTimeout(timer);
     }
   }, [phase]);
 
-  if (opacity === 0) return null;
-
   return (
     <div
-      className="pointer-events-none absolute inset-0 z-50 bg-black transition-opacity duration-700"
-      style={{ opacity }}
+      className={`pointer-events-none fixed inset-0 z-50 bg-black transition-opacity duration-700 ease-out ${opaque ? "opacity-100" : "opacity-0"}`}
     />
   );
 }
@@ -223,22 +234,38 @@ export default function GameShell() {
   );
 }
 
+const _launchCamPos = new THREE.Vector3();
+const _launchLook = new THREE.Vector3();
+
 function AscentAnimator() {
   const ref = useRef<THREE.Group>(null);
   const flameRef = useRef<THREE.Mesh>(null);
+  const lookRef = useRef(new THREE.Vector3(0, 0, 0));
   const elapsed = useRef(0);
 
-  useFrame((state, dt) => {
+  useFrame((state, rawDt) => {
+    const dt = Math.min(rawDt, 0.05);
     elapsed.current += dt;
+    const t = elapsed.current;
+    const ignition = Math.min(t / 1.2, 1);
+    const liftT = Math.max(0, t - 1.0);
+    const y = 0.85 * Math.pow(liftT, 1.75);
+    const shake = ignition > 0.2 ? Math.sin(t * 28) * 0.015 * Math.max(0, 1 - liftT * 0.4) : 0;
+
     if (ref.current) {
-      ref.current.position.y = elapsed.current * 2.5;
-      ref.current.rotation.z = Math.sin(elapsed.current * 3) * 0.02;
+      ref.current.position.set(shake, y, 0);
+      ref.current.rotation.z = Math.sin(t * 2.5) * 0.015;
     }
     if (flameRef.current) {
-      flameRef.current.scale.y = 0.8 + Math.sin(elapsed.current * 15) * 0.3;
+      const fScale = ignition * (0.85 + Math.sin(t * 15) * 0.25);
+      flameRef.current.visible = ignition > 0.05;
+      flameRef.current.scale.set(ignition, fScale, ignition);
     }
-    state.camera.position.y = 3 + elapsed.current * 0.3;
-    state.camera.lookAt(0, elapsed.current * 1.2, 0);
+    _launchCamPos.set(15, 2.5 + y * 0.12, 15);
+    _launchLook.set(0, y * 0.65, 0);
+    damp3(state.camera.position, _launchCamPos, 0.35, dt);
+    damp3(lookRef.current, _launchLook, 0.25, dt);
+    state.camera.lookAt(lookRef.current);
   });
 
   return (
@@ -263,20 +290,32 @@ function AscentAnimator() {
 function MarsAscentAnimator() {
   const ref = useRef<THREE.Group>(null);
   const flameRef = useRef<THREE.Mesh>(null);
+  const lookRef = useRef(new THREE.Vector3(0, 0, 0));
   const elapsed = useRef(0);
 
-  useFrame((state, dt) => {
+  useFrame((state, rawDt) => {
+    const dt = Math.min(rawDt, 0.05);
     elapsed.current += dt;
     const t = elapsed.current;
+    const ignition = Math.min(t / 1.0, 1);
+    const liftT = Math.max(0, t - 0.8);
+    const y = 1.15 * Math.pow(liftT, 1.75);
+    const shake = ignition > 0.2 ? Math.sin(t * 26) * 0.012 * Math.max(0, 1 - liftT * 0.4) : 0;
+
     if (ref.current) {
-      ref.current.position.y = t * 3.0;
+      ref.current.position.set(shake, y, 0);
       ref.current.rotation.z = Math.sin(t * 2) * 0.01;
     }
     if (flameRef.current) {
-      flameRef.current.scale.y = 0.6 + Math.sin(t * 12) * 0.2;
+      const fScale = ignition * (0.7 + Math.sin(t * 14) * 0.2);
+      flameRef.current.visible = ignition > 0.05;
+      flameRef.current.scale.set(ignition, fScale, ignition);
     }
-    state.camera.position.y = 2 + t * 0.5;
-    state.camera.lookAt(0, t * 1.5, 0);
+    _launchCamPos.set(15, 2.5 + y * 0.15, 15);
+    _launchLook.set(0, y * 0.65, 0);
+    damp3(state.camera.position, _launchCamPos, 0.35, dt);
+    damp3(lookRef.current, _launchLook, 0.25, dt);
+    state.camera.lookAt(lookRef.current);
   });
 
   return (
@@ -325,14 +364,14 @@ function LaunchSceneContent() {
     <>
       {isMars ? (
         <>
-          <color attach="background" args={["#2a1a0e"]} />
-          <fog attach="fog" args={["#c4956a", 60, 250]} />
-          <Stars radius={300} depth={80} count={2000} factor={3} saturation={0.3} fade speed={0.05} />
-          <ambientLight intensity={0.12} color="#e8c4a0" />
-          <hemisphereLight args={["#c49060", "#3a2010", 0.15]} />
+          <color attach="background" args={["#b07850"]} />
+          <fog attach="fog" args={["#c4956a", 50, 220]} />
+          <ambientLight intensity={0.18} color="#e8c4a0" />
+          <hemisphereLight args={["#c49060", "#3a2010", 0.25]} />
         </>
       ) : (
         <>
+          <color attach="background" args={["#000000"]} />
           <Stars radius={300} depth={80} count={8000} factor={5} saturation={0.6} fade speed={0.1} />
           <ambientLight intensity={0.04} color="#333344" />
           <hemisphereLight args={["#667788", "#222228", 0.08]} />
@@ -388,10 +427,9 @@ function LaunchScene() {
   return (
     <div className="relative h-screen w-full">
       <Canvas
-        camera={{ position: [15, 3, 15], fov: 55, near: 0.1, far: 2000 }}
+        camera={{ position: [15, 2.5, 15], fov: 55, near: 0.1, far: 2000 }}
         gl={{ antialias: false, toneMapping: THREE.AgXToneMapping }}
       >
-        <color attach="background" args={["#000000"]} />
         <LaunchSceneContent />
         <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} />
       </Canvas>
@@ -402,9 +440,9 @@ function LaunchScene() {
           </p>
         </div>
       </div>
-      {fade && (
-        <div className="absolute inset-0 z-20 bg-space-950 transition-opacity duration-1000" />
-      )}
+      <div
+        className={`pointer-events-none absolute inset-0 z-20 bg-space-950 transition-opacity duration-1000 ease-in ${fade ? "opacity-100" : "opacity-0"}`}
+      />
     </div>
   );
 }
