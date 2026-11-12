@@ -14,7 +14,7 @@ import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { Howl } from "howler";
 import { gameAudio } from "@/lib/gameAudio";
-import { getMission, type HeritageObject, type Planet } from "@/lib/missionData";
+import { getMission, type HeritageObject } from "@/lib/missionData";
 import { LMDescent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
 import { EarthAtmosphere } from "./EarthAtmosphere";
