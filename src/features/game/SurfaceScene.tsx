@@ -20,6 +20,8 @@ import { Terrain, GroundPlane } from "./Terrain";
 import { EarthAtmosphere } from "./EarthAtmosphere";
 import { getSunPosition, getEarthPosition } from "./sunPosition";
 import { KeyPrompt } from "@/components/cf/KeyPrompt";
+import { HeritageModel, USFlagModel } from "./HeritageModels";
+import { ControlsModal } from "./ControlsModal";
 import * as THREE from "three";
 
 const SCAN_RANGE = 5;
@@ -92,6 +94,7 @@ function HeritageMarker({
   const outerRingRef = useRef<THREE.Mesh>(null);
   const innerRingRef = useRef<THREE.Mesh>(null);
   const pulseRef = useRef<THREE.Mesh>(null);
+  const playerName = useAppStore((s) => s.player.name);
 
   useFrame(() => {
     const t = Date.now() * 0.001;
@@ -123,10 +126,13 @@ function HeritageMarker({
 
   return (
     <group position={obj.position}>
+      {/* 3D PBR Heritage Artifact Model */}
+      <HeritageModel id={obj.id} playerName={playerName} />
+
       <mesh
         ref={outerRingRef}
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, 0.1, 0]}
+        position={[0, 0.04, 0]}
       >
         <torusGeometry args={[1.2, 0.03, 8, 48]} />
         <meshBasicMaterial
@@ -141,7 +147,7 @@ function HeritageMarker({
       <mesh
         ref={innerRingRef}
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, 0.15, 0]}
+        position={[0, 0.06, 0]}
       >
         <torusGeometry args={[0.7, 0.02, 8, 32]} />
         <meshBasicMaterial
@@ -156,7 +162,7 @@ function HeritageMarker({
       <mesh
         ref={pulseRef}
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, 0.05, 0]}
+        position={[0, 0.02, 0]}
       >
         <circleGeometry args={[1.5, 32]} />
         <meshBasicMaterial
@@ -175,7 +181,7 @@ function HeritageMarker({
 
       {showName && (
         <Text
-          position={[0, 2.2, 0]}
+          position={[0, 2.3, 0]}
           fontSize={0.28}
           color={isFound ? "#66ff99" : "#ffffff"}
           anchorX="center"
@@ -732,6 +738,7 @@ function SurfaceSceneContent({
   missionId: string;
 }) {
   const found = useGameStore((s) => s.objectsFoundThisRun);
+  const phase = useGameStore((s) => s.phase);
   const mission = useMemo(() => getMission(missionId), [missionId]);
   const objects = mission.objects;
   const terrainRef = useRef<THREE.Mesh>(null);
@@ -770,6 +777,12 @@ function SurfaceSceneContent({
       <Suspense fallback={null}>
         <LMDescent position={[0, 0, 0]} scale={1} />
       </Suspense>
+
+      {phase === "flagPlanted" && (
+        <group position={[3.5, 0, 3.5]}>
+          <USFlagModel isPlanted playerName={useAppStore.getState().player.name} />
+        </group>
+      )}
 
       {objects.map((obj) => (
         <HeritageMarker
@@ -999,12 +1012,16 @@ function TouchHUD({
   nearObjectId,
   found,
   phase,
+  onToggleHelp,
+  onTogglePhoto,
 }: {
   onScanStart: () => void;
   onScanEnd: () => void;
   nearObjectId: string | null;
   found: string[];
   phase: string;
+  onToggleHelp: () => void;
+  onTogglePhoto: () => void;
 }) {
   const [isTouch, setIsTouch] = useState(false);
   const [runActive, setRunActive] = useState(false);
@@ -1081,6 +1098,22 @@ function TouchHUD({
 
       {/* Right: Actions */}
       <div data-touch-control="true" className="flex flex-col gap-2">
+        <div className="flex justify-end gap-1.5">
+          <button
+            aria-label="Controls Help"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-space-700 bg-space-800/90 text-regolith-200 active:bg-signal active:text-space-950 text-xs font-bold backdrop-blur-md select-none touch-none shadow"
+            onTouchStart={(e) => { e.preventDefault(); onToggleHelp(); }}
+          >
+            ?
+          </button>
+          <button
+            aria-label="Photo Mode"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-space-700 bg-space-800/90 text-regolith-200 active:bg-signal active:text-space-950 text-xs font-bold backdrop-blur-md select-none touch-none shadow"
+            onTouchStart={(e) => { e.preventDefault(); onTogglePhoto(); }}
+          >
+            📷
+          </button>
+        </div>
         {nearObjectId && !found.includes(nearObjectId) && (
           <button
             aria-label="Scan Heritage Object"
@@ -1107,7 +1140,19 @@ function TouchHUD({
   );
 }
 
-function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; objects: HeritageObject[] }) {
+function SurfaceHUD({
+  nearObjectId,
+  objects,
+  photoMode,
+  onTogglePhotoMode,
+  onToggleHelp,
+}: {
+  nearObjectId: string | null;
+  objects: HeritageObject[];
+  photoMode: boolean;
+  onTogglePhotoMode: () => void;
+  onToggleHelp: () => void;
+}) {
   const { t } = useTranslation();
   const phase = useGameStore((s) => s.phase);
   const found = useGameStore((s) => s.objectsFoundThisRun);
@@ -1250,6 +1295,19 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
   const nearObj = objects.find((o) => o.id === nearObjectId);
   const isScanning = scanProgress > 0;
 
+  if (photoMode) {
+    return (
+      <div className="pointer-events-auto fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <button
+          onClick={onTogglePhotoMode}
+          className="rounded-full bg-space-950/80 border border-space-700/60 px-5 py-2 font-mono text-xs text-regolith-200 backdrop-blur-md hover:text-paper-50 hover:border-signal/50 shadow-lg transition"
+        >
+          {t("surface.photoModeExit")}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex flex-col">
       {/* Helmet visor vignette */}
@@ -1282,9 +1340,27 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
         </p>
       </div>
 
-      {/* Top-right: mini radar */}
-      <div className="absolute right-4 top-4 rounded-lg bg-space-950/60 p-1 backdrop-blur">
-        <MiniRadar found={found} objects={objects} />
+      {/* Top-right: quick controls buttons + mini radar */}
+      <div className="absolute right-4 top-4 flex flex-col items-end gap-2 pointer-events-auto">
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={onToggleHelp}
+            className="rounded-lg bg-space-950/80 px-2.5 py-1 text-xs font-mono text-regolith-300 hover:text-paper-50 hover:bg-space-800 border border-space-700/50 backdrop-blur shadow transition"
+            title="Controls Help (H)"
+          >
+            [H] {t("controls.help")}
+          </button>
+          <button
+            onClick={onTogglePhotoMode}
+            className="rounded-lg bg-space-950/80 px-2.5 py-1 text-xs font-mono text-regolith-300 hover:text-paper-50 hover:bg-space-800 border border-space-700/50 backdrop-blur shadow transition"
+            title="Photo Mode (P)"
+          >
+            [P] {t("surface.photoMode")}
+          </button>
+        </div>
+        <div className="rounded-lg bg-space-950/60 p-1 backdrop-blur">
+          <MiniRadar found={found} objects={objects} />
+        </div>
       </div>
 
       {/* XP toast */}
@@ -1360,7 +1436,7 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
       {/* Bottom left: controls hint */}
       <div className="mb-2 ml-4">
         <p className="text-xs text-regolith-400/60">
-          {t("surface.controlHints")}
+          {t("surface.controlHints")} · [H] Help · [P] Photo Mode
         </p>
       </div>
 
@@ -1370,6 +1446,8 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
         nearObjectId={nearObjectId}
         found={found}
         phase={phase}
+        onToggleHelp={onToggleHelp}
+        onTogglePhoto={onTogglePhotoMode}
       />
     </div>
   );
@@ -1382,6 +1460,8 @@ export function SurfaceScene() {
   const dpr: [number, number] | number = quality === "high" ? [1, 2] : quality === "medium" ? [1, 1.5] : 1;
   const [nearObjectId, setNearObjectId] = useState<string | null>(null);
   const [objectDistances, setObjectDistances] = useState<Record<string, number>>({});
+  const [photoMode, setPhotoMode] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const mission = useMemo(() => getMission(missionId ?? "apollo-11"), [missionId]);
 
   useEffect(() => {
@@ -1390,6 +1470,22 @@ export function SurfaceScene() {
       resetPlayerState();
     };
   }, [missionId]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === "p" || e.key === "P") {
+        setPhotoMode((prev) => !prev);
+      } else if (e.key === "h" || e.key === "H") {
+        setShowHelp((prev) => !prev);
+      } else if (e.key === "Escape") {
+        setShowHelp(false);
+        setPhotoMode(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const handleCanvasClick = useCallback(() => {
     if (typeof window !== "undefined" && !("ontouchstart" in window) && navigator.maxTouchPoints === 0) {
@@ -1427,8 +1523,15 @@ export function SurfaceScene() {
           <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} vignetteDarkness={0.6} />
         </Canvas>
       </div>
-      <SurfaceHUD nearObjectId={nearObjectId} objects={mission.objects} />
+      <SurfaceHUD
+        nearObjectId={nearObjectId}
+        objects={mission.objects}
+        photoMode={photoMode}
+        onTogglePhotoMode={() => setPhotoMode((p) => !p)}
+        onToggleHelp={() => setShowHelp((h) => !h)}
+      />
       {phase === "inspect" && <InspectOverlay objects={mission.objects} missionId={missionId ?? "apollo-11"} />}
+      <ControlsModal isOpen={showHelp} onClose={() => setShowHelp(false)} />
     </div>
   );
 }
