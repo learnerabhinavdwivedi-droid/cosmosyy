@@ -87,3 +87,8 @@ export function getMissionOrNull(id: string | null): MissionSpec | null {
   if (!id) return null;
   try { return getMission(id); } catch { return null; }
 }
+
+export function getAllMissions(): MissionSpec[] {
+  return Object.keys(RAW).map((id) => getMission(id));
+}
+

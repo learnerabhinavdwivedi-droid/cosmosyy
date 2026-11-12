@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import { useAppStore } from "@/store/useAppStore";
 import { gameAudio } from "@/lib/gameAudio";
 import { unlockAudio, preloadNarration } from "@/lib/narration";
+import { getAllMissions, type MissionSpec } from "@/lib/missionData";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -20,62 +21,21 @@ interface MissionCardData {
   objectCount: number;
 }
 
-const MISSIONS: MissionCardData[] = [
-  {
-    id: "apollo-11",
-    name: "Apollo 11",
-    site: "Sea of Tranquility",
-    date: "20 July 1969",
-    crew: "Armstrong, Aldrin, Collins",
-    hook: "One small step — the first humans on the Moon.",
-    objectCount: 7,
-  },
-  {
-    id: "apollo-12",
-    name: "Apollo 12",
-    site: "Ocean of Storms",
-    date: "19 November 1969",
-    crew: "Conrad, Bean, Gordon",
-    hook: "Precision landing beside Surveyor 3.",
-    objectCount: 7,
-  },
-  {
-    id: "apollo-14",
-    name: "Apollo 14",
-    site: "Fra Mauro",
-    date: "5 February 1971",
-    crew: "Shepard, Mitchell, Roosa",
-    hook: "Shepard's lunar golf shot and the longest EVA walk.",
-    objectCount: 6,
-  },
-  {
-    id: "apollo-15",
-    name: "Apollo 15",
-    site: "Hadley Rille",
-    date: "30 July 1971",
-    crew: "Scott, Irwin, Worden",
-    hook: "First lunar rover — exploring the edge of a canyon.",
-    objectCount: 6,
-  },
-  {
-    id: "apollo-16",
-    name: "Apollo 16",
-    site: "Descartes Highlands",
-    date: "21 April 1972",
-    crew: "Young, Duke, Mattingly",
-    hook: "Into the lunar highlands for the first time.",
-    objectCount: 5,
-  },
-  {
-    id: "apollo-17",
-    name: "Apollo 17",
-    site: "Taurus–Littrow",
-    date: "11 December 1972",
-    crew: "Cernan, Schmitt, Evans",
-    hook: "The final Apollo mission — a geologist on the Moon.",
-    objectCount: 6,
-  },
-];
+const MISSION_HOOKS: Record<string, string> = {
+  "apollo-11": "One small step — the first humans on the Moon.",
+  "apollo-12": "Precision landing beside Surveyor 3.",
+  "apollo-14": "Shepard's lunar golf shot and the longest EVA walk.",
+  "apollo-15": "First lunar rover — exploring the edge of a canyon.",
+  "apollo-16": "Into the lunar highlands for the first time.",
+  "apollo-17": "The final Apollo mission — a geologist on the Moon.",
+};
+
+function formatCrew(crew: MissionSpec["crew"]): string {
+  const c = crew.commander.split(" ").pop() ?? crew.commander;
+  const l = crew.lmp.split(" ").pop() ?? crew.lmp;
+  const cmp = crew.cmp.split(" ").pop() ?? crew.cmp;
+  return `${c}, ${l}, ${cmp}`;
+}
 
 function StatusBadge({ status }: { status: MissionStatus }) {
   const { t } = useTranslation();
@@ -180,6 +140,18 @@ export default function MissionSelectPage() {
   const [searchParams] = useSearchParams();
   const isDemo = searchParams.get("demo") === "1";
   const [nameInput, setNameInput] = useState(playerName);
+
+  const missionsList: MissionCardData[] = useMemo(() => {
+    return getAllMissions().map((m) => ({
+      id: m.id,
+      name: m.name,
+      site: m.site,
+      date: m.date,
+      crew: formatCrew(m.crew),
+      hook: MISSION_HOOKS[m.id] || m.landing.label,
+      objectCount: m.objects.length,
+    }));
+  }, []);
 
   useEffect(() => {
     if (isDemo) {
@@ -297,7 +269,7 @@ export default function MissionSelectPage() {
 
         {/* Mission grid */}
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {MISSIONS.map((mission, i) => {
+          {missionsList.map((mission, i) => {
             const progress = missions[mission.id];
             const status: MissionStatus = progress?.status ?? "locked";
             const objectsFound = progress?.objectsFound?.length ?? 0;
@@ -320,8 +292,17 @@ export default function MissionSelectPage() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-auto pt-12 pb-4 text-center text-xs text-regolith-400/60">
-          NASA Space Apps Challenge 2026
+        <footer className="mt-auto pt-12 pb-6 flex flex-col items-center gap-2 text-xs text-regolith-400/60">
+          <div className="flex items-center gap-4 text-regolith-400">
+            <Link to="/settings" className="hover:text-signal transition">
+              {t("settings.title", { defaultValue: "Settings" })}
+            </Link>
+            <span className="text-space-700">•</span>
+            <Link to="/credits" className="hover:text-signal transition">
+              {t("credits.title", { defaultValue: "Credits" })}
+            </Link>
+          </div>
+          <span>NASA Space Apps Challenge 2026</span>
         </footer>
       </div>
     </div>

@@ -284,6 +284,9 @@ importers:
       '@axe-core/playwright':
         specifier: ^4.14.0
         version: 4.14.0(playwright-core@1.65.0)
+      '@oxlint/binding-win32-x64-msvc':
+        specifier: ^1.93.0
+        version: 1.93.0
       '@playwright/test':
         specifier: ^1.65.0
         version: 1.65.0
@@ -1475,6 +1478,12 @@ packages:
 
   '@oxlint/binding-win32-x64-msvc@1.92.0':
     resolution: {integrity: sha512-0AyhqX0ciFuEnHIL+B4PIMMX3s/IpGHNEbbUqwsNhSrzWUSlEOPw/q7qFnRsEJfiKedcqVfUE/aXYuSMtpiFyw==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [win32]
+
+  '@oxlint/binding-win32-x64-msvc@1.93.0':
+    resolution: {integrity: sha512-ZzzIIVs/Qkm8trUWYKF0OYub5ALlv50/3gsEZbKAvWgz+yNJX6uRmQ8ySPXU2Q0/Y9m4JCOjhpmC8XUYbPHX5Q==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [win32]
@@ -6214,6 +6223,8 @@ snapshots:
 
   '@oxlint/binding-win32-x64-msvc@1.92.0':
     optional: true
+
+  '@oxlint/binding-win32-x64-msvc@1.93.0': {}
 
   '@playwright/test@1.65.0':
     dependencies:

@@ -96,6 +96,23 @@ describe("useAppStore", () => {
     expect(state.progress.totalXp).toBe(XP_COMPLETE);
   });
 
+  it("unlocks next mission when previous completes", () => {
+    useAppStore.setState({
+      progress: {
+        missions: {
+          "apollo-11": { status: "in-progress", xp: 100, flagPlanted: true, objectsFound: [] },
+          "apollo-12": { status: "locked", xp: 0, flagPlanted: false, objectsFound: [] },
+        },
+        totalXp: 100,
+      },
+    });
+
+    useAppStore.getState().completeMission("apollo-11");
+    const state = useAppStore.getState();
+    expect(state.progress.missions["apollo-11"]?.status).toBe("completed");
+    expect(state.progress.missions["apollo-12"]?.status).toBe("available");
+  });
+
   it("does not double-complete mission", () => {
     useAppStore.getState().completeMission("apollo-11");
     useAppStore.getState().completeMission("apollo-11");

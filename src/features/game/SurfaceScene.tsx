@@ -19,6 +19,7 @@ import { LMDescent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
 import { EarthAtmosphere } from "./EarthAtmosphere";
 import { getSunPosition, getEarthPosition } from "./sunPosition";
+import { KeyPrompt } from "@/components/cf/KeyPrompt";
 import * as THREE from "three";
 
 const SCAN_RANGE = 5;
@@ -1101,18 +1102,32 @@ function SurfaceHUD({ nearObjectId, objects }: { nearObjectId: string | null; ob
       )}
 
       {phase === "flagReady" && (
-        <div className="mx-auto mt-auto mb-32 rounded-xl bg-signal/20 px-8 py-4 text-center backdrop-blur-md border border-signal/30">
-          <p className="animate-pulse font-display text-lg text-signal">
-            [F] {t("surface.flagPrompt")}
-          </p>
+        <div className="mx-auto mt-auto mb-32">
+          <KeyPrompt
+            actions={[
+              {
+                key: "f",
+                label: t("surface.flagPrompt"),
+                onPress: handleFlag,
+                blink: true,
+              },
+            ]}
+          />
         </div>
       )}
 
       {phase === "flagPlanted" && (
-        <div className="mx-auto mt-auto mb-32 rounded-xl bg-ok/20 px-8 py-4 text-center backdrop-blur-md border border-ok/30">
-          <p className="animate-pulse font-display text-lg text-ok">
-            [L] {t("surface.launchPrompt")}
-          </p>
+        <div className="mx-auto mt-auto mb-32">
+          <KeyPrompt
+            actions={[
+              {
+                key: "l",
+                label: t("surface.launchPrompt"),
+                onPress: handleLaunch,
+                blink: true,
+              },
+            ]}
+          />
         </div>
       )}
 

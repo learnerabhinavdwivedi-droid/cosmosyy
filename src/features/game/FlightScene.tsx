@@ -8,6 +8,7 @@ import { useGameStore, type GamePhase } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { getMissionOrNull, type MissionSpec } from "@/lib/missionData";
 import { gameAudio } from "@/lib/gameAudio";
+import { KeyPrompt } from "@/components/cf/KeyPrompt";
 import * as THREE from "three";
 
 const EARTH = new THREE.Vector3(-28, 0, -20);
@@ -789,12 +790,16 @@ export function FlightScene() {
       <FlightHUD />
       {gate && (
         <div className="absolute inset-x-0 bottom-24 z-20 flex justify-center">
-          <button
-            onClick={() => send(gate.event)}
-            className="animate-pulse rounded-lg border border-signal/60 bg-signal/20 px-8 py-3 font-display text-lg font-semibold text-signal backdrop-blur transition hover:bg-signal/30"
-          >
-            [Space] {t(gate.labelKey)}
-          </button>
+          <KeyPrompt
+            actions={[
+              {
+                key: "Space",
+                label: t(gate.labelKey),
+                onPress: () => send(gate.event),
+                blink: true,
+              },
+            ]}
+          />
         </div>
       )}
       {showStepOutFade && (

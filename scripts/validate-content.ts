@@ -1,7 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { MissionSpecSchema } from "../content/schema.js";
-import { z } from "zod/v4";
 
 const CONTENT_DIR = join(import.meta.dirname, "..", "content", "missions");
 
@@ -27,7 +26,7 @@ async function main() {
     const result = MissionSpecSchema.safeParse(raw);
     if (!result.success) {
       console.error(`\n❌ ${file}:`);
-      console.error(z.prettifyError(result.error));
+      console.error(result.error.format());
       errors++;
     } else {
       console.log(`✓ ${file}`);

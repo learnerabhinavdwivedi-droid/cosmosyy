@@ -53,11 +53,11 @@ interface AppState {
 
 const DEFAULT_MISSIONS: Record<string, MissionProgress> = {
   "apollo-11": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
-  "apollo-12": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
-  "apollo-14": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
-  "apollo-15": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
-  "apollo-16": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
-  "apollo-17": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "apollo-12": { status: "locked", xp: 0, flagPlanted: false, objectsFound: [] },
+  "apollo-14": { status: "locked", xp: 0, flagPlanted: false, objectsFound: [] },
+  "apollo-15": { status: "locked", xp: 0, flagPlanted: false, objectsFound: [] },
+  "apollo-16": { status: "locked", xp: 0, flagPlanted: false, objectsFound: [] },
+  "apollo-17": { status: "locked", xp: 0, flagPlanted: false, objectsFound: [] },
 };
 
 export const XP_LAND = 50;
