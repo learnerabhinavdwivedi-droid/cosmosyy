@@ -493,7 +493,6 @@ const _aheadCopy = new THREE.Vector3();
 const _targetQuat = new THREE.Quaternion();
 const _lookMat = new THREE.Matrix4();
 const _up = new THREE.Vector3(0, 1, 0);
-const _flipY = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
 
 function FlightAnimator({
   isMars,
@@ -632,7 +631,6 @@ function FlightAnimator({
         if (_aheadCopy.distanceToSquared(_shipCopy) > 0.000001) {
           _lookMat.lookAt(_aheadCopy, _shipCopy, _up);
           _targetQuat.setFromRotationMatrix(_lookMat);
-          _targetQuat.multiply(_flipY);
           if (!orientInit.current) {
             shipRef.current.quaternion.copy(_targetQuat);
             orientInit.current = true;
