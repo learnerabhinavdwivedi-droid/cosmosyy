@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import { useAppStore } from "@/store/useAppStore";
@@ -288,7 +288,31 @@ export default function MissionSelectPage() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-8 sm:px-6">
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-6 sm:px-6">
+        {/* Top bar navigation */}
+        <div className="mb-6 flex items-center justify-between">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-space-700/80 bg-space-900/80 px-3.5 py-1.5 text-xs font-semibold text-regolith-300 backdrop-blur transition hover:border-signal-500 hover:text-signal-500 hover:bg-space-800"
+          >
+            ← Home
+          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/settings"
+              className="rounded-xl border border-space-700/80 bg-space-900/80 px-3 py-1.5 text-xs text-regolith-400 backdrop-blur transition hover:text-regolith-200 hover:border-space-600"
+            >
+              Settings
+            </Link>
+            <Link
+              to="/credits"
+              className="rounded-xl border border-space-700/80 bg-space-900/80 px-3 py-1.5 text-xs text-regolith-400 backdrop-blur transition hover:text-regolith-200 hover:border-space-600"
+            >
+              Credits
+            </Link>
+          </div>
+        </div>
+
         {/* Header */}
         <motion.header
           className="text-center"

@@ -27,6 +27,9 @@ Every asset, font, and non-MIT library used in this project.
 | Mars surface map | NASA/JPL (solarsystem.nasa.gov) | Public domain | US government work — preferred for H1 |
 | Mars colour 2K (mars-color-2k.jpg) | Solar System Scope (solarsystemscope.com/textures) | CC BY 4.0 | Based on NASA data; credit: "Textures by Solar System Scope" |
 | Planet texture pack (non-Earth/Moon/Mars) | Solar System Scope (solarsystemscope.com/textures) | CC BY 4.0 | Credit: "Textures by Solar System Scope" |
+| Cartoon Astronaut mascot (astronaut.png) | User-supplied original custom art | Project-owned | Landing page hero zero-g mascot |
+| Cartoon Moon illustration (moon.png) | User-supplied original custom art | Project-owned | Landing page guide destination card |
+| Cartoon Mars illustration (mars.jpg) | User-supplied original custom art | Project-owned | Landing page guide destination card |
 | ESA imagery | ESA (sci.esa.int) | CC BY-SA 3.0 IGO [verify] | Do NOT ship in H1 until licence confirmed per-asset |
 | ISRO imagery | ISRO (isro.gov.in) | [verify] | Reuse terms unclear; do NOT ship in H1 until confirmed |
 

@@ -208,7 +208,7 @@ export default function GameShell() {
 
   useEffect(() => {
     if (phase === "select" && prevPhase.current !== "select") {
-      navigate("/");
+      navigate("/missions");
     }
     prevPhase.current = phase;
   }, [phase, navigate]);
