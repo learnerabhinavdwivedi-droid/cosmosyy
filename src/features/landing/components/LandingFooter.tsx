@@ -6,16 +6,15 @@ import { playQuindar } from "../../../lib/gameAudio";
 
 export function LandingFooter() {
   const [isAstronautHovered, setIsAstronautHovered] = useState(false);
-  const [speechBubbleText, setSpeechBubbleText] = useState(
-    "Whew! What a cosmic journey. Thanks for exploring with us, Commander! 🪐",
-  );
-
   const [quoteIndex, setQuoteIndex] = useState(0);
+  const [speechBubbleText, setSpeechBubbleText] = useState(
+    "Taking a breather on Mars! What an adventure, Commander! 🪐",
+  );
 
   const handleAstronautClick = () => {
     playQuindar();
     const quotes = [
-      "Whew! What a cosmic journey. Thanks for exploring with us, Commander! 🪐",
+      "Taking a breather on Mars! What an adventure, Commander! 🪐",
       "Did you know? Apollo footprints will last 100 million years on the Moon! 🐾",
       "Mars has the tallest volcano in the solar system: Olympus Mons! 🌋",
       "Ready for another mission? Click 'Missions' or 'START MISSION' above! 🚀",
@@ -23,18 +22,18 @@ export function LandingFooter() {
     ];
     const nextIndex = (quoteIndex + 1) % quotes.length;
     setQuoteIndex(nextIndex);
-    const fallback = "Whew! What a cosmic journey. Thanks for exploring with us, Commander! 🪐";
+    const fallback = "Taking a breather on Mars! What an adventure, Commander! 🪐";
     setSpeechBubbleText(quotes[nextIndex] ?? fallback);
   };
 
   return (
-    <footer className="relative overflow-visible border-t border-space-800 bg-space-950/85 pt-24 pb-16 min-h-[500px] text-regolith-300 md:pt-32 md:pb-24">
+    <footer className="relative z-20 overflow-hidden border-t-[3px] border-orange-500/80 bg-space-950 pt-28 pb-16 min-h-[580px] text-regolith-300 shadow-[0_-4px_30px_rgba(255,120,0,0.5)] md:pt-36 md:pb-24">
       
-      {/* 1. Left Side: Sitting Cartoon Astronaut Sitting on the Top Border Line */}
-      <div className="absolute -top-[70px] left-6 sm:left-12 md:left-20 lg:left-28 z-30 select-none">
+      {/* 1. Left Side: Sitting Cartoon Astronaut Firmly Sitting on the Orange Border Line */}
+      <div className="absolute top-0 left-6 sm:left-12 md:left-20 lg:left-28 -translate-y-[92%] z-30 select-none">
         
-        {/* Cute Contextual Speech Bubble above sitting astronaut */}
-        <div className="relative mb-2 max-w-[260px] sm:max-w-[300px]">
+        {/* Cute Speech Bubble above sitting astronaut */}
+        <div className="relative mb-3 max-w-[260px] sm:max-w-[310px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={speechBubbleText}
@@ -44,8 +43,8 @@ export function LandingFooter() {
               transition={{ duration: 0.25 }}
               className={`rounded-2xl border px-3.5 py-2 text-center text-xs font-semibold shadow-xl backdrop-blur-md transition-colors ${
                 isAstronautHovered
-                  ? "border-amber-400/80 bg-space-900/95 text-amber-300 shadow-amber-500/20"
-                  : "border-space-700/80 bg-space-900/90 text-regolith-200 shadow-space-950/80"
+                  ? "border-amber-400 bg-space-900/95 text-amber-300 shadow-amber-500/25"
+                  : "border-orange-500/60 bg-space-900/95 text-regolith-200 shadow-space-950/90"
               }`}
             >
               <div className="flex items-center justify-center gap-1.5">
@@ -53,14 +52,14 @@ export function LandingFooter() {
                 <span>{speechBubbleText}</span>
               </div>
               {/* Speech bubble pointer pointing down to helmet */}
-              <div className="absolute -bottom-2 left-10 h-0 w-0 border-x-8 border-x-transparent border-t-8 border-t-space-900/90" />
+              <div className="absolute -bottom-2 left-12 h-0 w-0 border-x-8 border-x-transparent border-t-8 border-t-space-900/95" />
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Sitting Mascot sitting directly on the border line */}
+        {/* Sitting Mascot with Idle Breathing & Interactive Hover */}
         <motion.div
-          whileHover={{ scale: 1.08 }}
+          whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.96 }}
           animate={{
             y: [0, -3, 0],
@@ -79,45 +78,46 @@ export function LandingFooter() {
           className="relative cursor-pointer"
           title="Click the resting astronaut for fun space facts!"
         >
-          {/* Warm Ambient Helmet & Suit Glow */}
+          {/* Orange Rim Light & Contact Shadow on the Border Line */}
+          <div className="pointer-events-none absolute -bottom-2 left-1/2 -translate-x-1/2 h-4 w-28 rounded-full bg-orange-500/50 blur-sm" />
           <div
-            className={`pointer-events-none absolute inset-0 rounded-full bg-gradient-to-t from-orange-600/30 via-amber-400/20 to-transparent blur-xl transition-opacity duration-300 ${
+            className={`pointer-events-none absolute inset-0 rounded-full bg-gradient-to-t from-orange-600/35 via-amber-400/20 to-transparent blur-xl transition-opacity duration-300 ${
               isAstronautHovered ? "opacity-100 scale-110" : "opacity-60"
             }`}
           />
 
-          {/* Sitting Cartoon Astronaut Asset */}
+          {/* Tightly Cropped High-Res Sitting Cartoon Astronaut Asset */}
           <img
             src="/art/sitting-astronaut.png"
             alt="Resting Cartoon Astronaut Sitting on Border Line"
-            className="h-28 sm:h-32 md:h-36 w-auto object-contain drop-shadow-[0_15px_25px_rgba(255,120,0,0.4)]"
+            className="h-36 sm:h-44 md:h-52 w-auto object-contain drop-shadow-[0_12px_25px_rgba(255,120,0,0.5)]"
           />
 
-          {/* Interactive Hint Pill on Hover */}
+          {/* Interactive Click Hint Pill on Hover */}
           {isAstronautHovered && (
-            <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-space-900/90 border border-amber-500/40 px-2 py-0.5 text-[10px] font-bold text-amber-300 shadow">
+            <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-space-900 border border-amber-500/50 px-2.5 py-0.5 text-[10px] font-bold text-amber-300 shadow-md">
               Click to chat! 🧑‍🚀
             </span>
           )}
         </motion.div>
       </div>
 
-      {/* 2. Bottom Martian Volcanic Landscape Background (User 3rd attached image) */}
-      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-44 sm:h-60 md:h-72 overflow-hidden z-0" aria-hidden="true">
+      {/* 2. Bottom Martian Volcanic Landscape Background (Solid Black Base underneath) */}
+      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-48 sm:h-64 md:h-84 overflow-hidden z-0" aria-hidden="true">
         {/* Radiant Magma Horizon Glow */}
-        <div className="absolute bottom-0 inset-x-0 h-36 bg-gradient-to-t from-orange-600/30 via-amber-500/15 to-transparent blur-2xl" />
+        <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-orange-600/30 via-amber-500/15 to-transparent blur-2xl z-0" />
         
         {/* Transparent Martian Rocky Mountain Terrain */}
         <img
           src="/art/martian-landscape.png"
           alt="Martian Rocky Terrain Footer Base"
-          className="absolute bottom-0 inset-x-0 w-full h-full object-cover object-bottom opacity-85 select-none"
+          className="absolute bottom-0 inset-x-0 w-full h-full object-cover object-bottom opacity-90 select-none z-0"
         />
       </div>
 
-      {/* 3. Main Footer Content Grid */}
+      {/* 3. Main Footer Content Grid (Clean, Broad, High-Contrast Typography) */}
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           
           {/* Brand & Made By Column */}
           <div className="flex flex-col lg:col-span-4">
@@ -149,8 +149,8 @@ export function LandingFooter() {
               </p>
             </div>
 
-            {/* Passport Storage Indicator */}
-            <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-space-800 bg-space-900/60 px-3 py-1.5 text-[11px] text-regolith-400 backdrop-blur w-fit">
+            {/* Offline Passport indicator */}
+            <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-space-800 bg-space-900/80 px-3 py-1.5 text-[11px] text-regolith-400 backdrop-blur w-fit">
               <Sparkles className="h-3.5 w-3.5 text-warn-500" />
               <span>Offline Ready · Explorer Passport Local Vault</span>
             </div>
@@ -158,37 +158,37 @@ export function LandingFooter() {
 
           {/* Quick Navigation Links */}
           <div className="flex flex-col lg:col-span-2">
-            <p className="font-display text-sm font-bold uppercase tracking-wider text-regolith-100">
+            <p className="font-display text-xs font-bold uppercase tracking-widest text-amber-400 drop-shadow-[0_0_8px_rgba(255,180,0,0.4)]">
               Navigation
             </p>
-            <ul className="mt-3 space-y-2 text-xs font-medium text-regolith-300">
+            <ul className="mt-4 space-y-2.5 text-xs font-semibold text-regolith-300">
               <li>
-                <Link to="/missions" className="hover:text-amber-400 transition-colors">
+                <Link to="/missions" className="hover:text-amber-300 transition-colors">
                   Missions Directory
                 </Link>
               </li>
               <li>
-                <a href="#how-to-play" className="hover:text-amber-400 transition-colors">
+                <a href="#how-to-play" className="hover:text-amber-300 transition-colors">
                   How to Play
                 </a>
               </li>
               <li>
-                <a href="#gravity-lab" className="hover:text-amber-400 transition-colors">
+                <a href="#gravity-lab" className="hover:text-amber-300 transition-colors">
                   Gravity Lab
                 </a>
               </li>
               <li>
-                <a href="#controls" className="hover:text-amber-400 transition-colors">
+                <a href="#controls" className="hover:text-amber-300 transition-colors">
                   Flight Controls
                 </a>
               </li>
               <li>
-                <Link to="/credits" className="hover:text-amber-400 transition-colors">
+                <Link to="/credits" className="hover:text-amber-300 transition-colors">
                   Credits & Licences
                 </Link>
               </li>
               <li>
-                <Link to="/settings" className="hover:text-amber-400 transition-colors">
+                <Link to="/settings" className="hover:text-amber-300 transition-colors">
                   Settings
                 </Link>
               </li>
@@ -197,35 +197,35 @@ export function LandingFooter() {
 
           {/* Apollo & Mars Destinations */}
           <div className="flex flex-col lg:col-span-3">
-            <p className="font-display text-sm font-bold uppercase tracking-wider text-regolith-100">
+            <p className="font-display text-xs font-bold uppercase tracking-widest text-amber-400 drop-shadow-[0_0_8px_rgba(255,180,0,0.4)]">
               Landing Sites
             </p>
-            <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-1.5 text-xs text-regolith-400">
-              <span className="hover:text-regolith-200 transition-colors">Apollo 11</span>
-              <span className="hover:text-regolith-200 transition-colors">Viking 1</span>
-              <span className="hover:text-regolith-200 transition-colors">Apollo 12</span>
-              <span className="hover:text-regolith-200 transition-colors">Pathfinder</span>
-              <span className="hover:text-regolith-200 transition-colors">Apollo 14</span>
-              <span className="hover:text-regolith-200 transition-colors">Opportunity</span>
-              <span className="hover:text-regolith-200 transition-colors">Apollo 15</span>
-              <span className="hover:text-regolith-200 transition-colors">Curiosity</span>
-              <span className="hover:text-regolith-200 transition-colors">Apollo 16</span>
-              <span className="hover:text-regolith-200 transition-colors">Perseverance</span>
-              <span className="hover:text-regolith-200 transition-colors">Apollo 17</span>
-              <span className="hover:text-regolith-200 transition-colors">Ingenuity</span>
+            <div className="mt-4 grid grid-cols-2 gap-x-2 gap-y-2 text-xs font-medium text-regolith-300">
+              <span className="hover:text-white transition-colors cursor-default">Apollo 11</span>
+              <span className="hover:text-white transition-colors cursor-default">Viking 1</span>
+              <span className="hover:text-white transition-colors cursor-default">Apollo 12</span>
+              <span className="hover:text-white transition-colors cursor-default">Pathfinder</span>
+              <span className="hover:text-white transition-colors cursor-default">Apollo 14</span>
+              <span className="hover:text-white transition-colors cursor-default">Opportunity</span>
+              <span className="hover:text-white transition-colors cursor-default">Apollo 15</span>
+              <span className="hover:text-white transition-colors cursor-default">Curiosity</span>
+              <span className="hover:text-white transition-colors cursor-default">Apollo 16</span>
+              <span className="hover:text-white transition-colors cursor-default">Perseverance</span>
+              <span className="hover:text-white transition-colors cursor-default">Apollo 17</span>
+              <span className="hover:text-white transition-colors cursor-default">Ingenuity</span>
             </div>
           </div>
 
           {/* Connect & Support Column */}
           <div className="flex flex-col lg:col-span-3">
-            <p className="font-display text-sm font-bold uppercase tracking-wider text-regolith-100">
+            <p className="font-display text-xs font-bold uppercase tracking-widest text-amber-400 drop-shadow-[0_0_8px_rgba(255,180,0,0.4)]">
               Connect & Support
             </p>
-            <p className="mt-2 text-xs text-regolith-400">
+            <p className="mt-2 text-xs text-regolith-400 leading-relaxed">
               Cosmosyy is an educational open-data space exploration project by Abhinav Dwivedi.
             </p>
 
-            <div className="mt-4 flex flex-col gap-2.5">
+            <div className="mt-4 flex flex-col gap-3">
               {/* Buy Me a Coffee Button */}
               <motion.a
                 whileHover={{ scale: 1.03 }}
@@ -233,7 +233,7 @@ export function LandingFooter() {
                 href="https://buymeacoffee.com/learnerabhinav"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 rounded-xl border border-amber-500/50 bg-gradient-to-r from-amber-500/20 via-warn-500/25 to-yellow-500/20 px-4 py-2.5 text-xs font-bold text-amber-300 shadow-sm transition-all hover:border-amber-400 hover:bg-amber-400/30"
+                className="flex items-center justify-center gap-2 rounded-xl border border-amber-500/60 bg-gradient-to-r from-amber-500/25 via-warn-500/30 to-amber-600/25 px-5 py-3 text-xs font-bold text-amber-300 shadow-md transition-all hover:border-amber-400 hover:bg-amber-400/35 hover:shadow-amber-500/30"
               >
                 <Coffee className="h-4 w-4 text-amber-300" />
                 <span>Buy Me a Coffee</span>
@@ -246,7 +246,7 @@ export function LandingFooter() {
                 href="https://www.linkedin.com/in/abhinav-dwivedi-b074a136a/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 rounded-xl border border-sky-500/50 bg-sky-600/30 px-4 py-2.5 text-xs font-bold text-sky-200 shadow-sm transition-all hover:border-sky-400 hover:bg-sky-500/40"
+                className="flex items-center justify-center gap-2 rounded-xl border border-sky-500/60 bg-gradient-to-r from-sky-600/35 to-blue-700/35 px-5 py-3 text-xs font-bold text-sky-200 shadow-md transition-all hover:border-sky-400 hover:bg-sky-500/40"
               >
                 <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
@@ -259,7 +259,7 @@ export function LandingFooter() {
                 href="https://devabhinav.xyz/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-1 text-center text-xs font-semibold text-amber-400 hover:underline transition-colors"
+                className="mt-1 text-center text-xs font-bold text-amber-400 hover:text-amber-300 underline underline-offset-4 decoration-amber-500/40 hover:decoration-amber-400 transition-colors"
               >
                 🌐 devabhinav.xyz
               </a>
@@ -268,12 +268,12 @@ export function LandingFooter() {
 
         </div>
 
-        {/* Bottom Bar: Copyright & NASA Open Data Disclaimer */}
-        <div className="mt-16 border-t border-space-800/80 pt-8 text-center text-xs text-regolith-400">
-          <p>
+        {/* Bottom Bar: Clean Solid Base with Copyright & NASA Open Data Disclaimer */}
+        <div className="mt-20 border-t border-space-800/90 pt-8 pb-4 text-center text-xs text-regolith-400 relative z-20">
+          <p className="max-w-3xl mx-auto leading-relaxed">
             Historical landing site data, coordinates, and telemetry derived from NASA Open Data, Apollo Lunar Surface Journal (ALSJ), and LROC imagery.
           </p>
-          <p className="mt-2 text-regolith-500">
+          <p className="mt-2 font-medium text-regolith-500">
             © 2026 Cosmosyy · Built for space exploration enthusiasts & curious young minds.
           </p>
         </div>

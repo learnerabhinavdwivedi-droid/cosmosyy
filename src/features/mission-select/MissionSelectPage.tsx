@@ -172,7 +172,6 @@ function MissionCard({
   const { t } = useTranslation();
   const isLocked = status === "locked";
   const isCompleted = status === "completed";
-  const accentColor = isMars ? "warn" : "signal";
 
   return (
     <motion.div
