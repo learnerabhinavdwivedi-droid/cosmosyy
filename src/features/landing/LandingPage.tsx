@@ -7,6 +7,7 @@ import { LandingGravityLab } from "./components/LandingGravityLab";
 import { LandingMissionShowcase } from "./components/LandingMissionShowcase";
 import { LandingGuide } from "./components/LandingGuide";
 import { LandingControls } from "./components/LandingControls";
+import { LandingLaunchBanner } from "./components/LandingLaunchBanner";
 import { LandingFooter } from "./components/LandingFooter";
 
 export default function LandingPage() {
@@ -70,6 +71,7 @@ export default function LandingPage() {
               <LandingMissionShowcase />
               <LandingGuide />
               <LandingControls />
+              <LandingLaunchBanner />
               <LandingFooter />
             </div>
           </div>

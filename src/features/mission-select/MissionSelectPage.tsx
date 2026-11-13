@@ -515,8 +515,15 @@ export default function MissionSelectPage() {
         </p>
 
         {/* Mission grid */}
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={isMars ? "mars-grid" : "moon-grid"}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.3 }}
+            className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          >
             {activeMissions.map((mission, i) => {
               const progress = missions[mission.id];
               const status: MissionStatus = progress?.status ?? "available";
@@ -526,8 +533,7 @@ export default function MissionSelectPage() {
                   key={mission.id}
                   initial={{ opacity: 0, y: 24 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.35, delay: 0.1 + i * 0.06, ease: "easeOut" }}
+                  transition={{ duration: 0.35, delay: 0.05 + i * 0.04, ease: "easeOut" }}
                 >
                   <MissionCard
                     mission={mission}
@@ -539,8 +545,8 @@ export default function MissionSelectPage() {
                 </motion.div>
               );
             })}
-          </AnimatePresence>
-        </div>
+          </motion.div>
+        </AnimatePresence>
 
         {/* Footer */}
         <footer className="mt-auto pt-16 pb-6 text-center">

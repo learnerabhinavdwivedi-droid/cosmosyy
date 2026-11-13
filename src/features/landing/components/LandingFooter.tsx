@@ -113,15 +113,19 @@ export function LandingFooter() {
             </p>
             <ul className="mt-4 space-y-2.5 text-xs font-semibold text-regolith-300">
               <li>
-                <Link to="/missions" className="hover:text-amber-300 transition-colors">
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("missions-directory")}
+                  className="hover:text-amber-300 transition-colors cursor-pointer text-left focus-visible:outline-none focus-visible:text-amber-300"
+                >
                   Missions Directory
-                </Link>
+                </button>
               </li>
               <li>
                 <button
                   type="button"
-                  onClick={() => scrollToSection("landing-guide")}
-                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
+                  onClick={() => scrollToSection("how-to-play")}
+                  className="hover:text-amber-300 transition-colors cursor-pointer text-left focus-visible:outline-none focus-visible:text-amber-300"
                 >
                   How to Play
                 </button>
@@ -130,7 +134,7 @@ export function LandingFooter() {
                 <button
                   type="button"
                   onClick={() => scrollToSection("gravity-lab")}
-                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
+                  className="hover:text-amber-300 transition-colors cursor-pointer text-left focus-visible:outline-none focus-visible:text-amber-300"
                 >
                   Gravity Lab
                 </button>
@@ -139,18 +143,18 @@ export function LandingFooter() {
                 <button
                   type="button"
                   onClick={() => scrollToSection("controls")}
-                  className="hover:text-amber-300 transition-colors cursor-pointer text-left"
+                  className="hover:text-amber-300 transition-colors cursor-pointer text-left focus-visible:outline-none focus-visible:text-amber-300"
                 >
                   Flight Controls
                 </button>
               </li>
               <li>
-                <Link to="/credits" className="hover:text-amber-300 transition-colors">
+                <Link to="/credits" className="hover:text-amber-300 transition-colors focus-visible:outline-none focus-visible:text-amber-300">
                   Credits & Licences
                 </Link>
               </li>
               <li>
-                <Link to="/settings" className="hover:text-amber-300 transition-colors">
+                <Link to="/settings" className="hover:text-amber-300 transition-colors focus-visible:outline-none focus-visible:text-amber-300">
                   Settings
                 </Link>
               </li>

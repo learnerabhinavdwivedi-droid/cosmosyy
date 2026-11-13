@@ -105,7 +105,7 @@ export function LandingMissionShowcase() {
   };
 
   return (
-    <section className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent">
+    <section id="missions-directory" className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         
         {/* Section Header */}
@@ -130,23 +130,27 @@ export function LandingMissionShowcase() {
           <div className="flex rounded-2xl border border-space-700 bg-space-900/90 p-1.5 shadow-md backdrop-blur">
             <button
               onClick={() => handleTabChange("moon")}
-              className={`flex items-center gap-2 rounded-xl px-4 py-2 font-display text-sm font-bold transition-all ${
+              aria-pressed={activeTab === "moon"}
+              aria-label="Show 6 Apollo Moon Missions"
+              className={`flex min-h-[44px] items-center gap-2 rounded-xl px-4 py-2 font-display text-sm font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 ${
                 activeTab === "moon"
                   ? "bg-signal-500 text-space-950 shadow-md"
                   : "text-regolith-300 hover:text-regolith-100"
               }`}
             >
-              <span>🌕 Moon Missions (6)</span>
+              <span>🌕 Moon (6)</span>
             </button>
             <button
               onClick={() => handleTabChange("mars")}
-              className={`flex items-center gap-2 rounded-xl px-4 py-2 font-display text-sm font-bold transition-all ${
+              aria-pressed={activeTab === "mars"}
+              aria-label="Show 6 Robotic Mars Missions"
+              className={`flex min-h-[44px] items-center gap-2 rounded-xl px-4 py-2 font-display text-sm font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warn-500 ${
                 activeTab === "mars"
                   ? "bg-warn-500 text-space-950 shadow-md"
                   : "text-regolith-300 hover:text-regolith-100"
               }`}
             >
-              <span>🪐 Mars Missions (6)</span>
+              <span>🪐 Mars (6)</span>
             </button>
           </div>
         </div>
@@ -220,7 +224,7 @@ export function LandingMissionShowcase() {
 
                     <Link
                       to="/missions"
-                      className="inline-flex items-center gap-1.5 rounded-xl bg-space-800 px-3.5 py-1.5 font-display text-xs font-bold text-regolith-100 transition-all group-hover:bg-signal-500 group-hover:text-space-950"
+                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl bg-space-800 px-3.5 py-1.5 font-display text-xs font-bold text-regolith-100 transition-all group-hover:bg-signal-500 group-hover:text-space-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500"
                     >
                       <span>Fly Mission</span>
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -236,9 +240,9 @@ export function LandingMissionShowcase() {
         <div className="mt-12 text-center">
           <Link
             to="/missions"
-            className="inline-flex items-center gap-2 rounded-2xl border border-signal-500/40 bg-space-900/80 px-8 py-3.5 font-display text-lg font-bold text-regolith-100 backdrop-blur transition-all hover:bg-space-800 hover:border-signal-500 hover:text-signal-500"
+            className="inline-flex min-h-[48px] items-center gap-2 rounded-2xl border border-signal-500/40 bg-space-900/80 px-8 py-3.5 font-display text-base sm:text-lg font-bold text-regolith-100 backdrop-blur transition-all hover:bg-space-800 hover:border-signal-500 hover:text-signal-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500"
           >
-            <Rocket className="h-5 w-5 text-signal-500" />
+            <Rocket className="h-5 w-5 text-signal-500 shrink-0" />
             <span>Open All 12 Missions in Mission Select Hub</span>
           </Link>
         </div>

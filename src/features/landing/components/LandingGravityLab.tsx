@@ -88,7 +88,7 @@ export function LandingGravityLab() {
   };
 
   return (
-    <section className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent">
+    <section id="gravity-lab" className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         
         {/* Header */}
@@ -109,7 +109,7 @@ export function LandingGravityLab() {
         </div>
 
         {/* Planet Switcher Buttons */}
-        <div className="mt-10 flex flex-wrap justify-center gap-3 px-2">
+        <div className="mt-10 flex flex-wrap justify-center gap-2.5 sm:gap-3 px-2">
           {(["earth", "mars", "moon"] as PlanetId[]).map((pid) => {
             const p = PLANETS[pid];
             const isSelected = activePlanet === pid;
@@ -117,7 +117,9 @@ export function LandingGravityLab() {
               <button
                 key={pid}
                 onClick={() => handleSelect(pid)}
-                className={`flex shrink-0 items-center gap-2 rounded-2xl px-4 py-2.5 font-display text-sm font-bold transition-all sm:px-5 sm:py-3 sm:text-base ${
+                aria-pressed={isSelected}
+                aria-label={`Select ${p.name} Gravity: ${p.gravity} meters per second squared`}
+                className={`flex min-h-[44px] shrink-0 items-center gap-2 rounded-2xl px-4 py-2.5 font-display text-sm font-bold transition-all sm:px-5 sm:py-3 sm:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 ${
                   isSelected
                     ? "bg-gradient-to-r from-signal-500 to-warn-500 text-space-950 shadow-lg shadow-signal-500/25 scale-105"
                     : "border border-space-700 bg-space-900/80 text-regolith-300 hover:border-space-500 hover:bg-space-800"
@@ -134,7 +136,19 @@ export function LandingGravityLab() {
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
             
             {/* Visual Leaping Canvas Stage */}
-            <div className="relative flex h-80 flex-col justify-end overflow-hidden rounded-2xl border border-space-800 bg-space-950/80 p-6 lg:col-span-7">
+            <div
+              role="button"
+              tabIndex={0}
+              aria-label={`Interactive low-gravity leaping canvas. Currently simulating ${current.name}. Click or press Enter to leap.`}
+              onClick={triggerJump}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  triggerJump();
+                }
+              }}
+              className="relative flex h-80 flex-col justify-end overflow-hidden rounded-2xl border border-space-800 bg-space-950/80 p-6 lg:col-span-7 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 transition-all hover:border-space-600"
+            >
               {/* Star sparkles */}
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#ffffff15_1px,transparent_1px)] [background-size:16px_16px]" />
 
@@ -208,7 +222,7 @@ export function LandingGravityLab() {
             </div>
 
             {/* Live Telemetry Card */}
-            <div className="flex flex-col justify-center lg:col-span-5">
+            <div className="flex flex-col justify-center lg:col-span-5" aria-live="polite" aria-atomic="true">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-warn-500" />
                 <h3 className="font-display text-2xl font-bold text-regolith-100">

@@ -111,7 +111,7 @@ export function LandingHero() {
             </div>
 
             {/* Catchy Main Heading */}
-            <h1 className="mt-4 font-display text-4xl font-black tracking-tight text-white sm:text-6xl md:text-7xl">
+            <h1 className="mt-4 font-display text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white">
               Ready for Liftoff,{" "}
               <span className="bg-gradient-to-r from-signal-500 via-warn-500 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(255,107,44,0.4)]">
                 Little Explorer?
@@ -129,9 +129,9 @@ export function LandingHero() {
                 <Link
                   to="/missions"
                   onClick={handleStartMissionClick}
-                  className="group flex w-full sm:w-auto items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-signal-500 via-warn-500 to-amber-400 px-8 py-3.5 font-display text-xl font-bold text-space-950 shadow-xl shadow-signal-500/35 transition-all hover:shadow-2xl hover:shadow-signal-500/50"
+                  className="group flex w-full sm:w-auto min-h-[48px] items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-signal-500 via-warn-500 to-amber-400 px-8 py-3.5 font-display text-lg sm:text-xl font-bold text-space-950 shadow-xl shadow-signal-500/35 transition-all hover:shadow-2xl hover:shadow-signal-500/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                 >
-                  <Rocket className="h-6 w-6 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+                  <Rocket className="h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 shrink-0" />
                   <span>START MISSION</span>
                 </Link>
               </motion.div>
@@ -140,30 +140,30 @@ export function LandingHero() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={scrollToGuide}
-                className="flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-2xl border border-space-700/80 bg-space-900/80 px-6 py-3.5 font-display text-lg font-semibold text-regolith-200 backdrop-blur-md transition-colors hover:border-space-500 hover:bg-space-800"
+                className="flex w-full sm:w-auto min-h-[48px] items-center justify-center gap-2.5 rounded-2xl border border-space-700/80 bg-space-900/80 px-6 py-3.5 font-display text-base sm:text-lg font-semibold text-regolith-200 backdrop-blur-md transition-colors hover:border-space-500 hover:bg-space-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
-                <BookOpen className="h-5 w-5 text-signal-500" />
+                <BookOpen className="h-5 w-5 text-signal-500 shrink-0" />
                 <span>How to Play</span>
               </motion.button>
             </div>
 
             {/* Quick Stat Cards (Row of 4 Glassmorphic Metrics) */}
-            <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-              <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3.5 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1">
-                <p className="font-display text-2xl font-bold text-white">6</p>
-                <p className="mt-1 text-[11px] font-medium text-regolith-300">Apollo Landing Sites</p>
+            <div className="mt-10 grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-4">
+              <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1 sm:p-3.5">
+                <p className="font-display text-xl sm:text-2xl font-bold text-white">6</p>
+                <p className="mt-1 text-[10px] sm:text-[11px] font-medium text-regolith-300">Apollo Landing Sites</p>
               </div>
-              <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3.5 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1">
-                <p className="font-display text-2xl font-bold text-white">6</p>
-                <p className="mt-1 text-[11px] font-medium text-regolith-300">Mars Rovers & Landers</p>
+              <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1 sm:p-3.5">
+                <p className="font-display text-xl sm:text-2xl font-bold text-white">6</p>
+                <p className="mt-1 text-[10px] sm:text-[11px] font-medium text-regolith-300">Mars Rovers & Landers</p>
               </div>
-              <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3.5 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1">
-                <p className="font-display text-2xl font-bold text-white">1/6th G</p>
-                <p className="mt-1 text-[11px] font-medium text-regolith-300">Real Lunar Bounding</p>
+              <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1 sm:p-3.5">
+                <p className="font-display text-xl sm:text-2xl font-bold text-white">1/6th G</p>
+                <p className="mt-1 text-[10px] sm:text-[11px] font-medium text-regolith-300">Real Lunar Bounding</p>
               </div>
-              <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3.5 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1">
-                <p className="font-display text-2xl font-bold text-white">60+</p>
-                <p className="mt-1 text-[11px] font-medium text-regolith-300">Historical Relics</p>
+              <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1 sm:p-3.5">
+                <p className="font-display text-xl sm:text-2xl font-bold text-white">60+</p>
+                <p className="mt-1 text-[10px] sm:text-[11px] font-medium text-regolith-300">Historical Relics</p>
               </div>
             </div>
           </motion.div>

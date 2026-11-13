@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Gamepad2, Award, ShieldCheck, Sparkles } from "lucide-react";
+import { Gamepad2, Award, ShieldCheck, Sparkles, Smartphone, CheckCircle2 } from "lucide-react";
 import { playBeep } from "../../../lib/gameAudio";
+import { useAppStore } from "../../../store/useAppStore";
 
 export function LandingControls() {
   const [activeKey, setActiveKey] = useState<string | null>(null);
+  const totalXp = useAppStore((s) => s.progress.totalXp);
+  const getRank = useAppStore((s) => s.getRank);
+  const currentRank = getRank();
 
   const controls = [
     { key: "W A S D", label: "Walk / Drive", desc: "Move across the surface", freq: 440 },
@@ -19,18 +23,24 @@ export function LandingControls() {
     {
       level: "Cadet",
       xp: "0 – 99 XP",
+      minXp: 0,
+      maxXp: 99,
       color: "border-regolith-400/40 text-regolith-300",
       desc: "Your journey begins. Touch down safely and scan your first artifact.",
     },
     {
       level: "Pilot",
       xp: "100 – 299 XP",
+      minXp: 100,
+      maxXp: 299,
       color: "border-warn-500/50 text-warn-500",
       desc: "Master the lunar rover, plant your flag, and complete Apollo 11 & 12.",
     },
     {
       level: "Commander",
       xp: "300+ XP",
+      minXp: 300,
+      maxXp: 9999,
       color: "border-signal-500/60 text-signal-500",
       desc: "Veteran explorer of all 12 Moon and Mars missions. The solar system is yours!",
     },
@@ -45,7 +55,7 @@ export function LandingControls() {
   };
 
   return (
-    <section className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent">
+    <section id="controls" className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
@@ -72,10 +82,19 @@ export function LandingControls() {
                 return (
                   <motion.div
                     key={c.key}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Test control key: ${c.key} - ${c.label}`}
                     onClick={() => handleKeyClick(c.key, c.freq)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleKeyClick(c.key, c.freq);
+                      }
+                    }}
                     whileHover={{ scale: 1.03, y: -2 }}
                     whileTap={{ scale: 0.96 }}
-                    className={`flex cursor-pointer flex-col rounded-2xl border p-4 shadow-sm backdrop-blur transition-all duration-200 select-none ${
+                    className={`flex min-h-[44px] cursor-pointer flex-col rounded-2xl border p-4 shadow-sm backdrop-blur transition-all duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-500 ${
                       isPressed
                         ? "border-signal-500 bg-signal-500/15 shadow-md shadow-signal-500/20 scale-105"
                         : "border-space-700/60 bg-space-900/90 hover:border-space-500"
@@ -100,6 +119,17 @@ export function LandingControls() {
                 );
               })}
             </div>
+
+            {/* Mobile Touch Controls Guidance Banner */}
+            <div className="mt-6 flex items-start gap-3 rounded-2xl border border-sky-500/30 bg-sky-950/40 p-4 text-xs text-sky-200 backdrop-blur">
+              <Smartphone className="h-5 w-5 text-sky-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-sky-100">Touch & Mobile Ready Ergonomics</p>
+                <p className="mt-0.5 text-sky-200/90 leading-relaxed">
+                  On phones and tablets, interactive virtual thumbsticks and large on-screen action buttons activate automatically in the 3D surface view.
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Right Column: Explorer Passport & Ranks */}
@@ -118,28 +148,76 @@ export function LandingControls() {
               </div>
             </div>
 
-            <div className="mt-8 flex flex-col gap-3.5">
-              {ranks.map((r) => (
-                <div
-                  key={r.level}
-                  className={`rounded-2xl border bg-space-900/70 p-4 backdrop-blur ${r.color}`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <ShieldCheck className="h-4 w-4" />
-                      <span className="font-display text-lg font-bold">
-                        {r.level}
-                      </span>
-                    </div>
-                    <span className="font-mono text-xs font-semibold text-regolith-300">
-                      {r.xp}
-                    </span>
-                  </div>
-                  <p className="mt-1.5 text-xs text-regolith-300">
-                    {r.desc}
+            {/* Live Passport Status Card */}
+            <div className="mt-6 rounded-2xl border border-signal-500/40 bg-gradient-to-br from-space-900/95 to-space-950 p-4 shadow-lg backdrop-blur">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-regolith-400">Active Explorer Status</p>
+                  <p className="font-display text-xl font-black text-white">
+                    Rank: <span className="text-signal-500">{currentRank}</span>
                   </p>
                 </div>
-              ))}
+                <div className="text-right">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-regolith-400">Total Progress</p>
+                  <p className="font-mono text-xl font-bold text-amber-400">
+                    {totalXp} <span className="text-xs font-normal text-regolith-400">XP</span>
+                  </p>
+                </div>
+              </div>
+              {/* Progress bar to next rank */}
+              <div className="mt-3">
+                <div className="h-2 w-full overflow-hidden rounded-full bg-space-800">
+                  <div
+                    className="h-full bg-gradient-to-r from-signal-500 via-warn-500 to-amber-400 transition-all duration-500"
+                    style={{ width: `${Math.min(100, Math.max(8, (totalXp / 300) * 100))}%` }}
+                  />
+                </div>
+                <div className="mt-1 flex justify-between text-[10px] font-mono text-regolith-400">
+                  <span>Cadet (0 XP)</span>
+                  <span>Pilot (100 XP)</span>
+                  <span>Commander (300 XP)</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-col gap-3">
+              {ranks.map((r) => {
+                const isActive = currentRank === r.level;
+                return (
+                  <div
+                    key={r.level}
+                    className={`rounded-2xl border bg-space-900/70 p-4 backdrop-blur transition-all ${
+                      isActive
+                        ? "border-signal-500 ring-2 ring-signal-500/30 bg-space-900/90"
+                        : r.color
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {isActive ? (
+                          <CheckCircle2 className="h-4 w-4 text-signal-500 shrink-0" />
+                        ) : (
+                          <ShieldCheck className="h-4 w-4 shrink-0" />
+                        )}
+                        <span className="font-display text-lg font-bold text-regolith-100">
+                          {r.level}
+                        </span>
+                        {isActive && (
+                          <span className="rounded-full bg-signal-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-signal-500">
+                            Current
+                          </span>
+                        )}
+                      </div>
+                      <span className="font-mono text-xs font-semibold text-regolith-300">
+                        {r.xp}
+                      </span>
+                    </div>
+                    <p className="mt-1.5 text-xs text-regolith-300">
+                      {r.desc}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Quick Badge */}
