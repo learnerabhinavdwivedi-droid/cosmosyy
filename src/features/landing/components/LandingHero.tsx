@@ -18,7 +18,7 @@ export function LandingHero() {
   // Scroll tracking for parallax and scroll-triggered astronaut reaction
   const { scrollY } = useScroll();
   const scrollRotate = useTransform(scrollY, [0, 600, 1200, 2000], [0, 18, -12, 8]);
-  const scrollParallaxY = useTransform(scrollY, [0, 1000], [0, 80]);
+  const scrollParallaxY = useTransform(scrollY, [0, 1000], [0, 70]);
 
   // Update speech bubble contextually as user scrolls down the page
   useEffect(() => {
@@ -61,53 +61,40 @@ export function LandingHero() {
   };
 
   return (
-    <section className="relative overflow-hidden pt-10 pb-20 md:pt-16 md:pb-32">
-      {/* Background Cosmic Atmosphere & Planetary Horizon */}
+    <section className="relative overflow-hidden pt-10 pb-36 sm:pt-14 sm:pb-44 md:pt-16 md:pb-52 lg:pt-20 lg:pb-60 min-h-[760px] sm:min-h-[820px] md:min-h-[880px] lg:min-h-[940px] flex flex-col justify-center">
       
-      {/* 1. Golden Spiral Galaxy in Upper Space */}
-      <div
-        className="pointer-events-none absolute top-4 left-1/2 h-80 w-80 -translate-x-1/2 opacity-40 blur-sm [animation:spin_90s_linear_infinite]"
-        aria-hidden="true"
-      >
-        <div className="h-full w-full rounded-full bg-gradient-to-tr from-transparent via-amber-500/20 to-orange-500/30 blur-2xl" />
-        <div className="absolute inset-8 rounded-full border border-amber-400/20 border-dashed" />
-        <div className="absolute inset-16 rounded-full border border-orange-400/30 border-dotted" />
-      </div>
-
-      {/* 2. Giant Glowing Mars/Planet Sphere on Upper Right */}
-      <div
-        className="pointer-events-none absolute -top-16 -right-24 h-[380px] w-[380px] rounded-full sm:h-[480px] sm:w-[480px] lg:-top-20 lg:-right-16 lg:h-[580px] lg:w-[580px]"
-        aria-hidden="true"
-      >
-        {/* Planet Body with Crater Shading & Rim Light */}
-        <div className="relative h-full w-full rounded-full bg-gradient-to-bl from-orange-600 via-amber-800 to-space-950 shadow-[-20px_20px_70px_rgba(255,110,0,0.45)]">
-          {/* Atmosphere Crescent Halo */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-transparent to-amber-300/40 blur-md" />
-          {/* Subtle Planet Ring Belt */}
-          <div className="absolute -top-10 -right-10 h-[120%] w-[120%] rounded-full border border-amber-400/20 opacity-30 [transform:rotate(35deg)_scaleY(0.35)]" />
-        </div>
-      </div>
-
-      {/* 3. Volcanic Mountain Terrain Ridge along the Bottom */}
-      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-36 md:h-52 overflow-hidden z-0" aria-hidden="true">
-        {/* Magma Horizon Glow */}
-        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-orange-600/30 via-amber-500/15 to-transparent blur-2xl" />
-        {/* Terrain Silhouette Image */}
-        <img
-          src="/art/martian-landscape.png"
-          alt="Martian Volcanic Ridge"
-          className="absolute bottom-0 inset-x-0 w-full h-full object-cover object-bottom opacity-80 select-none"
+      {/* 1. Primary Full-Width Mars Landscape Cinematic Background */}
+      <div className="pointer-events-none absolute inset-0 z-0 select-none overflow-hidden" aria-hidden="true">
+        {/* Base Layer: Mars Landscape Wallpaper Anchored to Bottom */}
+        <div
+          className="absolute inset-0 bg-cover bg-bottom bg-no-repeat transition-transform duration-1000 ease-out"
+          style={{
+            backgroundImage: "url('/art/mars-landscape-wallpaper.jpg')",
+          }}
         />
+
+        {/* Depth Layer 1: Cosmic Purple Nebula Cloud (Top Right & Center Sky) */}
+        <div className="absolute -top-16 right-8 sm:right-1/4 h-[380px] w-[520px] rounded-full bg-gradient-to-br from-purple-900/25 via-indigo-950/20 to-transparent blur-3xl opacity-75" />
+
+        {/* Depth Layer 2: Deep Violet Dust Veil (Top Left) */}
+        <div className="absolute top-10 left-8 sm:left-1/6 h-[320px] w-[420px] rounded-full bg-gradient-to-tr from-violet-950/30 via-purple-950/15 to-transparent blur-3xl opacity-60" />
+
+        {/* Depth Layer 3: Subtle Mars Ambient Orange Lighting along the Mountain Horizon */}
+        <div className="absolute bottom-16 inset-x-0 h-44 bg-gradient-to-t from-orange-600/20 via-amber-500/10 to-transparent blur-2xl" />
+
+        {/* Top Vignette Gradient to blend smoothly under the navbar */}
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-space-950/85 via-space-950/40 to-transparent" />
+
+        {/* Subtle dark overlay in the upper sky region to guarantee crisp text readability */}
+        <div className="absolute inset-x-0 top-0 h-3/5 bg-gradient-to-b from-space-950/40 via-space-950/15 to-transparent" />
+
+        {/* Bottom Vignette Gradient to transition seamlessly into the Gravity Lab below */}
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-space-950 via-space-950/80 to-transparent" />
       </div>
 
-      {/* 4. Drifting Space Asteroids */}
-      <div className="pointer-events-none absolute top-28 left-8 h-4 w-4 rounded-full bg-stone-700/60 blur-[0.5px] shadow-sm animate-pulse" />
-      <div className="pointer-events-none absolute top-48 left-1/4 h-3 w-3 rounded-full bg-stone-800/80 blur-[0.5px]" />
-      <div className="pointer-events-none absolute bottom-40 right-1/3 h-5 w-5 rounded-full bg-stone-700/70 blur-[0.5px]" />
-
-      {/* Main Foreground Hero Content */}
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
+      {/* 2. Main Foreground Hero Content (Mobile & Desktop Responsive) */}
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 w-full">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-8">
           
           {/* Left Column: Playful Hero Text & CTAs */}
           <motion.div
@@ -124,26 +111,25 @@ export function LandingHero() {
             </div>
 
             {/* Catchy Main Heading */}
-            <h1 className="mt-4 font-display text-5xl font-black tracking-tight text-white sm:text-6xl md:text-7xl">
-              Ready for Liftoff,
-              <br />
+            <h1 className="mt-4 font-display text-4xl font-black tracking-tight text-white sm:text-6xl md:text-7xl">
+              Ready for Liftoff,{" "}
               <span className="bg-gradient-to-r from-signal-500 via-warn-500 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(255,107,44,0.4)]">
                 Little Explorer?
               </span>
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-4 text-base leading-relaxed text-regolith-300 sm:text-lg md:text-xl max-w-2xl">
+            <p className="mt-4 text-sm leading-relaxed text-regolith-200 sm:text-base md:text-lg max-w-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
               Blast off on genuine Saturn V rockets, leap in lunar low gravity, and scan historical rovers and Apollo landers left behind on other worlds. Real NASA terrain, zero boring lectures!
             </p>
 
             {/* CTA Buttons */}
-            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3.5 sm:flex-row lg:justify-start">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
                 <Link
                   to="/missions"
                   onClick={handleStartMissionClick}
-                  className="group flex items-center gap-3 rounded-2xl bg-gradient-to-r from-signal-500 via-warn-500 to-amber-400 px-8 py-4 font-display text-xl font-bold text-space-950 shadow-xl shadow-signal-500/30 transition-all hover:shadow-2xl hover:shadow-signal-500/50"
+                  className="group flex w-full sm:w-auto items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-signal-500 via-warn-500 to-amber-400 px-8 py-3.5 font-display text-xl font-bold text-space-950 shadow-xl shadow-signal-500/35 transition-all hover:shadow-2xl hover:shadow-signal-500/50"
                 >
                   <Rocket className="h-6 w-6 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
                   <span>START MISSION</span>
@@ -154,7 +140,7 @@ export function LandingHero() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={scrollToGuide}
-                className="flex items-center gap-2.5 rounded-2xl border border-space-700 bg-space-900/80 px-6 py-4 font-display text-lg font-semibold text-regolith-200 backdrop-blur transition-colors hover:border-space-500 hover:bg-space-800"
+                className="flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-2xl border border-space-700/80 bg-space-900/80 px-6 py-3.5 font-display text-lg font-semibold text-regolith-200 backdrop-blur-md transition-colors hover:border-space-500 hover:bg-space-800"
               >
                 <BookOpen className="h-5 w-5 text-signal-500" />
                 <span>How to Play</span>
@@ -163,21 +149,21 @@ export function LandingHero() {
 
             {/* Quick Stat Cards (Row of 4 Glassmorphic Metrics) */}
             <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-              <div className="rounded-xl border border-space-800/80 bg-space-900/60 p-3.5 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1">
+              <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3.5 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1">
                 <p className="font-display text-2xl font-bold text-white">6</p>
-                <p className="mt-1 text-[11px] font-medium text-regolith-400">Apollo Landing Sites</p>
+                <p className="mt-1 text-[11px] font-medium text-regolith-300">Apollo Landing Sites</p>
               </div>
-              <div className="rounded-xl border border-space-800/80 bg-space-900/60 p-3.5 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1">
+              <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3.5 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1">
                 <p className="font-display text-2xl font-bold text-white">6</p>
-                <p className="mt-1 text-[11px] font-medium text-regolith-400">Mars Rovers & Landers</p>
+                <p className="mt-1 text-[11px] font-medium text-regolith-300">Mars Rovers & Landers</p>
               </div>
-              <div className="rounded-xl border border-space-800/80 bg-space-900/60 p-3.5 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1">
+              <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3.5 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1">
                 <p className="font-display text-2xl font-bold text-white">1/6th G</p>
-                <p className="mt-1 text-[11px] font-medium text-regolith-400">Real Lunar Bounding</p>
+                <p className="mt-1 text-[11px] font-medium text-regolith-300">Real Lunar Bounding</p>
               </div>
-              <div className="rounded-xl border border-space-800/80 bg-space-900/60 p-3.5 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1">
+              <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3.5 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1">
                 <p className="font-display text-2xl font-bold text-white">60+</p>
-                <p className="mt-1 text-[11px] font-medium text-regolith-400">Historical Relics</p>
+                <p className="mt-1 text-[11px] font-medium text-regolith-300">Historical Relics</p>
               </div>
             </div>
           </motion.div>
@@ -197,15 +183,6 @@ export function LandingHero() {
                   isHovered ? "opacity-100 scale-110" : "opacity-75 animate-pulse"
                 }`}
               />
-
-              {/* Glowing 3D Perspective Orbital Halo Ring */}
-              <div
-                className="pointer-events-none absolute top-1/2 left-1/2 h-36 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full border-[2.5px] border-amber-400/85 shadow-[0_0_25px_rgba(255,160,0,0.85),inset_0_0_15px_rgba(255,160,0,0.5)] [transform:rotateX(68deg)_rotateY(-18deg)] sm:h-44 sm:w-96"
-                aria-hidden="true"
-              >
-                {/* Orbiting Light Particle */}
-                <div className="absolute top-0 left-1/4 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow-200 blur-[0.5px] shadow-[0_0_12px_#fff] animate-ping" />
-              </div>
 
               {/* Dynamic Scroll & Hover Triggered Speech Bubble */}
               <div className="relative z-20 mb-3 max-w-[290px]">
@@ -270,7 +247,7 @@ export function LandingHero() {
                 <img
                   src="/art/astronaut.png"
                   alt="Cosmosyy Cartoon Astronaut Mascot"
-                  className="h-64 w-auto object-contain drop-shadow-[0_20px_35px_rgba(255,140,0,0.35)] transition-transform duration-300 sm:h-76 md:h-84 lg:h-92"
+                  className="h-60 w-auto object-contain drop-shadow-[0_20px_35px_rgba(255,140,0,0.35)] transition-transform duration-300 sm:h-72 md:h-80 lg:h-88"
                 />
               </motion.div>
 
