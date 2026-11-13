@@ -22,7 +22,7 @@ import { EarthAtmosphere } from "./EarthAtmosphere";
 import { getSunPosition, getEarthPosition } from "./sunPosition";
 import * as THREE from "three";
 
-const SCAN_RANGE = 5;
+const SCAN_RANGE = 8;
 
 function HoloParticles({ color, speed }: { color: string; speed: number }) {
   const ref = useRef<THREE.Points>(null);
@@ -75,8 +75,39 @@ function HoloParticles({ color, speed }: { color: string; speed: number }) {
   );
 }
 
-const NAME_VISIBLE_RANGE = 8;
+const NAME_VISIBLE_RANGE = 40;
 const PROXIMITY_RANGE = 15;
+
+function FloatingArrow({ isFound }: { isFound: boolean }) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame(() => {
+    if (!groupRef.current) return;
+    const t = Date.now() * 0.001;
+    groupRef.current.position.y = 5 + Math.sin(t * 2) * 0.4;
+  });
+
+  return (
+    <group ref={groupRef} position={[0, 5, 0]}>
+      <mesh rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[0.35, 0.8, 6]} />
+        <meshBasicMaterial
+          color={isFound ? "#66ff99" : "#00ff66"}
+          transparent
+          opacity={isFound ? 0.4 : 0.85}
+        />
+      </mesh>
+      <mesh position={[0, 0.7, 0]}>
+        <cylinderGeometry args={[0.1, 0.1, 0.6, 6]} />
+        <meshBasicMaterial
+          color={isFound ? "#66ff99" : "#00ff66"}
+          transparent
+          opacity={isFound ? 0.3 : 0.7}
+        />
+      </mesh>
+    </group>
+  );
+}
 
 function HeritageMarker({
   obj,
@@ -127,6 +158,8 @@ function HeritageMarker({
 
   return (
     <group position={obj.position}>
+      <FloatingArrow isFound={isFound} />
+
       <mesh
         ref={outerRingRef}
         rotation={[-Math.PI / 2, 0, 0]}
