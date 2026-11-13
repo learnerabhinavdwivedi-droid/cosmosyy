@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { Coffee, Volume2, VolumeX } from "lucide-react";
-import { gameAudio } from "@/lib/gameAudio";
+import { Volume2, VolumeX } from "lucide-react";
+import { gameAudio, playBeep } from "@/lib/gameAudio";
+import { PhonePeModal } from "./PhonePeModal";
 
 export function LandingNavbar() {
   const [soundPlaying, setSoundPlaying] = useState(false);
+  const [isPhonePeOpen, setIsPhonePeOpen] = useState(false);
 
   const toggleSound = () => {
     gameAudio.unlock();
@@ -97,20 +99,24 @@ export function LandingNavbar() {
                 )}
               </motion.button>
 
-              {/* Buy Me a Coffee Golden Pill */}
-              <motion.a
+              {/* PhonePe Glowing Purple Pill */}
+              <motion.button
                 whileHover={{ scale: 1.05, y: -1 }}
                 whileTap={{ scale: 0.95 }}
-                href="https://buymeacoffee.com/learnerabhinav"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Buy Me a Coffee for Cosmosyy"
-                className="flex min-h-[40px] items-center gap-1.5 rounded-full border border-amber-500/70 bg-amber-500/15 px-3 py-1.5 text-xs font-bold text-amber-300 shadow-[0_0_14px_rgba(245,158,11,0.25)] transition-all hover:border-amber-400 hover:bg-amber-400/25 hover:shadow-amber-500/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                type="button"
+                onClick={() => {
+                  setIsPhonePeOpen(true);
+                  playBeep(750, 0.08);
+                }}
+                aria-label="Support Cosmosyy via PhonePe or UPI"
+                className="flex min-h-[40px] items-center gap-1.5 rounded-full border border-purple-500/70 bg-gradient-to-r from-purple-600/30 via-indigo-600/25 to-violet-600/30 px-3 py-1.5 text-xs font-bold text-purple-200 shadow-[0_0_14px_rgba(147,51,234,0.35)] transition-all hover:border-purple-400 hover:bg-purple-600/40 hover:text-white hover:shadow-purple-500/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 cursor-pointer"
               >
-                <Coffee className="h-3.5 w-3.5 text-amber-400 shrink-0" />
-                <span className="hidden sm:inline">Buy Me a Coffee</span>
-                <span className="inline sm:hidden text-[11px]">Coffee</span>
-              </motion.a>
+                <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#5f259f] text-white font-bold text-[10px] select-none shrink-0 shadow-sm">
+                  पे
+                </div>
+                <span className="hidden sm:inline">Support on PhonePe</span>
+                <span className="inline sm:hidden text-[11px]">PhonePe</span>
+              </motion.button>
 
               {/* LinkedIn Glowing Blue Pill */}
               <motion.a
@@ -135,6 +141,12 @@ export function LandingNavbar() {
           </div>
         </div>
       </div>
+
+      {/* PhonePe Modal */}
+      <PhonePeModal
+        isOpen={isPhonePeOpen}
+        onClose={() => setIsPhonePeOpen(false)}
+      />
     </header>
   );
 }

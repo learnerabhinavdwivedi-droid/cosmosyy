@@ -31,7 +31,7 @@ describe("LandingPage", () => {
       );
       expect(screen.getAllByText(/Ready for Liftoff/i).length).toBeGreaterThan(0);
       expect(screen.getByText("START MISSION")).toBeInTheDocument();
-      expect(screen.getAllByText("Buy Me a Coffee").length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/PhonePe/i).length).toBeGreaterThan(0);
       expect(screen.getAllByText("LinkedIn").length).toBeGreaterThan(0);
       expect(
         screen.getByAltText("Cosmosyy Cartoon Astronaut Mascot"),

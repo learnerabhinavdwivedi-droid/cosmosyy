@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { Coffee, Sparkles, Compass } from "lucide-react";
+import { Sparkles, Compass } from "lucide-react";
+import { playBeep } from "../../../lib/gameAudio";
+import { PhonePeModal } from "./PhonePeModal";
 
 export function LandingFooter() {
+  const [isPhonePeOpen, setIsPhonePeOpen] = useState(false);
+
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -204,18 +209,22 @@ export function LandingFooter() {
             </p>
 
             <div className="mt-4 flex flex-col gap-3">
-              {/* Buy Me a Coffee Button */}
-              <motion.a
+              {/* Support via PhonePe Button */}
+              <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                href="https://buymeacoffee.com/learnerabhinav"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 rounded-xl border border-amber-500/70 bg-gradient-to-r from-amber-500/20 via-warn-500/25 to-yellow-500/20 px-5 py-2.5 text-xs font-bold text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.25)] transition-all hover:border-amber-400 hover:bg-amber-400/30 hover:shadow-amber-500/35"
+                type="button"
+                onClick={() => {
+                  setIsPhonePeOpen(true);
+                  playBeep(750, 0.08);
+                }}
+                className="flex items-center justify-center gap-2 rounded-xl border border-purple-500/80 bg-gradient-to-r from-purple-600/30 via-indigo-600/30 to-violet-600/30 px-5 py-2.5 text-xs font-bold text-purple-200 shadow-[0_0_15px_rgba(147,51,234,0.3)] transition-all hover:border-purple-400 hover:bg-purple-600/40 hover:text-white hover:shadow-purple-500/40 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
               >
-                <Coffee className="h-4 w-4 text-amber-400" />
-                <span>Buy Me a Coffee</span>
-              </motion.a>
+                <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#5f259f] text-white font-bold text-[10px] select-none shrink-0 shadow-sm">
+                  पे
+                </div>
+                <span>Support via PhonePe</span>
+              </motion.button>
 
               {/* LinkedIn Button */}
               <motion.a
@@ -258,6 +267,11 @@ export function LandingFooter() {
         </div>
       </div>
 
+      {/* PhonePe Modal */}
+      <PhonePeModal
+        isOpen={isPhonePeOpen}
+        onClose={() => setIsPhonePeOpen(false)}
+      />
     </footer>
   );
 }
