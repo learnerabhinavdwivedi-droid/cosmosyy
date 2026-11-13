@@ -1,13 +1,42 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "motion/react";
-import { Rocket, BookOpen, Sparkles, Compass } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { Rocket, BookOpen, Sparkles, Compass, Volume2 } from "lucide-react";
+import { playQuindar, playBeep } from "../../../lib/gameAudio";
+
+const ASTRONAUT_QUOTES = [
+  "Hey Explorer! Tap me to do a zero-g backflip!",
+  "Did you know? Moon footprints stay for over 100 million years without wind!",
+  "On Mars, gravity is 38% of Earth — your leaps are 2.6x higher!",
+  "Saturn V burned 20 metric tonnes of rocket fuel per second at launch!",
+  "Over 60 real NASA historical relics are waiting for you to scan!",
+];
 
 export function LandingHero() {
+  const [quoteIndex, setQuoteIndex] = useState(0);
+  const [isFlipping, setIsFlipping] = useState(false);
+  const [flipDegree, setFlipDegree] = useState(0);
+
   const scrollToGuide = () => {
     const el = document.getElementById("how-to-play");
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
     }
+    playBeep(650, 0.08);
+  };
+
+  const handleAstronautClick = () => {
+    playQuindar();
+    setIsFlipping(true);
+    setFlipDegree((prev) => prev + 360);
+    setQuoteIndex((prev) => (prev + 1) % ASTRONAUT_QUOTES.length);
+    setTimeout(() => {
+      setIsFlipping(false);
+    }, 900);
+  };
+
+  const handleStartMissionClick = () => {
+    playQuindar();
   };
 
   return (
@@ -51,6 +80,7 @@ export function LandingHero() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   to="/missions"
+                  onClick={handleStartMissionClick}
                   className="group flex items-center gap-3 rounded-2xl bg-gradient-to-r from-signal-500 via-signal-500 to-warn-500 px-8 py-4 font-display text-xl font-bold text-space-950 shadow-xl shadow-signal-500/30 transition-all hover:shadow-2xl hover:shadow-signal-500/40"
                 >
                   <Rocket className="h-6 w-6 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
@@ -90,62 +120,90 @@ export function LandingHero() {
             </div>
           </motion.div>
 
-          {/* Right Column: Floating Cartoon Astronaut Mascot */}
+          {/* Right Column: Floating Cut-Out Cartoon Astronaut Mascot */}
           <motion.div
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.15, ease: "easeOut" }}
             className="relative flex items-center justify-center lg:col-span-5"
           >
-            {/* Mascot Container */}
-            <div className="relative">
-              {/* Outer Pulsing Glow */}
-              <div className="absolute inset-0 -m-6 animate-pulse rounded-full bg-gradient-to-tr from-signal-500/25 via-warn-500/20 to-transparent blur-2xl" />
+            <div className="relative flex flex-col items-center">
+              
+              {/* Outer Cosmic Nebular Glow behind transparent mascot */}
+              <div className="pointer-events-none absolute -inset-10 animate-pulse rounded-full bg-gradient-to-tr from-signal-500/20 via-warn-500/20 to-blue-500/10 blur-3xl" />
 
-              {/* Orbital Ring Element */}
-              <div className="pointer-events-none absolute -inset-8 rounded-full border border-signal-500/20 [animation:spin_28s_linear_infinite]" />
+              {/* Orbital Rings around mascot */}
+              <div className="pointer-events-none absolute -inset-12 rounded-full border border-signal-500/20 [animation:spin_35s_linear_infinite]" />
+              <div className="pointer-events-none absolute -inset-6 rounded-full border border-dashed border-warn-500/20 [animation:spin_25s_linear_infinite_reverse]" />
 
-              {/* Speech Bubble */}
+              {/* Dynamic Interactive Speech Bubble */}
+              <div className="relative z-20 mb-4 max-w-[280px]">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={quoteIndex}
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.3 }}
+                    className="rounded-2xl border border-space-700/90 bg-space-900/95 p-3.5 shadow-2xl backdrop-blur-md"
+                  >
+                    <div className="flex items-start gap-2.5">
+                      <Compass className="h-4 w-4 shrink-0 text-signal-500 mt-0.5" />
+                      <p className="text-xs leading-snug font-medium text-regolith-200">
+                        "{ASTRONAUT_QUOTES[quoteIndex]}"
+                      </p>
+                    </div>
+                    {/* Speech Triangle pointing down towards astronaut */}
+                    <div className="absolute -bottom-2 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-r border-b border-space-700/90 bg-space-900" />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              {/* Transparent Mascot with Zero-G Float + Click Flip */}
               <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="absolute -top-10 -left-6 z-20 max-w-[210px] rounded-2xl border border-space-700/80 bg-space-900/95 p-3 shadow-xl backdrop-blur-md sm:-top-8 sm:-left-12"
-              >
-                <div className="flex items-start gap-2">
-                  <Compass className="h-4 w-4 shrink-0 text-signal-500" />
-                  <p className="text-xs leading-snug font-medium text-regolith-200">
-                    "Hey Explorer! Pick a mission and come jump on the Moon with me!"
-                  </p>
-                </div>
-                <div className="absolute -bottom-2 left-10 h-3 w-3 rotate-45 border-r border-b border-space-700/80 bg-space-900" />
-              </motion.div>
-
-              {/* Astronaut Mascot with Gentle Floating Animation */}
-              <motion.div
+                onClick={handleAstronautClick}
+                title="Click me to do a zero-g backflip!"
                 animate={{
-                  y: [0, -16, 0],
-                  rotate: [-2, 2, -2],
+                  y: isFlipping ? [0, -35, 0] : [0, -18, 0],
+                  rotate: flipDegree,
                 }}
                 transition={{
-                  duration: 4.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
+                  y: {
+                    duration: isFlipping ? 0.9 : 4.5,
+                    repeat: isFlipping ? 0 : Infinity,
+                    ease: "easeInOut",
+                  },
+                  rotate: {
+                    duration: 0.85,
+                    ease: "easeInOut",
+                  },
                 }}
-                whileHover={{ scale: 1.06, rotate: 0 }}
-                className="relative z-10 flex h-72 w-72 items-center justify-center rounded-full border-4 border-signal-500/40 bg-gradient-to-b from-space-800/80 via-space-900/90 to-space-950 p-4 shadow-2xl shadow-signal-500/30 sm:h-80 sm:w-80 md:h-96 md:w-96"
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative z-10 cursor-pointer select-none"
               >
+                {/* Astronaut Cutout Image */}
                 <img
                   src="/art/astronaut.png"
                   alt="Cosmosyy Cartoon Astronaut Mascot"
-                  className="h-full w-full object-contain drop-shadow-[0_15px_30px_rgba(255,107,44,0.4)]"
+                  className="h-64 w-auto object-contain drop-shadow-[0_20px_40px_rgba(255,107,44,0.45)] sm:h-76 md:h-88 transition-transform"
                 />
 
-                {/* Badge Tag */}
-                <div className="absolute -bottom-3 rounded-full border border-warn-500/50 bg-space-950 px-4 py-1 text-xs font-bold text-warn-500 shadow-lg">
-                  🧑‍🚀 Commander Cadet
-                </div>
+                {/* Gentle Thruster Embers Glow beneath feet */}
+                <div className="pointer-events-none absolute -bottom-3 left-1/2 h-6 w-20 -translate-x-1/2 rounded-full bg-signal-500/40 blur-md animate-pulse" />
               </motion.div>
+
+              {/* Playful Click Me Badge */}
+              <motion.button
+                onClick={handleAstronautClick}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="mt-4 z-20 inline-flex items-center gap-1.5 rounded-full border border-warn-500/60 bg-space-950/90 px-4 py-1.5 text-xs font-bold text-warn-500 shadow-xl backdrop-blur transition-colors hover:bg-space-900"
+              >
+                <Volume2 className="h-3.5 w-3.5" />
+                <span>Tap Astronaut to Flip! 🧑‍🚀</span>
+              </motion.button>
+
             </div>
           </motion.div>
 

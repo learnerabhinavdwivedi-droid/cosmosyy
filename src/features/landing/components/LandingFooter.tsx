@@ -18,7 +18,15 @@ export function LandingFooter() {
               </span>
             </div>
             <p className="mt-2 text-xs text-regolith-400">
-              Made with ❤️ by <span className="font-semibold text-regolith-200">Abhinav Dwivedi</span>
+              Made with ❤️ by{" "}
+              <a
+                href="https://devabhinav.xyz/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-regolith-200 underline decoration-signal-500/50 underline-offset-4 transition-colors hover:text-signal-500 hover:decoration-signal-500"
+              >
+                Abhinav Dwivedi
+              </a>
             </p>
           </div>
 
@@ -29,6 +37,14 @@ export function LandingFooter() {
             </Link>
             <a href="#how-to-play" className="hover:text-signal-500 transition-colors">
               How to Play
+            </a>
+            <a
+              href="https://devabhinav.xyz/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-signal-500 hover:underline transition-colors"
+            >
+              devabhinav.xyz
             </a>
             <Link to="/credits" className="hover:text-signal-500 transition-colors">
               Credits & Licences
@@ -51,7 +67,7 @@ export function LandingFooter() {
             </a>
 
             <a
-              href="https://www.linkedin.com/in/abhinav-dwivedi-584742269"
+              href="https://www.linkedin.com/in/abhinav-dwivedi-b074a136a/"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 rounded-lg border border-sky-500/40 bg-sky-500/10 px-3 py-1.5 text-xs font-semibold text-sky-300 hover:bg-sky-500/20 transition-colors"

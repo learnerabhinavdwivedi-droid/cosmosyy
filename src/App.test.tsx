@@ -34,6 +34,17 @@ describe("LandingPage", () => {
     expect(
       screen.getByAltText("Cosmosyy Cartoon Astronaut Mascot"),
     ).toBeInTheDocument();
+
+    // Verify Abhinav Dwivedi hyperlink to devabhinav.xyz
+    const authorLink = screen.getByRole("link", { name: "Abhinav Dwivedi" });
+    expect(authorLink).toHaveAttribute("href", "https://devabhinav.xyz/");
+
+    // Verify LinkedIn link
+    const linkedinLinks = screen.getAllByRole("link", { name: /LinkedIn/i });
+    expect(linkedinLinks[0]).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/abhinav-dwivedi-b074a136a/",
+    );
   });
 });
 
@@ -45,8 +56,8 @@ describe("MissionSelectPage", () => {
       </MemoryRouter>,
     );
     expect(screen.getAllByText("Cosmosyy").length).toBeGreaterThan(0);
-    expect(screen.getByText("Apollo 11")).toBeInTheDocument();
-    expect(screen.getByText("Sea of Tranquility")).toBeInTheDocument();
+    expect(screen.getAllByText("Apollo 11").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Sea of Tranquility").length).toBeGreaterThan(0);
   });
 });
 

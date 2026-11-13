@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { LandingNavbar } from "./components/LandingNavbar";
 import { LandingHero } from "./components/LandingHero";
+import { LandingGravityLab } from "./components/LandingGravityLab";
+import { LandingMissionShowcase } from "./components/LandingMissionShowcase";
 import { LandingGuide } from "./components/LandingGuide";
 import { LandingControls } from "./components/LandingControls";
 import { LandingFooter } from "./components/LandingFooter";
@@ -48,6 +50,8 @@ export default function LandingPage() {
         <LandingNavbar />
         <main className="flex-1">
           <LandingHero />
+          <LandingGravityLab />
+          <LandingMissionShowcase />
           <LandingGuide />
           <LandingControls />
         </main>

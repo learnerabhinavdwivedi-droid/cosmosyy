@@ -91,7 +91,7 @@ export function LandingNavbar() {
           <motion.a
             whileHover={{ scale: 1.05, y: -1 }}
             whileTap={{ scale: 0.95 }}
-            href="https://www.linkedin.com/in/abhinav-dwivedi-584742269"
+            href="https://www.linkedin.com/in/abhinav-dwivedi-b074a136a/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 rounded-lg border border-sky-500/40 bg-sky-500/10 px-3 py-1.5 text-xs font-semibold text-sky-300 transition-all hover:border-sky-400 hover:bg-sky-500/20 hover:text-sky-200"
