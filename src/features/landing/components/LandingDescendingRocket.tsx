@@ -8,14 +8,14 @@ interface DescendingRocketProps {
 export function LandingDescendingRocket({ targetRef }: DescendingRocketProps) {
   const { scrollYProgress } = useScroll({
     target: targetRef,
-    offset: ["start 85%", "end 15%"],
+    offset: ["start 80%", "end end"],
   });
 
-  // Moves straight downward as user scrolls (from top of section down above footer)
-  const driftY = useTransform(
+  // Moves straight downward as user scrolls (from top of section right down till footer)
+  const driftTop = useTransform(
     scrollYProgress,
     [0, 0.25, 0.5, 0.75, 1],
-    ["0px", "550px", "1100px", "1650px", "2250px"],
+    ["1%", "24%", "48%", "72%", "94%"],
   );
 
   // Subtle aerodynamic gimbal steering sway around 122.5° (where 122.5° is exactly pointing straight down)
@@ -25,20 +25,22 @@ export function LandingDescendingRocket({ targetRef }: DescendingRocketProps) {
     [122.5, 124.5, 121, 123.5, 122.5],
   );
 
-  // Subtle scale dynamics during entry
+  // Scale dynamics during descent & touchdown
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1.05, 1]);
 
   return (
-    <div
-      className="pointer-events-none absolute top-4 right-3 z-0 overflow-visible sm:right-6 md:right-10 lg:right-16"
+    <motion.div
+      style={{
+        top: driftTop,
+      }}
+      className="pointer-events-none absolute right-3 z-0 overflow-visible transition-[top] duration-500 ease-out sm:right-6 md:right-10 lg:right-16"
       aria-hidden="true"
     >
       <motion.div
         style={{
-          y: driftY,
           scale,
         }}
-        className="relative transition-[transform] duration-500 ease-out"
+        className="relative"
       >
         {/* Ambient Thruster Flame Glow illuminating the starry space backdrop */}
         <div className="pointer-events-none absolute -inset-10 rounded-full bg-gradient-to-t from-orange-600/25 via-amber-500/20 to-transparent blur-3xl animate-pulse" />
@@ -108,6 +110,6 @@ export function LandingDescendingRocket({ targetRef }: DescendingRocketProps) {
           />
         </motion.div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 }

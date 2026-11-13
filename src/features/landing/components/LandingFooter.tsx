@@ -3,7 +3,7 @@ import { Rocket, Coffee } from "lucide-react";
 
 export function LandingFooter() {
   return (
-    <footer className="border-t border-space-800 bg-space-950 py-12 text-regolith-400">
+    <footer className="border-t border-space-800 bg-space-950/80 backdrop-blur-sm py-12 text-regolith-400">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
           

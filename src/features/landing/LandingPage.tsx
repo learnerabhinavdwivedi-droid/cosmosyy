@@ -56,12 +56,12 @@ export default function LandingPage() {
         <main className="flex-1">
           <LandingHero />
 
-          {/* Scroll Track Container (From below Hero down to above Footer) */}
+          {/* Scroll Track Container (From below Hero down till bottom of Footer) */}
           <div ref={containerRef} className="relative">
             {/* Background Floating Balloon Cloud Astronaut (Left side) */}
             <LandingFloatingBalloonAstronaut targetRef={containerRef} />
 
-            {/* Background Descending Rocket with Blazing Animated Flame (Right side) */}
+            {/* Background Descending Rocket with Blazing Animated Flame (Right side, down till footer) */}
             <LandingDescendingRocket targetRef={containerRef} />
 
             {/* Foreground Content Layer (Cards, Text & Buttons on top) */}
@@ -70,11 +70,10 @@ export default function LandingPage() {
               <LandingMissionShowcase />
               <LandingGuide />
               <LandingControls />
+              <LandingFooter />
             </div>
           </div>
         </main>
-
-        <LandingFooter />
       </div>
 
     </div>
