@@ -8,58 +8,68 @@ interface FloatingAstronautProps {
 export function LandingFloatingBalloonAstronaut({ targetRef }: FloatingAstronautProps) {
   const { scrollYProgress } = useScroll({
     target: targetRef,
-    offset: ["start end", "end end"],
+    offset: ["start 90%", "end 10%"],
   });
 
-  // Smooth vertical drift from top-left (below hero) to bottom (above footer)
-  const topPosition = useTransform(scrollYProgress, [0, 1], ["1%", "88%"]);
-
-  // Gentle horizontal sway mimicking a floating balloon
-  const swayX = useTransform(
+  // Non-linear horizontal inclined path (drifts gently across from left to right)
+  const driftX = useTransform(
     scrollYProgress,
     [0, 0.25, 0.5, 0.75, 1],
-    ["0px", "35px", "-10px", "30px", "5px"],
+    ["0vw", "8vw", "18vw", "28vw", "40vw"],
   );
 
-  // Subtle rotation sway during flight
+  // Upward inclined vertical path (floats upward like a real buoyant balloon as user scrolls)
+  const driftY = useTransform(
+    scrollYProgress,
+    [0, 0.25, 0.5, 0.75, 1],
+    ["0px", "-70px", "-160px", "-260px", "-380px"],
+  );
+
+  // Subtle aerodynamic balloon tilt matching the inclined path
   const rotateSway = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.6, 0.85, 1],
-    [-5, 4, -4, 5, -2],
+    [0, 0.25, 0.5, 0.75, 1],
+    [-3, 4, -2, 5, 1],
   );
 
-  return (
-    <motion.div
-      style={{
-        top: topPosition,
-        x: swayX,
-        rotate: rotateSway,
-      }}
-      className="pointer-events-none absolute left-2 z-0 sm:left-6 md:left-10 lg:left-14"
-      aria-hidden="true"
-    >
-      {/* Balloon Glow Ambience */}
-      <div className="pointer-events-none absolute -inset-8 rounded-full bg-gradient-to-tr from-signal-500/15 via-scan-blue/15 to-purple-500/15 blur-2xl" />
+  // Gentle scale-up as it rises higher into deep space
+  const scaleProgress = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1.05, 1]);
 
-      {/* Floating Balloon Bobbing Animation */}
+  return (
+    <div className="pointer-events-none absolute top-4 left-3 z-0 overflow-visible sm:left-6 md:left-10 lg:left-16" aria-hidden="true">
       <motion.div
-        animate={{
-          y: [0, -18, 0],
-          rotate: [-2, 2, -2],
+        style={{
+          x: driftX,
+          y: driftY,
+          rotate: rotateSway,
+          scale: scaleProgress,
         }}
-        transition={{
-          duration: 5.5,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="relative"
+        className="relative transition-[transform] duration-700 ease-out"
       >
-        <img
-          src="/art/cloud-astronaut.png"
-          alt="Floating Balloon Cloud Astronaut"
-          className="h-44 w-auto object-contain opacity-80 drop-shadow-[0_20px_40px_rgba(0,212,255,0.35)] transition-opacity duration-300 sm:h-56 md:h-72 lg:h-80"
-        />
+        {/* Soft Cosmic Balloon Nebula Glow */}
+        <div className="pointer-events-none absolute -inset-10 rounded-full bg-gradient-to-tr from-signal-500/15 via-scan-blue/20 to-purple-500/15 blur-3xl animate-pulse" />
+
+        {/* Ambient Balloon Floating Loop (Slow, gentle, non-linear heave) */}
+        <motion.div
+          animate={{
+            y: [0, -20, 6, -14, 0],
+            x: [0, 10, -6, 12, 0],
+            rotate: [-2, 3, -1, 2, -2],
+          }}
+          transition={{
+            duration: 9,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="relative"
+        >
+          <img
+            src="/art/cloud-astronaut.png"
+            alt="Floating Balloon Cloud Astronaut"
+            className="h-40 w-auto object-contain opacity-85 drop-shadow-[0_20px_45px_rgba(0,212,255,0.4)] transition-opacity duration-300 sm:h-52 md:h-68 lg:h-76 select-none"
+          />
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 }

@@ -2,6 +2,7 @@ import { useMemo, useRef } from "react";
 import { LandingNavbar } from "./components/LandingNavbar";
 import { LandingHero } from "./components/LandingHero";
 import { LandingFloatingBalloonAstronaut } from "./components/LandingFloatingBalloonAstronaut";
+import { LandingDescendingRocket } from "./components/LandingDescendingRocket";
 import { LandingGravityLab } from "./components/LandingGravityLab";
 import { LandingMissionShowcase } from "./components/LandingMissionShowcase";
 import { LandingGuide } from "./components/LandingGuide";
@@ -57,8 +58,11 @@ export default function LandingPage() {
 
           {/* Scroll Track Container (From below Hero down to above Footer) */}
           <div ref={containerRef} className="relative">
-            {/* Background Floating Balloon Cloud Astronaut */}
+            {/* Background Floating Balloon Cloud Astronaut (Left side) */}
             <LandingFloatingBalloonAstronaut targetRef={containerRef} />
+
+            {/* Background Descending Rocket with Blazing Animated Flame (Right side) */}
+            <LandingDescendingRocket targetRef={containerRef} />
 
             {/* Foreground Content Layer (Cards, Text & Buttons on top) */}
             <div className="relative z-10">

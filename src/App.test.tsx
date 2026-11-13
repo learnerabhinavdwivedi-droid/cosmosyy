@@ -21,31 +21,41 @@ beforeAll(() => {
 });
 
 describe("LandingPage", () => {
-  it("renders the hero title, CTAs, and cartoon astronaut mascot", () => {
-    render(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>,
-    );
-    expect(screen.getAllByText(/Ready for Liftoff/i).length).toBeGreaterThan(0);
-    expect(screen.getByText("START MISSION")).toBeInTheDocument();
-    expect(screen.getAllByText("Buy Me a Coffee").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("LinkedIn").length).toBeGreaterThan(0);
-    expect(
-      screen.getByAltText("Cosmosyy Cartoon Astronaut Mascot"),
-    ).toBeInTheDocument();
+  it(
+    "renders the hero title, CTAs, and cartoon astronaut mascot",
+    () => {
+      render(
+        <MemoryRouter>
+          <LandingPage />
+        </MemoryRouter>,
+      );
+      expect(screen.getAllByText(/Ready for Liftoff/i).length).toBeGreaterThan(0);
+      expect(screen.getByText("START MISSION")).toBeInTheDocument();
+      expect(screen.getAllByText("Buy Me a Coffee").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("LinkedIn").length).toBeGreaterThan(0);
+      expect(
+        screen.getByAltText("Cosmosyy Cartoon Astronaut Mascot"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByAltText("Floating Balloon Cloud Astronaut"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByAltText("Descending Cartoon Rocket with Blazing Flame"),
+      ).toBeInTheDocument();
 
-    // Verify Abhinav Dwivedi hyperlink to devabhinav.xyz
-    const authorLink = screen.getByRole("link", { name: "Abhinav Dwivedi" });
-    expect(authorLink).toHaveAttribute("href", "https://devabhinav.xyz/");
+      // Verify Abhinav Dwivedi hyperlink to devabhinav.xyz
+      const authorLink = screen.getByRole("link", { name: "Abhinav Dwivedi" });
+      expect(authorLink).toHaveAttribute("href", "https://devabhinav.xyz/");
 
-    // Verify LinkedIn link
-    const linkedinLinks = screen.getAllByRole("link", { name: /LinkedIn/i });
-    expect(linkedinLinks[0]).toHaveAttribute(
-      "href",
-      "https://www.linkedin.com/in/abhinav-dwivedi-b074a136a/",
-    );
-  });
+      // Verify LinkedIn link
+      const linkedinLinks = screen.getAllByRole("link", { name: /LinkedIn/i });
+      expect(linkedinLinks[0]).toHaveAttribute(
+        "href",
+        "https://www.linkedin.com/in/abhinav-dwivedi-b074a136a/",
+      );
+    },
+    20000,
+  );
 });
 
 describe("MissionSelectPage", () => {

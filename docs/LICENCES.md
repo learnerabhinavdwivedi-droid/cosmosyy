@@ -31,6 +31,7 @@ Every asset, font, and non-MIT library used in this project.
 | Cartoon Moon illustration (moon.png) | User-supplied original custom art | Project-owned | Landing page guide destination card |
 | Cartoon Mars illustration (mars.jpg) | User-supplied original custom art | Project-owned | Landing page guide destination card |
 | Cartoon Cloud Balloon Astronaut (cloud-astronaut.png) | User-supplied original custom art | Project-owned | Landing page scroll-triggered background drifting mascot |
+| Cartoon Rocket with Flame (rocket-flame.png) | User-supplied original custom art | Project-owned | Landing page scroll-triggered descending rocket on right |
 | ESA imagery | ESA (sci.esa.int) | CC BY-SA 3.0 IGO [verify] | Do NOT ship in H1 until licence confirmed per-asset |
 | ISRO imagery | ISRO (isro.gov.in) | [verify] | Reuse terms unclear; do NOT ship in H1 until confirmed |
 
