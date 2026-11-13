@@ -105,7 +105,7 @@ export function LandingMissionShowcase() {
   };
 
   return (
-    <section className="relative py-16 md:py-24 border-t border-space-800/80 bg-space-950">
+    <section className="relative py-16 md:py-24 border-t border-space-800/60 bg-transparent">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         
         {/* Section Header */}

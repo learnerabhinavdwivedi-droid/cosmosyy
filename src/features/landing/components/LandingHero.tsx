@@ -1,21 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "motion/react";
-import { Rocket, BookOpen, Sparkles, Compass, Volume2 } from "lucide-react";
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
+import { Rocket, BookOpen, Sparkles, Compass } from "lucide-react";
 import { playQuindar, playBeep } from "../../../lib/gameAudio";
 
-const ASTRONAUT_QUOTES = [
-  "Hey Explorer! Tap me to do a zero-g backflip!",
-  "Did you know? Moon footprints stay for over 100 million years without wind!",
-  "On Mars, gravity is 38% of Earth — your leaps are 2.6x higher!",
-  "Saturn V burned 20 metric tonnes of rocket fuel per second at launch!",
-  "Over 60 real NASA historical relics are waiting for you to scan!",
+const SCROLL_QUOTES = [
+  "Ready for liftoff, Little Explorer? Blast off to the Moon & Mars! 🚀",
+  "Whoa, check out the Gravity Lab! 1/6th gravity on the Moon is super floaty! 🌕",
+  "12 authentic NASA landing sites: Apollo 11, Lunar Rovers, and Viking 1! 🪐",
+  "Master your thrusters: WASD to walk, SPACE to leap high, E to scan! 🕹️",
 ];
 
 export function LandingHero() {
-  const [quoteIndex, setQuoteIndex] = useState(0);
-  const [isFlipping, setIsFlipping] = useState(false);
-  const [flipDegree, setFlipDegree] = useState(0);
+  const [activeQuoteIndex, setActiveQuoteIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Scroll tracking for parallax and scroll-triggered astronaut reaction
+  const { scrollY } = useScroll();
+  const scrollRotate = useTransform(scrollY, [0, 600, 1200, 2000], [0, 24, -18, 12]);
+  const scrollParallaxY = useTransform(scrollY, [0, 1000], [0, 90]);
+
+  // Update speech bubble contextually as user scrolls down the page
+  useEffect(() => {
+    const handleScroll = () => {
+      const y = window.scrollY;
+      if (y < 450) {
+        setActiveQuoteIndex(0);
+      } else if (y < 1200) {
+        setActiveQuoteIndex(1);
+      } else if (y < 1900) {
+        setActiveQuoteIndex(2);
+      } else {
+        setActiveQuoteIndex(3);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const scrollToGuide = () => {
     const el = document.getElementById("how-to-play");
@@ -25,18 +47,17 @@ export function LandingHero() {
     playBeep(650, 0.08);
   };
 
-  const handleAstronautClick = () => {
-    playQuindar();
-    setIsFlipping(true);
-    setFlipDegree((prev) => prev + 360);
-    setQuoteIndex((prev) => (prev + 1) % ASTRONAUT_QUOTES.length);
-    setTimeout(() => {
-      setIsFlipping(false);
-    }, 900);
-  };
-
   const handleStartMissionClick = () => {
     playQuindar();
+  };
+
+  const handleMascotMouseEnter = () => {
+    setIsHovered(true);
+    playQuindar();
+  };
+
+  const handleMascotMouseLeave = () => {
+    setIsHovered(false);
   };
 
   return (
@@ -130,79 +151,99 @@ export function LandingHero() {
             <div className="relative flex flex-col items-center">
               
               {/* Outer Cosmic Nebular Glow behind transparent mascot */}
-              <div className="pointer-events-none absolute -inset-10 animate-pulse rounded-full bg-gradient-to-tr from-signal-500/20 via-warn-500/20 to-blue-500/10 blur-3xl" />
+              <div
+                className={`pointer-events-none absolute -inset-10 rounded-full bg-gradient-to-tr from-signal-500/25 via-warn-500/20 to-blue-500/15 blur-3xl transition-opacity duration-500 ${
+                  isHovered ? "opacity-100 scale-110" : "opacity-70 animate-pulse"
+                }`}
+              />
 
               {/* Orbital Rings around mascot */}
               <div className="pointer-events-none absolute -inset-12 rounded-full border border-signal-500/20 [animation:spin_35s_linear_infinite]" />
               <div className="pointer-events-none absolute -inset-6 rounded-full border border-dashed border-warn-500/20 [animation:spin_25s_linear_infinite_reverse]" />
 
-              {/* Dynamic Interactive Speech Bubble */}
-              <div className="relative z-20 mb-4 max-w-[280px]">
+              {/* Dynamic Scroll & Hover Triggered Speech Bubble */}
+              <div className="relative z-20 mb-3 max-w-[290px]">
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={quoteIndex}
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    key={isHovered ? "hover" : activeQuoteIndex}
+                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    transition={{ duration: 0.3 }}
-                    className="rounded-2xl border border-space-700/90 bg-space-900/95 p-3.5 shadow-2xl backdrop-blur-md"
+                    exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                    transition={{ duration: 0.25 }}
+                    className={`rounded-2xl border p-3.5 shadow-2xl backdrop-blur-md transition-colors ${
+                      isHovered
+                        ? "border-signal-500/90 bg-space-900/95 shadow-signal-500/20"
+                        : "border-space-700/90 bg-space-900/95"
+                    }`}
                   >
                     <div className="flex items-start gap-2.5">
-                      <Compass className="h-4 w-4 shrink-0 text-signal-500 mt-0.5" />
+                      <Compass
+                        className={`h-4 w-4 shrink-0 mt-0.5 transition-colors ${
+                          isHovered ? "text-warn-500 animate-spin" : "text-signal-500"
+                        }`}
+                      />
                       <p className="text-xs leading-snug font-medium text-regolith-200">
-                        "{ASTRONAUT_QUOTES[quoteIndex]}"
+                        {isHovered
+                          ? "\"Thrusters active! Floating through low-G orbit with you! ✨\""
+                          : `"${SCROLL_QUOTES[activeQuoteIndex]}"`}
                       </p>
                     </div>
                     {/* Speech Triangle pointing down towards astronaut */}
-                    <div className="absolute -bottom-2 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-r border-b border-space-700/90 bg-space-900" />
+                    <div
+                      className={`absolute -bottom-2 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-r border-b bg-space-900 transition-colors ${
+                        isHovered ? "border-signal-500/90" : "border-space-700/90"
+                      }`}
+                    />
                   </motion.div>
                 </AnimatePresence>
               </div>
 
-              {/* Transparent Mascot with Zero-G Float + Click Flip */}
+              {/* Mascot Container: Hover-Triggered + Scroll-Triggered Parallax */}
               <motion.div
-                onClick={handleAstronautClick}
-                title="Click me to do a zero-g backflip!"
-                animate={{
-                  y: isFlipping ? [0, -35, 0] : [0, -18, 0],
-                  rotate: flipDegree,
+                style={{
+                  y: scrollParallaxY,
+                  rotate: scrollRotate,
                 }}
-                transition={{
-                  y: {
-                    duration: isFlipping ? 0.9 : 4.5,
-                    repeat: isFlipping ? 0 : Infinity,
-                    ease: "easeInOut",
-                  },
-                  rotate: {
-                    duration: 0.85,
-                    ease: "easeInOut",
+                onMouseEnter={handleMascotMouseEnter}
+                onMouseLeave={handleMascotMouseLeave}
+                whileHover={{
+                  scale: 1.12,
+                  rotate: [0, -8, 8, -4, 4, 0],
+                  transition: {
+                    rotate: { duration: 0.6, ease: "easeInOut" },
+                    scale: { duration: 0.3, type: "spring", stiffness: 300 },
                   },
                 }}
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.95 }}
                 className="relative z-10 cursor-pointer select-none"
               >
                 {/* Astronaut Cutout Image */}
-                <img
+                <motion.img
                   src="/art/astronaut.png"
                   alt="Cosmosyy Cartoon Astronaut Mascot"
-                  className="h-64 w-auto object-contain drop-shadow-[0_20px_40px_rgba(255,107,44,0.45)] sm:h-76 md:h-88 transition-transform"
+                  animate={{
+                    y: isHovered ? [0, -12, 0] : [0, -16, 0],
+                  }}
+                  transition={{
+                    duration: isHovered ? 2 : 4.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className={`h-64 w-auto object-contain transition-all duration-300 sm:h-76 md:h-88 ${
+                    isHovered
+                      ? "drop-shadow-[0_25px_45px_rgba(255,107,44,0.65)] brightness-110"
+                      : "drop-shadow-[0_20px_35px_rgba(255,107,44,0.4)]"
+                  }`}
                 />
 
-                {/* Gentle Thruster Embers Glow beneath feet */}
-                <div className="pointer-events-none absolute -bottom-3 left-1/2 h-6 w-20 -translate-x-1/2 rounded-full bg-signal-500/40 blur-md animate-pulse" />
+                {/* Thruster Plume beneath feet - brightens on hover */}
+                <div
+                  className={`pointer-events-none absolute -bottom-3 left-1/2 h-6 -translate-x-1/2 rounded-full blur-md transition-all duration-300 ${
+                    isHovered
+                      ? "w-28 bg-gradient-to-r from-signal-500 via-warn-500 to-amber-300 opacity-90 scale-125"
+                      : "w-20 bg-signal-500/40 opacity-70 animate-pulse"
+                  }`}
+                />
               </motion.div>
-
-              {/* Playful Click Me Badge */}
-              <motion.button
-                onClick={handleAstronautClick}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="mt-4 z-20 inline-flex items-center gap-1.5 rounded-full border border-warn-500/60 bg-space-950/90 px-4 py-1.5 text-xs font-bold text-warn-500 shadow-xl backdrop-blur transition-colors hover:bg-space-900"
-              >
-                <Volume2 className="h-3.5 w-3.5" />
-                <span>Tap Astronaut to Flip! 🧑‍🚀</span>
-              </motion.button>
 
             </div>
           </motion.div>

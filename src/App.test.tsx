@@ -27,7 +27,7 @@ describe("LandingPage", () => {
         <LandingPage />
       </MemoryRouter>,
     );
-    expect(screen.getByText(/Ready for Liftoff/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Ready for Liftoff/i).length).toBeGreaterThan(0);
     expect(screen.getByText("START MISSION")).toBeInTheDocument();
     expect(screen.getAllByText("Buy Me a Coffee").length).toBeGreaterThan(0);
     expect(screen.getAllByText("LinkedIn").length).toBeGreaterThan(0);

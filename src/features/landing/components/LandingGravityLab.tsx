@@ -88,7 +88,7 @@ export function LandingGravityLab() {
   };
 
   return (
-    <section className="relative py-16 md:py-24 border-t border-space-800/80 bg-gradient-to-b from-space-950 via-space-900/60 to-space-950">
+    <section className="relative py-16 md:py-24 border-t border-space-800/60 bg-transparent">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         
         {/* Header */}
