@@ -9,6 +9,7 @@ import { useAppStore } from "@/store/useAppStore";
 import { DebugPanel } from "@/components/DebugPanel";
 import { gameAudio } from "@/lib/gameAudio";
 import { preloadNarration, playNarration, stopNarration, unlockAudio, onNarrationComplete } from "@/lib/narration";
+import { isTouchDevice, useIsPortrait } from "@/lib/useMobile";
 import { FlightScene } from "./FlightScene";
 import { SurfaceScene } from "./SurfaceScene";
 import { ReportScreen } from "./ReportScreen";
@@ -135,6 +136,36 @@ function GameAudioController() {
   return null;
 }
 
+function useOrientationLock() {
+  useEffect(() => {
+    if (!isTouchDevice()) return;
+    const so = screen.orientation;
+    if (!so?.lock) return;
+    so.lock("landscape-primary").catch(() => {});
+    return () => {
+      so.unlock();
+    };
+  }, []);
+}
+
+function LandscapeNudge() {
+  const isPortrait = useIsPortrait();
+  const touch = isTouchDevice();
+  if (!touch || !isPortrait) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-space-950/95 backdrop-blur-xl">
+      <div className="animate-[spin_2s_ease-in-out_infinite_alternate] text-6xl">📱</div>
+      <p className="max-w-xs text-center font-display text-lg font-bold text-regolith-100">
+        Please rotate your phone to landscape mode
+      </p>
+      <p className="text-sm text-regolith-400">
+        The mission requires a horizontal view
+      </p>
+    </div>
+  );
+}
+
 function SceneFade({ phase }: { phase: string }) {
   const prevPhase = useRef(phase);
   const [opaque, setOpaque] = useState(false);
@@ -176,6 +207,8 @@ export default function GameShell() {
   const playerName = useAppStore((s) => s.player.name);
   const prevPhase = useRef(phase);
   const demoSkipped = useRef(false);
+
+  useOrientationLock();
 
   useEffect(() => {
     if (!playerName && !isDemo) {
@@ -224,6 +257,7 @@ export default function GameShell() {
       {phase === "report" && <ReportScreen />}
       <SceneFade phase={phase} />
       <GameAudioController />
+      <LandscapeNudge />
       {isDemo && (
         <div className="pointer-events-none fixed left-4 bottom-4 z-[60] rounded-full bg-warn/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-warn backdrop-blur">
           Demo Mode

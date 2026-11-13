@@ -12,6 +12,8 @@ import { Stars, Text } from "@react-three/drei";
 import { Effects } from "./Effects";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
+import { useTouchStore } from "@/store/useTouchStore";
+import { isTouchDevice } from "@/lib/useMobile";
 import { Howl } from "howler";
 import { gameAudio } from "@/lib/gameAudio";
 import { stopNarration } from "@/lib/narration";
@@ -20,6 +22,7 @@ import { LMDescent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
 import { EarthAtmosphere } from "./EarthAtmosphere";
 import { getSunPosition, getEarthPosition } from "./sunPosition";
+import { TouchControls } from "./TouchControls";
 import * as THREE from "three";
 
 const SCAN_RANGE = 8;
@@ -618,8 +621,10 @@ function PlayerController({ planet }: { planet?: string }) {
 
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
-    window.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("pointerlockchange", onPointerLockChange);
+    if (!isTouchDevice()) {
+      window.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("pointerlockchange", onPointerLockChange);
+    }
 
     physY.current = GROUND_Y + EYE_HEIGHT;
     camera.position.set(5, physY.current, 10);
@@ -629,8 +634,10 @@ function PlayerController({ planet }: { planet?: string }) {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
-      window.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("pointerlockchange", onPointerLockChange);
+      if (!isTouchDevice()) {
+        window.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("pointerlockchange", onPointerLockChange);
+      }
     };
   }, [camera]);
 
@@ -642,15 +649,32 @@ function PlayerController({ planet }: { planet?: string }) {
       return;
     }
 
+    // Touch look (mobile)
+    const touch = useTouchStore.getState();
+    const { dx: tLookX, dy: tLookY } = touch.consumeLookDelta();
+    if (tLookX !== 0 || tLookY !== 0) {
+      euler.current.y -= tLookX;
+      euler.current.x -= tLookY;
+      euler.current.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler.current.x));
+      camera.quaternion.setFromEuler(euler.current);
+    }
+
     const k = keys.current;
-    const running = k["ShiftLeft"] || k["ShiftRight"];
+    const running = k["ShiftLeft"] || k["ShiftRight"] || touch.sprint;
     const speed = running ? RUN_SPEED : WALK_SPEED;
     _moveDir.set(0, 0, 0);
 
+    // Keyboard input
     if (k["KeyW"] || k["ArrowUp"]) _moveDir.z -= 1;
     if (k["KeyS"] || k["ArrowDown"]) _moveDir.z += 1;
     if (k["KeyA"] || k["ArrowLeft"]) _moveDir.x -= 1;
     if (k["KeyD"] || k["ArrowRight"]) _moveDir.x += 1;
+
+    // Touch joystick input
+    if (touch.moveX !== 0 || touch.moveZ !== 0) {
+      _moveDir.x += touch.moveX;
+      _moveDir.z += touch.moveZ;
+    }
 
     const isMoving = _moveDir.length() > 0;
 
@@ -668,7 +692,7 @@ function PlayerController({ planet }: { planet?: string }) {
 
     const onGround = physY.current <= GROUND_Y + EYE_HEIGHT + 0.01;
 
-    if (k["Space"] && onGround) {
+    if ((k["Space"] || touch.jump) && onGround) {
       verticalVel.current = jumpV0;
     }
 
@@ -958,10 +982,18 @@ function InspectOverlay({ objects, missionId, isMars }: { objects: HeritageObjec
         </div>
 
         {/* Footer */}
-        <div className="border-t border-space-700/40 px-6 py-3">
+        <div className="border-t border-space-700/40 px-6 py-3 flex items-center justify-between">
           <p className="text-xs text-regolith-400/50">
-            {t("inspect.pressEsc")}
+            {isTouchDevice() ? t("inspect.tapClose") : t("inspect.pressEsc")}
           </p>
+          {isTouchDevice() && (
+            <button
+              onClick={() => send("EXIT_INSPECT")}
+              className="rounded-lg border border-regolith-400/30 bg-space-800/80 px-4 py-2 text-sm font-bold text-regolith-200 active:bg-space-700"
+            >
+              CLOSE
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -1273,7 +1305,7 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
       )}
 
       {/* Interaction prompt */}
-      {nearObj && !found.includes(nearObj.id) && phase !== "inspect" && (
+      {nearObj && !found.includes(nearObj.id) && phase !== "inspect" && !isTouchDevice() && (
         <div className="mx-auto mt-auto mb-32 rounded-xl bg-space-950/90 px-8 py-4 text-center backdrop-blur-md border border-space-700/50">
           <p className="font-display text-lg text-signal">
             {isScanning ? t("surface.scanning") : `[Hold E] ${t("surface.inspectPrompt")} ${nearObj.name}`}
@@ -1282,7 +1314,7 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
         </div>
       )}
 
-      {phase === "flagReady" && (
+      {phase === "flagReady" && !isTouchDevice() && (
         <div className="mx-auto mt-auto mb-32 rounded-xl bg-signal/20 px-8 py-4 text-center backdrop-blur-md border border-signal/30">
           <p className="animate-pulse font-display text-lg text-signal">
             [F] {t(isRobotic ? "surface.surveyPrompt" : "surface.flagPrompt")}
@@ -1290,7 +1322,7 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
         </div>
       )}
 
-      {phase === "flagPlanted" && (
+      {phase === "flagPlanted" && !isTouchDevice() && (
         <div className="mx-auto mt-auto mb-32 rounded-xl bg-ok/20 px-8 py-4 text-center backdrop-blur-md border border-ok/30">
           <p className="animate-pulse font-display text-lg text-ok">
             [L] {t(isRobotic ? "surface.endMissionPrompt" : "surface.launchPrompt")}
@@ -1312,12 +1344,14 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
         </div>
       </div>
 
-      {/* Bottom left: controls hint */}
-      <div className="mb-2 ml-4">
-        <p className="text-xs text-regolith-400/60">
-          {t("surface.controlHints")}
-        </p>
-      </div>
+      {/* Bottom left: controls hint (desktop only) */}
+      {!isTouchDevice() && (
+        <div className="mb-2 ml-4">
+          <p className="text-xs text-regolith-400/60">
+            {t("surface.controlHints")}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
@@ -1325,13 +1359,40 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
 export function SurfaceScene() {
   const phase = useGameStore((s) => s.phase);
   const missionId = useGameStore((s) => s.missionId);
+  const send = useGameStore((s) => s.send);
+  const found = useGameStore((s) => s.objectsFoundThisRun);
+  const addFoundObject = useGameStore((s) => s.addFoundObject);
+  const findObject = useAppStore((s) => s.findObject);
   const [nearObjectId, setNearObjectId] = useState<string | null>(null);
   const [objectDistances, setObjectDistances] = useState<Record<string, number>>({});
   const mission = useMemo(() => getMission(missionId ?? "apollo-11"), [missionId]);
 
   const handleCanvasClick = useCallback(() => {
-    document.body.requestPointerLock();
+    if (!isTouchDevice()) {
+      document.body.requestPointerLock();
+    }
   }, []);
+
+  const touchScan = useCallback(() => {
+    if (!nearObjectId || found.includes(nearObjectId) || !missionId) return;
+    addFoundObject(nearObjectId);
+    findObject(missionId, nearObjectId);
+    send("START_INSPECT", { objectId: nearObjectId });
+    gameAudio.playScanComplete();
+  }, [nearObjectId, found, missionId, addFoundObject, findObject, send]);
+
+  const touchFlag = useCallback(() => {
+    if (!missionId) return;
+    useAppStore.getState().plantFlag(missionId);
+    send("PLANT_FLAG");
+    gameAudio.playSuccess();
+  }, [missionId, send]);
+
+  const touchLaunch = useCallback(() => {
+    send("LAUNCH_HOME");
+  }, [send]);
+
+  const canScan = !!nearObjectId && !found.includes(nearObjectId);
 
   return (
     <div className="relative h-screen w-full">
@@ -1361,6 +1422,13 @@ export function SurfaceScene() {
         </Canvas>
       </div>
       <SurfaceHUD nearObjectId={nearObjectId} objects={mission.objects} planet={mission.planet} missionType={mission.missionType} />
+      <TouchControls
+        nearObjectId={nearObjectId}
+        canScan={canScan}
+        onScan={touchScan}
+        onFlag={touchFlag}
+        onLaunch={touchLaunch}
+      />
       {phase === "inspect" && <InspectOverlay objects={mission.objects} missionId={missionId ?? "apollo-11"} isMars={mission.planet === "mars"} />}
     </div>
   );

@@ -68,6 +68,7 @@
     "hotspot": "Hotspot {{number}}",
     "source": "Source",
     "pressEsc": "Press [ESC] to return",
+    "tapClose": "Tap CLOSE to return",
     "missionLabel": "{{mission}} · {{site}}"
   },
   "report": {

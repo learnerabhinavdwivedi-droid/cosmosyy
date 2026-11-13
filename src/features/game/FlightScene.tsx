@@ -10,6 +10,7 @@ import { useAppStore } from "@/store/useAppStore";
 import { getMissionOrNull, type MissionSpec, type Planet } from "@/lib/missionData";
 import { gameAudio } from "@/lib/gameAudio";
 import { onNarrationComplete } from "@/lib/narration";
+import { isTouchDevice } from "@/lib/useMobile";
 import * as THREE from "three";
 
 const EARTH = new THREE.Vector3(-28, 0, -20);
@@ -1376,9 +1377,9 @@ export function FlightScene() {
         <div className="absolute inset-x-0 bottom-24 z-20 flex justify-center">
           <button
             onClick={() => send(gate.event)}
-            className="animate-pulse rounded-lg border border-signal/60 bg-signal/20 px-8 py-3 font-display text-lg font-semibold text-signal backdrop-blur transition hover:bg-signal/30"
+            className="animate-pulse rounded-lg border border-signal/60 bg-signal/20 px-10 py-4 font-display text-lg sm:text-xl font-semibold text-signal backdrop-blur transition hover:bg-signal/30 min-h-[56px]"
           >
-            [Space] {t(gate.labelKey)}
+            {isTouchDevice() ? t(gate.labelKey) : `[Space] ${t(gate.labelKey)}`}
           </button>
         </div>
       )}
