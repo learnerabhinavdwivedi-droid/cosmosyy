@@ -20,9 +20,20 @@ function fallbackPath(phase: GamePhase): string {
 }
 
 const howls = new Map<string, Howl>();
+const stopTimers = new WeakMap<Howl, ReturnType<typeof setTimeout>>();
 let currentNarration: Howl | null = null;
+let narrationBusy = false;
+const completionListeners = new Set<() => void>();
 let volume = 0.9;
 let activeMissionId = "apollo-11";
+
+function notifyComplete(): void {
+  narrationBusy = false;
+  if (completionListeners.size === 0) return;
+  const cbs = Array.from(completionListeners);
+  completionListeners.clear();
+  for (const cb of cbs) cb();
+}
 
 function getKey(missionId: string, phase: GamePhase): string {
   return `${missionId}:${phase}`;
@@ -55,9 +66,21 @@ export function playNarration(phase: GamePhase, missionId?: string): void {
   const id = missionId || activeMissionId;
 
   if (currentNarration) {
-    currentNarration.fade(currentNarration.volume(), 0, 300);
     const prev = currentNarration;
-    setTimeout(() => prev.stop(), 350);
+    prev.off("end");
+    prev.off("loaderror");
+    prev.off("playerror");
+    prev.off("stop");
+    prev.fade(prev.volume(), 0, 250);
+    const prevTimer = stopTimers.get(prev);
+    if (prevTimer) clearTimeout(prevTimer);
+    stopTimers.set(
+      prev,
+      setTimeout(() => {
+        prev.stop();
+        stopTimers.delete(prev);
+      }, 280),
+    );
   }
 
   const key = getKey(id, phase);
@@ -68,19 +91,88 @@ export function playNarration(phase: GamePhase, missionId?: string): void {
     howl = howls.get(fallbackKey);
   }
 
-  if (!howl) return;
+  if (!howl) {
+    currentNarration = null;
+    notifyComplete();
+    return;
+  }
+
+  // Cancel any pending fade-stop if replaying this Howl instance
+  const pendingStop = stopTimers.get(howl);
+  if (pendingStop) {
+    clearTimeout(pendingStop);
+    stopTimers.delete(howl);
+  }
+  howl.stop();
+  howl.off("end");
+  howl.off("loaderror");
+  howl.off("playerror");
+  howl.off("stop");
+
   currentNarration = howl;
+  narrationBusy = true;
+
+  const markDone = () => {
+    if (currentNarration === howl) {
+      notifyComplete();
+    }
+  };
+
+  howl.once("end", markDone);
+  howl.once("loaderror", markDone);
+  howl.once("playerror", markDone);
+  howl.once("stop", markDone);
+
   howl.volume(volume);
   howl.play();
 }
 
+export function onNarrationComplete(cb: () => void, maxWaitMs = 12000): () => void {
+  if (!narrationBusy || !currentNarration) {
+    cb();
+    return () => {};
+  }
+
+  let settled = false;
+  const finish = () => {
+    if (settled) return;
+    settled = true;
+    clearTimeout(safetyTimer);
+    completionListeners.delete(finish);
+    cb();
+  };
+
+  const safetyTimer = setTimeout(finish, maxWaitMs);
+  completionListeners.add(finish);
+
+  return () => {
+    if (settled) return;
+    settled = true;
+    clearTimeout(safetyTimer);
+    completionListeners.delete(finish);
+  };
+}
+
 export function stopNarration(): void {
   if (currentNarration) {
-    currentNarration.fade(currentNarration.volume(), 0, 500);
     const h = currentNarration;
-    setTimeout(() => h.stop(), 550);
+    h.off("end");
+    h.off("loaderror");
+    h.off("playerror");
+    h.off("stop");
+    h.fade(h.volume(), 0, 500);
+    const prevTimer = stopTimers.get(h);
+    if (prevTimer) clearTimeout(prevTimer);
+    stopTimers.set(
+      h,
+      setTimeout(() => {
+        h.stop();
+        stopTimers.delete(h);
+      }, 550),
+    );
     currentNarration = null;
   }
+  notifyComplete();
 }
 
 export function setNarrationVolume(v: number): void {

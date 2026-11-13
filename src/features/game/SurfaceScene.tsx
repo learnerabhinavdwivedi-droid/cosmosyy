@@ -14,6 +14,7 @@ import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { Howl } from "howler";
 import { gameAudio } from "@/lib/gameAudio";
+import { stopNarration } from "@/lib/narration";
 import { getMission, type HeritageObject } from "@/lib/missionData";
 import { LMDescent } from "./LunarModule";
 import { Terrain, GroundPlane } from "./Terrain";
@@ -858,6 +859,7 @@ function InspectOverlay({ objects, missionId, isMars }: { objects: HeritageObjec
 
   useEffect(() => {
     if (!objectId) return;
+    stopNarration();
     const src = `/audio/heritage/${missionId}/${objectId}.mp3`;
     const howl = new Howl({ src: [src], volume: 0.85 });
     howlRef.current = howl;
@@ -866,13 +868,14 @@ function InspectOverlay({ objects, missionId, isMars }: { objects: HeritageObjec
     } else {
       gameAudio.playQuindar();
     }
-    setTimeout(() => howl.play(), 350);
+    const playTimer = setTimeout(() => howl.play(), 350);
     return () => {
+      clearTimeout(playTimer);
       howl.fade(howl.volume(), 0, 400);
       setTimeout(() => howl.unload(), 500);
       howlRef.current = null;
     };
-  }, [objectId, missionId]);
+  }, [objectId, missionId, isMars]);
 
   if (!obj) return null;
 

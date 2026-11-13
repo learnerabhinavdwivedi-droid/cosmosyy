@@ -9,6 +9,7 @@ import { useGameStore, type GamePhase } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { getMissionOrNull, type MissionSpec, type Planet } from "@/lib/missionData";
 import { gameAudio } from "@/lib/gameAudio";
+import { onNarrationComplete } from "@/lib/narration";
 import * as THREE from "three";
 
 const EARTH = new THREE.Vector3(-28, 0, -20);
@@ -492,6 +493,7 @@ const _aheadCopy = new THREE.Vector3();
 const _targetQuat = new THREE.Quaternion();
 const _lookMat = new THREE.Matrix4();
 const _up = new THREE.Vector3(0, 1, 0);
+const _flipY = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
 
 function FlightAnimator({
   isMars,
@@ -511,9 +513,11 @@ function FlightAnimator({
   const elapsed = useRef(0);
   const lookRef = useRef(new THREE.Vector3(0, 0, -10));
   const landingCut = useRef(false);
+  const orientInit = useRef(false);
   const separated = useRef(false);
   const sepPos = useRef(new THREE.Vector3());
   const sepDir = useRef(new THREE.Vector3());
+  const sepQuat = useRef(new THREE.Quaternion());
   const sepTime = useRef(0);
 
   const marsProbeRef = useRef<THREE.Group>(null);
@@ -522,6 +526,7 @@ function FlightAnimator({
   const cruiseSeparated = useRef(false);
   const cruiseSepPos = useRef(new THREE.Vector3());
   const cruiseSepDir = useRef(new THREE.Vector3());
+  const cruiseSepQuat = useRef(new THREE.Quaternion());
   const cruiseSepTime = useRef(0);
 
   const marsLanderRef = useRef<THREE.Group>(null);
@@ -550,6 +555,7 @@ function FlightAnimator({
             cruiseSepTime.current = 0;
             shieldDropY.current = 0;
             landingCut.current = false;
+            orientInit.current = false;
           }
         }
       }),
@@ -590,6 +596,7 @@ function FlightAnimator({
       sepPos.current.copy(_shipCopy);
       _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.05, 1)));
       sepDir.current.subVectors(_shipCopy, _aheadCopy).normalize();
+      if (shipRef.current) sepQuat.current.copy(shipRef.current.quaternion);
       gameAudio.playStaging();
     }
     if (separated.current) {
@@ -609,6 +616,7 @@ function FlightAnimator({
       cruiseSepPos.current.copy(_shipCopy);
       _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.05, 1)));
       cruiseSepDir.current.subVectors(_shipCopy, _aheadCopy).normalize();
+      if (shipRef.current) cruiseSepQuat.current.copy(shipRef.current.quaternion);
       gameAudio.playStaging();
     }
     if (cruiseSeparated.current) {
@@ -622,9 +630,15 @@ function FlightAnimator({
       } else {
         _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.03, 1)));
         if (_aheadCopy.distanceToSquared(_shipCopy) > 0.000001) {
-          _lookMat.lookAt(_shipCopy, _aheadCopy, _up);
+          _lookMat.lookAt(_aheadCopy, _shipCopy, _up);
           _targetQuat.setFromRotationMatrix(_lookMat);
-          dampQ(shipRef.current.quaternion, _targetQuat, 0.14, dt);
+          _targetQuat.multiply(_flipY);
+          if (!orientInit.current) {
+            shipRef.current.quaternion.copy(_targetQuat);
+            orientInit.current = true;
+          } else {
+            dampQ(shipRef.current.quaternion, _targetQuat, 0.14, dt);
+          }
         }
       }
     }
@@ -646,7 +660,9 @@ function FlightAnimator({
           sepPos.current.y + sepDir.current.y * drift - t * 0.08,
           sepPos.current.z + sepDir.current.z * drift,
         );
-        boosterRef.current.rotation.set(Math.PI / 2 + t * 0.14, t * 0.05, t * 0.09);
+        boosterRef.current.quaternion.copy(sepQuat.current);
+        boosterRef.current.rotateX(t * 0.14);
+        boosterRef.current.rotateZ(t * 0.08);
         const fade = Math.max(0.12, 1 - t * 0.09);
         boosterRef.current.scale.setScalar(0.5 * fade);
       } else {
@@ -682,7 +698,9 @@ function FlightAnimator({
           cruiseSepPos.current.y + cruiseSepDir.current.y * drift + t * 0.12,
           cruiseSepPos.current.z + cruiseSepDir.current.z * drift,
         );
-        marsCruiseSepRef.current.rotation.set(Math.PI / 2 - t * 0.18, t * 0.12, t * 0.1);
+        marsCruiseSepRef.current.quaternion.copy(cruiseSepQuat.current);
+        marsCruiseSepRef.current.rotateX(-t * 0.18);
+        marsCruiseSepRef.current.rotateZ(t * 0.1);
         marsCruiseSepRef.current.scale.setScalar(0.42 * Math.max(0.2, 1 - t * 0.15));
       }
     }
@@ -839,51 +857,91 @@ function FlightAnimator({
 
         {/* Mars Surface Descent Pod / Lander + Parachute + Heat Shield Drop */}
         <group ref={marsLanderRef} scale={0.62} visible={false}>
-          {/* Descent Stage / Sky Crane / Lander Deck */}
+          {/* Descent Stage / Sky Crane body */}
           <mesh position={[0, 0.25, 0]}>
-            <cylinderGeometry args={[0.45, 0.58, 0.38, 8]} />
+            <cylinderGeometry args={[0.45, 0.58, 0.38, 24]} />
             <meshStandardMaterial color="#c8b896" metalness={0.55} roughness={0.38} />
+          </mesh>
+          {/* Sky crane top ring */}
+          <mesh position={[0, 0.46, 0]}>
+            <cylinderGeometry args={[0.42, 0.45, 0.04, 24]} />
+            <meshStandardMaterial color="#b0a888" metalness={0.6} roughness={0.3} />
           </mesh>
           {/* Gold Foil Thermal Belly */}
           <mesh position={[0, 0.02, 0]}>
-            <cylinderGeometry args={[0.38, 0.32, 0.16, 8]} />
+            <cylinderGeometry args={[0.38, 0.32, 0.16, 24]} />
             <meshStandardMaterial color="#d4a238" metalness={0.85} roughness={0.25} />
           </mesh>
+          {/* Bottom panel / nozzle deck */}
+          <mesh position={[0, -0.08, 0]}>
+            <cylinderGeometry args={[0.52, 0.56, 0.06, 24]} />
+            <meshStandardMaterial color="#8a8070" metalness={0.5} roughness={0.45} />
+          </mesh>
+          {/* 8 MLE thrusters around perimeter */}
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => {
+            const rad = (deg * Math.PI) / 180;
+            return (
+              <mesh
+                key={`thr-${deg}`}
+                position={[Math.cos(rad) * 0.48, -0.06, Math.sin(rad) * 0.48]}
+              >
+                <cylinderGeometry args={[0.025, 0.035, 0.08, 12]} />
+                <meshStandardMaterial color="#555555" metalness={0.7} roughness={0.3} />
+              </mesh>
+            );
+          })}
           {/* 4 Landing Legs / Rocker Struts */}
           {[45, 135, 225, 315].map((deg) => {
             const rad = (deg * Math.PI) / 180;
             return (
-              <mesh
-                key={deg}
-                position={[Math.cos(rad) * 0.52, -0.12, Math.sin(rad) * 0.52]}
-                rotation={[Math.sin(rad) * 0.35, 0, -Math.cos(rad) * 0.35]}
-              >
-                <cylinderGeometry args={[0.03, 0.02, 0.52, 6]} />
-                <meshStandardMaterial color="#888888" metalness={0.65} roughness={0.35} />
-              </mesh>
+              <group key={deg}>
+                <mesh
+                  position={[Math.cos(rad) * 0.52, -0.12, Math.sin(rad) * 0.52]}
+                  rotation={[Math.sin(rad) * 0.35, 0, -Math.cos(rad) * 0.35]}
+                >
+                  <cylinderGeometry args={[0.025, 0.018, 0.52, 8]} />
+                  <meshStandardMaterial color="#888888" metalness={0.65} roughness={0.35} />
+                </mesh>
+                {/* Foot pad */}
+                <mesh position={[Math.cos(rad) * 0.68, -0.38, Math.sin(rad) * 0.68]}>
+                  <cylinderGeometry args={[0.05, 0.06, 0.02, 12]} />
+                  <meshStandardMaterial color="#777777" metalness={0.5} roughness={0.5} />
+                </mesh>
+              </group>
             );
           })}
           {/* High-Gain Dish */}
           <mesh position={[0, 0.55, 0]}>
-            <cylinderGeometry args={[0.24, 0.08, 0.06, 12]} />
+            <cylinderGeometry args={[0.24, 0.08, 0.06, 24]} />
             <meshStandardMaterial color="#e0ded8" metalness={0.75} roughness={0.25} />
+          </mesh>
+          {/* Dish feed horn */}
+          <mesh position={[0, 0.62, 0]}>
+            <cylinderGeometry args={[0.02, 0.02, 0.12, 8]} />
+            <meshStandardMaterial color="#aaaaaa" metalness={0.6} roughness={0.4} />
           </mesh>
 
           {/* Supersonic Parachute + Bridle */}
           <group ref={chuteRef} position={[0, 2.3, 0]} visible={false}>
             <mesh position={[0, 0.3, 0]}>
-              <sphereGeometry args={[1.15, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.52]} />
+              <sphereGeometry args={[1.15, 32, 18, 0, Math.PI * 2, 0, Math.PI * 0.52]} />
               <meshStandardMaterial color="#e85828" roughness={0.65} side={THREE.DoubleSide} />
             </mesh>
-            {[0, 90, 180, 270].map((deg) => {
+            {/* White band pattern on chute */}
+            <mesh position={[0, 0.18, 0]}>
+              <sphereGeometry args={[1.14, 32, 6, 0, Math.PI * 2, Math.PI * 0.18, Math.PI * 0.08]} />
+              <meshStandardMaterial color="#f0e8d8" roughness={0.7} side={THREE.DoubleSide} />
+            </mesh>
+            {/* 8 suspension lines */}
+            {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => {
               const rad = (deg * Math.PI) / 180;
               return (
                 <mesh
                   key={deg}
-                  position={[Math.cos(rad) * 0.48, -0.8, Math.sin(rad) * 0.48]}
-                  rotation={[Math.sin(rad) * 0.25, 0, -Math.cos(rad) * 0.25]}
+                  position={[Math.cos(rad) * 0.44, -0.8, Math.sin(rad) * 0.44]}
+                  rotation={[Math.sin(rad) * 0.22, 0, -Math.cos(rad) * 0.22]}
                 >
-                  <cylinderGeometry args={[0.008, 0.008, 1.9, 4]} />
+                  <cylinderGeometry args={[0.005, 0.005, 1.9, 4]} />
                   <meshBasicMaterial color="#cccccc" />
                 </mesh>
               );
@@ -892,7 +950,7 @@ function FlightAnimator({
 
           {/* Heat shield entry plasma glow */}
           <mesh ref={heatShieldRef} position={[0, -0.25, 0]} visible={false}>
-            <sphereGeometry args={[0.68, 16, 12, 0, Math.PI * 2, Math.PI * 0.45, Math.PI * 0.55]} />
+            <sphereGeometry args={[0.68, 24, 16, 0, Math.PI * 2, Math.PI * 0.45, Math.PI * 0.55]} />
             <meshBasicMaterial
               color="#ff5511"
               transparent
@@ -905,7 +963,7 @@ function FlightAnimator({
 
           {/* Separated heat shield falling away */}
           <mesh ref={shieldDropRef} position={[0, -0.45, 0]} rotation={[Math.PI, 0, 0]} visible={false}>
-            <coneGeometry args={[0.58, 0.16, 16]} />
+            <coneGeometry args={[0.58, 0.16, 24]} />
             <meshStandardMaterial color="#3c2a21" metalness={0.2} roughness={0.8} />
           </mesh>
         </group>
@@ -947,18 +1005,20 @@ function FlightAnimator({
 
       {/* Stage 2 Mars Cruise Stage separating away before entry */}
       <group ref={marsCruiseSepRef} visible={false}>
-        <mesh>
-          <cylinderGeometry args={[0.38, 0.38, 0.28, 16]} />
-          <meshStandardMaterial color="#b8b8b8" metalness={0.75} roughness={0.3} />
-        </mesh>
-        <mesh position={[0.92, 0, 0]}>
-          <boxGeometry args={[0.9, 0.015, 0.36]} />
-          <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.45} />
-        </mesh>
-        <mesh position={[-0.92, 0, 0]}>
-          <boxGeometry args={[0.9, 0.015, 0.36]} />
-          <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.45} />
-        </mesh>
+        <group rotation={[Math.PI / 2, 0, 0]}>
+          <mesh>
+            <cylinderGeometry args={[0.38, 0.38, 0.28, 16]} />
+            <meshStandardMaterial color="#b8b8b8" metalness={0.75} roughness={0.3} />
+          </mesh>
+          <mesh position={[0.92, 0, 0]}>
+            <boxGeometry args={[0.9, 0.015, 0.36]} />
+            <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.45} />
+          </mesh>
+          <mesh position={[-0.92, 0, 0]}>
+            <boxGeometry args={[0.9, 0.015, 0.36]} />
+            <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.45} />
+          </mesh>
+        </group>
       </group>
     </>
   );
@@ -1242,10 +1302,17 @@ export function FlightScene() {
   const gates = useMemo(() => getGates(mission?.planet ?? "moon", mission?.missionType), [mission]);
 
   useEffect(() => {
+    if (phase === "stepOut") return;
     const beat = BEAT_EVENTS.find((b) => b.from === phase);
     if (!beat) return;
-    const timer = setTimeout(() => send(beat.event), beat.delay);
-    return () => clearTimeout(timer);
+    let cancelWait: (() => void) | null = null;
+    const timer = setTimeout(() => {
+      cancelWait = onNarrationComplete(() => send(beat.event), 12000);
+    }, beat.delay);
+    return () => {
+      clearTimeout(timer);
+      if (cancelWait) cancelWait();
+    };
   }, [phase, send]);
 
   useEffect(() => {
@@ -1269,9 +1336,20 @@ export function FlightScene() {
       setStepOutFading(false);
       return;
     }
-    const timer = setTimeout(() => setStepOutFading(true), 7600);
-    return () => clearTimeout(timer);
-  }, [phase]);
+    let cancelWait: (() => void) | null = null;
+    let sendTimer: ReturnType<typeof setTimeout> | null = null;
+    const minTimer = setTimeout(() => {
+      cancelWait = onNarrationComplete(() => {
+        setStepOutFading(true);
+        sendTimer = setTimeout(() => send("STEP_OUT"), 2200);
+      }, 10000);
+    }, 7600);
+    return () => {
+      clearTimeout(minTimer);
+      if (cancelWait) cancelWait();
+      if (sendTimer) clearTimeout(sendTimer);
+    };
+  }, [phase, send]);
 
   const gate = gates[phase];
   const isMars = mission?.planet === "mars";

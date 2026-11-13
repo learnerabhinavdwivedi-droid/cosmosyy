@@ -8,7 +8,7 @@ import { useGameStore, type GamePhase } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { DebugPanel } from "@/components/DebugPanel";
 import { gameAudio } from "@/lib/gameAudio";
-import { preloadNarration, playNarration, stopNarration, unlockAudio } from "@/lib/narration";
+import { preloadNarration, playNarration, stopNarration, unlockAudio, onNarrationComplete } from "@/lib/narration";
 import { FlightScene } from "./FlightScene";
 import { SurfaceScene } from "./SurfaceScene";
 import { ReportScreen } from "./ReportScreen";
@@ -416,11 +416,18 @@ function LaunchScene() {
   const [fade, setFade] = useState(false);
 
   useEffect(() => {
-    const fadeTimer = setTimeout(() => setFade(true), isRobotic ? 2500 : 4000);
-    const reportTimer = setTimeout(() => send("SHOW_REPORT"), isRobotic ? 3500 : 5000);
+    let cancelWait: (() => void) | null = null;
+    let reportTimer: ReturnType<typeof setTimeout> | null = null;
+    const fadeTimer = setTimeout(() => {
+      cancelWait = onNarrationComplete(() => {
+        setFade(true);
+        reportTimer = setTimeout(() => send("SHOW_REPORT"), 1000);
+      }, 10000);
+    }, isRobotic ? 3000 : 4000);
     return () => {
       clearTimeout(fadeTimer);
-      clearTimeout(reportTimer);
+      if (cancelWait) cancelWait();
+      if (reportTimer) clearTimeout(reportTimer);
     };
   }, [send, isRobotic]);
 

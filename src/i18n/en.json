@@ -50,7 +50,7 @@
     "photoModeExit": "Photo mode — P to exit",
     "help": "Help",
     "objectCount": "Objects: {{found}} / {{total}}",
-    "narrationStart": "Walk to the golden beacons, Commander {{name}}. Scan what was left behind.",
+    "narrationStart": "Walk to the golden beacons, {{name}}. Scan what was left behind.",
     "narrationStartMars": "Move to the signal markers, {{name}}. Scan what the missions left on the surface.",
     "narrationProgress": "{{found}} of {{total}} objects scanned. Keep searching.",
     "narrationAllFound": "All objects found. Plant your flag and launch home.",
