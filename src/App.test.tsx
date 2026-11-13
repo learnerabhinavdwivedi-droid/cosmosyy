@@ -42,6 +42,12 @@ describe("LandingPage", () => {
       expect(
         screen.getByAltText("Descending Cartoon Rocket with Blazing Flame"),
       ).toBeInTheDocument();
+      expect(
+        screen.getByAltText("Resting Cartoon Astronaut Sitting on Border Line"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getAllByAltText(/Martian/i).length,
+      ).toBeGreaterThan(0);
 
       // Verify Abhinav Dwivedi hyperlink to devabhinav.xyz
       const authorLink = screen.getByRole("link", { name: "Abhinav Dwivedi" });

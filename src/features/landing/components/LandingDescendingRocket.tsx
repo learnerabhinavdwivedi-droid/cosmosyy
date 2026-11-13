@@ -11,11 +11,11 @@ export function LandingDescendingRocket({ targetRef }: DescendingRocketProps) {
     offset: ["start 80%", "end end"],
   });
 
-  // Moves straight downward as user scrolls (from top of section right down till footer)
+  // Moves straight downward as user scrolls (from top of section right down inside footer)
   const driftTop = useTransform(
     scrollYProgress,
     [0, 0.25, 0.5, 0.75, 1],
-    ["1%", "24%", "48%", "72%", "94%"],
+    ["1%", "24%", "48%", "72%", "96.5%"],
   );
 
   // Subtle aerodynamic gimbal steering sway around 122.5° (where 122.5° is exactly pointing straight down)
