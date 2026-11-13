@@ -125,8 +125,9 @@ export function LandingHero() {
 
             {/* Catchy Main Heading */}
             <h1 className="mt-4 font-display text-5xl font-black tracking-tight text-white sm:text-6xl md:text-7xl">
-              Ready for Liftoff,{" "}
-              <span className="bg-gradient-to-r from-signal-500 via-warn-500 to-amber-300 bg-clip-text text-transparent">
+              Ready for Liftoff,
+              <br />
+              <span className="bg-gradient-to-r from-signal-500 via-warn-500 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(255,107,44,0.4)]">
                 Little Explorer?
               </span>
             </h1>

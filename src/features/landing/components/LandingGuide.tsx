@@ -4,7 +4,7 @@ import { Sparkles, ArrowRight, Radio, Compass, Rocket } from "lucide-react";
 
 export function LandingGuide() {
   return (
-    <section id="how-to-play" className="relative py-16 md:py-24">
+    <section id="how-to-play" className="relative py-12 md:py-16">
       {/* Background Section Glow */}
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-signal-500/5 blur-3xl" />
 

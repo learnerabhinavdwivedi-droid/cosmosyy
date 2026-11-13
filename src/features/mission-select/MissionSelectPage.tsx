@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useAppStore } from "@/store/useAppStore";
 import { gameAudio } from "@/lib/gameAudio";
 import { unlockAudio, preloadNarration } from "@/lib/narration";
@@ -141,11 +141,11 @@ function StatusBadge({ status }: { status: MissionStatus }) {
   return (
     <span
       className={cn(
-        "rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide",
+        "rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider",
         status === "locked" && "bg-space-700/60 text-regolith-400",
-        status === "available" && "bg-signal/20 text-signal",
-        status === "in-progress" && "bg-warn/20 text-warn",
-        status === "completed" && "bg-ok/20 text-ok",
+        status === "available" && "bg-signal/20 text-signal border border-signal/30",
+        status === "in-progress" && "bg-warn/20 text-warn border border-warn/30",
+        status === "completed" && "bg-ok/20 text-ok border border-ok/30",
       )}
     >
       {status === "locked" && t("missionSelect.locked")}
@@ -161,63 +161,103 @@ function MissionCard({
   status,
   objectsFound,
   onLaunch,
+  isMars,
 }: {
   mission: MissionCardData;
   status: MissionStatus;
   objectsFound: number;
   onLaunch: () => void;
+  isMars: boolean;
 }) {
   const { t } = useTranslation();
   const isLocked = status === "locked";
   const isCompleted = status === "completed";
+  const accentColor = isMars ? "warn" : "signal";
 
   return (
     <motion.div
       className={cn(
-        "group relative flex flex-col rounded-xl border p-5 transition-colors duration-200",
+        "group relative flex flex-col overflow-hidden rounded-2xl border p-5 transition-all duration-300",
         isLocked
-          ? "border-space-700/30 bg-space-900/40 opacity-50"
-          : "border-space-700/60 bg-space-800/60 hover:border-signal/40 hover:bg-space-800/80",
+          ? "border-space-700/20 bg-space-900/30 opacity-40"
+          : cn(
+              "border-space-700/50 bg-gradient-to-b from-space-800/80 to-space-900/90 backdrop-blur-sm",
+              isMars
+                ? "hover:border-warn/40 hover:shadow-lg hover:shadow-warn/5"
+                : "hover:border-signal/40 hover:shadow-lg hover:shadow-signal/5",
+            ),
       )}
-      whileHover={isLocked ? undefined : { scale: 1.02, y: -2 }}
+      whileHover={isLocked ? undefined : { scale: 1.03, y: -4 }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
     >
+      {!isLocked && (
+        <div
+          className={cn(
+            "absolute inset-x-0 top-0 h-[2px] opacity-0 transition-opacity duration-300 group-hover:opacity-100",
+            isMars
+              ? "bg-gradient-to-r from-transparent via-warn to-transparent"
+              : "bg-gradient-to-r from-transparent via-signal to-transparent",
+          )}
+        />
+      )}
+
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <h3
             className={cn(
-              "font-display text-xl font-bold",
-              isLocked ? "text-regolith-400" : "text-regolith-200",
+              "font-display text-xl font-bold transition-colors",
+              isLocked ? "text-regolith-400" : cn(
+                "text-regolith-200",
+                isMars ? "group-hover:text-warn" : "group-hover:text-signal",
+              ),
             )}
           >
             {mission.name}
           </h3>
-          <p className="mt-0.5 text-sm text-regolith-400">{mission.site}</p>
+          <p className="mt-0.5 flex items-center gap-1.5 text-sm text-regolith-400">
+            <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            {mission.site}
+          </p>
         </div>
         <StatusBadge status={status} />
       </div>
 
-      <p className="mt-2 text-xs italic text-regolith-400/80">{mission.hook}</p>
+      <p className="mt-3 text-xs leading-relaxed text-regolith-400/90">{mission.hook}</p>
 
-      <div className="mt-3 flex items-center gap-3 text-xs text-regolith-400">
-        <span>{mission.date}</span>
-        <span className="text-space-700">|</span>
-        <span>{mission.crew}</span>
+      <div className="mt-3 flex items-center gap-3 text-[11px] text-regolith-400/70">
+        <span className="font-mono">{mission.date}</span>
+        <span className={cn("h-3 w-px", isMars ? "bg-warn/20" : "bg-signal/20")} />
+        <span className="truncate">{mission.crew}</span>
       </div>
 
-      {isCompleted && (
-        <div className="mt-3 flex items-center gap-2 text-xs">
-          <span className="rounded-full bg-ok/15 px-2.5 py-0.5 text-ok font-medium">
-            {objectsFound}/{mission.objectCount} artifacts
+      <div className="mt-3 flex items-center gap-3">
+        <span className="flex items-center gap-1.5 text-[11px] text-regolith-400/70">
+          <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+          {mission.objectCount} relics
+        </span>
+        {isCompleted && (
+          <span className="rounded-full bg-ok/15 px-2 py-0.5 text-[10px] font-semibold text-ok">
+            {objectsFound}/{mission.objectCount} found
           </span>
-        </div>
-      )}
+        )}
+      </div>
 
       {!isLocked && (
         <Button
           onClick={onLaunch}
           aria-label={`Launch ${mission.name} mission to ${mission.site}`}
-          className="mt-4 w-full bg-signal text-space-950 hover:bg-signal/90 font-semibold focus-visible:ring-2 focus-visible:ring-signal focus-visible:ring-offset-2 focus-visible:ring-offset-space-900"
+          className={cn(
+            "mt-4 w-full font-bold tracking-wide focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-space-900 transition-all",
+            isMars
+              ? "bg-gradient-to-r from-warn to-[#c1440e] text-space-950 hover:shadow-md hover:shadow-warn/20 focus-visible:ring-warn"
+              : "bg-gradient-to-r from-signal to-[#e85d20] text-space-950 hover:shadow-md hover:shadow-signal/20 focus-visible:ring-signal",
+          )}
         >
           {t("missionSelect.launch")}
         </Button>
@@ -267,172 +307,247 @@ export default function MissionSelectPage() {
     navigate(`/play/${missionId}`);
   };
 
+  const stars = useMemo(() => {
+    const list = [];
+    for (let i = 0; i < 120; i++) {
+      list.push({
+        top: (i * 37.7) % 100,
+        left: (i * 61.3 + i * 7.1) % 100,
+        size: 1 + (i % 3),
+        delay: (i % 11) * 0.5,
+        duration: 2 + (i % 7) * 0.6,
+        opacity: 0.15 + (i % 6) * 0.12,
+      });
+    }
+    return list;
+  }, []);
+
+  const isMars = planetTab === "mars";
+
   return (
     <div className="relative flex min-h-screen flex-col bg-bg">
-      {/* Starfield background */}
+      {/* Animated starfield background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--space-900)_0%,_var(--space-950)_70%)]" />
-        {Array.from({ length: 80 }, (_, i) => (
+        <div
+          className={cn(
+            "absolute inset-0 transition-all duration-1000",
+            isMars
+              ? "bg-[radial-gradient(ellipse_at_top,_#1a0800_0%,_var(--space-950)_60%)]"
+              : "bg-[radial-gradient(ellipse_at_top,_#0a0d18_0%,_var(--space-950)_60%)]",
+          )}
+        />
+        {stars.map((s, idx) => (
           <div
-            key={i}
-            className="absolute rounded-full bg-regolith-200"
+            key={idx}
+            className="absolute rounded-full bg-white"
             style={{
-              width: `${1 + (i % 3)}px`,
-              height: `${1 + (i % 3)}px`,
-              top: `${(i * 37.7) % 100}%`,
-              left: `${(i * 61.3) % 100}%`,
-              opacity: 0.15 + (i % 5) * 0.1,
+              top: `${s.top}%`,
+              left: `${s.left}%`,
+              width: `${s.size}px`,
+              height: `${s.size}px`,
+              opacity: s.opacity,
+              animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
             }}
           />
         ))}
       </div>
 
+      {/* Atmospheric planet glow */}
+      <div
+        className={cn(
+          "pointer-events-none fixed top-0 right-0 h-[500px] w-[500px] rounded-full blur-[120px] transition-all duration-1000",
+          isMars ? "bg-[#c1440e]/8 translate-x-1/3 -translate-y-1/3" : "bg-signal/5 translate-x-1/3 -translate-y-1/3",
+        )}
+      />
+      <div
+        className={cn(
+          "pointer-events-none fixed bottom-0 left-0 h-[400px] w-[400px] rounded-full blur-[100px] transition-all duration-1000",
+          isMars ? "bg-warn/5 -translate-x-1/3 translate-y-1/3" : "bg-[#38BDF8]/4 -translate-x-1/3 translate-y-1/3",
+        )}
+      />
+
       {/* Content */}
-      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-6 sm:px-6">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-6 sm:px-6 lg:px-8">
         {/* Top bar navigation */}
-        <div className="mb-6 flex items-center justify-between">
+        <nav className="mb-8 flex items-center justify-between">
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-space-700/80 bg-space-900/80 px-3.5 py-1.5 text-xs font-semibold text-regolith-300 backdrop-blur transition hover:border-signal-500 hover:text-signal-500 hover:bg-space-800"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-space-700/60 bg-space-900/60 px-3.5 py-1.5 text-xs font-semibold text-regolith-300 backdrop-blur-md transition hover:border-signal/50 hover:text-signal hover:bg-space-800/80"
           >
-            ← Home
+            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            Home
           </Link>
           <div className="flex items-center gap-2">
             <Link
               to="/settings"
-              className="rounded-xl border border-space-700/80 bg-space-900/80 px-3 py-1.5 text-xs text-regolith-400 backdrop-blur transition hover:text-regolith-200 hover:border-space-600"
+              className="rounded-xl border border-space-700/60 bg-space-900/60 px-3 py-1.5 text-xs text-regolith-400 backdrop-blur-md transition hover:text-regolith-200 hover:border-space-600"
             >
               Settings
             </Link>
             <Link
               to="/credits"
-              className="rounded-xl border border-space-700/80 bg-space-900/80 px-3 py-1.5 text-xs text-regolith-400 backdrop-blur transition hover:text-regolith-200 hover:border-space-600"
+              className="rounded-xl border border-space-700/60 bg-space-900/60 px-3 py-1.5 text-xs text-regolith-400 backdrop-blur-md transition hover:text-regolith-200 hover:border-space-600"
             >
               Credits
             </Link>
           </div>
-        </div>
+        </nav>
 
         {/* Header */}
         <motion.header
           className="text-center"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <h1 className="font-display text-5xl font-bold tracking-tight text-regolith-200 sm:text-6xl">
-            {t("app.title")}
+          <h1 className="font-display text-5xl font-black tracking-tight sm:text-6xl md:text-7xl">
+            <span className="text-regolith-200">{t("app.title")}</span>
           </h1>
-          <p className="mt-2 text-lg text-regolith-400">
+          <p className="mt-3 text-base text-regolith-400 sm:text-lg">
             {t("app.tagline")}
           </p>
         </motion.header>
 
-        {/* Name input */}
+        {/* Name input or Welcome bar */}
         {!playerName ? (
-          <div className="mx-auto mt-10 w-full max-w-sm">
-            <label className="mb-2 block text-sm font-medium text-regolith-400">
-              {t("missionSelect.enterName")}
-            </label>
-            <div className="flex gap-2">
-              <Input
-                value={nameInput}
-                onChange={(e) => setNameInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleNameSubmit()}
-                placeholder={t("missionSelect.namePlaceholder")}
-                maxLength={16}
-                aria-label="Commander name"
-                className="border-space-700 bg-space-800 text-regolith-200 placeholder:text-regolith-400/50 focus:border-signal focus-visible:ring-2 focus-visible:ring-signal"
-              />
-              <Button
-                onClick={handleNameSubmit}
-                disabled={nameInput.trim().length < 2}
-                aria-label="Confirm name"
-                className="bg-signal text-space-950 hover:bg-signal/90 font-semibold disabled:opacity-40 focus-visible:ring-2 focus-visible:ring-signal"
-              >
-                GO
-              </Button>
+          <motion.div
+            className="mx-auto mt-10 w-full max-w-md"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <div className="rounded-2xl border border-space-700/60 bg-space-800/50 p-6 backdrop-blur-md">
+              <label className="mb-3 block text-center text-sm font-semibold text-regolith-300">
+                {t("missionSelect.enterName")}
+              </label>
+              <div className="flex gap-2">
+                <Input
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleNameSubmit()}
+                  placeholder={t("missionSelect.namePlaceholder")}
+                  maxLength={16}
+                  aria-label="Commander name"
+                  className="border-space-700/60 bg-space-900/80 text-regolith-200 placeholder:text-regolith-400/40 focus:border-signal focus-visible:ring-2 focus-visible:ring-signal text-center text-lg"
+                />
+                <Button
+                  onClick={handleNameSubmit}
+                  disabled={nameInput.trim().length < 2}
+                  aria-label="Confirm name"
+                  className="bg-gradient-to-r from-signal to-warn text-space-950 hover:shadow-lg hover:shadow-signal/20 font-bold px-6 disabled:opacity-40 focus-visible:ring-2 focus-visible:ring-signal"
+                >
+                  GO
+                </Button>
+              </div>
             </div>
-          </div>
+          </motion.div>
         ) : (
-          <div className="mt-6 flex items-center justify-center gap-4 text-sm">
-            <span className="text-regolith-400">
-              Welcome, <span className="font-semibold text-regolith-200">{playerName}</span>
+          <motion.div
+            className="mx-auto mt-6 flex items-center gap-3 rounded-xl border border-space-700/40 bg-space-800/40 px-5 py-2.5 backdrop-blur-md"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
+          >
+            <span className="text-sm text-regolith-400">
+              Welcome, <span className="font-bold text-regolith-200">{playerName}</span>
             </span>
-            <span className="text-space-700">|</span>
-            <span className="text-regolith-400">
-              {totalXp} XP
-            </span>
-            <span className="text-space-700">|</span>
+            <span className="h-4 w-px bg-space-700" />
+            <span className="font-mono text-sm text-signal">{totalXp} XP</span>
+            <span className="h-4 w-px bg-space-700" />
             <span className={cn(
-              "font-semibold",
+              "font-bold text-sm",
               getRank() === "Cadet" && "text-regolith-400",
               getRank() === "Pilot" && "text-warn",
               getRank() === "Commander" && "text-signal",
             )}>
               {getRank()}
             </span>
-          </div>
+          </motion.div>
         )}
 
         {/* Planet tabs */}
-        <div className="mx-auto mt-10 flex items-center gap-1 rounded-lg bg-space-800/60 p-1">
+        <motion.div
+          className="mx-auto mt-10 flex items-center gap-1 rounded-2xl border border-space-700/40 bg-space-900/60 p-1.5 backdrop-blur-md"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.25 }}
+        >
           <button
             onClick={() => setPlanetTab("moon")}
             className={cn(
-              "rounded-md px-5 py-2 text-sm font-semibold transition-colors",
+              "flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300",
               planetTab === "moon"
-                ? "bg-signal text-space-950"
-                : "text-regolith-400 hover:text-regolith-200",
+                ? "bg-gradient-to-r from-signal to-[#e85d20] text-space-950 shadow-md shadow-signal/20"
+                : "text-regolith-400 hover:text-regolith-200 hover:bg-space-800/50",
             )}
           >
+            <span className="text-base">&#127765;</span>
             {t("missionSelect.moonTab")}
           </button>
           <button
             onClick={() => setPlanetTab("mars")}
             className={cn(
-              "rounded-md px-5 py-2 text-sm font-semibold transition-colors",
+              "flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300",
               planetTab === "mars"
-                ? "bg-[#c1440e] text-white"
-                : "text-regolith-400 hover:text-regolith-200",
+                ? "bg-gradient-to-r from-warn to-[#c1440e] text-space-950 shadow-md shadow-warn/20"
+                : "text-regolith-400 hover:text-regolith-200 hover:bg-space-800/50",
             )}
           >
+            <span className="text-base">&#127756;</span>
             {t("missionSelect.marsTab")}
           </button>
-        </div>
+        </motion.div>
 
-        {/* Mission heading */}
-        <h2 className="mt-6 text-center font-display text-2xl font-semibold text-regolith-200">
+        {/* Section heading */}
+        <motion.h2
+          className="mt-8 text-center font-display text-2xl font-bold text-regolith-200 sm:text-3xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+        >
           {planetTab === "mars" ? t("missionSelect.marsHeading") : t("missionSelect.heading")}
-        </h2>
+        </motion.h2>
+        <p className="mx-auto mt-2 max-w-lg text-center text-sm text-regolith-400/80">
+          {isMars
+            ? "Deploy robotic explorers to the red planet. Scan landers, rovers and instruments left on Martian soil."
+            : "Fly Saturn V rockets to the Moon. Walk the landing sites and scan what the astronauts left behind."}
+        </p>
 
         {/* Mission grid */}
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {activeMissions.map((mission, i) => {
-            const progress = missions[mission.id];
-            const status: MissionStatus = progress?.status ?? "available";
-            const objectsFound = progress?.objectsFound?.length ?? 0;
-            return (
-              <motion.div
-                key={mission.id}
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.15 + i * 0.07, ease: "easeOut" }}
-              >
-                <MissionCard
-                  mission={mission}
-                  status={status}
-                  objectsFound={objectsFound}
-                  onLaunch={() => handleLaunch(mission.id)}
-                />
-              </motion.div>
-            );
-          })}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <AnimatePresence mode="wait">
+            {activeMissions.map((mission, i) => {
+              const progress = missions[mission.id];
+              const status: MissionStatus = progress?.status ?? "available";
+              const objectsFound = progress?.objectsFound?.length ?? 0;
+              return (
+                <motion.div
+                  key={mission.id}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.35, delay: 0.1 + i * 0.06, ease: "easeOut" }}
+                >
+                  <MissionCard
+                    mission={mission}
+                    status={status}
+                    objectsFound={objectsFound}
+                    onLaunch={() => handleLaunch(mission.id)}
+                    isMars={isMars}
+                  />
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
         </div>
 
         {/* Footer */}
-        <footer className="mt-auto pt-12 pb-4 text-center text-xs text-regolith-400/60">
-          NASA Space Apps Challenge 2026
+        <footer className="mt-auto pt-16 pb-6 text-center">
+          <p className="text-xs text-regolith-400/50">
+            NASA Space Apps Challenge 2026
+          </p>
         </footer>
       </div>
     </div>

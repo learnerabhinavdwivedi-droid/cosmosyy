@@ -23,7 +23,7 @@ interface GravityConfig {
 const PLANETS: Record<PlanetId, GravityConfig> = {
   earth: {
     name: "Earth",
-    badge: "🌍 Standard Earth (1.0G)",
+    badge: "🌍 Earth (1G)",
     gravity: 9.8,
     gravityRatio: "1.00x",
     jumpHeightMeters: 0.5,
@@ -37,7 +37,7 @@ const PLANETS: Record<PlanetId, GravityConfig> = {
   },
   mars: {
     name: "Mars",
-    badge: "🪐 Mars Surface (0.38G)",
+    badge: "🪐 Mars (0.38G)",
     gravity: 3.72,
     gravityRatio: "0.38x",
     jumpHeightMeters: 1.3,
@@ -51,7 +51,7 @@ const PLANETS: Record<PlanetId, GravityConfig> = {
   },
   moon: {
     name: "Moon",
-    badge: "🌕 Moon Surface (0.166G)",
+    badge: "🌕 Moon (0.16G)",
     gravity: 1.62,
     gravityRatio: "0.16x",
     jumpHeightMeters: 3.0,
@@ -88,7 +88,7 @@ export function LandingGravityLab() {
   };
 
   return (
-    <section className="relative py-16 md:py-24 border-t border-space-800/60 bg-transparent">
+    <section className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         
         {/* Header */}
@@ -109,7 +109,7 @@ export function LandingGravityLab() {
         </div>
 
         {/* Planet Switcher Buttons */}
-        <div className="mt-10 flex flex-wrap justify-center gap-3">
+        <div className="mt-10 flex flex-wrap justify-center gap-3 px-2">
           {(["earth", "mars", "moon"] as PlanetId[]).map((pid) => {
             const p = PLANETS[pid];
             const isSelected = activePlanet === pid;
@@ -117,7 +117,7 @@ export function LandingGravityLab() {
               <button
                 key={pid}
                 onClick={() => handleSelect(pid)}
-                className={`flex items-center gap-2.5 rounded-2xl px-5 py-3 font-display text-base font-bold transition-all ${
+                className={`flex shrink-0 items-center gap-2 rounded-2xl px-4 py-2.5 font-display text-sm font-bold transition-all sm:px-5 sm:py-3 sm:text-base ${
                   isSelected
                     ? "bg-gradient-to-r from-signal-500 to-warn-500 text-space-950 shadow-lg shadow-signal-500/25 scale-105"
                     : "border border-space-700 bg-space-900/80 text-regolith-300 hover:border-space-500 hover:bg-space-800"
