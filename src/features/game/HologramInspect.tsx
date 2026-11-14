@@ -128,47 +128,54 @@ function HoloModel({
   );
 }
 
-/* ─── Blender Studio 3-Point Lighting Setup ─── */
-function StudioLighting() {
+/* ─── Blender Studio 3-Point Lighting Setup with Aerospace Bounce ─── */
+function StudioLighting({ themeColor = "#38bdf8" }: { themeColor?: string }) {
   return (
     <>
-      <ambientLight intensity={0.8} color="#ffffff" />
-      {/* Key light — warm sunlight casting specular highlights */}
+      <ambientLight intensity={1.6} color="#ffffff" />
+      {/* Primary Key light — luminous front illumination on all faces */}
       <directionalLight
-        position={[5, 8, 5]}
-        intensity={2.6}
-        color="#fffbf0"
+        position={[3, 5, 5]}
+        intensity={2.8}
+        color="#ffffff"
         castShadow
         shadow-mapSize={[1024, 1024]}
       />
-      {/* Fill light — soft diffused sky fill from opposite side */}
-      <directionalLight position={[-6, 3, -4]} intensity={1.2} color="#a0b8d8" />
-      {/* Rim / Kicker backlight — crisp edge silhouette separation */}
-      <directionalLight position={[0, 5, -7]} intensity={2.8} color="#d4e8ff" />
-      {/* Bottom bounce light from surface */}
-      <pointLight position={[0, -2.5, 0]} intensity={0.7} color="#ffffff" />
+      {/* Soft diffused fill light from opposite angle to prevent dark voids */}
+      <directionalLight position={[-4, 3, 4]} intensity={2.2} color="#e0f2fe" />
+      {/* Rim / Kicker backlight — crisp silhouette edge highlight */}
+      <directionalLight position={[0, 6, -6]} intensity={2.6} color="#ffe4cc" />
+      {/* Top light */}
+      <pointLight position={[0, 4.5, 0]} intensity={1.2} color="#ffffff" />
+      {/* Ground theme bounce light */}
+      <pointLight position={[0, -1.8, 1.2]} intensity={1.4} color={themeColor} />
     </>
   );
 }
 
-/* ─── Studio Pedestal Contact Shadow ─── */
-function ContactShadow() {
+/* ─── Studio Pedestal Contact Shadow & Glowing Reticle ─── */
+function ContactShadow({ themeColor = "#38bdf8" }: { themeColor?: string }) {
   return (
     <group position={[0, -0.68, 0]}>
       {/* Dark radial contact shadow on floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.1, 48]} />
-        <meshBasicMaterial color="#000000" transparent opacity={0.65} depthWrite={false} />
+        <circleGeometry args={[1.2, 48]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.7} depthWrite={false} />
       </mesh>
       {/* Outer soft shadow feather */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.5, 48]} />
-        <meshBasicMaterial color="#000000" transparent opacity={0.3} depthWrite={false} />
+        <circleGeometry args={[1.6, 48]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.35} depthWrite={false} />
       </mesh>
-      {/* Studio turntable ring */}
+      {/* Glowing inner telemetry ring */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.008, 0]}>
+        <ringGeometry args={[1.28, 1.31, 64]} />
+        <meshBasicMaterial color={themeColor} transparent opacity={0.25} depthWrite={false} />
+      </mesh>
+      {/* Studio turntable ring with theme glow */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-        <ringGeometry args={[1.35, 1.38, 64]} />
-        <meshBasicMaterial color="#3a404c" transparent opacity={0.5} depthWrite={false} />
+        <ringGeometry args={[1.45, 1.48, 64]} />
+        <meshBasicMaterial color={themeColor} transparent opacity={0.5} depthWrite={false} />
       </mesh>
     </group>
   );
@@ -288,7 +295,7 @@ function HoloCanvas({
       camera={{ fov: 36, near: 0.1, far: 100, position: [2.4, 1.4, 2.4] }}
       style={{ background: "transparent" }}
     >
-      <StudioLighting />
+      <StudioLighting themeColor={theme.primary} />
       <Suspense fallback={null}>
         {isDedicated ? (
           <DedicatedHoloModel
@@ -307,7 +314,7 @@ function HoloCanvas({
           />
         )}
       </Suspense>
-      <ContactShadow />
+      <ContactShadow themeColor={theme.primary} />
       <AutoCamera />
       <OrbitControls
         enableZoom={true}
@@ -416,15 +423,17 @@ function AudioTransmissionDeck({
   onSeek: (pct: number) => void;
   theme: ObjectTheme;
 }) {
-  const barHeights = [28, 65, 42, 88, 55, 96, 72, 38, 82, 58, 92, 48, 70, 34, 84, 46];
+  // 20 energetic equalizer bars with undulating natural frequency spectrum
+  const idleBars = [35, 55, 72, 45, 82, 60, 92, 50, 78, 65, 88, 48, 70, 42, 65, 80, 52, 75, 45, 35];
+  const activeBars = [45, 75, 95, 60, 100, 80, 95, 70, 90, 85, 100, 65, 85, 55, 80, 95, 70, 90, 60, 45];
 
   return (
     <div
-      className="mb-4 rounded-xl border p-3 backdrop-blur-md transition-all duration-300"
+      className="mb-3 rounded-xl border p-3 backdrop-blur-md transition-all duration-300"
       style={{
         borderColor: isPlaying ? theme.primary : theme.border,
-        background: "rgba(10, 14, 22, 0.88)",
-        boxShadow: isPlaying ? `0 0 24px ${theme.primaryDim}` : "none",
+        background: "linear-gradient(145deg, rgba(12, 17, 28, 0.95), rgba(7, 9, 13, 0.98))",
+        boxShadow: isPlaying ? `0 0 25px ${theme.primaryDim}` : "none",
       }}
     >
       {/* Top telemetry bar */}
@@ -434,35 +443,38 @@ function AudioTransmissionDeck({
             className={`inline-block h-2 w-2 rounded-full ${
               isPlaying ? "animate-pulse" : ""
             }`}
-            style={{ background: isPlaying ? theme.primary : "#71717a" }}
+            style={{ background: isPlaying ? "#ef4444" : theme.primary }}
           />
           <span className="font-bold tracking-wider uppercase" style={{ color: theme.primary }}>
-            {isPlaying ? "Transmitting Machine Voice" : "Deep Space Voice Log Ready"}
+            {isPlaying ? "🔴 DSN VOICE TRANSMISSION ACTIVE" : "📡 DSN CARRIER LOCKED // VOICE READY"}
           </span>
         </div>
-        <span className="text-regolith-400 font-mono">
+        <span className="text-regolith-300 font-mono text-[11px] font-bold">
           {formatSeconds(currentTime)} / {formatSeconds(duration)}
         </span>
       </div>
 
       {/* Waveform Equalizer Display */}
-      <div className="my-2.5 flex h-7 items-end justify-between gap-1 px-1">
-        {barHeights.map((h, i) => (
+      <div className="my-2.5 flex h-9 items-end justify-between gap-1 px-1">
+        {idleBars.map((h, i) => (
           <div
             key={i}
             className={`w-full rounded-t-sm transition-all duration-150 ${
               isPlaying ? "animate-wave-bar" : ""
             }`}
             style={{
-              height: isPlaying ? `${h}%` : "16%",
-              background: isPlaying ? theme.primary : "rgba(255,255,255,0.18)",
-              animationDelay: `${(i % 6) * 0.12}s`,
+              height: isPlaying ? `${activeBars[i]}%` : `${h}%`,
+              background: isPlaying
+                ? `linear-gradient(to top, ${theme.primaryDim}, ${theme.primary}, #ffffff)`
+                : `linear-gradient(to top, rgba(255,255,255,0.1), ${theme.primary})`,
+              opacity: isPlaying ? 1 : 0.45,
+              animationDelay: `${(i % 7) * 0.11}s`,
             }}
           />
         ))}
       </div>
 
-      {/* Scrubber track */}
+      {/* Interactive Scrubber track */}
       <div
         className="relative mb-2.5 h-1.5 w-full cursor-pointer rounded-full bg-space-800 overflow-hidden"
         onClick={(e) => {
@@ -478,13 +490,13 @@ function AudioTransmissionDeck({
         />
       </div>
 
-      {/* Play/Pause & Restart controls */}
+      {/* Hero Play/Pause & Restart controls */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={onTogglePlay}
-            className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-bold transition hover:brightness-125 active:scale-95"
+            className="flex items-center gap-1.5 rounded-lg border px-3.5 py-1.5 text-xs font-bold transition hover:brightness-125 active:scale-95 shadow-sm"
             style={{
               borderColor: theme.primary,
               background: theme.primaryDim,
@@ -504,7 +516,7 @@ function AudioTransmissionDeck({
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                   <polygon points="5 3 19 12 5 21 5 3" />
                 </svg>
-                <span>Play Machine Voice</span>
+                <span>Play Explorer's Voice</span>
               </>
             )}
           </button>
@@ -531,7 +543,7 @@ function AudioTransmissionDeck({
   );
 }
 
-/* ─── Right info panel with Living Fable Mode & NASA Telemetry ─── */
+/* ─── Right info panel with Living Explorer Mode & NASA Telemetry ─── */
 function InfoPanel({
   obj,
   missionId,
@@ -566,11 +578,13 @@ function InfoPanel({
   onSeekAudio: (pct: number) => void;
 }) {
   const [tab, setTab] = useState<"fable" | "telemetry">("fable");
+  const [chapterTab, setChapterTab] = useState<1 | 2 | 3>(1);
   const [imgError, setImgError] = useState(false);
   const nssdcEntry = useMemo(() => getNssdcCatalog(missionId, obj.id), [missionId, obj.id]);
 
   useEffect(() => {
     setTab("fable");
+    setChapterTab(1);
     setImgError(false);
   }, [obj.id]);
 
@@ -580,11 +594,11 @@ function InfoPanel({
 
   return (
     <div
-      className="flex h-full flex-col overflow-y-auto rounded-xl border p-5 backdrop-blur-xl"
-      style={{ borderColor: theme.border, background: "rgba(7,9,13,0.94)" }}
+      className="flex h-full flex-col rounded-xl border p-4 backdrop-blur-xl"
+      style={{ borderColor: theme.border, background: "rgba(7,9,13,0.95)" }}
     >
       {/* Category + status + NSSDCA quick pill */}
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 shrink-0">
         <div className="flex items-center gap-2">
           <span
             className="rounded px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]"
@@ -613,12 +627,12 @@ function InfoPanel({
       </div>
 
       {/* Object name */}
-      <h2 className="mt-3 font-display text-2xl font-bold tracking-tight" style={{ color: theme.primary }}>
+      <h2 className="mt-2 font-display text-2xl font-bold tracking-tight shrink-0" style={{ color: theme.primary }}>
         {obj.name}
       </h2>
 
       {/* Mission + Site + Date */}
-      <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-regolith-400">
+      <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-regolith-400 shrink-0">
         <span className="flex items-center gap-1 font-medium">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={theme.primary} strokeWidth="2" className="shrink-0">
             <circle cx="12" cy="12" r="10" />
@@ -637,11 +651,11 @@ function InfoPanel({
       </div>
 
       {/* Mode Switcher Tabs */}
-      <div className="mt-4 grid grid-cols-2 gap-2 shrink-0">
+      <div className="mt-3 grid grid-cols-2 gap-2 shrink-0">
         <button
           type="button"
           onClick={() => setTab("fable")}
-          className={`flex items-center justify-center gap-2 rounded-lg py-2 px-3 text-xs font-bold transition ${
+          className={`flex items-center justify-center gap-2 rounded-lg py-1.5 px-3 text-xs font-bold transition ${
             tab === "fable"
               ? "bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-[0_0_16px_rgba(245,158,11,0.25)]"
               : "bg-space-900/60 text-regolith-400 border border-space-800 hover:text-regolith-200 hover:bg-space-800/80"
@@ -653,7 +667,7 @@ function InfoPanel({
         <button
           type="button"
           onClick={() => setTab("telemetry")}
-          className={`flex items-center justify-center gap-2 rounded-lg py-2 px-3 text-xs font-bold transition ${
+          className={`flex items-center justify-center gap-2 rounded-lg py-1.5 px-3 text-xs font-bold transition ${
             tab === "telemetry"
               ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-[0_0_16px_rgba(6,182,212,0.25)]"
               : "bg-space-900/60 text-regolith-400 border border-space-800 hover:text-regolith-200 hover:bg-space-800/80"
@@ -665,11 +679,11 @@ function InfoPanel({
       </div>
 
       {/* Divider */}
-      <div className="my-3.5 h-px" style={{ background: theme.border }} />
+      <div className="my-2.5 h-px shrink-0" style={{ background: theme.border }} />
 
       {/* TAB 1: THE DORMANT VOICE LOG (THE FABLE) */}
       {tab === "fable" && (
-        <div className="flex flex-col">
+        <div className="flex flex-1 flex-col justify-between overflow-y-auto pr-1">
           {/* Deep Space Audio Transmission Deck */}
           <AudioTransmissionDeck
             isPlaying={isPlaying}
@@ -685,16 +699,16 @@ function InfoPanel({
           {/* The Machine's Personal Monologue */}
           {obj.firstPerson ? (
             <div
-              className="relative mb-4 overflow-hidden rounded-xl border p-4 backdrop-blur-md"
+              className="relative mb-3 overflow-hidden rounded-xl border p-3 backdrop-blur-md"
               style={{
                 borderColor: theme.border,
                 background: "linear-gradient(145deg, rgba(16,22,34,0.95), rgba(7,9,13,0.98))",
                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
               }}
             >
-              <div className="mb-2 flex items-center justify-between border-b border-space-800/80 pb-2">
+              <div className="mb-1.5 flex items-center justify-between border-b border-space-800/80 pb-1.5">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-sm">📻</span>
+                  <span className="text-xs">📻</span>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-regolith-300">
                     Decoded Transmission // The Explorer's Words
                   </span>
@@ -707,74 +721,106 @@ function InfoPanel({
                 </span>
               </div>
 
-              <blockquote className="relative mt-2.5 pl-3 border-l-2" style={{ borderColor: theme.primary }}>
-                <p className="font-sans text-[13px] md:text-sm italic leading-relaxed text-regolith-100 font-medium">
+              <blockquote className="relative pl-3 border-l-2" style={{ borderColor: theme.primary }}>
+                <p className="font-sans text-[12px] md:text-xs italic leading-relaxed text-regolith-100 font-medium">
                   &ldquo;{obj.firstPerson}&rdquo;
                 </p>
               </blockquote>
             </div>
           ) : null}
 
-          {/* Explorer's Story in 3 Chapters */}
-          <div className="mb-4 flex flex-col gap-2.5">
-            <div className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-regolith-300">
-              <span>🧭</span>
-              <span>The Journey in 3 Chapters</span>
-            </div>
-
-            {/* Chapter 1: Why Earth Built Me */}
-            <div className="rounded-lg border border-space-800/80 bg-space-900/50 p-3">
-              <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-400">
+          {/* Interactive Story Stepper (3 Chapters in Single Compact View) */}
+          <div className="flex flex-col gap-1.5 mb-2.5">
+            <div className="grid grid-cols-3 gap-1.5">
+              <button
+                type="button"
+                onClick={() => setChapterTab(1)}
+                className={`py-1.5 px-2 rounded-lg text-[10px] font-bold uppercase transition flex items-center justify-center gap-1 ${
+                  chapterTab === 1
+                    ? "bg-amber-500/25 text-amber-300 border border-amber-500/60 shadow-[0_0_10px_rgba(245,158,11,0.2)]"
+                    : "bg-space-900/50 text-regolith-400 border border-space-800 hover:text-regolith-200"
+                }`}
+              >
                 <span>🚀</span>
-                <span>Chapter 1: Why Earth Built Me</span>
-              </div>
-              <p className="mt-1 text-xs leading-relaxed text-regolith-300">
-                {obj.description}
-              </p>
+                <span>1. Genesis</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setChapterTab(2)}
+                className={`py-1.5 px-2 rounded-lg text-[10px] font-bold uppercase transition flex items-center justify-center gap-1 ${
+                  chapterTab === 2
+                    ? "bg-cyan-500/25 text-cyan-300 border border-cyan-500/60 shadow-[0_0_10px_rgba(6,182,212,0.2)]"
+                    : "bg-space-900/50 text-regolith-400 border border-space-800 hover:text-regolith-200"
+                }`}
+              >
+                <span>💡</span>
+                <span>2. Eureka</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setChapterTab(3)}
+                className={`py-1.5 px-2 rounded-lg text-[10px] font-bold uppercase transition flex items-center justify-center gap-1 ${
+                  chapterTab === 3
+                    ? "bg-emerald-500/25 text-emerald-300 border border-emerald-500/60 shadow-[0_0_10px_rgba(16,185,129,0.2)]"
+                    : "bg-space-900/50 text-regolith-400 border border-space-800 hover:text-regolith-200"
+                }`}
+              >
+                <span>🪐</span>
+                <span>3. Monument</span>
+              </button>
             </div>
 
-            {/* Chapter 2: The Groundbreaking Discovery */}
-            {obj.scienceDiscovery && (
-              <div className="rounded-lg border border-space-800/80 bg-space-900/50 p-3">
-                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-cyan-400">
-                  <span>💡</span>
-                  <span>Chapter 2: The Breakthrough Discovery</span>
-                </div>
-                <p className="mt-1 text-xs leading-relaxed text-regolith-200 font-medium">
-                  {obj.scienceDiscovery}
-                </p>
-              </div>
-            )}
-
-            {/* Chapter 3: My Eternal Vigil */}
-            {obj.legacy && (
-              <div className="rounded-lg border border-space-800/80 bg-space-900/50 p-3">
-                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
-                  <span>🪐</span>
-                  <span>Chapter 3: My Eternal Monument</span>
-                </div>
-                <p className="mt-1 text-xs leading-relaxed text-regolith-300">
-                  {obj.legacy}
-                </p>
-              </div>
-            )}
+            {/* Active Chapter Content Box */}
+            <div className="rounded-xl border border-space-800/80 bg-space-900/70 p-2.5 min-h-[75px] flex flex-col justify-center">
+              {chapterTab === 1 && (
+                <>
+                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-0.5">
+                    <span className="flex items-center gap-1.5"><span>🚀</span> Chapter 1: Why Earth Built Me</span>
+                    <span className="text-regolith-500 font-mono text-[9px]">MISSION PURPOSE</span>
+                  </div>
+                  <p className="text-xs leading-relaxed text-regolith-200">{obj.description}</p>
+                </>
+              )}
+              {chapterTab === 2 && (
+                <>
+                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-cyan-400 mb-0.5">
+                    <span className="flex items-center gap-1.5"><span>💡</span> Chapter 2: The Breakthrough Discovery</span>
+                    <span className="text-regolith-500 font-mono text-[9px]">SCIENCE DATA</span>
+                  </div>
+                  <p className="text-xs leading-relaxed text-regolith-100 font-medium">
+                    {obj.scienceDiscovery || "Collected vital in-situ data that transformed planetary science."}
+                  </p>
+                </>
+              )}
+              {chapterTab === 3 && (
+                <>
+                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-emerald-400 mb-0.5">
+                    <span className="flex items-center gap-1.5"><span>🪐</span> Chapter 3: My Eternal Monument</span>
+                    <span className="text-regolith-500 font-mono text-[9px]">PERMANENT HERITAGE</span>
+                  </div>
+                  <p className="text-xs leading-relaxed text-regolith-200">
+                    {obj.legacy || "Stands in eternal silence under cosmic rays, awaiting humanity's return."}
+                  </p>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Did You Know? Field Note */}
           <div
-            className="mb-4 rounded-xl border p-3.5 backdrop-blur-sm"
+            className="rounded-xl border p-2.5 backdrop-blur-sm"
             style={{
-              borderColor: "rgba(251, 191, 36, 0.35)",
-              background: "linear-gradient(135deg, rgba(251,191,36,0.08), rgba(15,20,30,0.9))",
+              borderColor: "rgba(251, 191, 36, 0.4)",
+              background: "linear-gradient(135deg, rgba(251,191,36,0.1), rgba(15,20,30,0.85))",
             }}
           >
             <div className="flex items-center gap-1.5">
-              <span className="text-base">✨</span>
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
+              <span className="text-sm">✨</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300">
                 Did You Know? // Explorer Field Note
               </span>
             </div>
-            <p className="mt-1.5 text-xs leading-relaxed text-amber-100/95 font-medium">
+            <p className="mt-1 text-[11px] leading-relaxed text-amber-100/90 font-medium">
               {nssdcEntry.funFactKid}
             </p>
           </div>
@@ -783,13 +829,13 @@ function InfoPanel({
 
       {/* TAB 2: TECHNICAL TELEMETRY & NASA ARCHIVE */}
       {tab === "telemetry" && (
-        <div className="flex flex-col">
+        <div className="flex flex-1 flex-col overflow-y-auto pr-1">
           {/* Official Designation Banner */}
-          <div className="mb-3 rounded-lg border border-cyan-800/40 bg-cyan-950/20 p-3">
+          <div className="mb-2.5 rounded-lg border border-cyan-800/40 bg-cyan-950/20 p-2.5 shrink-0">
             <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-cyan-400">
               NASA Master Catalog Designation
             </p>
-            <p className="mt-1 text-xs font-bold text-cyan-100">
+            <p className="mt-0.5 text-xs font-bold text-cyan-100">
               {nssdcEntry.officialDesignation}
             </p>
             <p className="mt-0.5 text-[10px] text-regolith-400">
@@ -799,32 +845,32 @@ function InfoPanel({
 
           {/* NASA Image */}
           {nasaUrl && !imgError && (
-            <div className="relative mb-3 overflow-hidden rounded-lg border" style={{ borderColor: theme.border }}>
+            <div className="relative mb-2.5 overflow-hidden rounded-lg border shrink-0" style={{ borderColor: theme.border }}>
               <img
                 src={nasaUrl}
                 alt={obj.name}
-                className="h-44 w-full object-cover"
+                className="h-36 w-full object-cover"
                 onError={() => setImgError(true)}
               />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 to-transparent px-2.5 py-1.5">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 to-transparent px-2.5 py-1">
                 <p className="text-[9px] font-mono text-regolith-300">NASA Image Archive // ID: {obj.nasaImageId}</p>
               </div>
             </div>
           )}
 
           {/* Description */}
-          <div className="mb-3">
+          <div className="mb-2.5">
             <p className="text-[9px] font-bold uppercase tracking-wider text-regolith-400">Technical Overview</p>
-            <p className="mt-1 text-xs leading-relaxed text-regolith-200">{obj.description}</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-regolith-200">{obj.description}</p>
           </div>
 
           {/* Science discovery */}
           {obj.scienceDiscovery && (
-            <div className="mb-3 rounded-lg border px-3 py-2" style={{ borderColor: theme.border, background: theme.primaryDim }}>
+            <div className="mb-2.5 rounded-lg border px-2.5 py-1.5" style={{ borderColor: theme.border, background: theme.primaryDim }}>
               <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: theme.primary }}>
                 Science Discovery & Data Yield
               </p>
-              <p className="mt-1 text-[11px] leading-relaxed text-regolith-200">
+              <p className="mt-0.5 text-[11px] leading-relaxed text-regolith-200">
                 {obj.scienceDiscovery}
               </p>
             </div>
@@ -832,15 +878,15 @@ function InfoPanel({
 
           {/* Legacy */}
           {obj.legacy && (
-            <div className="mb-3 rounded-lg border border-space-700/30 bg-space-800/40 px-3 py-2">
+            <div className="mb-2.5 rounded-lg border border-space-700/30 bg-space-800/40 px-2.5 py-1.5">
               <p className="text-[9px] font-bold uppercase tracking-wider text-regolith-400/80">Historical Significance</p>
-              <p className="mt-1 text-[11px] leading-relaxed text-regolith-300">{obj.legacy}</p>
+              <p className="mt-0.5 text-[11px] leading-relaxed text-regolith-300">{obj.legacy}</p>
             </div>
           )}
 
           {/* Mission Deployment Timestamps */}
           {(obj.yearDeployed || obj.yearLastContact) && (
-            <div className="mb-3 flex flex-wrap gap-4 rounded-lg bg-space-900/60 p-2.5 text-xs text-regolith-300 border border-space-800">
+            <div className="mb-2 flex flex-wrap gap-4 rounded-lg bg-space-900/60 p-2 text-xs text-regolith-300 border border-space-800">
               {obj.yearDeployed && (
                 <div>
                   <span className="text-[9px] block text-regolith-500 uppercase font-mono">Deployed</span>
@@ -864,13 +910,10 @@ function InfoPanel({
         </div>
       )}
 
-      {/* Bottom spacer to push XP down */}
-      <div className="mt-auto" />
-
       {/* XP badge + Source + NSSDCA Link */}
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-space-800/80 pt-3">
+      <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2 border-t border-space-800/80 pt-2 shrink-0">
         <span
-          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold"
+          className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold"
           style={{ background: "rgba(255,107,44,0.15)", color: "#FF6B2C" }}
         >
           <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
