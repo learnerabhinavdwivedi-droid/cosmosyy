@@ -321,20 +321,6 @@ export function TouchControls({
             </button>
           )}
 
-          {/* 3D Story Card */}
-          {canScan && onOpenStory && (
-            <button
-              className="flex h-14 w-14 items-center justify-center rounded-full border border-sky-400/80 bg-sky-500/25 text-[10px] font-black uppercase text-sky-200 backdrop-blur active:bg-sky-500/50 shadow-lg shadow-sky-500/30 font-mono animate-pulse"
-              style={{ touchAction: "none" }}
-              onTouchStart={(e) => {
-                e.stopPropagation();
-                onOpenStory();
-              }}
-            >
-              STORY
-            </button>
-          )}
-
           {/* Launch */}
           {showLaunch && (
             <button
@@ -346,20 +332,6 @@ export function TouchControls({
               }}
             >
               GO
-            </button>
-          )}
-
-          {/* 3D Story Card */}
-          {canScan && onOpenStory && (
-            <button
-              className="flex h-14 w-14 items-center justify-center rounded-full border border-sky-400/80 bg-sky-500/25 text-[10px] font-black uppercase text-sky-200 backdrop-blur active:bg-sky-500/50 shadow-lg shadow-sky-500/30 font-mono animate-pulse"
-              style={{ touchAction: "none" }}
-              onTouchStart={(e) => {
-                e.stopPropagation();
-                onOpenStory();
-              }}
-            >
-              STORY
             </button>
           )}
         </div>

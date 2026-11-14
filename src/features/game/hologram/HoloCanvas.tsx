@@ -265,6 +265,10 @@ function AutoCamera({ resetTrigger = 0 }: { resetTrigger?: number }) {
 }
 
 /* ─── Clean object bounding box fit without compounding transform bug ─── */
+const _fitBox = new THREE.Box3();
+const _fitSize = new THREE.Vector3();
+const _fitCenter = new THREE.Vector3();
+
 function fitObject(pivot: THREE.Group, content: THREE.Group, targetSize = 1.30): boolean {
   pivot.position.set(0, 0, 0);
   pivot.scale.set(1, 1, 1);
@@ -272,17 +276,17 @@ function fitObject(pivot: THREE.Group, content: THREE.Group, targetSize = 1.30):
   pivot.updateMatrixWorld(true);
   content.updateWorldMatrix(true, true);
 
-  const box = new THREE.Box3().setFromObject(content);
-  if (box.isEmpty()) return false;
+  _fitBox.setFromObject(content);
+  if (_fitBox.isEmpty()) return false;
 
-  const size = box.getSize(new THREE.Vector3());
-  const center = box.getCenter(new THREE.Vector3());
-  const maxDim = Math.max(size.x, size.y, size.z);
+  _fitBox.getSize(_fitSize);
+  _fitBox.getCenter(_fitCenter);
+  const maxDim = Math.max(_fitSize.x, _fitSize.y, _fitSize.z);
   if (maxDim <= 0.001) return false;
 
   const s = targetSize / maxDim;
   pivot.scale.set(s, s, s);
-  pivot.position.set(-center.x * s, -box.min.y * s - 0.32, -center.z * s);
+  pivot.position.set(-_fitCenter.x * s, -_fitBox.min.y * s - 0.32, -_fitCenter.z * s);
   return true;
 }
 

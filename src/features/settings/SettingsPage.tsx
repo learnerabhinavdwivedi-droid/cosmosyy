@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppStore, type Quality } from "@/store/useAppStore";
 import { gameAudio } from "@/lib/gameAudio";
+import { setNarrationVolume } from "@/lib/narration";
+import { Howler } from "howler";
 import { Volume2, VolumeX, Monitor, Shield, ArrowLeft, RefreshCw, Check, Sparkles } from "lucide-react";
 
 export default function SettingsPage() {
@@ -22,6 +24,8 @@ export default function SettingsPage() {
   const handleVolumeChange = (vol: number) => {
     setSetting("volume", vol);
     gameAudio.setVolume(vol);
+    setNarrationVolume(vol);
+    Howler.volume(vol);
   };
 
   const handleNameSave = (e: React.FormEvent) => {

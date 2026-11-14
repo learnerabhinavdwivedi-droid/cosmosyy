@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useGameStore } from "@/store/useGameStore";
 import { getMission, type HeritageObject } from "@/lib/missionData";
 import { getHologramModel, type HologramManifest } from "../hologramMapping";
@@ -70,11 +70,20 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
     return () => clearTimeout(t);
   }, []);
 
+  const handleClose = useCallback(() => {
+    setVisible(false);
+    setTimeout(() => {
+      send("EXIT_INSPECT");
+    }, 400);
+  }, [send]);
+
   // Global key listener for 'T' (3D Story) and 'Esc'
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      if ((e.code === "KeyT" || e.key === "t" || e.key === "T") && !e.repeat) {
+      if (e.code === "Escape" || e.key === "Escape") {
+        handleClose();
+      } else if ((e.code === "KeyT" || e.key === "t" || e.key === "T") && !e.repeat) {
         if (hasStory && storyPacket) {
           setShowStory((prev) => !prev);
         }
@@ -82,14 +91,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [hasStory, storyPacket]);
-
-  const handleClose = () => {
-    setVisible(false);
-    setTimeout(() => {
-      send("EXIT_INSPECT");
-    }, 400);
-  };
+  }, [hasStory, storyPacket, handleClose]);
 
   const handleSelectIndex = (idx: number) => {
     setActiveIdx(idx);
@@ -104,7 +106,22 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
     });
   };
 
-  if (!obj) return null;
+  if (!obj) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-space-950/90 text-white">
+        <div className="flex flex-col items-center gap-3">
+          <p className="font-mono text-sm text-regolith-300">Artifact data unavailable</p>
+          <button
+            type="button"
+            onClick={handleClose}
+            className="rounded border border-space-700 bg-space-900 px-4 py-2 font-mono text-xs uppercase"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Primary Experience: 3D Animated Cinematic Story Movie
   if (showStory && storyPacket) {
@@ -147,9 +164,9 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
       </div>
 
       {/* FLOATING AEROSPACE HUD OVERLAYS */}
-      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between p-3 sm:p-5">
+      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between p-2.5 sm:p-5 overflow-hidden">
         {/* TOP FLOATING HEADER HUD */}
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pointer-events-auto">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pointer-events-auto shrink-0">
           {/* Left: Mission Location Breadcrumb & Artifact Title */}
           <div className="flex flex-col">
             <div className="flex items-center gap-2 mb-1">
@@ -289,7 +306,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
         </div>
 
         {/* BOTTOM FLOATING DOCK (Audio Transmission, Explode & Artifact Switcher) */}
-        <div className="flex flex-col gap-2 pointer-events-auto max-w-5xl w-full mx-auto pb-1 sm:pb-3">
+        <div className="flex flex-col gap-2 pointer-events-auto max-w-5xl w-full mx-auto pb-[max(0.5rem,env(safe-area-inset-bottom))] shrink-0">
           {/* Subsystem Explode Controller (Centered Glass Pill) */}
           <div className="self-center">
             <ExplodeController

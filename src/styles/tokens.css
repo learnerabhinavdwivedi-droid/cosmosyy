@@ -81,7 +81,7 @@
     --fg: var(--ink-900);
     --fg-muted: var(--ink-600);
     --border: var(--regolith-200);
-    --primary-fg: #FFFFFF;
+    --primary-fg: var(--space-950);
     --shadow-1: 0 1px 2px rgb(14 22 38 / .06), 0 4px 12px rgb(14 22 38 / .06);
     --shadow-2: 0 2px 4px rgb(14 22 38 / .08), 0 8px 24px rgb(14 22 38 / .10);
     color-scheme: light;
@@ -95,7 +95,7 @@
   --fg: var(--ink-900);
   --fg-muted: var(--ink-600);
   --border: var(--regolith-200);
-  --primary-fg: #FFFFFF;
+  --primary-fg: var(--space-950);
   --shadow-1: 0 1px 2px rgb(14 22 38 / .06), 0 4px 12px rgb(14 22 38 / .06);
   --shadow-2: 0 2px 4px rgb(14 22 38 / .08), 0 8px 24px rgb(14 22 38 / .10);
   color-scheme: light;

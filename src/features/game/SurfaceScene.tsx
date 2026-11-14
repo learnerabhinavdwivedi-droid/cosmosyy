@@ -412,6 +412,8 @@ function getJumpV0(planet: string): number {
 const BOB_FREQ = 6;
 const BOB_AMP = 0.03;
 const _moveDir = new THREE.Vector3();
+const _camForward = new THREE.Vector3();
+const _camRight = new THREE.Vector3();
 const _lookTarget = new THREE.Vector3();
 const _targetCamPos = new THREE.Vector3();
 const _lookAtPos = new THREE.Vector3();
@@ -805,10 +807,21 @@ function PlayerController({
 
     if (isMoving) {
       if (viewModeRef.current === "pov") {
-        _moveDir.set(moveRight, 0, -moveForward).normalize();
-        _moveDir.applyQuaternion(camera.quaternion);
-        _moveDir.y = 0;
-        _moveDir.normalize();
+        camera.getWorldDirection(_camForward);
+        _camForward.y = 0;
+        if (_camForward.lengthSq() > 0.0001) {
+          _camForward.normalize();
+        } else {
+          _camForward.set(0, 0, -1);
+        }
+        _camRight.crossVectors(_camForward, camera.up).normalize();
+        _moveDir
+          .set(0, 0, 0)
+          .addScaledVector(_camForward, moveForward)
+          .addScaledVector(_camRight, moveRight);
+        if (_moveDir.lengthSq() > 0.0001) {
+          _moveDir.normalize();
+        }
       } else {
         const s = Math.sin(orbitYaw.current);
         const c = Math.cos(orbitYaw.current);
@@ -1573,22 +1586,17 @@ export function SurfaceScene() {
     [nearObjectId, found, missionId, addFoundObject, findObject, send],
   );
 
-  // Global key listener for 'V' (toggle view) and 'E' (inspect nearby object)
+  // Global key listener for 'V' (toggle view mode between POV and Walker)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.code === "KeyV") {
         setViewMode((current) => (current === "pov" ? "walker" : "pov"));
       }
-      if ((e.code === "KeyE" || e.key === "e" || e.key === "E") && !e.repeat) {
-        if (nearObjectId && phase !== "inspect") {
-          touchScan(nearObjectId);
-        }
-      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [nearObjectId, phase, touchScan]);
+  }, []);
 
   const handleCanvasClick = useCallback(() => {
     if (!isTouchDevice()) {

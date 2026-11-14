@@ -26,6 +26,12 @@ export function AmericanFlag3D({ explode = 0, wireframe = false, scale = 1 }: Ar
     return geo;
   }, []);
 
+  useEffect(() => {
+    return () => {
+      fabricGeo.dispose();
+    };
+  }, [fabricGeo]);
+
   const staffY = explode * 0.4;
   const flagX = explode * 0.6;
 

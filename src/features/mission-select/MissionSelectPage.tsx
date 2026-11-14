@@ -42,7 +42,7 @@ const MOON_MISSIONS: MissionCardData[] = [
     date: "19 November 1969",
     crew: "Conrad, Bean, Gordon",
     hook: "Precision landing beside Surveyor 3.",
-    objectCount: 7,
+    objectCount: 6,
   },
   {
     id: "apollo-14",
@@ -69,7 +69,7 @@ const MOON_MISSIONS: MissionCardData[] = [
     date: "21 April 1972",
     crew: "Young, Duke, Mattingly",
     hook: "Into the lunar highlands for the first time.",
-    objectCount: 5,
+    objectCount: 6,
   },
   {
     id: "apollo-17",

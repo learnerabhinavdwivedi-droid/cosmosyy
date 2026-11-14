@@ -942,7 +942,11 @@ function FlightAnimator({
       sepTime.current = 0;
       sepPos.current.copy(_shipCopy);
       _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.05, 1)));
-      sepDir.current.subVectors(_shipCopy, _aheadCopy).normalize();
+      if (_aheadCopy.distanceToSquared(_shipCopy) > 0.00001) {
+        sepDir.current.subVectors(_shipCopy, _aheadCopy).normalize();
+      } else {
+        sepDir.current.set(0, 0, -1);
+      }
       if (shipRef.current) sepQuat.current.copy(shipRef.current.quaternion);
       gameAudio.playStaging();
     }
@@ -962,7 +966,11 @@ function FlightAnimator({
       cruiseSepTime.current = 0;
       cruiseSepPos.current.copy(_shipCopy);
       _aheadCopy.copy(shipPos(phase, Math.min(progress + 0.05, 1)));
-      cruiseSepDir.current.subVectors(_shipCopy, _aheadCopy).normalize();
+      if (_aheadCopy.distanceToSquared(_shipCopy) > 0.00001) {
+        cruiseSepDir.current.subVectors(_shipCopy, _aheadCopy).normalize();
+      } else {
+        cruiseSepDir.current.set(0, 0, -1);
+      }
       if (shipRef.current) cruiseSepQuat.current.copy(shipRef.current.quaternion);
       gameAudio.playStaging();
     }
@@ -1598,9 +1606,10 @@ function FlightHUD({ onSkip }: { onSkip: () => void }) {
   const playerName = useAppStore((s) => s.player.name);
   const mission = useMemo(() => getMissionOrNull(missionId), [missionId]);
   const planet = mission?.planet ?? "moon";
+  const i18nPhaseLabel = t(`flight.phaseLabels.${phase}`, { defaultValue: "" });
   const label = phase === "touchdown"
     ? getTouchdownLabel(mission)
-    : (getPhaseLabel(phase, planet) || t(`flight.phaseLabels.${phase}`, { defaultValue: "" }));
+    : (i18nPhaseLabel || getPhaseLabel(phase, planet));
   const narration = getNarration(phase, playerName, mission);
 
   const phases = [

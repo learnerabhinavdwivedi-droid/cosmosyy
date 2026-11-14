@@ -1,6 +1,5 @@
 let ctx: AudioContext | null = null;
 let masterGain: GainNode | null = null;
-let unlocked = false;
 
 function getCtx(): AudioContext {
   if (!ctx) {
@@ -26,10 +25,10 @@ function makeNoise(c: AudioContext, seconds: number): AudioBuffer {
 }
 
 export function unlock(): void {
-  if (unlocked) return;
   const c = getCtx();
-  if (c.state === "suspended") void c.resume();
-  unlocked = true;
+  if (c.state === "suspended") {
+    void c.resume();
+  }
 }
 
 export function setVolume(v: number): void {
@@ -537,6 +536,14 @@ export function stopMarsWind(): void {
   }, 2200);
 }
 
+export function stopAll(): void {
+  stopEngine();
+  stopBreathing();
+  stopSpaceDrone();
+  stopLunarHum();
+  stopMarsWind();
+}
+
 // ── data scan beep (Mars heritage) ──────────────────────────
 
 export function playDataScan(): void {
@@ -628,6 +635,7 @@ export const gameAudio = {
   stopLunarHum,
   startMarsWind,
   stopMarsWind,
+  stopAll,
   playDataScan,
   playProximityPing,
   playScanTick,

@@ -1,4 +1,4 @@
-import { useRef, useMemo, Suspense } from "react";
+import { useRef, useMemo, useEffect, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import type { StoryPacket } from "./storySchema";
@@ -17,6 +17,9 @@ export interface StorySceneProps {
 }
 
 /* ─── Smooth Cinematic Camera Rig ─── */
+const _scratchDrift = new THREE.Vector3();
+const _scratchDesiredPos = new THREE.Vector3();
+
 function StoryCameraRig({
   cameraKeyframe,
   reduceMotion,
@@ -47,10 +50,10 @@ function StoryCameraRig({
     const driftX = Math.sin(t * 0.4) * 0.04;
     const driftY = Math.cos(t * 0.5) * 0.03;
 
-    const desiredPos = targetPos.clone().add(new THREE.Vector3(driftX, driftY, 0));
+    _scratchDesiredPos.copy(targetPos).add(_scratchDrift.set(driftX, driftY, 0));
     const factor = Math.min(delta * 2.8, 1);
 
-    camera.position.lerp(desiredPos, factor);
+    camera.position.lerp(_scratchDesiredPos, factor);
     currentLook.current.lerp(targetLook, factor);
     camera.lookAt(currentLook.current);
   });
@@ -58,16 +61,16 @@ function StoryCameraRig({
   return null;
 }
 
-/* ─── Lunar & Martian Terrain & Atmosphere ─── */
+/* ─── Lunar & Martian Terrain & Atmosphere (100% Deterministic) ─── */
 function StoryEnvironment({ isMars = false }: { isMars?: boolean }) {
   const starsGeo = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     const count = 600;
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      const r = 40 + Math.random() * 20;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.random() * 2 - 1);
+      const r = 40 + ((i * 7) % 20);
+      const theta = ((i * 137.5) * Math.PI) / 180;
+      const phi = Math.acos(1 - (2 * (i + 0.5)) / count);
       pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
       pos[i * 3 + 1] = Math.abs(r * Math.cos(phi)) + 2;
       pos[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
@@ -93,6 +96,13 @@ function StoryEnvironment({ isMars = false }: { isMars?: boolean }) {
     geo.computeVertexNormals();
     return geo;
   }, []);
+
+  useEffect(() => {
+    return () => {
+      starsGeo.dispose();
+      groundGeo.dispose();
+    };
+  }, [starsGeo, groundGeo]);
 
   return (
     <>
@@ -140,6 +150,12 @@ function SolarWindStream({ active }: { active: boolean }) {
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     return { geo: geometry, velocities: vels };
   }, []);
+
+  useEffect(() => {
+    return () => {
+      geo.dispose();
+    };
+  }, [geo]);
 
   useFrame((_, delta) => {
     if (!pointsRef.current || !active) return;

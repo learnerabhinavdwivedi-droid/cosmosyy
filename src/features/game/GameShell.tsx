@@ -70,7 +70,9 @@ function GameAudioController() {
         return;
       }
 
-      playNarration(phase, mid);
+      if (!(phase === "explore" && prev === "inspect")) {
+        playNarration(phase, mid);
+      }
 
       if (ENGINE_PHASES.has(phase) && !ENGINE_PHASES.has(prev)) {
         gameAudio.startEngine();
@@ -279,6 +281,15 @@ export default function GameShell() {
       }
     }
   }, [missionId, gameMission, playerName, navigate, setMission, send, isDemo]);
+
+  // Clean up game store state and active audio loops on leaving GameShell
+  useEffect(() => {
+    return () => {
+      gameAudio.stopAll();
+      stopNarration();
+      useGameStore.getState().reset();
+    };
+  }, []);
 
   useEffect(() => {
     if (isDemo && phase === "flight" && !demoSkipped.current) {

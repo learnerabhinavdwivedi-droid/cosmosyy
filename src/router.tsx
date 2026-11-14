@@ -44,7 +44,10 @@ export const router = createBrowserRouter([
   { path: "/missions", element: withSuspense(MissionSelectPage) },
   { path: "/select", element: withSuspense(MissionSelectPage) },
   { path: "/play/:missionId", element: withSuspense(GameShell) },
+  { path: "/site/:missionId", element: withSuspense(GameShell) },
+  { path: "/flight/:missionId", element: withSuspense(GameShell) },
   { path: "/credits", element: withSuspense(CreditsPage) },
   { path: "/about", element: withSuspense(AboutPage) },
   { path: "/settings", element: withSuspense(SettingsPage) },
+  { path: "*", element: withSuspense(MissionSelectPage) },
 ]);

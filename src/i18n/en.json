@@ -1,4 +1,7 @@
 {
+  "common": {
+    "close": "Close"
+  },
   "app": {
     "title": "Cosmosyy",
     "tagline": "Walk where they walked. Find what they left behind."
@@ -26,6 +29,7 @@
   },
   "flight": {
     "skip": "Skip",
+    "skipAria": "Skip directly to surface landing",
     "pause": "Pause",
     "speed1x": "1×",
     "speed3x": "3×",

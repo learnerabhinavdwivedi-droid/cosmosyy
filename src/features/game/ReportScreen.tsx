@@ -77,7 +77,8 @@ export function ReportScreen() {
   const handleNextMission = () => {
     if (!nextMissionId) return;
     startMission(nextMissionId);
-    send("BACK_TO_SELECT");
+    useGameStore.getState().reset();
+    useGameStore.getState().setMission(nextMissionId);
     navigate(`/play/${nextMissionId}`);
   };
 
