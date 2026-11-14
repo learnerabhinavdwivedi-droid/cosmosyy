@@ -41,7 +41,8 @@
       "legacy": "Still operational and collecting samples for Mars Sample Return; the most advanced astrobiology laboratory ever sent to another planet.",
       "status": "operational",
       "firstPerson": "I am the most advanced robot ever sent to another world. I landed in a dried-up lake to search for signs of ancient life, and I am collecting rock samples in sealed tubes for a future mission to bring home. I even carry MOXIE, which breathes Mars's air and makes oxygen. I am paving the way for the first humans on Mars.",
-      "yearDeployed": 2021
+      "yearDeployed": 2021,
+      "nasaImageId": "PIA24490"
     },
     {
       "id": "pe-ingenuity",
@@ -55,7 +56,8 @@
       "status": "dormant",
       "firstPerson": "I am Ingenuity, and I carry a piece of the Wright Brothers' Flyer inside me. I was supposed to fly just five times — but I flew seventy-two. I soared over Martian dunes, scouted paths for Perseverance, and proved that aircraft can fly on another world. My blade is damaged now and I will never fly again, but I showed the way.",
       "yearDeployed": 2021,
-      "yearLastContact": 2024
+      "yearLastContact": 2024,
+      "nasaImageId": "PIA24547"
     },
     {
       "id": "pe-sample-tubes",
@@ -68,7 +70,8 @@
       "legacy": "Ten titanium tubes rest on the surface at Three Forks, awaiting a future Mars Sample Return mission to bring them to Earth.",
       "status": "operational",
       "firstPerson": "I am ten titanium tubes lying in a careful pattern on the Martian surface. Inside each of us is a core of ancient rock drilled by Perseverance — rock that may hold traces of life from billions of years ago. We are waiting for a future mission to pick us up and fly us to Earth. We could be the most important delivery in human history.",
-      "yearDeployed": 2023
+      "yearDeployed": 2023,
+      "nasaImageId": "PIA25658"
     },
     {
       "id": "pe-delta",
@@ -81,7 +84,8 @@
       "legacy": "The Jezero delta is one of the most promising places to search for ancient Martian life, and Perseverance's samples from here are the highest-priority targets for Mars Sample Return.",
       "status": "defunct",
       "firstPerson": "I am the remains of a river delta, three and a half billion years old. A river once flowed into a lake here, carrying sediment and perhaps life. My layers hold organic molecules and minerals born in water. Perseverance drilled into me and sealed my secrets in tubes. One day those tubes will travel to Earth, and scientists will finally read my story.",
-      "yearDeployed": 2022
+      "yearDeployed": 2022,
+      "nasaImageId": "PIA25331"
     },
     {
       "id": "pe-supercam",
@@ -94,7 +98,8 @@
       "legacy": "SuperCam's laser pits on Martian rocks are among the most precise human-made marks on another world; its data guides which rocks Perseverance drills.",
       "status": "operational",
       "firstPerson": "I fire a laser that vaporises a tiny spot of rock from seven metres away, then I read the flash of light to learn what that rock is made of. I can also use Raman spectroscopy to find organic molecules. I have zapped hundreds of targets across Jezero Crater. Every tiny pit I leave is a question answered about Mars's history.",
-      "yearDeployed": 2021
+      "yearDeployed": 2021,
+      "nasaImageId": "PIA24684"
     },
     {
       "id": "pe-sky-crane",
@@ -108,7 +113,8 @@
       "status": "defunct",
       "firstPerson": "I lowered Perseverance to the ground on cables, then flew away and crashed — just like my twin did for Curiosity. But this time, cameras recorded everything. Millions of people watched me work in the first-ever video of a Mars landing. I may be wreckage now, but that footage will inspire engineers for generations.",
       "yearDeployed": 2021,
-      "yearLastContact": 2021
+      "yearLastContact": 2021,
+      "nasaImageId": "PIA24333"
     }
   ]
 }

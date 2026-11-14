@@ -58,7 +58,8 @@
       "legacy": "Eagle Crater is where Opportunity made its 'hole in one' landing; the exposed bedrock remains a landmark site in the history of Mars exploration.",
       "status": "defunct",
       "firstPerson": "I am a tiny crater, just 22 metres across, and Opportunity landed right inside me — scientists called it a hole in one. In my walls they found layered rock and tiny round pebbles made of haematite. That was the proof: water once pooled here. I am small, but I changed everything we know about Mars.",
-      "yearDeployed": 2004
+      "yearDeployed": 2004,
+      "nasaImageId": "PIA05482"
     },
     {
       "id": "op-blueberries",
@@ -71,7 +72,8 @@
       "legacy": "Billions of blueberries still litter the surface of Meridiani Planum, a permanent record of Mars's wet past waiting for future sample return.",
       "status": "defunct",
       "firstPerson": "We are tiny — just a few millimetres across — but there are billions of us scattered across Meridiani Planum. We formed deep inside rock that was soaked in water, and as the rock crumbled, we tumbled out. Each one of us is a marble-sized proof that Mars was once a wet world. Pick us up and you hold ancient water in your hand.",
-      "yearDeployed": 2004
+      "yearDeployed": 2004,
+      "nasaImageId": "PIA05564"
     },
     {
       "id": "op-heat-shield",
@@ -84,7 +86,8 @@
       "legacy": "The crushed heat shield and nearby meteorite remain on the surface of Meridiani Planum, a pair of space-hardware and space-rock side by side.",
       "status": "defunct",
       "firstPerson": "I protected Opportunity during the hottest part of her journey — searing through the Martian atmosphere at thousands of degrees. Then I was tossed away and crashed 250 metres from the landing site. But my story was not over: right next to me, Opportunity found a meteorite — the first ever identified on another planet. Even discarded, I still helped make history.",
-      "yearDeployed": 2004
+      "yearDeployed": 2004,
+      "nasaImageId": "PIA07218"
     },
     {
       "id": "op-marathon-valley",
@@ -97,7 +100,8 @@
       "legacy": "Marathon Valley marks where Opportunity completed a full marathon distance (42.195 km) on another planet, a milestone in human exploration.",
       "status": "defunct",
       "firstPerson": "I am Marathon Valley, and I earned my name the hard way. Opportunity drove 42.195 kilometres — a full marathon — to reach me. And I did not disappoint: my rocks hold clay minerals that formed in gentle, life-friendly water. I am proof that not all of Mars's water was harsh and acidic. Some of it was kind.",
-      "yearDeployed": 2015
+      "yearDeployed": 2015,
+      "nasaImageId": "PIA20322"
     },
     {
       "id": "op-perseverance-valley",
@@ -110,7 +114,8 @@
       "legacy": "Perseverance Valley is Opportunity's final resting place; the rover sits partway down the channel, forever mid-investigation.",
       "status": "defunct",
       "firstPerson": "I am Perseverance Valley, carved into the rim of Endeavour Crater. Opportunity came to study how I was made — by water? by wind? by ice? — but the great dust storm of 2018 came before she could finish. Now she rests inside me, silent, her question unanswered. Perhaps someone will come back and solve the mystery she started.",
-      "yearDeployed": 2017
+      "yearDeployed": 2017,
+      "nasaImageId": "PIA22072"
     }
   ]
 }

@@ -41,7 +41,8 @@
       "legacy": "Still operational and climbing Mount Sharp as of 2024, having driven over 30 km and drilled dozens of rock samples.",
       "status": "operational",
       "firstPerson": "I am the size of a car and I run on plutonium, so no dust storm can stop me. I have been exploring Mars since 2012 — drilling into rocks, tasting the soil, climbing a mountain layer by layer. I proved that Mars once had a lake where microbes could have lived. And I am still going.",
-      "yearDeployed": 2012
+      "yearDeployed": 2012,
+      "nasaImageId": "PIA16239"
     },
     {
       "id": "cu-sky-crane",
@@ -55,7 +56,8 @@
       "status": "defunct",
       "firstPerson": "I am the sky crane — the craziest landing system ever invented. I hovered on rocket engines, lowered Curiosity on cables like a spider lowering an egg, and then flew away to crash. Engineers called me 'seven minutes of terror'. My wreckage lies 650 metres from the rover I saved, and my design flew again for Perseverance.",
       "yearDeployed": 2012,
-      "yearLastContact": 2012
+      "yearLastContact": 2012,
+      "nasaImageId": "PIA24489"
     },
     {
       "id": "cu-drill-holes",
@@ -68,7 +70,8 @@
       "legacy": "Dozens of drill holes across Gale Crater mark Curiosity's path, each one a tiny window into Mars's ancient chemistry.",
       "status": "operational",
       "firstPerson": "I am tiny holes in Martian rock — each just 1.6 centimetres wide. But inside me, Curiosity found clay minerals, organic molecules, and the chemical ingredients of life. Every hole is a question asked and answered. Scientists on Earth pour over the data I provide. I am small, but I hold big secrets.",
-      "yearDeployed": 2013
+      "yearDeployed": 2013,
+      "nasaImageId": "PIA21254"
     },
     {
       "id": "cu-yellowknife",
@@ -81,7 +84,8 @@
       "legacy": "Yellowknife Bay is where the habitability question was answered; Curiosity's drill holes there are among the most scientifically important marks on Mars.",
       "status": "defunct",
       "firstPerson": "I am Yellowknife Bay, a shallow depression of ancient mudstone. Curiosity drilled into me and found everything life needs: carbon, hydrogen, nitrogen, oxygen, phosphorus, and sulphur. All six, right here in my rock. That was the moment scientists could say for certain: Mars was once a place where life could have existed.",
-      "yearDeployed": 2013
+      "yearDeployed": 2013,
+      "nasaImageId": "PIA16803"
     },
     {
       "id": "cu-calibration-target",
@@ -94,7 +98,8 @@
       "legacy": "The 1909 Lincoln penny on Mars is a beloved cultural artefact — the only U.S. coin on another planet, still riding on Curiosity's deck.",
       "status": "operational",
       "firstPerson": "I carry a 1909 Lincoln penny, colour chips, and a ruler — not very exciting, right? But every time Curiosity takes a close-up photo of a rock, she photographs me first to make sure her colours and scale are correct. I am the yardstick of Mars. And that penny? It belongs to a scientist named Ken Edgett. It is the only coin on another planet.",
-      "yearDeployed": 2012
+      "yearDeployed": 2012,
+      "nasaImageId": "PIA16120"
     },
     {
       "id": "cu-mount-sharp",
@@ -107,7 +112,8 @@
       "legacy": "Mount Sharp is Curiosity's ongoing destination; the rover continues to climb and read Mars's environmental history layer by layer.",
       "status": "operational",
       "firstPerson": "I am Mount Sharp, a 5.5-kilometre mountain of layered rock in the centre of Gale Crater. Each of my layers is a page in Mars's autobiography. At my base, clay tells of a wet world. Higher up, sulphates record a drying planet. At my peak, only dust and rust remain. Curiosity is reading me like a book, one layer at a time.",
-      "yearDeployed": 2014
+      "yearDeployed": 2014,
+      "nasaImageId": "PIA19912"
     }
   ]
 }

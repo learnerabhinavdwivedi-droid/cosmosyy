@@ -1097,7 +1097,7 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
 
   const distFromLM = useMemo(() => {
     return Math.sqrt(playerState.x * playerState.x + playerState.z * playerState.z).toFixed(1);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [evaSeconds]);
 
   const scannableCount = useMemo(

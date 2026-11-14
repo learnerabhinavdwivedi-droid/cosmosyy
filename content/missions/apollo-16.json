@@ -43,7 +43,8 @@
       "legacy": "Remains at Descartes; its ascent stage developed a guidance malfunction after separation and tumbled onto the Moon in an uncontrolled impact.",
       "status": "defunct",
       "firstPerson": "I am Orion, and I landed in the highlands where geologists expected to find ancient volcanoes. Instead, John and Charlie found nothing but impact breccia — rocks shattered and fused by asteroid strikes billions of years ago. It was not what anyone expected, but proving a theory wrong is just as important as proving one right.",
-      "yearDeployed": 1972
+      "yearDeployed": 1972,
+      "nasaImageId": "as16-113-18359"
     },
     {
       "id": "flag",
@@ -56,7 +57,8 @@
       "legacy": "LROC images from 2012 confirm the Apollo 16 flag is still standing, casting a shadow on the highland surface.",
       "status": "defunct",
       "firstPerson": "I am the flag that John Young jumped beside. When Charlie Duke snapped that famous photo, John was nearly a metre off the ground in his full spacesuit, saluting me mid-air. In one-sixth gravity, even a suited astronaut can leap like a gymnast. That picture became one of the most iconic images of the Apollo programme.",
-      "yearDeployed": 1972
+      "yearDeployed": 1972,
+      "nasaImageId": "as16-113-18339"
     },
     {
       "id": "lrv",
@@ -69,7 +71,8 @@
       "legacy": "Parked at its final TV position to film the departure from Descartes; one of three rovers remaining on the Moon.",
       "status": "defunct",
       "firstPerson": "I am the second Lunar Roving Vehicle. John drove me to North Ray Crater, the most distant point any Apollo rover reached relative to the LM. Standing on the rim of that giant crater, the astronauts could see House Rock — a boulder bigger than a house, blasted up from deep underground. My TV camera filmed them leaving as Houston tilted me skyward to catch the ascent.",
-      "yearDeployed": 1972
+      "yearDeployed": 1972,
+      "nasaImageId": "as16-107-17436"
     },
     {
       "id": "alsep",
@@ -83,7 +86,8 @@
       "status": "defunct",
       "firstPerson": "I am the ALSEP at Descartes. My most dramatic instrument was the active seismic experiment — it fired small grenades into the ground to create vibrations I could measure. Scientists were nervous about breaking my other instruments, so they only fired some of the charges. Still, I mapped the layers of broken rock beneath me and reported home for five years.",
       "yearDeployed": 1972,
-      "yearLastContact": 1977
+      "yearLastContact": 1977,
+      "nasaImageId": "as16-113-18384"
     },
     {
       "id": "uv-camera",
@@ -96,7 +100,8 @@
       "legacy": "Remains at Descartes; it was designed by Dr. George Carruthers of the Naval Research Laboratory, who was later inducted into the National Inventors Hall of Fame for this work.",
       "status": "defunct",
       "firstPerson": "I am the Far Ultraviolet Camera, the first telescope operated from another world. Dr. George Carruthers built me to see what no Earth telescope can — ultraviolet light from stars and galaxies that our atmosphere blocks. From my perch on the Moon, I photographed Earth's glowing hydrogen halo, the Milky Way, and distant nebulae. I am still here, the oldest observatory on the Moon.",
-      "yearDeployed": 1972
+      "yearDeployed": 1972,
+      "nasaImageId": "as16-117-18825"
     },
     {
       "id": "family-photo",
@@ -109,7 +114,8 @@
       "legacy": "The plastic-wrapped photograph remains on the surface at Descartes; decades of intense UV radiation have likely destroyed the image, but the plastic wrapping may preserve some trace.",
       "status": "defunct",
       "firstPerson": "I am a family portrait — Charlie Duke, his wife Dorothy, and their sons Charles and Tom, smiling together on a warm day back home. Charlie wrapped me in plastic and laid me gently on the grey dust. On my back he wrote: 'This is the family of Astronaut Duke from Planet Earth. Landed on the Moon, April 1972.' The Sun has probably bleached my image away, but I am still here.",
-      "yearDeployed": 1972
+      "yearDeployed": 1972,
+      "nasaImageId": "as16-117-18841"
     }
   ],
   "models": {

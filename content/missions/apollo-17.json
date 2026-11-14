@@ -43,7 +43,8 @@
       "legacy": "Remains in Taurus-Littrow valley; the last crewed spacecraft on the lunar surface. Its plaque reads: 'Here Man completed his first explorations of the Moon.'",
       "status": "defunct",
       "firstPerson": "I am Challenger, the last Lunar Module to touch the Moon. Gene and Jack spent three record-breaking days with me in the Taurus-Littrow valley, surrounded by mountains taller than the Grand Canyon is deep. My plaque says 'Here Man completed his first explorations of the Moon.' It was supposed to say 'first' — but no one has come back since.",
-      "yearDeployed": 1972
+      "yearDeployed": 1972,
+      "nasaImageId": "as17-134-20463"
     },
     {
       "id": "flag",
@@ -56,7 +57,8 @@
       "legacy": "LROC images from 2011 show the Apollo 17 flag is still standing, casting a clear shadow — the last flag planted on the Moon by human hands.",
       "status": "defunct",
       "firstPerson": "I am the last flag planted on the Moon. Before Gene climbed the ladder for the final time, he said: 'We leave as we came and, God willing, as we shall return, with peace and hope for all mankind.' Those words were meant as a promise, not a farewell. I am still waiting.",
-      "yearDeployed": 1972
+      "yearDeployed": 1972,
+      "nasaImageId": "as17-134-20382"
     },
     {
       "id": "lrv",
@@ -69,7 +71,8 @@
       "legacy": "Holds the unofficial lunar speed record of 17.1 km/h set by Cernan; parked at its final TV position to film humanity's last departure from the Moon.",
       "status": "defunct",
       "firstPerson": "I am the third and final lunar rover, and I hold the speed record — Gene pushed me to 17.1 km/h bouncing across the valley floor. Together we drove 35.9 kilometres through some of the most spectacular scenery on the Moon. Houston aimed my camera for the very last time, and I filmed Gene and Jack leaving. I am the last car anyone has driven on the Moon.",
-      "yearDeployed": 1972
+      "yearDeployed": 1972,
+      "nasaImageId": "as17-137-20979"
     },
     {
       "id": "alsep",
@@ -83,7 +86,8 @@
       "status": "defunct",
       "firstPerson": "I am the last and most advanced ALSEP, carrying instruments no previous station had — a gravimeter that measured the Moon's tidal flexing, a mass spectrometer that sniffed the vanishingly thin lunar atmosphere, and explosive charges for deep seismic profiling. I was the final science station humans left on the Moon, and I reported home for five years.",
       "yearDeployed": 1972,
-      "yearLastContact": 1977
+      "yearLastContact": 1977,
+      "nasaImageId": "as17-134-20500"
     },
     {
       "id": "lrrr",
@@ -96,7 +100,8 @@
       "legacy": "Part of the five-reflector lunar network (three Apollo, two Lunokhod) that continues to be used for laser ranging experiments worldwide.",
       "status": "operational",
       "firstPerson": "I am the last retroreflector placed on the Moon. Together with my siblings at Tranquility Base, Fra Mauro, and Hadley Rille — and two French-built reflectors on Soviet Lunokhod rovers — I form a network that spans the near side. Scientists bounce lasers off us to track the Moon's orbit with extraordinary precision. We are still working, all of us.",
-      "yearDeployed": 1972
+      "yearDeployed": 1972,
+      "nasaImageId": "as17-134-20497"
     },
     {
       "id": "orange-soil",
@@ -109,7 +114,8 @@
       "legacy": "Samples of the orange soil (sample 74220) remain among the most studied lunar materials; recent analysis revealed they contain water trapped in volcanic glass, reshaping theories about the Moon's interior.",
       "status": "dormant",
       "firstPerson": "I am the orange soil at Shorty Crater — tiny beads of volcanic glass that erupted from deep inside the Moon 3.7 billion years ago. When Jack Schmitt spotted my bright colour against the grey regolith, he shouted with excitement. I am proof that the Moon was once a world of fire. Scientists recently found water trapped inside my glass beads — changing everything they thought about how dry the Moon is.",
-      "yearDeployed": 1972
+      "yearDeployed": 1972,
+      "nasaImageId": "as17-137-20990"
     }
   ],
   "models": {

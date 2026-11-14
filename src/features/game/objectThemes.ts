@@ -73,7 +73,8 @@ export function getObjectTheme(objectId: string): ObjectTheme {
     objectId.includes("descent") ||
     objectId.includes("sky-crane") ||
     objectId.includes("lander") ||
-    objectId.includes("base-station")
+    objectId.includes("base-station") ||
+    objectId.includes("surveyor")
   )
     return T.spacecraft;
 

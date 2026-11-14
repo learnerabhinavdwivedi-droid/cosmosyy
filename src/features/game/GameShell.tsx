@@ -186,8 +186,8 @@ function SceneFade({ phase }: { phase: string }) {
 
     if ((wasFlightScene && isSurfaceScene) || (wasLaunch && isReport) || (wasSurface && isLaunch)) {
       setOpaque(true);
-      // Allow the incoming 3D scene to mount and stabilize its first frame before lifting curtain
-      const timer = setTimeout(() => setOpaque(false), 650);
+      // Allow the incoming 3D scene to mount, initialize WebGL context, and render first frame
+      const timer = setTimeout(() => setOpaque(false), 1200);
       return () => clearTimeout(timer);
     }
   }, [phase]);

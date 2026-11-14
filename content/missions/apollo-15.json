@@ -43,7 +43,8 @@
       "legacy": "Remains at Hadley-Apennine; its ascent stage was deliberately crashed into the Moon 93 km from the ALSEP, creating a calibrated seismic source.",
       "status": "defunct",
       "firstPerson": "I am Falcon, the first Lunar Module built for the long stay. Dave and Jim spent nearly three days with me at Hadley Rille, making three moonwalks and driving the first car on the Moon. I carried more science equipment than any LM before me. When they flew away, NASA crashed my upper half into the Moon so the seismometers could feel it.",
-      "yearDeployed": 1971
+      "yearDeployed": 1971,
+      "nasaImageId": "as15-87-11849"
     },
     {
       "id": "flag",
@@ -56,7 +57,8 @@
       "legacy": "LROC images from 2011 confirmed the Apollo 15 flag is still standing, casting a visible shadow on the surface.",
       "status": "defunct",
       "firstPerson": "I am the flag at Hadley-Apennine, planted with the towering Apennine mountains as my backdrop. LROC photographs taken in 2011 show my shadow still stretching across the regolith. I am one of the lucky ones — after more than forty years, I am still standing.",
-      "yearDeployed": 1971
+      "yearDeployed": 1971,
+      "nasaImageId": "as15-88-11863"
     },
     {
       "id": "lrv",
@@ -69,7 +71,8 @@
       "legacy": "Parked at its final position with the TV camera aimed to film the ascent stage liftoff; remains one of only three cars on the Moon.",
       "status": "defunct",
       "firstPerson": "I am the first car to drive on another world. My four wire-mesh wheels carried Dave and Jim across 27.9 kilometres of the most dramatic lunar terrain any astronaut ever saw — along the edge of Hadley Rille, a canyon a kilometre wide and 300 metres deep. My top speed was 13 km/h. Houston aimed my TV camera to film the moment my crew left the Moon.",
-      "yearDeployed": 1971
+      "yearDeployed": 1971,
+      "nasaImageId": "as15-88-11901"
     },
     {
       "id": "alsep",
@@ -83,7 +86,8 @@
       "status": "defunct",
       "firstPerson": "I am the ALSEP at Hadley, the most ambitious science station yet placed on the Moon. Jim drilled holes in the regolith to plant my heat flow probes, measuring the warmth leaking from the Moon's interior for the first time. My dust detector watched tiny charged particles dance in the electric fields above the surface. I spoke to Earth for six years.",
       "yearDeployed": 1971,
-      "yearLastContact": 1977
+      "yearLastContact": 1977,
+      "nasaImageId": "as15-86-11593"
     },
     {
       "id": "lrrr",
@@ -96,7 +100,8 @@
       "legacy": "Still fully operational and the most-used retroreflector on the Moon; the Apache Point Observatory Lunar Laser-ranging Operation (APOLLO) targets it routinely.",
       "status": "operational",
       "firstPerson": "I am the largest retroreflector on the Moon, with 300 glass prisms — three times more than my siblings at Tranquility Base and Fra Mauro. That makes me the easiest target for laser ranging, and I am the one scientists aim for most often. Every pulse I bounce back measures the Moon's distance to less than a centimetre. I have been doing this for over fifty years and I am not tired yet.",
-      "yearDeployed": 1971
+      "yearDeployed": 1971,
+      "nasaImageId": "as15-85-11514"
     },
     {
       "id": "fallen-astronaut",
@@ -109,7 +114,8 @@
       "legacy": "The only known artwork on another world; a replica is in the Smithsonian National Air and Space Museum. Its existence sparked discussion about the ethics of art and commerce in space.",
       "status": "dormant",
       "firstPerson": "I am the Fallen Astronaut, a small aluminium figure lying beside a plaque with fourteen names — astronauts and cosmonauts who gave their lives for space exploration. Dave Scott placed me here quietly during the last moonwalk, and I was not revealed to the public until after the crew returned home. I am the only artwork on another world, keeping a silent vigil that has lasted more than fifty years.",
-      "yearDeployed": 1971
+      "yearDeployed": 1971,
+      "nasaImageId": "as15-88-11894"
     }
   ],
   "models": {
