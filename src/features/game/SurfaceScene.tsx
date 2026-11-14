@@ -953,24 +953,84 @@ function InspectOverlay({ objects, missionId, isMars }: { objects: HeritageObjec
         </div>
 
         {/* Body */}
-        <div className="px-6 py-5">
+        <div className="px-6 py-5 space-y-4">
           <p className="text-sm leading-relaxed text-regolith-300">
             {obj.description}
           </p>
 
-          {/* XP Badge */}
-          <div className="mt-5 flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-signal/15 px-3 py-1.5 text-sm font-bold text-signal">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          {/* Status + Year badges */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-signal/15 px-3 py-1.5 text-xs font-bold text-signal">
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
                 <polygon points="7,1 8.8,5.2 13.4,5.5 9.9,8.5 11,13 7,10.6 3,13 4.1,8.5 0.6,5.5 5.2,5.2" fill="currentColor" />
               </svg>
               +{obj.xp} XP
             </span>
+            {obj.status && (
+              <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
+                obj.status === "operational" ? "bg-ok/15 text-ok" :
+                obj.status === "dormant" ? "bg-amber-500/15 text-amber-400" :
+                "bg-regolith-400/15 text-regolith-400"
+              }`}>
+                <span className={`inline-block h-1.5 w-1.5 rounded-full ${
+                  obj.status === "operational" ? "bg-ok animate-pulse" :
+                  obj.status === "dormant" ? "bg-amber-400" :
+                  "bg-regolith-500"
+                }`} />
+                {t(`inspect.status${obj.status.charAt(0).toUpperCase() + obj.status.slice(1)}`)}
+              </span>
+            )}
+            {obj.yearDeployed && (
+              <span className="text-xs text-regolith-400/70">
+                {t("inspect.deployed", { year: obj.yearDeployed })}
+              </span>
+            )}
+            {obj.yearLastContact && (
+              <span className="text-xs text-regolith-400/70">
+                · {t("inspect.lastContact", { year: obj.yearLastContact })}
+              </span>
+            )}
           </div>
+
+          {/* Science Discovery */}
+          {obj.scienceDiscovery && (
+            <div className="rounded-lg bg-signal/5 border border-signal/20 px-4 py-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-signal/70 mb-1">
+                {t("inspect.scienceDiscovery")}
+              </p>
+              <p className="text-sm leading-relaxed text-regolith-200">
+                {obj.scienceDiscovery}
+              </p>
+            </div>
+          )}
+
+          {/* First-person narration */}
+          {obj.firstPerson && (
+            <div className="rounded-lg bg-space-800/60 border border-space-600/30 px-4 py-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-regolith-400/60 mb-1.5">
+                {t("inspect.firstPersonLabel")}
+              </p>
+              <p className="text-sm italic leading-relaxed text-regolith-300/90">
+                &ldquo;{obj.firstPerson}&rdquo;
+              </p>
+            </div>
+          )}
+
+          {/* Legacy */}
+          {obj.legacy && (
+            <div className="rounded-lg bg-space-800/40 px-4 py-3 border border-space-700/30">
+              <p className="text-xs font-bold uppercase tracking-wider text-regolith-400/60 mb-1">
+                {t("inspect.legacy")}
+              </p>
+              <p className="text-sm leading-relaxed text-regolith-300">
+                {obj.legacy}
+              </p>
+            </div>
+          )}
 
           {/* Source citation */}
           {obj.source && (
-            <div className="mt-5 rounded-lg bg-space-800/50 px-4 py-3 border border-space-700/30">
+            <div className="rounded-lg bg-space-800/50 px-4 py-3 border border-space-700/30">
               <p className="text-xs font-medium uppercase tracking-wider text-regolith-400/60 mb-1">
                 {t("inspect.source")}
               </p>

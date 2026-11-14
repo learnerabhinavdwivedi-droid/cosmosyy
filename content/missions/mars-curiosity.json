@@ -21,6 +21,14 @@
     "model": null,
     "ortho": null
   },
+  "keyDiscovery": "Curiosity confirmed that Gale Crater once held a freshwater lake with all six chemical elements essential for life (carbon, hydrogen, nitrogen, oxygen, phosphorus, and sulphur).",
+  "missionLegacy": "Curiosity proved Mars was once habitable for microbial life and pioneered the sky crane landing system now used by Perseverance — it continues to operate and climb Mount Sharp.",
+  "funFact": "Curiosity carries a 1909 Lincoln penny on its calibration target — making it the only U.S. coin on Mars.",
+  "heritageNote": "Curiosity remains operational at Gale Crater as of 2024, having driven over 30 km and climbed hundreds of metres up Mount Sharp; it is actively adding to its heritage every sol.",
+  "timeline": {
+    "launch": "2011-11-26",
+    "landing": "2012-08-06"
+  },
   "objects": [
     {
       "id": "cu-rover",
@@ -28,7 +36,12 @@
       "position": [3, 0, -2],
       "description": "Curiosity is a car-sized rover that landed on 6 August 2012 using an audacious sky crane manoeuvre. Weighing 899 kg, it is powered by a plutonium-238 radioisotope thermoelectric generator, so unlike Spirit and Opportunity, dust storms cannot end its mission. Curiosity carries 10 science instruments and has been climbing Mount Sharp since 2014.",
       "xp": 60,
-      "source": "NASA/JPL Mars Science Laboratory"
+      "source": "NASA/JPL Mars Science Laboratory",
+      "scienceDiscovery": "Confirmed that Gale Crater once held a habitable freshwater lake environment with all six elements essential for life.",
+      "legacy": "Still operational and climbing Mount Sharp as of 2024, having driven over 30 km and drilled dozens of rock samples.",
+      "status": "operational",
+      "firstPerson": "I am the size of a car and I run on plutonium, so no dust storm can stop me. I have been exploring Mars since 2012 — drilling into rocks, tasting the soil, climbing a mountain layer by layer. I proved that Mars once had a lake where microbes could have lived. And I am still going.",
+      "yearDeployed": 2012
     },
     {
       "id": "cu-sky-crane",

@@ -69,7 +69,15 @@
     "source": "Source",
     "pressEsc": "Press [ESC] to return",
     "tapClose": "Tap CLOSE to return",
-    "missionLabel": "{{mission}} · {{site}}"
+    "missionLabel": "{{mission}} · {{site}}",
+    "scienceDiscovery": "Science Discovery",
+    "legacy": "Legacy",
+    "statusOperational": "Still Operational",
+    "statusDormant": "Dormant",
+    "statusDefunct": "Defunct",
+    "deployed": "Deployed {{year}}",
+    "lastContact": "Last contact {{year}}",
+    "firstPersonLabel": "In Its Own Words"
   },
   "report": {
     "heading": "Mission Complete",
@@ -92,7 +100,18 @@
     "backToMissions": "Back to missions",
     "whatStayedBehind": "What stayed behind",
     "missionSuccess": "Mission Successful",
-    "nextMission": "Next Mission: {{mission}}"
+    "nextMission": "Next Mission: {{mission}}",
+    "keyDiscovery": "Key Discovery",
+    "missionLegacy": "Mission Legacy",
+    "funFact": "Did You Know?",
+    "heritageNote": "Heritage Preservation",
+    "timelineLaunch": "Launch",
+    "timelineLanding": "Landing",
+    "timelineLastContact": "Last Contact",
+    "timelineEndOfMission": "End of Mission",
+    "missionTimeline": "Mission Timeline",
+    "missionDebrief": "Mission Debrief",
+    "stillOperational": "{{count}} artifact(s) still operational today"
   },
   "ranks": {
     "cadet": "Cadet",
@@ -136,6 +155,21 @@
   "credits": {
     "heading": "Credits",
     "builtWith": "Built with"
+  },
+  "about": {
+    "heading": "About Cosmosyy",
+    "tagline": "Abandoned but not forgotten.",
+    "challenge": "NASA Space Apps Challenge 2025",
+    "challengeDesc": "This project was created for the NASA International Space Apps Challenge, responding to the prompt: Abandoned but Not Forgotten — Storytelling about NASA's Discarded Equipment.",
+    "whatWeBuilt": "What We Built",
+    "whatWeBuiltDesc": "Cosmosyy is an interactive 3D experience that lets you walk the actual landing sites of Apollo Moon missions and Mars rover missions. You discover the heritage objects — scientific instruments, rovers, descent stages, and personal items — that humanity left behind on other worlds.",
+    "nasaData": "NASA Data & Sources",
+    "nasaDataDesc": "Every fact, coordinate, and artifact in this game comes from verified NASA sources. Landing coordinates use LROC/HiRISE data. Heritage object descriptions reference NASA mission archives, ALSEP documentation, and JPL mission pages.",
+    "heritagePreservation": "Heritage Preservation",
+    "heritagePreservationDesc": "The Artemis Accords (Section 9) recognize Apollo landing sites as historically significant. NASA's 2011 recommendations establish exclusion zones around Apollo 11 and 17 sites. These artifacts are humanity's first archaeological record on another world — they deserve protection and remembrance.",
+    "techStack": "Technology",
+    "openSource": "Open Source",
+    "backToGame": "Back to Game"
   },
   "error": {
     "heading": "Something went wrong",

@@ -154,6 +154,11 @@ export function LandingFooter() {
                 </button>
               </li>
               <li>
+                <Link to="/about" className="hover:text-amber-300 transition-colors focus-visible:outline-none focus-visible:text-amber-300">
+                  About & NASA Sources
+                </Link>
+              </li>
+              <li>
                 <Link to="/credits" className="hover:text-amber-300 transition-colors focus-visible:outline-none focus-visible:text-amber-300">
                   Credits & Licences
                 </Link>

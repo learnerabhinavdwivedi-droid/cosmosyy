@@ -8,6 +8,7 @@ const MissionSelectPage = lazy(
 );
 const GameShell = lazy(() => import("@/features/game/GameShell"));
 const CreditsPage = lazy(() => import("@/features/credits/CreditsPage"));
+const AboutPage = lazy(() => import("@/features/about/AboutPage"));
 const SettingsPage = lazy(() => import("@/features/settings/SettingsPage"));
 
 function withSuspense(Component: React.ComponentType) {
@@ -24,5 +25,6 @@ export const router = createBrowserRouter([
   { path: "/select", element: withSuspense(MissionSelectPage) },
   { path: "/play/:missionId", element: withSuspense(GameShell) },
   { path: "/credits", element: withSuspense(CreditsPage) },
+  { path: "/about", element: withSuspense(AboutPage) },
   { path: "/settings", element: withSuspense(SettingsPage) },
 ]);

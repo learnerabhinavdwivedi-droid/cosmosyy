@@ -58,6 +58,10 @@ export function ReportScreen() {
     mission.objects.filter((o) => found.includes(o.id)),
     [mission.objects, found],
   );
+  const operationalCount = useMemo(() =>
+    foundObjects.filter((o) => o.status === "operational").length,
+    [foundObjects],
+  );
   const objectXp = found.length * 50;
   const flagXp = isRobotic ? 50 : 100;
   const missionXp = XP_LAND + objectXp + flagXp + XP_COMPLETE;
@@ -183,9 +187,126 @@ export function ReportScreen() {
                   >
                     <span className="text-ok">✓</span>
                     <span className="text-regolith-300">{obj.name}</span>
+                    {obj.status && (
+                      <span className={`ml-auto text-xs ${
+                        obj.status === "operational" ? "text-ok" :
+                        obj.status === "dormant" ? "text-amber-400" : "text-regolith-500"
+                      }`}>
+                        {obj.status === "operational" ? "● Active" : obj.status === "dormant" ? "○ Silent" : "✕ Defunct"}
+                      </span>
+                    )}
                   </motion.div>
                 ))}
               </div>
+              {operationalCount > 0 && (
+                <p className="mt-3 text-xs text-ok/80">
+                  {t("report.stillOperational", { count: operationalCount })}
+                </p>
+              )}
+            </motion.div>
+          )}
+
+          {/* Mission Debrief */}
+          {(mission.keyDiscovery || mission.missionLegacy || mission.funFact) && (
+            <motion.div
+              className="mt-6 space-y-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.8 }}
+            >
+              <p className="text-xs font-bold uppercase tracking-wider text-regolith-400/70">
+                {t("report.missionDebrief")}
+              </p>
+
+              {mission.keyDiscovery && (
+                <div className="rounded-lg bg-signal/5 border border-signal/20 px-4 py-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-signal/70 mb-1">
+                    {t("report.keyDiscovery")}
+                  </p>
+                  <p className="text-sm leading-relaxed text-regolith-200">
+                    {mission.keyDiscovery}
+                  </p>
+                </div>
+              )}
+
+              {mission.missionLegacy && (
+                <div className="rounded-lg bg-space-800/60 border border-space-600/30 px-4 py-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-regolith-400/60 mb-1">
+                    {t("report.missionLegacy")}
+                  </p>
+                  <p className="text-sm leading-relaxed text-regolith-300">
+                    {mission.missionLegacy}
+                  </p>
+                </div>
+              )}
+
+              {mission.funFact && (
+                <div className="rounded-lg bg-amber-500/5 border border-amber-500/20 px-4 py-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-amber-400/70 mb-1">
+                    {t("report.funFact")}
+                  </p>
+                  <p className="text-sm leading-relaxed text-regolith-200">
+                    {mission.funFact}
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {/* Mission Timeline */}
+          {mission.timeline && (
+            <motion.div
+              className="mt-6 rounded-lg bg-space-800/40 border border-space-700/30 px-4 py-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.2 }}
+            >
+              <p className="text-xs font-bold uppercase tracking-wider text-regolith-400/60 mb-2">
+                {t("report.missionTimeline")}
+              </p>
+              <div className="space-y-1.5">
+                {mission.timeline.launch && (
+                  <div className="flex justify-between text-xs">
+                    <span className="text-regolith-400">{t("report.timelineLaunch")}</span>
+                    <span className="text-regolith-300 font-mono">{mission.timeline.launch}</span>
+                  </div>
+                )}
+                {mission.timeline.landing && (
+                  <div className="flex justify-between text-xs">
+                    <span className="text-regolith-400">{t("report.timelineLanding")}</span>
+                    <span className="text-regolith-300 font-mono">{mission.timeline.landing}</span>
+                  </div>
+                )}
+                {mission.timeline.lastContact && (
+                  <div className="flex justify-between text-xs">
+                    <span className="text-regolith-400">{t("report.timelineLastContact")}</span>
+                    <span className="text-regolith-300 font-mono">{mission.timeline.lastContact}</span>
+                  </div>
+                )}
+                {mission.timeline.endOfMission && (
+                  <div className="flex justify-between text-xs">
+                    <span className="text-regolith-400">{t("report.timelineEndOfMission")}</span>
+                    <span className="text-regolith-300 font-mono">{mission.timeline.endOfMission}</span>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Heritage Preservation Note */}
+          {mission.heritageNote && (
+            <motion.div
+              className="mt-4 rounded-lg bg-space-800/30 px-4 py-3 border border-space-700/20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.5 }}
+            >
+              <p className="text-xs font-bold uppercase tracking-wider text-regolith-400/50 mb-1">
+                {t("report.heritageNote")}
+              </p>
+              <p className="text-xs leading-relaxed text-regolith-400/80 italic">
+                {mission.heritageNote}
+              </p>
             </motion.div>
           )}
 

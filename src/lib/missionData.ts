@@ -27,6 +27,19 @@ export interface HeritageObject {
   xp: number;
   source?: string;
   hidden?: boolean;
+  scienceDiscovery?: string;
+  legacy?: string;
+  status?: "operational" | "dormant" | "defunct";
+  firstPerson?: string;
+  yearDeployed?: number;
+  yearLastContact?: number;
+}
+
+export interface MissionTimeline {
+  launch: string;
+  landing: string;
+  lastContact?: string;
+  endOfMission?: string;
 }
 
 export interface MissionSpec {
@@ -44,6 +57,11 @@ export interface MissionSpec {
   landing: { lat: number; lon: number; label: string };
   terrain: { model: string | null; ortho: string | null };
   objects: HeritageObject[];
+  keyDiscovery?: string;
+  missionLegacy?: string;
+  funFact?: string;
+  heritageNote?: string;
+  timeline?: MissionTimeline;
 }
 
 const RAW: Record<string, unknown> = {
@@ -74,6 +92,12 @@ function parse(raw: unknown): MissionSpec {
     xp: (o.xp as number) ?? 50,
     source: (o.source as string) ?? undefined,
     hidden: (o.hidden as boolean) ?? undefined,
+    scienceDiscovery: (o.scienceDiscovery as string) ?? undefined,
+    legacy: (o.legacy as string) ?? undefined,
+    status: (o.status as HeritageObject["status"]) ?? undefined,
+    firstPerson: (o.firstPerson as string) ?? undefined,
+    yearDeployed: (o.yearDeployed as number) ?? undefined,
+    yearLastContact: (o.yearLastContact as number) ?? undefined,
   }));
   return {
     id: r.id as string,
@@ -90,6 +114,11 @@ function parse(raw: unknown): MissionSpec {
     landing,
     terrain,
     objects,
+    keyDiscovery: (r.keyDiscovery as string) ?? undefined,
+    missionLegacy: (r.missionLegacy as string) ?? undefined,
+    funFact: (r.funFact as string) ?? undefined,
+    heritageNote: (r.heritageNote as string) ?? undefined,
+    timeline: (r.timeline as MissionTimeline) ?? undefined,
   };
 }
 

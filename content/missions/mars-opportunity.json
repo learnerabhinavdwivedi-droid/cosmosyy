@@ -21,6 +21,16 @@
     "model": null,
     "ortho": null
   },
+  "keyDiscovery": "Opportunity found haematite 'blueberries' and layered bedrock at Eagle Crater — the first in-situ proof that liquid water once flowed on the Martian surface.",
+  "missionLegacy": "Opportunity drove 45.16 km in nearly 15 years, setting the all-time off-Earth driving record and proving that long-duration surface missions are possible on Mars.",
+  "funFact": "Opportunity's last data, received during a planet-engulfing dust storm, was paraphrased by a NASA engineer as 'My battery is low and it's getting dark' — a line that moved millions of people worldwide.",
+  "heritageNote": "Opportunity's final resting place in Perseverance Valley on the rim of Endeavour Crater is one of the most emotionally significant sites in space exploration; it was silenced by a global dust storm in June 2018.",
+  "timeline": {
+    "launch": "2003-07-08",
+    "landing": "2004-01-25",
+    "lastContact": "2018-06-10",
+    "endOfMission": "2019-02-13"
+  },
   "objects": [
     {
       "id": "op-rover",
@@ -28,7 +38,13 @@
       "position": [2, 0, -3],
       "description": "Opportunity landed on 25 January 2004 for a 90-sol mission and operated for nearly 15 years — over 55 times its planned lifetime. It drove 45.16 km across the Martian surface, the longest distance travelled by any off-Earth wheeled vehicle. A planet-wide dust storm in June 2018 blocked sunlight to its solar panels. Last contact: 10 June 2018.",
       "xp": 60,
-      "source": "NASA/JPL Mars Exploration Rovers"
+      "source": "NASA/JPL Mars Exploration Rovers",
+      "scienceDiscovery": "Provided the first ground-truth evidence that Mars once had sustained surface water, through haematite concretions and water-laid sedimentary rock at Meridiani Planum.",
+      "legacy": "Opportunity rests in Perseverance Valley on Endeavour Crater's rim, silent since the June 2018 global dust storm; NASA declared it lost on 13 February 2019.",
+      "status": "dormant",
+      "firstPerson": "I was given 90 days and I lasted nearly 15 years. I drove farther than any robot on any world — 45.16 kilometres of Martian desert. I found proof that water once flowed here, and I ran a marathon across another planet. When the great dust storm came, I sent my last message and fell silent. My battery was low, and it was getting dark.",
+      "yearDeployed": 2004,
+      "yearLastContact": 2018
     },
     {
       "id": "op-eagle-crater",
@@ -36,7 +52,12 @@
       "position": [14, 0, 8],
       "description": "Opportunity landed inside Eagle Crater, a small 22-metre impact crater. Scientists called it a 'hole in one'. The crater walls exposed layered bedrock containing tiny haematite spherules nicknamed 'blueberries'. This was the first in-situ evidence that liquid water once existed on the Martian surface.",
       "xp": 50,
-      "source": "NASA/JPL Mars Exploration Rovers"
+      "source": "NASA/JPL Mars Exploration Rovers",
+      "scienceDiscovery": "Exposed layered bedrock and haematite spherules that provided the first in-situ proof of ancient liquid water on the Martian surface.",
+      "legacy": "Eagle Crater is where Opportunity made its 'hole in one' landing; the exposed bedrock remains a landmark site in the history of Mars exploration.",
+      "status": "defunct",
+      "firstPerson": "I am a tiny crater, just 22 metres across, and Opportunity landed right inside me — scientists called it a hole in one. In my walls they found layered rock and tiny round pebbles made of haematite. That was the proof: water once pooled here. I am small, but I changed everything we know about Mars.",
+      "yearDeployed": 2004
     },
     {
       "id": "op-blueberries",
@@ -44,7 +65,12 @@
       "position": [9, 0, -12],
       "description": "Scattered across Meridiani Planum, these small spherical concretions of grey haematite are typically 4–6 mm across. They formed inside water-saturated sedimentary rock and eroded out as the rock weathered. Their discovery was a landmark finding: definitive proof that Mars once had sustained liquid water on its surface.",
       "xp": 50,
-      "source": "NASA/JPL Mars Exploration Rovers"
+      "source": "NASA/JPL Mars Exploration Rovers",
+      "scienceDiscovery": "These 4–6 mm iron oxide spherules formed inside water-saturated rock, providing definitive proof that Mars had long-lasting liquid water.",
+      "legacy": "Billions of blueberries still litter the surface of Meridiani Planum, a permanent record of Mars's wet past waiting for future sample return.",
+      "status": "defunct",
+      "firstPerson": "We are tiny — just a few millimetres across — but there are billions of us scattered across Meridiani Planum. We formed deep inside rock that was soaked in water, and as the rock crumbled, we tumbled out. Each one of us is a marble-sized proof that Mars was once a wet world. Pick us up and you hold ancient water in your hand.",
+      "yearDeployed": 2004
     },
     {
       "id": "op-heat-shield",
@@ -52,7 +78,12 @@
       "position": [-12, 0, 14],
       "description": "Opportunity drove to examine its own heat shield, which had impacted the surface about 250 metres from the landing site. Near the heat shield, the rover found an iron-nickel meteorite, later named Heat Shield Rock — the first meteorite identified on another planet. It confirmed that the Martian atmosphere was once thicker.",
       "xp": 50,
-      "source": "NASA/JPL Mars Exploration Rovers"
+      "source": "NASA/JPL Mars Exploration Rovers",
+      "scienceDiscovery": "Led to the discovery of Heat Shield Rock, the first meteorite identified on another planet — an iron-nickel meteorite that confirmed Mars's thinner atmosphere allows more impacts.",
+      "legacy": "The crushed heat shield and nearby meteorite remain on the surface of Meridiani Planum, a pair of space-hardware and space-rock side by side.",
+      "status": "defunct",
+      "firstPerson": "I protected Opportunity during the hottest part of her journey — searing through the Martian atmosphere at thousands of degrees. Then I was tossed away and crashed 250 metres from the landing site. But my story was not over: right next to me, Opportunity found a meteorite — the first ever identified on another planet. Even discarded, I still helped make history.",
+      "yearDeployed": 2004
     },
     {
       "id": "op-marathon-valley",
@@ -60,7 +91,12 @@
       "position": [-10, 0, -14],
       "description": "In March 2015, Opportunity reached Marathon Valley on the rim of Endeavour Crater, having driven 42.195 km — a full marathon distance. The valley contained clay minerals detected from orbit by the Mars Reconnaissance Orbiter. Clay minerals form in near-neutral water, suggesting this area once had conditions more hospitable to life.",
       "xp": 50,
-      "source": "NASA/JPL Mars Exploration Rovers"
+      "source": "NASA/JPL Mars Exploration Rovers",
+      "scienceDiscovery": "Contained clay minerals that form only in near-neutral pH water, suggesting this area once had conditions hospitable to life — the gentlest water environment found by a rover.",
+      "legacy": "Marathon Valley marks where Opportunity completed a full marathon distance (42.195 km) on another planet, a milestone in human exploration.",
+      "status": "defunct",
+      "firstPerson": "I am Marathon Valley, and I earned my name the hard way. Opportunity drove 42.195 kilometres — a full marathon — to reach me. And I did not disappoint: my rocks hold clay minerals that formed in gentle, life-friendly water. I am proof that not all of Mars's water was harsh and acidic. Some of it was kind.",
+      "yearDeployed": 2015
     },
     {
       "id": "op-perseverance-valley",
@@ -68,7 +104,12 @@
       "position": [17, 0, -5],
       "description": "Opportunity's final resting place is in Perseverance Valley, a shallow channel carved into the western rim of Endeavour Crater. The rover was studying how the valley formed — by water, wind, or ice — when the 2018 global dust storm ended its mission. The valley was named for the rover's remarkable longevity.",
       "xp": 50,
-      "source": "NASA/JPL Mars Exploration Rovers"
+      "source": "NASA/JPL Mars Exploration Rovers",
+      "scienceDiscovery": "A shallow channel whose origin — water, wind, or ice — was under active investigation when the mission ended; its formation mechanism remains an open question.",
+      "legacy": "Perseverance Valley is Opportunity's final resting place; the rover sits partway down the channel, forever mid-investigation.",
+      "status": "defunct",
+      "firstPerson": "I am Perseverance Valley, carved into the rim of Endeavour Crater. Opportunity came to study how I was made — by water? by wind? by ice? — but the great dust storm of 2018 came before she could finish. Now she rests inside me, silent, her question unanswered. Perhaps someone will come back and solve the mystery she started.",
+      "yearDeployed": 2017
     }
   ]
 }

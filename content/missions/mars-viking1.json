@@ -21,6 +21,16 @@
     "model": null,
     "ortho": null
   },
+  "keyDiscovery": "Viking 1 returned the first successful images and soil analyses from the Martian surface, including biology experiments that searched for signs of life.",
+  "missionLegacy": "Viking 1 proved that robotic landers could survive and operate on Mars for years, paving the way for every Mars lander and rover that followed.",
+  "funFact": "Viking 1's cameras revealed that the Martian sky is butterscotch-pink, not blue — because fine iron oxide dust hangs in the thin atmosphere and scatters light differently than Earth's air.",
+  "heritageNote": "The Viking 1 lander is the oldest human-made object on the Martian surface and a designated U.S. National Historic Landmark candidate; it has rested undisturbed at Chryse Planitia since 1982.",
+  "timeline": {
+    "launch": "1975-08-20",
+    "landing": "1976-07-20",
+    "lastContact": "1982-11-11",
+    "endOfMission": "1982-11-13"
+  },
   "objects": [
     {
       "id": "v1-lander-body",
@@ -28,7 +38,13 @@
       "position": [2, 0, -3],
       "description": "The Viking 1 lander operated on the surface of Mars for over six years, from July 1976 to November 1982. It was the first spacecraft to successfully land on Mars and return images from the surface. The lander carried biology experiments, a gas chromatograph mass spectrometer, and cameras that captured the first colour photos from the Martian surface.",
       "xp": 60,
-      "source": "NASA/JPL Viking Mission"
+      "source": "NASA/JPL Viking Mission",
+      "scienceDiscovery": "Performed the first direct chemical analysis of Martian soil and conducted three biology experiments designed to detect metabolic signs of life.",
+      "legacy": "Silent since November 1982, the lander remains intact on the surface at Chryse Planitia, visible in orbital imagery from Mars Reconnaissance Orbiter.",
+      "status": "defunct",
+      "firstPerson": "I was the first to touch Mars and survive. For six years I tasted its soil, photographed its rust-coloured deserts, and radioed home every discovery. Now I sit quietly at Chryse Planitia, the oldest human-made object on Mars, waiting for the day someone visits me again.",
+      "yearDeployed": 1976,
+      "yearLastContact": 1982
     },
     {
       "id": "v1-sampler-arm",
@@ -36,7 +52,13 @@
       "position": [10, 0, 8],
       "description": "The Viking lander's robotic arm could extend 3 metres to collect soil samples. It scooped Martian regolith and delivered it to three biology experiments designed to detect signs of life. The results were controversial — the Labeled Release experiment gave positive results, but scientists ultimately attributed them to chemical reactions in the soil.",
       "xp": 50,
-      "source": "NASA/JPL Viking Mission"
+      "source": "NASA/JPL Viking Mission",
+      "scienceDiscovery": "Collected soil samples for three biology experiments, including the Labeled Release test that produced still-debated positive results for metabolic activity.",
+      "legacy": "The arm rests in its final position after its last scoop; the experiment results still fuel scientific debate decades later.",
+      "status": "defunct",
+      "firstPerson": "I reached out and touched Mars for the very first time. My metal fingers scooped the red soil and fed it to experiments searching for life. The answer I found was puzzling — something was happening in that soil, but we still aren't sure what. Maybe one day humans will come back and finish what I started.",
+      "yearDeployed": 1976,
+      "yearLastContact": 1982
     },
     {
       "id": "v1-meteorology",
@@ -44,7 +66,13 @@
       "position": [-12, 0, 5],
       "description": "Viking 1's meteorology boom measured temperature, wind speed, wind direction, and atmospheric pressure. It recorded the first Martian weather reports: temperatures ranging from -89°C at dawn to -31°C in the afternoon, with winds of 2–7 m/s. It also detected the first dust storms from ground level.",
       "xp": 50,
-      "source": "NASA/JPL Viking Mission"
+      "source": "NASA/JPL Viking Mission",
+      "scienceDiscovery": "Recorded the first weather reports from another planet, revealing temperatures from -89°C to -31°C and wind speeds of 2–7 m/s.",
+      "legacy": "Its design directly informed the meteorology instruments on every subsequent Mars lander, including Phoenix and InSight.",
+      "status": "defunct",
+      "firstPerson": "Every morning I felt the Martian wind brush past my sensors. I was the world's loneliest weather station, reporting forecasts no one could use — but scientists on Earth hung on every reading. I showed them that Mars has weather, seasons, and dust storms just like home.",
+      "yearDeployed": 1976,
+      "yearLastContact": 1982
     },
     {
       "id": "v1-cameras",
@@ -52,7 +80,13 @@
       "position": [6, 0, -14],
       "description": "Two facsimile cameras mounted on the lander captured the first panoramic images of the Martian surface. Each camera scanned vertically while the nodding mirror swept horizontally, building up images line by line. The cameras revealed a rock-strewn, rust-coloured desert beneath a butterscotch sky.",
       "xp": 50,
-      "source": "NASA/JPL Viking Mission"
+      "source": "NASA/JPL Viking Mission",
+      "scienceDiscovery": "Captured the first colour photographs of the Martian surface, revealing the true butterscotch colour of the sky and the rock-strewn landscape.",
+      "legacy": "These cameras gave humanity its first ground-level view of another planet; the panoramas remain iconic images in space exploration history.",
+      "status": "defunct",
+      "firstPerson": "I showed people what Mars actually looks like — not through a telescope, but standing right there. Line by line I built up the picture: red rocks, pink sky, a desert that stretches to the horizon. When my first photo reached Earth, the whole world saw a new frontier for the first time.",
+      "yearDeployed": 1976,
+      "yearLastContact": 1982
     },
     {
       "id": "v1-antenna",
@@ -60,7 +94,13 @@
       "position": [-8, 0, -16],
       "description": "The S-band high-gain antenna transmitted data directly to Earth at up to 16 kilobits per second. It also relayed data through the Viking Orbiter. The dish antenna is one of the most recognisable features of the Viking lander design.",
       "xp": 50,
-      "source": "NASA/JPL Viking Mission"
+      "source": "NASA/JPL Viking Mission",
+      "scienceDiscovery": "Enabled the first direct data relay from the Martian surface to Earth at up to 16 kilobits per second, transmitting images and science data.",
+      "legacy": "The antenna's relay architecture became the template for every subsequent Mars surface mission's communication design.",
+      "status": "defunct",
+      "firstPerson": "I was the voice of Mars. Every photograph, every weather reading, every soil experiment result — they all passed through me on their way to Earth. At 16 kilobits per second I was slow by today's standards, but I was the first to whisper Mars's secrets across 225 million kilometres of space.",
+      "yearDeployed": 1976,
+      "yearLastContact": 1982
     },
     {
       "id": "v1-seismometer",
@@ -68,7 +108,13 @@
       "position": [16, 0, -6],
       "description": "The seismometer on Viking 1 was mounted on top of the lander, which meant it was sensitive to wind vibrations. Unlike its twin on Viking 2, which may have detected a marsquake, Viking 1's seismometer was unable to confirm any seismic events due to wind interference. The lesson informed the design of InSight's seismometer decades later.",
       "xp": 50,
-      "source": "NASA/JPL Viking Mission"
+      "source": "NASA/JPL Viking Mission",
+      "scienceDiscovery": "Attempted the first seismic measurements on Mars; its wind-interference problems taught engineers to place future seismometers directly on the ground.",
+      "legacy": "Its failure directly inspired the design of InSight's SEIS seismometer, which was placed on the surface and successfully detected over 1,300 marsquakes.",
+      "status": "defunct",
+      "firstPerson": "I tried to listen to the heartbeat of Mars, but the wind kept drowning it out. Mounted on top of the lander, every gust shook me. I could not confirm a single marsquake. But my struggle was not wasted — forty years later, InSight learned from my mistakes and heard Mars rumble for the first time.",
+      "yearDeployed": 1976,
+      "yearLastContact": 1982
     }
   ]
 }
