@@ -169,34 +169,43 @@ function LandscapeNudge() {
 
 import { preloadGameAssets } from "@/lib/assetPreload";
 
-function SceneFade({ phase }: { phase: string }) {
-  const prevPhase = useRef(phase);
-  const [opaque, setOpaque] = useState(false);
+type SceneGroup = "select" | "flight" | "surface" | "launch" | "report";
+
+function getSceneGroup(phase: string): SceneGroup {
+  if (FLIGHT_PHASES.has(phase)) return "flight";
+  if (SURFACE_PHASES.has(phase)) return "surface";
+  if (phase === "launch") return "launch";
+  if (phase === "report") return "report";
+  return "select";
+}
+
+function useSceneTransition(phase: string) {
+  const target = getSceneGroup(phase);
+  const [mounted, setMounted] = useState<SceneGroup>(target);
+  const [curtain, setCurtain] = useState(false);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
-    const prev = prevPhase.current;
-    prevPhase.current = phase;
+    if (target === mounted) return;
 
-    const wasFlightScene = FLIGHT_PHASES.has(prev);
-    const isSurfaceScene = SURFACE_PHASES.has(phase);
-    const wasLaunch = prev === "launch";
-    const isReport = phase === "report";
-    const wasSurface = SURFACE_PHASES.has(prev);
-    const isLaunch = phase === "launch";
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
 
-    if ((wasFlightScene && isSurfaceScene) || (wasLaunch && isReport) || (wasSurface && isLaunch)) {
-      setOpaque(true);
-      // Allow the incoming 3D scene to mount, initialize WebGL context, and render first frame
-      const timer = setTimeout(() => setOpaque(false), 1200);
-      return () => clearTimeout(timer);
-    }
-  }, [phase]);
+    setCurtain(true);
 
-  return (
-    <div
-      className={`pointer-events-none fixed inset-0 z-50 bg-black transition-opacity duration-900 ease-out ${opaque ? "opacity-100" : "opacity-0"}`}
-    />
-  );
+    timersRef.current.push(
+      setTimeout(() => setMounted(target), 60),
+      setTimeout(() => setCurtain(false), 1100),
+    );
+
+    return () => {
+      timersRef.current.forEach(clearTimeout);
+      timersRef.current = [];
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target]);
+
+  return { mounted, curtain };
 }
 
 export default function GameShell() {
@@ -255,12 +264,11 @@ export default function GameShell() {
     prevPhase.current = phase;
   }, [phase, navigate]);
 
-  const isFlightPhase = FLIGHT_PHASES.has(phase);
-  const isSurfacePhase = SURFACE_PHASES.has(phase);
+  const { mounted, curtain } = useSceneTransition(phase);
 
   return (
     <div className="relative min-h-screen bg-bg text-fg">
-      {phase === "select" && (
+      {mounted === "select" && (
         <div className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-space-950 text-regolith-200">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-signal border-t-transparent" />
           <p className="mt-4 font-display text-sm tracking-widest uppercase text-regolith-400">
@@ -268,11 +276,15 @@ export default function GameShell() {
           </p>
         </div>
       )}
-      {isFlightPhase && <FlightScene />}
-      {isSurfacePhase && <SurfaceScene />}
-      {phase === "launch" && <LaunchScene />}
-      {phase === "report" && <ReportScreen />}
-      <SceneFade phase={phase} />
+      {mounted === "flight" && <FlightScene />}
+      {mounted === "surface" && <SurfaceScene />}
+      {mounted === "launch" && <LaunchScene />}
+      {mounted === "report" && <ReportScreen />}
+      <div
+        className={`pointer-events-none fixed inset-0 z-50 bg-black ${
+          curtain ? "opacity-100" : "opacity-0 transition-opacity duration-1000 ease-out"
+        }`}
+      />
       <GameAudioController />
       <LandscapeNudge />
       {isDemo && (
