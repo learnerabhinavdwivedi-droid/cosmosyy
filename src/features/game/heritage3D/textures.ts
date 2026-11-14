@@ -353,3 +353,172 @@ export function getSolarPanelTexture(): THREE.CanvasTexture {
   textureCache.solar = tex;
   return tex;
 }
+
+/**
+ * Crinkled Gold Kapton Multi-Layer Insulation (MLI) Foil Texture
+ */
+export function getGoldKaptonTexture(): THREE.CanvasTexture {
+  if (textureCache.goldKapton) return textureCache.goldKapton;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext("2d")!;
+
+  // Base amber-gold tone
+  ctx.fillStyle = "#d49b28";
+  ctx.fillRect(0, 0, 512, 512);
+
+  // Micro-crease specular highlights and wrinkles
+  for (let i = 0; i < 400; i++) {
+    const x = Math.random() * 512;
+    const y = Math.random() * 512;
+    const len = 10 + Math.random() * 35;
+    const angle = Math.random() * Math.PI * 2;
+    const bright = Math.random() > 0.45;
+
+    ctx.strokeStyle = bright
+      ? `rgba(255, 235, 150, ${0.15 + Math.random() * 0.25})`
+      : `rgba(130, 80, 10, ${0.2 + Math.random() * 0.3})`;
+    ctx.lineWidth = 1 + Math.random() * 1.5;
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+    ctx.stroke();
+  }
+
+  // Thermal tape grid seams (orange-gold Kapton tape with stitch lines)
+  ctx.strokeStyle = "rgba(180, 105, 15, 0.6)";
+  ctx.lineWidth = 4;
+  for (let x = 64; x < 512; x += 128) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, 512);
+    ctx.stroke();
+  }
+  for (let y = 64; y < 512; y += 128) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(512, y);
+    ctx.stroke();
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  textureCache.goldKapton = tex;
+  return tex;
+}
+
+/**
+ * Embossed Silver Thermal Mylar Blanket
+ */
+export function getSilverMLITexture(): THREE.CanvasTexture {
+  if (textureCache.silverMLI) return textureCache.silverMLI;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext("2d")!;
+
+  ctx.fillStyle = "#e2e8f0";
+  ctx.fillRect(0, 0, 512, 512);
+
+  // Waffle embossed dimple pattern
+  const step = 16;
+  for (let x = 0; x < 512; x += step) {
+    for (let y = 0; y < 512; y += step) {
+      ctx.fillStyle = (x / step + y / step) % 2 === 0 ? "#cbd5e1" : "#f8fafc";
+      ctx.fillRect(x + 1, y + 1, step - 2, step - 2);
+    }
+  }
+
+  // Wrinkle creases
+  for (let i = 0; i < 200; i++) {
+    const x = Math.random() * 512;
+    const y = Math.random() * 512;
+    const len = 15 + Math.random() * 40;
+    const angle = Math.random() * Math.PI * 2;
+    ctx.strokeStyle = `rgba(100, 116, 139, ${0.1 + Math.random() * 0.2})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
+    ctx.stroke();
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  textureCache.silverMLI = tex;
+  return tex;
+}
+
+/**
+ * Weathered Martian Basalt Rock with Iron-Oxide Dust
+ */
+export function getMarsRockTexture(): THREE.CanvasTexture {
+  if (textureCache.marsRock) return textureCache.marsRock;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext("2d")!;
+
+  // Dark volcanic basalt base
+  ctx.fillStyle = "#2d1b14";
+  ctx.fillRect(0, 0, 512, 512);
+
+  // Mineral specks and iron-oxide weathering
+  for (let i = 0; i < 2000; i++) {
+    const x = Math.random() * 512;
+    const y = Math.random() * 512;
+    const r = Math.random() * 3 + 0.5;
+    const isDust = Math.random() > 0.4;
+    ctx.fillStyle = isDust
+      ? `rgba(196, 95, 45, ${0.25 + Math.random() * 0.45})`
+      : `rgba(60, 45, 40, ${0.3 + Math.random() * 0.5})`;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  textureCache.marsRock = tex;
+  return tex;
+}
+
+/**
+ * Carbon-Fiber Twill Weave Texture
+ */
+export function getCarbonFiberTexture(): THREE.CanvasTexture {
+  if (textureCache.carbonFiber) return textureCache.carbonFiber;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 256;
+  canvas.height = 256;
+  const ctx = canvas.getContext("2d")!;
+
+  ctx.fillStyle = "#111827";
+  ctx.fillRect(0, 0, 256, 256);
+
+  const step = 8;
+  for (let x = 0; x < 256; x += step) {
+    for (let y = 0; y < 256; y += step) {
+      const isAlt = ((x / step) % 2 === 0) !== ((y / step) % 2 === 0);
+      ctx.fillStyle = isAlt ? "#1f2937" : "#0b0f17";
+      ctx.fillRect(x, y, step, step);
+    }
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  textureCache.carbonFiber = tex;
+  return tex;
+}

@@ -1,4 +1,4 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import type { StoryPacket } from "./storySchema";
@@ -381,21 +381,23 @@ export function StoryScene({
 
       <StoryEnvironment isMars={isMars} />
 
-      {isSWC ? (
-        <SWCExperimentModel
-          action={action}
-          isPlaying={isPlaying}
-          reduceMotion={reduceMotion}
-        />
-      ) : packet ? (
-        <DedicatedStoryObject
-          missionId={packet.missionId}
-          objectId={packet.id}
-          action={action}
-          isPlaying={isPlaying}
-          reduceMotion={reduceMotion}
-        />
-      ) : null}
+      <Suspense fallback={null}>
+        {isSWC ? (
+          <SWCExperimentModel
+            action={action}
+            isPlaying={isPlaying}
+            reduceMotion={reduceMotion}
+          />
+        ) : packet ? (
+          <DedicatedStoryObject
+            missionId={packet.missionId}
+            objectId={packet.id}
+            action={action}
+            isPlaying={isPlaying}
+            reduceMotion={reduceMotion}
+          />
+        ) : null}
+      </Suspense>
 
       <StoryCameraRig
         cameraKeyframe={cameraKeyframe}

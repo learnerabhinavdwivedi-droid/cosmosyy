@@ -334,40 +334,62 @@ export function JezeroDeltaFeature3D({ explode = 0, wireframe = false, scale = 1
 
   return (
     <group scale={scale} position={[0, lift, 0]}>
-      {/* 1. Jezero Crater Ancient Lakebed Foundation */}
-      <mesh position={[0, 0.08, 0]} receiveShadow>
-        <cylinderGeometry args={[1.6, 1.9, 0.16, 24]} />
-        <meshStandardMaterial color="#5c2410" roughness={0.96} metalness={0.04} wireframe={wireframe} />
+      {/* 1. Jezero Crater Ancient Mudstone Basin Floor */}
+      <mesh position={[0, 0.05, 0]} receiveShadow>
+        <boxGeometry args={[2.2, 0.1, 1.8]} />
+        <meshStandardMaterial color="#451a03" roughness={0.96} metalness={0.04} wireframe={wireframe} />
       </mesh>
 
-      {/* 2. Lower Delta Fan Sandstone Scarp */}
-      <mesh position={[-0.1, 0.28, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[1.2, 1.5, 0.26, 18]} />
-        <meshStandardMaterial color="#92400e" roughness={0.92} metalness={0.06} wireframe={wireframe} />
-      </mesh>
+      {/* 2. Lower Delta Fan Sandstone Scarp (Hawksbill Gap Strata) */}
+      <group position={[-0.15, 0.22, 0]}>
+        <mesh castShadow receiveShadow>
+          <boxGeometry args={[1.7, 0.24, 1.35]} />
+          <meshStandardMaterial color="#92400e" roughness={0.92} metalness={0.06} wireframe={wireframe} />
+        </mesh>
+        {/* Layered Cross-Bedding Sandstone Bench */}
+        <mesh position={[0.2, 0.09, 0.3]} castShadow>
+          <boxGeometry args={[1.25, 0.08, 0.55]} />
+          <meshStandardMaterial color="#b45309" roughness={0.94} metalness={0.05} wireframe={wireframe} />
+        </mesh>
+      </group>
 
-      {/* 3. Upper Kodiak Butte Layered Promontory */}
-      <mesh position={[-0.2, 0.54, 0]} castShadow receiveShadow>
-        <boxGeometry args={[1.1, 0.28, 0.85]} />
-        <meshStandardMaterial color="#b45309" roughness={0.88} metalness={0.08} wireframe={wireframe} />
-      </mesh>
+      {/* 3. Kodiak Butte Layered Delta Remnant Promontory */}
+      <group position={[-0.25, 0.5, -0.15]}>
+        <mesh rotation={[0, 0.1, -0.05]} castShadow receiveShadow>
+          <boxGeometry args={[1.15, 0.28, 0.85]} />
+          <meshStandardMaterial color="#78350f" roughness={0.88} metalness={0.08} wireframe={wireframe} />
+        </mesh>
+        {/* Top Flat Capping Rock Ledge */}
+        <mesh position={[0, 0.16, 0]} castShadow>
+          <boxGeometry args={[0.95, 0.05, 0.7]} />
+          <meshStandardMaterial color="#a16207" roughness={0.85} metalness={0.12} wireframe={wireframe} />
+        </mesh>
+      </group>
 
-      {/* 4. Ancient Neretva Vallis River Channel Cut */}
-      <mesh position={[0.3, 0.32, 0.1]} rotation={[0, 0.6, 0]}>
-        <boxGeometry args={[0.35, 0.08, 1.4]} />
-        <meshStandardMaterial color="#3b1708" roughness={0.95} wireframe={wireframe} />
-      </mesh>
+      {/* 4. Sinuous Neretva Vallis River Channel Cut */}
+      <group position={[0.32, 0.12, 0.05]} rotation={[0, 0.45, 0]}>
+        <mesh receiveShadow>
+          <boxGeometry args={[0.38, 0.06, 1.6]} />
+          <meshStandardMaterial color="#271810" roughness={0.98} wireframe={wireframe} />
+        </mesh>
+        {/* Clay & Carbonate Deposit Streaks on Channel Bank */}
+        <mesh position={[0.15, 0.035, 0]}>
+          <planeGeometry args={[0.08, 1.4]} />
+          <meshStandardMaterial color="#4ade80" roughness={0.7} metalness={0.1} wireframe={wireframe} />
+        </mesh>
+      </group>
 
-      {/* River-Transported Rounded Cobbles and Boulders */}
+      {/* River-Transported Rounded Conglomerate Cobbles & Boulders */}
       {([
-        [-0.4, 0.69, 0.2],
-        [0.1, 0.37, 0.45],
-        [0.35, 0.36, -0.3],
-        [-0.6, 0.42, -0.35],
-      ] as [number, number, number][]).map(([bx, by, bz], idx) => (
-        <mesh key={idx} position={[bx, by, bz]} castShadow>
-          <sphereGeometry args={[0.07 + (idx % 3) * 0.03, 8, 8]} />
-          <meshStandardMaterial color="#78716c" roughness={0.85} metalness={0.15} wireframe={wireframe} />
+        [-0.45, 0.68, 0.15],
+        [0.12, 0.38, 0.45],
+        [0.38, 0.16, -0.4],
+        [-0.65, 0.36, -0.4],
+        [0.22, 0.15, 0.65],
+      ] as const).map(([bx, by, bz], idx) => (
+        <mesh key={idx} position={[bx, by, bz]} rotation={[idx * 0.5, idx * 0.3, 0]} castShadow>
+          <dodecahedronGeometry args={[0.07 + (idx % 3) * 0.03, 0]} />
+          <meshStandardMaterial color="#57534e" roughness={0.88} metalness={0.15} wireframe={wireframe} />
         </mesh>
       ))}
     </group>

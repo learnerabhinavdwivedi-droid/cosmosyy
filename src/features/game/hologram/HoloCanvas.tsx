@@ -89,7 +89,7 @@ function HoloModel({
     const size = b.getSize(new THREE.Vector3());
     const center = b.getCenter(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
-    const targetSize = 0.60;
+    const targetSize = 1.35;
     const scale = targetSize / (maxDim || 1);
     return { center, scale, minY: b.min.y };
   }, [clonedScene]);
@@ -158,14 +158,14 @@ function ContactShadow({ themeColor = "#38bdf8" }: { themeColor?: string }) {
 function AutoCamera() {
   const { camera } = useThree();
   useEffect(() => {
-    camera.position.set(3.2, 1.45, 3.2);
-    camera.lookAt(0, 0, 0);
+    camera.position.set(2.4, 1.15, 2.4);
+    camera.lookAt(0, 0.08, 0);
   }, [camera]);
   return null;
 }
 
 /* ─── Clean object bounding box fit without compounding transform bug ─── */
-function fitObject(pivot: THREE.Group, content: THREE.Group, targetSize = 0.60): boolean {
+function fitObject(pivot: THREE.Group, content: THREE.Group, targetSize = 1.35): boolean {
   pivot.position.set(0, 0, 0);
   pivot.scale.set(1, 1, 1);
   pivot.rotation.set(0, 0, 0);

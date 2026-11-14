@@ -206,35 +206,60 @@ export function EagleCraterFeature3D({ explode = 0, wireframe = false, scale = 1
 
   return (
     <group scale={scale} position={[0, lift, 0]}>
-      {/* 1. Impact Crater Sandy Floor & Sloping Rim */}
-      <mesh position={[0, 0.06, 0]} receiveShadow>
-        <cylinderGeometry args={[1.3, 1.7, 0.14, 24]} />
-        <meshStandardMaterial color="#993d16" roughness={0.96} metalness={0.04} wireframe={wireframe} />
+      {/* Meridiani Planum Sand Dune & Crater Berm Rim Base */}
+      <mesh position={[0, 0.04, 0]} receiveShadow>
+        <boxGeometry args={[2.2, 0.08, 1.8]} />
+        <meshStandardMaterial color="#7c2d12" roughness={0.96} metalness={0.04} wireframe={wireframe} />
       </mesh>
 
-      {/* 2. Exposed Opportunity Ledge Sulfate Bedrock Outcrop */}
-      <mesh position={[-0.2, 0.22, -0.15]} castShadow receiveShadow>
-        <boxGeometry args={[1.4, 0.22, 0.7]} />
-        <meshStandardMaterial color="#d97706" roughness={0.9} metalness={0.08} wireframe={wireframe} />
-      </mesh>
+      {/* 22m Eagle Impact Crater Basin Depression */}
+      <group position={[0.2, 0.08, 0.1]}>
+        <mesh receiveShadow>
+          <boxGeometry args={[1.6, 0.06, 1.3]} />
+          <meshStandardMaterial color="#451a03" roughness={0.98} wireframe={wireframe} />
+        </mesh>
+      </group>
 
-      {/* 3. Layered Sulfate Outcrop Ribs */}
-      <mesh position={[-0.2, 0.34, -0.15]} castShadow>
-        <boxGeometry args={[1.1, 0.08, 0.55]} />
-        <meshStandardMaterial color="#f59e0b" roughness={0.88} metalness={0.1} wireframe={wireframe} />
-      </mesh>
+      {/* Opportunity Ledge: Exposed Stratified Sulfate Bedrock Outcrop */}
+      <group position={[-0.25, 0.22, -0.2]}>
+        <mesh rotation={[0, 0.12, -0.06]} castShadow receiveShadow>
+          <boxGeometry args={[1.5, 0.22, 0.75]} />
+          <meshStandardMaterial color="#d97706" roughness={0.9} metalness={0.08} wireframe={wireframe} />
+        </mesh>
+        {/* Upper Outcrop Sandstone Strata Layers */}
+        <mesh position={[0.08, 0.13, 0.05]} castShadow>
+          <boxGeometry args={[1.25, 0.07, 0.6]} />
+          <meshStandardMaterial color="#f59e0b" roughness={0.88} metalness={0.1} wireframe={wireframe} />
+        </mesh>
+        <mesh position={[-0.15, 0.19, -0.05]} castShadow>
+          <boxGeometry args={[0.9, 0.06, 0.45]} />
+          <meshStandardMaterial color="#fbbf24" roughness={0.85} metalness={0.12} wireframe={wireframe} />
+        </mesh>
+      </group>
 
-      {/* 4. Embedded Hematite 'Blueberries' in Bedrock */}
+      {/* Dense Field of Shiny Blue-Grey Hematite 'Blueberries' (Spherules) */}
       {([
-        [-0.5, 0.38, 0.05],
-        [-0.3, 0.36, -0.2],
-        [-0.1, 0.37, 0.1],
-        [0.15, 0.38, -0.15],
-        [0.35, 0.25, 0.18],
-      ] as [number, number, number][]).map(([bx, by, bz], idx) => (
+        [-0.55, 0.36, -0.1],
+        [-0.38, 0.35, -0.28],
+        [-0.2, 0.37, -0.05],
+        [0.05, 0.36, -0.2],
+        [0.22, 0.34, -0.12],
+        [-0.42, 0.12, 0.18],
+        [-0.15, 0.11, 0.25],
+        [0.1, 0.11, 0.32],
+        [0.35, 0.12, 0.15],
+        [0.55, 0.12, 0.28],
+      ] as const).map(([bx, by, bz], idx) => (
         <mesh key={idx} position={[bx, by, bz]} castShadow>
-          <sphereGeometry args={[0.038, 12, 12]} />
-          <meshStandardMaterial color="#3b4f6b" roughness={0.3} metalness={0.75} wireframe={wireframe} />
+          <sphereGeometry args={[0.032, 12, 12]} />
+          <meshStandardMaterial
+            color="#3b4f6b"
+            roughness={0.28}
+            metalness={0.82}
+            emissive="#1e293b"
+            emissiveIntensity={0.2}
+            wireframe={wireframe}
+          />
         </mesh>
       ))}
     </group>

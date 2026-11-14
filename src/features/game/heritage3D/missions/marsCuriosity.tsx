@@ -356,35 +356,77 @@ export function MountSharpFeature3D({ explode = 0, wireframe = false, scale = 1 
 
   return (
     <group scale={scale} position={[0, lift, 0]}>
-      {/* 1. Gale Crater Basalt Floor Layer */}
-      <mesh position={[0, 0.08, 0]} receiveShadow>
-        <cylinderGeometry args={[1.5, 1.8, 0.16, 24]} />
-        <meshStandardMaterial color="#442211" roughness={0.96} metalness={0.04} wireframe={wireframe} />
+      {/* Gale Crater Floor Terrain Base with Iron-Oxide Weathering */}
+      <mesh position={[0, 0.05, 0]} receiveShadow>
+        <boxGeometry args={[2.2, 0.1, 1.8]} />
+        <meshStandardMaterial color="#451a03" roughness={0.96} metalness={0.04} wireframe={wireframe} />
       </mesh>
 
-      {/* 2. Lower Stratified Mudstone (Murray Formation) */}
-      <mesh position={[0, 0.28, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[1.15, 1.45, 0.28, 20]} />
-        <meshStandardMaterial color="#78350f" roughness={0.94} metalness={0.06} wireframe={wireframe} />
+      {/* Murray Formation: Lower Stratified Mudstone Escarpment */}
+      <group position={[-0.1, 0.22, 0.05]}>
+        <mesh castShadow receiveShadow>
+          <boxGeometry args={[1.7, 0.24, 1.4]} />
+          <meshStandardMaterial color="#78350f" roughness={0.92} metalness={0.06} wireframe={wireframe} />
+        </mesh>
+        {/* Layered Sedimentary Bench Terraces */}
+        <mesh position={[0.2, 0.08, 0.35]} castShadow>
+          <boxGeometry args={[1.2, 0.08, 0.6]} />
+          <meshStandardMaterial color="#92400e" roughness={0.94} metalness={0.05} wireframe={wireframe} />
+        </mesh>
+        <mesh position={[-0.25, 0.08, -0.3]} castShadow>
+          <boxGeometry args={[1.0, 0.07, 0.55]} />
+          <meshStandardMaterial color="#b45309" roughness={0.94} metalness={0.05} wireframe={wireframe} />
+        </mesh>
+      </group>
+
+      {/* Vera Rubin Ridge: Distinctive Hematite-Rich Dark Red Ledge */}
+      <group position={[0.05, 0.48, -0.1]}>
+        <mesh position={[0, 0, 0]} rotation={[0, 0.15, -0.05]} castShadow receiveShadow>
+          <boxGeometry args={[1.35, 0.26, 0.95]} />
+          <meshStandardMaterial
+            color="#881337"
+            roughness={0.88}
+            metalness={0.15}
+            wireframe={wireframe}
+          />
+        </mesh>
+        {/* Jagged Promontory Cliff Edge */}
+        <mesh position={[0.42, 0.1, 0.15]} rotation={[0, 0.3, 0.1]} castShadow>
+          <dodecahedronGeometry args={[0.32, 0]} />
+          <meshStandardMaterial color="#701a75" roughness={0.86} metalness={0.16} wireframe={wireframe} />
+        </mesh>
+      </group>
+
+      {/* Clay-Bearing Unit & Sulfate Valley Fissure (Gediz Vallis Channel) */}
+      <mesh position={[-0.32, 0.36, 0.3]} rotation={[0.2, 0.5, 0]}>
+        <boxGeometry args={[0.22, 0.12, 1.3]} />
+        <meshStandardMaterial color="#3f3f46" roughness={0.95} metalness={0.08} wireframe={wireframe} />
       </mesh>
 
-      {/* 3. Vera Rubin Ridge (Hematite-Rich Reddish Unit) */}
-      <mesh position={[0.1, 0.52, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.82, 1.1, 0.24, 16]} />
-        <meshStandardMaterial color="#881337" roughness={0.9} metalness={0.12} wireframe={wireframe} />
-      </mesh>
+      {/* Upper Aeolis Mons Summit Peak (Wind-Carved Yardang Spire) */}
+      <group position={[0.12, 0.82, -0.15]}>
+        <mesh rotation={[0.1, 0.4, -0.1]} castShadow>
+          <dodecahedronGeometry args={[0.55, 1]} />
+          <meshStandardMaterial color="#d97706" roughness={0.9} metalness={0.08} wireframe={wireframe} />
+        </mesh>
+        {/* Wind-sculpted Fluted Fin */}
+        <mesh position={[0.15, 0.28, 0]} rotation={[0.2, -0.3, 0.2]} castShadow>
+          <dodecahedronGeometry args={[0.35, 0]} />
+          <meshStandardMaterial color="#b45309" roughness={0.92} wireframe={wireframe} />
+        </mesh>
+      </group>
 
-      {/* 4. Upper Sulfate-Bearing Canyons & Yardang Summit (Aeolis Mons Peak) */}
-      <mesh position={[0, 0.82, 0]} castShadow>
-        <coneGeometry args={[0.78, 0.42, 12]} />
-        <meshStandardMaterial color="#a16207" roughness={0.88} metalness={0.1} wireframe={wireframe} />
-      </mesh>
-
-      {/* Canyon Ridge Ribs */}
-      {[-0.4, 0, 0.4].map((rx, idx) => (
-        <mesh key={idx} position={[rx, 0.48, 0.55]} rotation={[0.4, 0, 0]} castShadow>
-          <boxGeometry args={[0.16, 0.55, 0.18]} />
-          <meshStandardMaterial color="#5c2410" roughness={0.92} wireframe={wireframe} />
+      {/* Scattered Dark Basalt Talus Boulders at Base */}
+      {([
+        [-0.75, 0.14, 0.6],
+        [-0.55, 0.12, -0.65],
+        [0.72, 0.15, 0.55],
+        [0.85, 0.12, -0.4],
+        [0.2, 0.13, 0.72],
+      ] as const).map(([bx, by, bz], idx) => (
+        <mesh key={idx} position={[bx, by, bz]} rotation={[idx * 0.4, idx * 0.7, 0]} castShadow>
+          <dodecahedronGeometry args={[0.08 + (idx % 3) * 0.03, 0]} />
+          <meshStandardMaterial color="#27272a" roughness={0.9} metalness={0.15} wireframe={wireframe} />
         </mesh>
       ))}
     </group>

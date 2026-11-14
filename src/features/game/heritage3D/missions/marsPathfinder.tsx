@@ -2,10 +2,12 @@ import { useMemo } from "react";
 import type { ArtifactProps } from "./shared";
 import {
   getSolarPanelTexture,
+  getGoldKaptonTexture,
 } from "../textures";
 
 export function SojournerRover3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactProps) {
   const solarTex = useMemo(() => getSolarPanelTexture(), []);
+  const goldKaptonTex = useMemo(() => getGoldKaptonTexture(), []);
   const wheelSpread = explode * 0.2;
 
   return (
@@ -13,7 +15,13 @@ export function SojournerRover3D({ explode = 0, wireframe = false, scale = 1 }: 
       {/* Warm Gold-foiled Chassis Body */}
       <mesh position={[0, 0.22, 0]} castShadow receiveShadow>
         <boxGeometry args={[0.55, 0.16, 0.36]} />
-        <meshStandardMaterial color="#dfa230" metalness={0.9} roughness={0.25} wireframe={wireframe} />
+        <meshStandardMaterial
+          map={goldKaptonTex}
+          color="#dfa230"
+          metalness={0.9}
+          roughness={0.25}
+          wireframe={wireframe}
+        />
       </mesh>
 
       {/* Top Silicon Solar Panel Deck */}

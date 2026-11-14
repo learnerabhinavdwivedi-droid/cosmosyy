@@ -1,10 +1,13 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import * as THREE from "three";
+import { useGLTF } from "@react-three/drei";
 import type { ArtifactProps } from "./shared";
 import {
   getAmericanFlagTexture,
   getLRRRTexture,
   getSolarPanelTexture,
+  getGoldKaptonTexture,
+  getSilverMLITexture,
 } from "../textures";
 
 export function AmericanFlag3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactProps) {
@@ -296,6 +299,7 @@ export function LaserRetroreflector3D({ explode = 0, wireframe = false, scale = 
 
 export function PSEPSeismometer3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactProps) {
   const solarTex = useMemo(() => getSolarPanelTexture(), []);
+  const goldKaptonTex = useMemo(() => getGoldKaptonTexture(), []);
   const wingExplode = explode * 0.4;
 
   return (
@@ -304,6 +308,7 @@ export function PSEPSeismometer3D({ explode = 0, wireframe = false, scale = 1 }:
       <mesh position={[0, 0.22, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[0.24, 0.24, 0.35, 24]} />
         <meshStandardMaterial
+          map={goldKaptonTex}
           color="#d97706"
           metalness={0.92}
           roughness={0.18}
@@ -328,6 +333,7 @@ export function PSEPSeismometer3D({ explode = 0, wireframe = false, scale = 1 }:
       <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.22, 0.48, 24]} />
         <meshStandardMaterial
+          map={goldKaptonTex}
           color="#f59e0b"
           metalness={0.9}
           roughness={0.22}
@@ -464,13 +470,21 @@ export function SolarWindComp3D({ explode = 0, wireframe = false, scale = 1 }: A
 
 export function MESA3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactProps) {
   const shelfY = explode * 0.25;
+  const goldKaptonTex = useMemo(() => getGoldKaptonTexture(), []);
+  const silverMLITex = useMemo(() => getSilverMLITexture(), []);
 
   return (
     <group scale={scale}>
       {/* Outer Descent Stage Quad Structural Frame */}
       <mesh position={[0, 0.5, -0.15]} castShadow>
         <boxGeometry args={[1.1, 1.0, 0.2]} />
-        <meshStandardMaterial color="#d4a338" metalness={0.92} roughness={0.25} wireframe={wireframe} />
+        <meshStandardMaterial
+          map={goldKaptonTex}
+          color="#d4a338"
+          metalness={0.92}
+          roughness={0.25}
+          wireframe={wireframe}
+        />
       </mesh>
 
       {/* Deployable Equipment Stowage Table Pallet */}
@@ -483,7 +497,13 @@ export function MESA3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactPr
         {/* Rock Sample Return Containers (SRC Boxes - Silver Al-Li alloy with handles) */}
         <mesh position={[-0.24, 0.14, 0.05]} castShadow>
           <boxGeometry args={[0.3, 0.2, 0.25]} />
-          <meshStandardMaterial color="#f1f5f9" metalness={0.95} roughness={0.15} wireframe={wireframe} />
+          <meshStandardMaterial
+            map={silverMLITex}
+            color="#f1f5f9"
+            metalness={0.95}
+            roughness={0.15}
+            wireframe={wireframe}
+          />
         </mesh>
         <mesh position={[-0.24, 0.25, 0.05]}>
           <cylinderGeometry args={[0.012, 0.012, 0.18, 8]} />
@@ -499,7 +519,13 @@ export function MESA3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactPr
         {/* Thermal Blanket Silver/Gold Foil Insulation Layers */}
         <mesh position={[0, -0.04, 0]}>
           <boxGeometry args={[0.92, 0.02, 0.62]} />
-          <meshStandardMaterial color="#e5b842" metalness={0.9} roughness={0.2} wireframe={wireframe} />
+          <meshStandardMaterial
+            map={goldKaptonTex}
+            color="#e5b842"
+            metalness={0.9}
+            roughness={0.2}
+            wireframe={wireframe}
+          />
         </mesh>
       </group>
     </group>
@@ -507,48 +533,30 @@ export function MESA3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactPr
 }
 
 export function LunarModuleDescentStage3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactProps) {
-  const engineY = -explode * 0.4;
-  const legSpread = explode * 0.3;
+  const { scene } = useGLTF("/models/lm-descent.glb");
+  const cloned = useMemo(() => scene.clone(true), [scene]);
+
+  useEffect(() => {
+    cloned.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        if (wireframe) {
+          mesh.material = new THREE.MeshStandardMaterial({
+            color: "#44eeff",
+            emissive: "#0088cc",
+            emissiveIntensity: 0.4,
+            wireframe: true,
+          });
+        }
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+      }
+    });
+  }, [cloned, wireframe]);
 
   return (
     <group scale={scale}>
-      {/* Octagonal Main Structure with Gold Kapton Foil Wrap */}
-      <mesh position={[0, 0.65, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[1.3, 1.3, 0.75, 8]} />
-        <meshStandardMaterial color="#d4a338" metalness={0.92} roughness={0.22} wireframe={wireframe} />
-      </mesh>
-      {/* Upper Deck Black/Silver Inconel Thermal Shields */}
-      <mesh position={[0, 1.04, 0]}>
-        <cylinderGeometry args={[1.25, 1.25, 0.04, 8]} />
-        <meshStandardMaterial color="#1e222a" metalness={0.7} roughness={0.4} wireframe={wireframe} />
-      </mesh>
-
-      {/* Central Descent Propulsion Engine (DPS) Bell */}
-      <mesh position={[0, 0.15 + engineY, 0]} castShadow>
-        <cylinderGeometry args={[0.32, 0.68, 0.6, 20]} />
-        <meshStandardMaterial color="#2d3036" metalness={0.88} roughness={0.25} wireframe={wireframe} />
-      </mesh>
-
-      {/* 4 Landing Gear Outriggers with Inverted Dish Footpads */}
-      {[45, 135, 225, 315].map((deg) => {
-        const rad = (deg * Math.PI) / 180;
-        const cos = Math.cos(rad);
-        const sin = Math.sin(rad);
-        return (
-          <group key={deg}>
-            {/* Primary Shock Strut */}
-            <mesh position={[cos * (1.6 + legSpread), 0.35, sin * (1.6 + legSpread)]} rotation={[0, -rad, 0.7]}>
-              <cylinderGeometry args={[0.04, 0.04, 1.4, 8]} />
-              <meshStandardMaterial color="#e5b842" metalness={0.92} roughness={0.2} wireframe={wireframe} />
-            </mesh>
-            {/* 37-inch Inverted Dish Footpad */}
-            <mesh position={[cos * (2.1 + legSpread), 0.02, sin * (2.1 + legSpread)]}>
-              <cylinderGeometry args={[0.34, 0.34, 0.04, 16]} />
-              <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.3} wireframe={wireframe} />
-            </mesh>
-          </group>
-        );
-      })}
+      <primitive object={cloned} position={[0, -explode * 0.3, 0]} />
     </group>
   );
 }
