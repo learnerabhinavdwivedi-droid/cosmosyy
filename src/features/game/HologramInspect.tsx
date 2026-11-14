@@ -18,13 +18,16 @@ import * as THREE from "three";
 /* ─── Holographic 3D model ─── */
 function HoloModel({
   url,
+  explode,
   wireframe,
   themeColor,
+  manifest,
 }: {
   url: string;
   explode: number;
   wireframe?: boolean;
   themeColor: string;
+  manifest?: HologramManifest | null;
 }) {
   const { scene } = useGLTF(url);
   const groupRef = useRef<THREE.Group>(null);
@@ -37,15 +40,44 @@ function HoloModel({
         mesh.material = new THREE.MeshStandardMaterial({
           color: new THREE.Color(themeColor),
           emissive: new THREE.Color(themeColor),
-          emissiveIntensity: wireframe ? 0.6 : 0.3,
+          emissiveIntensity: wireframe ? 0.6 : 0.35,
           transparent: true,
-          opacity: wireframe ? 0.35 : 0.7,
+          opacity: wireframe ? 0.4 : 0.85,
           wireframe: !!wireframe,
           side: THREE.DoubleSide,
         });
       }
     });
   }, [clonedScene, wireframe, themeColor]);
+
+  // Exploded view animation / subsystem offset
+  useEffect(() => {
+    if (!clonedScene) return;
+    clonedScene.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh || child.type === "Group") {
+        if (!child.userData.origPos) {
+          child.userData.origPos = child.position.clone();
+        }
+        if (manifest?.components && manifest.components.length > 0) {
+          const lowerName = child.name.toLowerCase();
+          const comp = manifest.components.find((c) => {
+            const cName = c.name.toLowerCase();
+            return lowerName === cName || lowerName.includes(cName) || cName.includes(lowerName);
+          });
+          if (comp && comp.explode_vector) {
+            const factor = explode * 1.5;
+            child.position.set(
+              child.userData.origPos.x + comp.explode_vector[0] * factor,
+              child.userData.origPos.y + comp.explode_vector[1] * factor,
+              child.userData.origPos.z + comp.explode_vector[2] * factor,
+            );
+            return;
+          }
+        }
+        child.position.copy(child.userData.origPos);
+      }
+    });
+  }, [clonedScene, manifest, explode]);
 
   useFrame((_, delta) => {
     if (groupRef.current) {
@@ -138,12 +170,16 @@ function AutoCamera() {
 /* ─── 3D Viewer canvas ─── */
 function HoloCanvas({
   modelUrl,
+  explode,
   wireframe,
   theme,
+  manifest,
 }: {
   modelUrl: string;
+  explode: number;
   wireframe?: boolean;
   theme: ObjectTheme;
+  manifest?: HologramManifest | null;
 }) {
   return (
     <Canvas
@@ -155,7 +191,13 @@ function HoloCanvas({
       <directionalLight position={[5, 5, 5]} intensity={0.6} color={theme.primary} />
       <pointLight position={[0, -2, 0]} intensity={0.4} color={theme.primary} />
       <Suspense fallback={null}>
-        <HoloModel url={modelUrl} explode={0} wireframe={wireframe} themeColor={theme.primary} />
+        <HoloModel
+          url={modelUrl}
+          explode={explode}
+          wireframe={wireframe}
+          themeColor={theme.primary}
+          manifest={manifest}
+        />
       </Suspense>
       <HoloRings color={theme.primary} />
       <ScanLine color={theme.primary} />
@@ -605,6 +647,8 @@ export function HologramInspect({
   const mission = useMemo(() => getMission(missionId), [missionId]);
   const [visible, setVisible] = useState(false);
   const [manifest, setManifest] = useState<HologramManifest | null>(null);
+  const [explode, setExplode] = useState(0);
+  const [wireframe, setWireframe] = useState(true);
   const howlRef = useRef<Howl | null>(null);
 
   const theme = useMemo(
@@ -618,6 +662,7 @@ export function HologramInspect({
   );
 
   useEffect(() => {
+    setExplode(0);
     if (!modelEntry) { setManifest(null); return; }
     fetch(modelEntry.manifestPath)
       .then((r) => r.json())
@@ -673,29 +718,69 @@ export function HologramInspect({
       <ObjectCounter found={found.length} total={objects.length} theme={theme} />
 
       {/* Two-panel layout */}
-      <div className="relative z-10 flex h-full items-stretch gap-4 p-4 pt-14 pb-16">
+      <div className="relative z-10 flex h-full flex-col md:flex-row items-stretch gap-4 p-4 pt-14 pb-16 overflow-y-auto md:overflow-hidden">
         {/* LEFT — 3D wireframe OR category blueprint */}
-        <div className="flex w-[42%] flex-col">
+        <div className="flex w-full md:w-[45%] flex-col min-h-[340px] md:min-h-0">
           {has3D ? (
             <div
-              className="relative flex-1 overflow-hidden rounded-xl border"
+              className="relative flex-1 overflow-hidden rounded-xl border flex flex-col"
               style={{ borderColor: theme.border, background: "rgba(7,9,13,0.7)" }}
             >
-              <HoloCanvas modelUrl={modelEntry!.modelPath} wireframe theme={theme} />
-              {manifest && (
-                <div className="absolute bottom-3 left-3 right-3 z-10">
-                  <ComponentLabels manifest={manifest} theme={theme} />
-                </div>
-              )}
-              {/* Category + name overlay */}
-              <div className="absolute left-3 top-3 z-10">
+              <div className="relative flex-1">
+                <HoloCanvas
+                  modelUrl={modelEntry!.modelPath}
+                  explode={explode}
+                  wireframe={wireframe}
+                  theme={theme}
+                  manifest={manifest}
+                />
+              </div>
+
+              {/* Category + wireframe toggle overlay */}
+              <div className="absolute left-3 top-3 right-3 z-10 flex items-center justify-between">
                 <span
                   className="rounded px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]"
                   style={{ background: theme.primaryDim, color: theme.primary }}
                 >
                   {theme.category}
                 </span>
+                <button
+                  type="button"
+                  onClick={() => setWireframe((v) => !v)}
+                  className="rounded border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider transition hover:bg-space-800"
+                  style={{ borderColor: theme.border, color: theme.primary, background: theme.primaryDim }}
+                >
+                  {wireframe ? "Wireframe" : "Solid Holo"}
+                </button>
               </div>
+
+              {/* Exploded view slider if components available */}
+              {manifest?.components && manifest.components.length > 0 && (
+                <div
+                  className="absolute bottom-3 left-3 right-3 z-10 flex flex-col gap-1 rounded-lg border p-2 backdrop-blur-md"
+                  style={{ borderColor: theme.border, background: "rgba(7,9,13,0.85)" }}
+                >
+                  <div className="flex items-center justify-between text-[10px] font-mono">
+                    <span className="font-bold tracking-wider uppercase" style={{ color: theme.primary }}>
+                      Subsystem Explode
+                    </span>
+                    <span className="text-regolith-300">{Math.round(explode * 100)}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={explode}
+                    onChange={(e) => setExplode(parseFloat(e.target.value))}
+                    className="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-space-800"
+                    style={{ accentColor: theme.primary }}
+                  />
+                  <div className="mt-1 max-h-16 overflow-y-auto">
+                    <ComponentLabels manifest={manifest} theme={theme} />
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <BlueprintView obj={obj} theme={theme} />
@@ -703,7 +788,7 @@ export function HologramInspect({
         </div>
 
         {/* RIGHT — Info card */}
-        <div className="flex w-[58%] flex-col">
+        <div className="flex w-full md:w-[55%] flex-col min-h-0">
           <InfoPanel
             obj={obj}
             missionName={mission.name}

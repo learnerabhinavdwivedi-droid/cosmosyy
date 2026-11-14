@@ -23,11 +23,13 @@ const MODEL_MAP: Record<string, Record<string, ModelEntry>> = {
     "descent-stage": m("apollo11_eagle"),
     "lrrr": m("apollo11_easep"),
     "psep": m("apollo11_easep"),
+    "mesa": m("apollo11_eagle"),
   },
   "apollo-12": {
     "descent-stage": m("apollo12_intrepid"),
     "surveyor-3": m("surveyor3"),
     "alsep": m("alsep_packages"),
+    "hand-tool-carrier": m("apollo12_intrepid"),
   },
   "apollo-14": {
     "descent-stage": m("apollo14_antares_met"),
@@ -45,6 +47,7 @@ const MODEL_MAP: Record<string, Record<string, ModelEntry>> = {
     "descent-stage": m("apollo16_orion_lrv2"),
     "lrv": m("apollo16_orion_lrv2"),
     "alsep": m("alsep_packages"),
+    "uv-camera": m("apollo16_orion_lrv2"),
   },
   "apollo-17": {
     "descent-stage": m("apollo17_challenger_lrv3"),
@@ -54,19 +57,36 @@ const MODEL_MAP: Record<string, Record<string, ModelEntry>> = {
   },
   "mars-viking1": {
     "v1-lander-body": m("viking1"),
+    "v1-sampler-arm": m("viking1"),
+    "v1-meteorology": m("viking1"),
+    "v1-cameras": m("viking1"),
+    "v1-antenna": m("viking1"),
+    "v1-seismometer": m("viking1"),
   },
   "mars-pathfinder": {
+    "mp-base-station": m("phoenix"),
     "mp-sojourner": m("sojourner"),
+    "mp-ramp": m("sojourner"),
+    "mp-imp-camera": m("sojourner"),
   },
   "mars-spirit": {
     "sp-rover": m("spirit"),
+    "sp-heat-shield": m("spirit"),
   },
   "mars-opportunity": {
     "op-rover": m("opportunity"),
+    "op-heat-shield": m("opportunity"),
   },
-  "mars-curiosity": {},
+  "mars-curiosity": {
+    "cu-rover": m("opportunity"),
+    "cu-sky-crane": m("insight"),
+    "cu-calibration-target": m("opportunity"),
+  },
   "mars-perseverance": {
+    "pe-rover": m("spirit"),
     "pe-ingenuity": m("ingenuity"),
+    "pe-supercam": m("spirit"),
+    "pe-sky-crane": m("insight"),
   },
 };
 
