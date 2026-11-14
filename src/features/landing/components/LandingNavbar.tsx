@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { Volume2, VolumeX, Rocket } from "lucide-react";
+import { Volume2, VolumeX, Rocket, Maximize2, Minimize2 } from "lucide-react";
 import { gameAudio } from "@/lib/gameAudio";
+import { useFullscreen } from "@/lib/fullscreen";
 
 export function LandingNavbar() {
   const [soundPlaying, setSoundPlaying] = useState(false);
+  const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
 
   const toggleSound = () => {
     gameAudio.unlock();
@@ -93,6 +95,33 @@ export function LandingNavbar() {
                   <>
                     <VolumeX className="h-3.5 w-3.5 text-regolith-300 shrink-0" />
                     <span className="hidden xs:inline">Sound</span>
+                  </>
+                )}
+              </motion.button>
+
+              {/* Focus Mode / Fullscreen Toggle */}
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={toggleFullscreen}
+                aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen Focus Mode"}
+                title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen Focus Mode"}
+                className={`flex min-h-[40px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold backdrop-blur-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                  isFullscreen
+                    ? "border-signal-500/70 bg-signal-500/20 text-signal-400 shadow-[0_0_12px_rgba(255,107,44,0.3)]"
+                    : "border-white/20 bg-space-900/70 text-regolith-200 hover:text-white hover:border-white/40 hover:bg-space-800/80"
+                }`}
+              >
+                {isFullscreen ? (
+                  <>
+                    <Minimize2 className="h-3.5 w-3.5 text-signal-400 shrink-0" />
+                    <span className="hidden md:inline">Exit Focus</span>
+                  </>
+                ) : (
+                  <>
+                    <Maximize2 className="h-3.5 w-3.5 text-regolith-300 shrink-0" />
+                    <span className="hidden md:inline">Focus Mode</span>
                   </>
                 )}
               </motion.button>

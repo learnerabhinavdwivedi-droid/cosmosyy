@@ -11,6 +11,7 @@ import { getMissionOrNull, type MissionSpec, type Planet } from "@/lib/missionDa
 import { gameAudio } from "@/lib/gameAudio";
 import { onNarrationComplete } from "@/lib/narration";
 import { isTouchDevice } from "@/lib/useMobile";
+import { useFullscreen } from "@/lib/fullscreen";
 import { getSolarPanelTexture, getCharredHeatShieldTexture } from "./heritage3D/textures";
 import * as THREE from "three";
 
@@ -1591,6 +1592,7 @@ function FlightContent({ cutVeilRef }: { cutVeilRef: RefObject<HTMLDivElement | 
 
 function FlightHUD({ onSkip }: { onSkip: () => void }) {
   const { t } = useTranslation();
+  const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
   const phase = useGameStore((s) => s.phase);
   const missionId = useGameStore((s) => s.missionId);
   const playerName = useAppStore((s) => s.player.name);
@@ -1658,6 +1660,18 @@ function FlightHUD({ onSkip }: { onSkip: () => void }) {
               </p>
             )}
           </div>
+          <button
+            type="button"
+            onClick={toggleFullscreen}
+            className="pointer-events-auto flex items-center justify-center gap-1.5 rounded-lg border border-space-700/80 bg-space-950/80 hover:bg-space-850 px-2 sm:px-2.5 py-1.5 text-xs font-semibold text-regolith-300 hover:text-white backdrop-blur transition hover:border-signal/50 active:scale-95 touch-manipulation shadow-lg"
+            aria-label={isFullscreen ? t("fullscreen.exitHint") : t("fullscreen.enterHint")}
+            title={isFullscreen ? t("fullscreen.exitHint") : t("fullscreen.enterHint")}
+          >
+            <span className="text-sm leading-none">{isFullscreen ? "🗗" : "⛶"}</span>
+            <span className="hidden sm:inline text-[11px]">
+              {isFullscreen ? t("fullscreen.exit") : t("fullscreen.enter")}
+            </span>
+          </button>
           <button
             type="button"
             onClick={onSkip}

@@ -107,7 +107,7 @@ function HoloModel({
     const size = b.getSize(new THREE.Vector3());
     const center = b.getCenter(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
-    const targetSize = 1.70;
+    const targetSize = 1.15;
     const scale = targetSize / (maxDim || 1);
     return { center, scale };
   }, [clonedScene]);
@@ -154,20 +154,20 @@ function StudioLighting() {
 /* ─── Studio Pedestal Contact Shadow ─── */
 function ContactShadow() {
   return (
-    <group position={[0, -1.02, 0]}>
+    <group position={[0, -0.68, 0]}>
       {/* Dark radial contact shadow on floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.3, 48]} />
+        <circleGeometry args={[1.1, 48]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.65} depthWrite={false} />
       </mesh>
       {/* Outer soft shadow feather */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.9, 48]} />
+        <circleGeometry args={[1.5, 48]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.3} depthWrite={false} />
       </mesh>
       {/* Studio turntable ring */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-        <ringGeometry args={[1.78, 1.82, 64]} />
+        <ringGeometry args={[1.35, 1.38, 64]} />
         <meshBasicMaterial color="#3a404c" transparent opacity={0.5} depthWrite={false} />
       </mesh>
     </group>
@@ -178,7 +178,7 @@ function ContactShadow() {
 function AutoCamera() {
   const { camera } = useThree();
   useEffect(() => {
-    camera.position.set(3.0, 1.8, 3.0);
+    camera.position.set(2.4, 1.4, 2.4);
     camera.lookAt(0, 0, 0);
   }, [camera]);
   return null;
@@ -199,23 +199,49 @@ function DedicatedHoloModel({
   const groupRef = useRef<THREE.Group>(null);
   const pivotRef = useRef<THREE.Group>(null);
   const contentRef = useRef<THREE.Group>(null);
+  const centeredRef = useRef(false);
+
+  useEffect(() => {
+    centeredRef.current = false;
+  }, [missionId, objectId]);
 
   useLayoutEffect(() => {
     if (!contentRef.current || !pivotRef.current) return;
     contentRef.current.updateWorldMatrix(true, true);
     const box = new THREE.Box3().setFromObject(contentRef.current);
-    const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-    const maxDim = Math.max(size.x, size.y, size.z);
-    const targetSize = 1.70;
-    const s = maxDim > 0.001 ? targetSize / maxDim : 1.0;
-    pivotRef.current.scale.set(s, s, s);
-    pivotRef.current.position.set(-center.x * s, -center.y * s, -center.z * s);
+    if (!box.isEmpty()) {
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      if (maxDim > 0.05) {
+        const targetSize = 1.15;
+        const s = targetSize / maxDim;
+        pivotRef.current.scale.set(s, s, s);
+        pivotRef.current.position.set(-center.x * s, -center.y * s, -center.z * s);
+        centeredRef.current = true;
+      }
+    }
   }, [missionId, objectId]);
 
   useFrame((_, delta) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += delta * 0.22;
+    }
+    if (!centeredRef.current && contentRef.current && pivotRef.current) {
+      contentRef.current.updateWorldMatrix(true, true);
+      const box = new THREE.Box3().setFromObject(contentRef.current);
+      if (!box.isEmpty()) {
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        if (maxDim > 0.05) {
+          const targetSize = 1.15;
+          const s = targetSize / maxDim;
+          pivotRef.current.scale.set(s, s, s);
+          pivotRef.current.position.set(-center.x * s, -center.y * s, -center.z * s);
+          centeredRef.current = true;
+        }
+      }
     }
   });
 
@@ -259,7 +285,7 @@ function HoloCanvas({
   return (
     <Canvas
       gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
-      camera={{ fov: 38, near: 0.1, far: 100, position: [3.0, 1.8, 3.0] }}
+      camera={{ fov: 36, near: 0.1, far: 100, position: [2.4, 1.4, 2.4] }}
       style={{ background: "transparent" }}
     >
       <StudioLighting />

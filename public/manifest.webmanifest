@@ -1,0 +1,19 @@
+{
+  "name": "Cosmosyy",
+  "short_name": "Cosmosyy",
+  "description": "Walk on the Moon and Mars, discover what was left behind.",
+  "start_url": "/play/apollo-11",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone", "minimal-ui"],
+  "orientation": "landscape",
+  "background_color": "#07090D",
+  "theme_color": "#07090D",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

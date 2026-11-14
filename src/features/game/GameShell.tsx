@@ -10,6 +10,7 @@ import { DebugPanel } from "@/components/DebugPanel";
 import { gameAudio } from "@/lib/gameAudio";
 import { preloadNarration, playNarration, stopNarration, unlockAudio, onNarrationComplete } from "@/lib/narration";
 import { isTouchDevice, useIsPortrait } from "@/lib/useMobile";
+import { useFullscreen, requestFullscreen, isFullscreen } from "@/lib/fullscreen";
 import { FlightScene } from "./FlightScene";
 import { SurfaceScene } from "./SurfaceScene";
 import { ReportScreen } from "./ReportScreen";
@@ -152,20 +153,48 @@ function useOrientationLock() {
   }, []);
 }
 
+function useAutoFullscreenTouch() {
+  useEffect(() => {
+    if (!isTouchDevice()) return;
+    const handleFirstTouch = () => {
+      if (!isFullscreen()) {
+        requestFullscreen().catch(() => {});
+      }
+    };
+    window.addEventListener("touchend", handleFirstTouch, { passive: true });
+    window.addEventListener("pointerup", handleFirstTouch, { passive: true });
+    return () => {
+      window.removeEventListener("touchend", handleFirstTouch);
+      window.removeEventListener("pointerup", handleFirstTouch);
+    };
+  }, []);
+}
+
 function LandscapeNudge() {
   const isPortrait = useIsPortrait();
   const touch = isTouchDevice();
+  const { enter } = useFullscreen();
+  const { t } = useTranslation();
+
   if (!touch || !isPortrait) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-space-950/95 backdrop-blur-xl">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-5 bg-space-950/95 backdrop-blur-xl px-4 text-center">
       <div className="animate-[spin_2s_ease-in-out_infinite_alternate] text-6xl">📱</div>
-      <p className="max-w-xs text-center font-display text-lg font-bold text-regolith-100">
+      <p className="max-w-xs font-display text-xl sm:text-2xl font-bold text-regolith-100">
         Please rotate your phone to landscape mode
       </p>
       <p className="text-sm text-regolith-400">
         The mission requires a horizontal view
       </p>
+      <button
+        type="button"
+        onClick={() => enter()}
+        className="mt-2 flex items-center gap-2 rounded-xl border border-signal bg-signal/20 hover:bg-signal/30 active:scale-95 px-5 py-3 text-sm font-bold text-signal shadow-lg shadow-signal/20 backdrop-blur transition touch-manipulation cursor-pointer"
+      >
+        <span className="text-base">⛶</span>
+        <span>{t("fullscreen.rotateAndFocus")}</span>
+      </button>
     </div>
   );
 }
@@ -260,9 +289,27 @@ export default function GameShell() {
   }, [phase, navigate]);
 
   const { mounted, curtain } = useSceneTransition(phase);
+  const isPortrait = useIsPortrait();
+  const touch = isTouchDevice();
+  const { isFullscreen: inFullscreen, enter } = useFullscreen();
+  const { t } = useTranslation();
+
+  useAutoFullscreenTouch();
 
   return (
-    <div className="relative min-h-screen bg-bg text-fg">
+    <div className="relative h-screen h-[100dvh] w-screen w-[100dvw] overflow-hidden bg-bg text-fg select-none">
+      {touch && !inFullscreen && !isPortrait && (
+        <div className="fixed top-2 left-1/2 -translate-x-1/2 z-[70] pointer-events-auto animate-pulse">
+          <button
+            type="button"
+            onClick={() => enter()}
+            className="flex items-center gap-1.5 rounded-full border border-signal/60 bg-space-950/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-signal shadow-lg shadow-signal/20 backdrop-blur active:scale-95 transition cursor-pointer"
+          >
+            <span className="text-xs">⛶</span>
+            <span>{t("fullscreen.enter")}</span>
+          </button>
+        </div>
+      )}
       {mounted === "select" && (
         <div className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-space-950 text-regolith-200">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-signal border-t-transparent" />

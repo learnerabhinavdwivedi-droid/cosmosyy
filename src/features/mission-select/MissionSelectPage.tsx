@@ -9,6 +9,8 @@ import { preloadGameAssets } from "@/lib/assetPreload";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { isTouchDevice } from "@/lib/useMobile";
+import { requestFullscreen } from "@/lib/fullscreen";
 import type { MissionStatus } from "@/store/useAppStore";
 
 type PlanetTab = "moon" | "mars";
@@ -301,6 +303,9 @@ export default function MissionSelectPage() {
 
   const handleLaunch = (missionId: string) => {
     if (!playerName) return;
+    if (isTouchDevice()) {
+      requestFullscreen().catch(() => {});
+    }
     gameAudio.unlock();
     unlockAudio();
     preloadNarration(missionId);

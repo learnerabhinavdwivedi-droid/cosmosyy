@@ -3,6 +3,15 @@
     "title": "Cosmosyy",
     "tagline": "Walk where they walked. Find what they left behind."
   },
+  "fullscreen": {
+    "enter": "Focus Mode",
+    "exit": "Exit Focus",
+    "enterHint": "Enter full screen focus mode",
+    "exitHint": "Exit full screen",
+    "rotateAndFocus": "Enter Focus Mode & Rotate",
+    "tapToFocus": "Tap for Full Screen Focus Mode",
+    "hideBrowserBar": "Hides browser bar & enables immersive landscape mode"
+  },
   "missionSelect": {
     "heading": "Choose Your Mission",
     "marsHeading": "Mars Exploration Missions",

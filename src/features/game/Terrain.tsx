@@ -26,7 +26,6 @@ export function STLTerrain({ stlPath, orthoPath }: { stlPath: string; orthoPath:
 
   const processedGeometry = useMemo(() => {
     const geo = geometry.clone();
-    geo.computeVertexNormals();
     geo.center();
 
     const bbox = new THREE.Box3().setFromBufferAttribute(
@@ -40,6 +39,7 @@ export function STLTerrain({ stlPath, orthoPath }: { stlPath: string; orthoPath:
     const s = targetSize / maxDim;
     geo.scale(s, s * 0.5, s);
     geo.rotateX(-Math.PI / 2);
+    geo.computeVertexNormals();
     generatePlanarUVs(geo);
 
     return geo;
@@ -51,6 +51,7 @@ export function STLTerrain({ stlPath, orthoPath }: { stlPath: string; orthoPath:
       map: orthoTex,
       roughness: 0.95,
       metalness: 0.0,
+      side: THREE.DoubleSide,
     });
   }, [orthoTex]);
 

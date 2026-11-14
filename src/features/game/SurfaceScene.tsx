@@ -14,6 +14,7 @@ import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { useTouchStore } from "@/store/useTouchStore";
 import { isTouchDevice } from "@/lib/useMobile";
+import { useFullscreen } from "@/lib/fullscreen";
 import { gameAudio } from "@/lib/gameAudio";
 import { getMission, type HeritageObject } from "@/lib/missionData";
 import { LMDescent } from "./LunarModule";
@@ -1082,6 +1083,7 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
   const isMars = planet === "mars";
   const isRobotic = missionType === "robotic";
   const { t } = useTranslation();
+  const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
   const phase = useGameStore((s) => s.phase);
   const found = useGameStore((s) => s.objectsFoundThisRun);
   const send = useGameStore((s) => s.send);
@@ -1259,9 +1261,20 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
         </p>
       </div>
 
-      {/* Top-right: mini radar */}
-      <div className="absolute right-4 top-4 rounded-lg bg-space-950/60 p-1 backdrop-blur">
-        <MiniRadar found={found} objects={objects} isMars={isMars} />
+      {/* Top-right: mini radar & focus mode toggle */}
+      <div className="absolute right-4 top-4 flex items-start gap-2">
+        <button
+          type="button"
+          onClick={toggleFullscreen}
+          className="pointer-events-auto flex items-center justify-center rounded-lg border border-space-700/80 bg-space-950/80 hover:bg-space-850 p-2 text-xs font-semibold text-regolith-300 hover:text-white backdrop-blur transition hover:border-signal/50 active:scale-95 touch-manipulation shadow-lg"
+          aria-label={isFullscreen ? t("fullscreen.exitHint") : t("fullscreen.enterHint")}
+          title={isFullscreen ? t("fullscreen.exitHint") : t("fullscreen.enterHint")}
+        >
+          <span className="text-base leading-none">{isFullscreen ? "🗗" : "⛶"}</span>
+        </button>
+        <div className="rounded-lg bg-space-950/60 p-1 backdrop-blur">
+          <MiniRadar found={found} objects={objects} isMars={isMars} />
+        </div>
       </div>
 
       {/* XP toast */}
