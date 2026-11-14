@@ -18,7 +18,8 @@ const KEY_TEXTURES = [
   "/textures/moon-color-4k.webp",
   "/textures/moon-elevation-2k.png",
   "/textures/mars-color-2k.jpg",
-  "/textures/earth-color-2k.jpg",
+  "/textures/earth.jpg",
+  "/textures/bootprint.jpg",
 ];
 
 let preloaded = false;
