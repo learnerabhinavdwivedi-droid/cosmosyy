@@ -23,6 +23,7 @@ import { getSunPosition, getEarthPosition } from "./sunPosition";
 import { TouchControls } from "./TouchControls";
 import { HologramInspect } from "./HologramInspect";
 import { getThemeColor3 } from "./objectThemes";
+import { getTerrainElevation } from "./terrainHeight";
 import * as THREE from "three";
 
 const SCAN_RANGE = 8;
@@ -126,12 +127,16 @@ function HeritageMarker({
   isNear,
   distance,
   isMars,
+  lat = 0,
+  lon = 0,
 }: {
   obj: HeritageObject;
   isFound: boolean;
   isNear: boolean;
   distance: number;
   isMars?: boolean;
+  lat?: number;
+  lon?: number;
 }) {
   const outerRingRef = useRef<THREE.Mesh>(null);
   const innerRingRef = useRef<THREE.Mesh>(null);
@@ -166,8 +171,16 @@ function HeritageMarker({
   const baseColor = isFound ? "#66ff99" : isNear ? themeColor : (isMars ? "#e8a050" : "#ffd36e");
   const showName = distance < NAME_VISIBLE_RANGE;
 
+  const terrainY = getTerrainElevation(
+    obj.position[0],
+    obj.position[2],
+    isMars ? "mars" : "moon",
+    lat,
+    lon,
+  );
+
   return (
-    <group position={obj.position}>
+    <group position={[obj.position[0], obj.position[1] + terrainY, obj.position[2]]}>
       <FloatingArrow isFound={isFound} themeColor={themeColor} distance={distance} />
 
       <mesh
@@ -442,7 +455,7 @@ function AmbientDust({ planet }: { planet?: string }) {
   );
 }
 
-function Footprints() {
+function Footprints({ lat = 0, lon = 0 }: { lat?: number; lon?: number }) {
   const texture = useLoader(THREE.TextureLoader, "/textures/bootprint.jpg");
   const maxPrints = 60;
   const meshRef = useRef<THREE.InstancedMesh>(null);
@@ -465,7 +478,8 @@ function Footprints() {
       const perpX = -Math.sin(playerState.heading) * 0.15 * side;
       const perpZ = Math.cos(playerState.heading) * 0.15 * side;
 
-      dummy.position.set(px + perpX, 0.01, pz + perpZ);
+      const printY = getTerrainElevation(px + perpX, pz + perpZ, "moon", lat, lon);
+      dummy.position.set(px + perpX, printY + 0.02, pz + perpZ);
       dummy.rotation.set(-Math.PI / 2, 0, playerState.heading + Math.PI);
       dummy.scale.set(0.15, 0.25, 1);
       dummy.updateMatrix();
@@ -493,7 +507,13 @@ function Footprints() {
   );
 }
 
-function MarsBase({ missionId }: { missionId: string }) {
+function MarsBase({
+  missionId,
+  position = [0, 0, 0],
+}: {
+  missionId: string;
+  position?: [number, number, number];
+}) {
   const isRover = missionId.startsWith("mars-spirit") || missionId.startsWith("mars-opportunity")
     || missionId.startsWith("mars-curiosity") || missionId.startsWith("mars-perseverance");
   const isLargeRover = missionId === "mars-curiosity" || missionId === "mars-perseverance";
@@ -501,7 +521,7 @@ function MarsBase({ missionId }: { missionId: string }) {
   if (isRover) {
     const s = isLargeRover ? 1.0 : 0.65;
     return (
-      <group position={[0, 0, 0]} scale={s}>
+      <group position={position} scale={s}>
         {/* Rover body */}
         <mesh position={[0, 0.35, 0]}>
           <boxGeometry args={[1.2, 0.4, 0.8]} />
@@ -547,7 +567,7 @@ function MarsBase({ missionId }: { missionId: string }) {
   // Lander (Viking, Pathfinder)
   const isPf = missionId === "mars-pathfinder";
   return (
-    <group position={[0, 0, 0]}>
+    <group position={position}>
       {/* Lander body */}
       <mesh position={[0, 0.4, 0]}>
         <cylinderGeometry args={[0.5, 0.6, 0.5, isPf ? 6 : 8]} />
@@ -577,7 +597,15 @@ function MarsBase({ missionId }: { missionId: string }) {
   );
 }
 
-function PlayerController({ planet }: { planet?: string }) {
+function PlayerController({
+  planet,
+  lat = 0,
+  lon = 0,
+}: {
+  planet?: string;
+  lat?: number;
+  lon?: number;
+}) {
   const { camera } = useThree();
   const velocity = useRef(new THREE.Vector3());
   const verticalVel = useRef(0);
@@ -633,7 +661,8 @@ function PlayerController({ planet }: { planet?: string }) {
       document.addEventListener("pointerlockchange", onPointerLockChange);
     }
 
-    physY.current = GROUND_Y + EYE_HEIGHT;
+    const startGroundY = getTerrainElevation(5, 10, planet ?? "moon", lat, lon);
+    physY.current = startGroundY + EYE_HEIGHT;
     camera.position.set(5, physY.current, 10);
     euler.current.y = -0.4;
     camera.quaternion.setFromEuler(euler.current);
@@ -646,7 +675,7 @@ function PlayerController({ planet }: { planet?: string }) {
         document.removeEventListener("pointerlockchange", onPointerLockChange);
       }
     };
-  }, [camera]);
+  }, [camera, planet, lat, lon]);
 
   useFrame((_state, rawDelta) => {
     const delta = Math.min(rawDelta, 0.05);
@@ -697,7 +726,8 @@ function PlayerController({ planet }: { planet?: string }) {
     camera.position.x += velocity.current.x * delta;
     camera.position.z += velocity.current.z * delta;
 
-    const onGround = physY.current <= GROUND_Y + EYE_HEIGHT + 0.01;
+    const currentGroundY = getTerrainElevation(camera.position.x, camera.position.z, planet ?? "moon", lat, lon);
+    const onGround = physY.current <= currentGroundY + EYE_HEIGHT + 0.05;
 
     if ((k["Space"] || touch.jump) && onGround) {
       verticalVel.current = jumpV0;
@@ -706,14 +736,14 @@ function PlayerController({ planet }: { planet?: string }) {
     verticalVel.current -= gravity * delta;
     physY.current += verticalVel.current * delta;
 
-    if (physY.current < GROUND_Y + EYE_HEIGHT) {
-      physY.current = GROUND_Y + EYE_HEIGHT;
+    if (physY.current < currentGroundY + EYE_HEIGHT) {
+      physY.current = currentGroundY + EYE_HEIGHT;
       if (!wasOnGround.current && verticalVel.current < -0.5) {
         gameAudio.playThud();
       }
       verticalVel.current = 0;
     }
-    wasOnGround.current = physY.current <= GROUND_Y + EYE_HEIGHT + 0.01;
+    wasOnGround.current = physY.current <= currentGroundY + EYE_HEIGHT + 0.05;
 
     if (isMoving && wasOnGround.current) {
       bobPhase.current += delta * BOB_FREQ * (running ? 1.3 : 1);
@@ -734,7 +764,17 @@ function PlayerController({ planet }: { planet?: string }) {
   return null;
 }
 
-function InspectCamera({ objects }: { objects: HeritageObject[] }) {
+function InspectCamera({
+  objects,
+  planet,
+  lat = 0,
+  lon = 0,
+}: {
+  objects: HeritageObject[];
+  planet?: string;
+  lat?: number;
+  lon?: number;
+}) {
   const { camera } = useThree();
   const inspecting = useGameStore((s) => s.inspecting);
   const phase = useGameStore((s) => s.phase);
@@ -754,7 +794,8 @@ function InspectCamera({ objects }: { objects: HeritageObject[] }) {
 
     const dt = Math.min(rawDelta, 0.05);
     const t = 1 - Math.exp(-5 * dt);
-    _lookTarget.set(obj.position[0], obj.position[1] + 0.85, obj.position[2]);
+    const objY = getTerrainElevation(obj.position[0], obj.position[2], planet ?? "moon", lat, lon);
+    _lookTarget.set(obj.position[0], obj.position[1] + objY + 0.85, obj.position[2]);
     smoothedLook.current.lerp(_lookTarget, t);
     camera.lookAt(smoothedLook.current);
   });
@@ -866,10 +907,16 @@ function SurfaceSceneContent({
       <GroundPlane planet={mission.planet} />
 
       {isMars ? (
-        <MarsBase missionId={missionId} />
+        <MarsBase
+          missionId={missionId}
+          position={[0, getTerrainElevation(0, 0, "mars", mission.landing.lat, mission.landing.lon), 0]}
+        />
       ) : (
         <Suspense fallback={null}>
-          <LMDescent position={[0, 0, 0]} scale={1} />
+          <LMDescent
+            position={[0, getTerrainElevation(0, 0, "moon", mission.landing.lat, mission.landing.lon), 0]}
+            scale={1}
+          />
         </Suspense>
       )}
 
@@ -881,6 +928,8 @@ function SurfaceSceneContent({
           isNear={nearObjectId === obj.id}
           distance={objectDistances[obj.id] ?? 999}
           isMars={isMars}
+          lat={mission.landing.lat}
+          lon={mission.landing.lon}
         />
       ))}
 
@@ -888,13 +937,13 @@ function SurfaceSceneContent({
       <AmbientDust planet={mission.planet} />
       {!isMars && (
         <Suspense fallback={null}>
-          <Footprints />
+          <Footprints lat={mission.landing.lat} lon={mission.landing.lon} />
         </Suspense>
       )}
 
       <ProximityDetector setNearObjectId={setNearObjectId} setObjectDistances={setObjectDistances} objects={objects} />
-      <PlayerController planet={mission.planet} />
-      <InspectCamera objects={objects} />
+      <PlayerController planet={mission.planet} lat={mission.landing.lat} lon={mission.landing.lon} />
+      <InspectCamera objects={objects} planet={mission.planet} lat={mission.landing.lat} lon={mission.landing.lon} />
     </>
   );
 }
