@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
-import { Stars, Text, useGLTF } from "@react-three/drei";
+import { Stars, Text, useGLTF, Preload } from "@react-three/drei";
 import { Effects } from "./Effects";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
@@ -1362,6 +1362,7 @@ export function SurfaceScene() {
             missionId={missionId ?? "apollo-11"}
           />
           <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} vignetteDarkness={0.6} />
+          <Preload all />
         </Canvas>
       </div>
       <SurfaceHUD nearObjectId={nearObjectId} objects={mission.objects} planet={mission.planet} missionType={mission.missionType} />

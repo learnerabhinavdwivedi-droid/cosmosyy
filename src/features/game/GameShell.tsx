@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Stars } from "@react-three/drei";
+import { Stars, Preload } from "@react-three/drei";
 import { damp3 } from "maath/easing";
 import { useGameStore, type GamePhase } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
@@ -167,6 +167,8 @@ function LandscapeNudge() {
   );
 }
 
+import { preloadGameAssets } from "@/lib/assetPreload";
+
 function SceneFade({ phase }: { phase: string }) {
   const prevPhase = useRef(phase);
   const [opaque, setOpaque] = useState(false);
@@ -184,14 +186,15 @@ function SceneFade({ phase }: { phase: string }) {
 
     if ((wasFlightScene && isSurfaceScene) || (wasLaunch && isReport) || (wasSurface && isLaunch)) {
       setOpaque(true);
-      const timer = setTimeout(() => setOpaque(false), 320);
+      // Allow the incoming 3D scene to mount and stabilize its first frame before lifting curtain
+      const timer = setTimeout(() => setOpaque(false), 650);
       return () => clearTimeout(timer);
     }
   }, [phase]);
 
   return (
     <div
-      className={`pointer-events-none fixed inset-0 z-50 bg-black transition-opacity duration-700 ease-out ${opaque ? "opacity-100" : "opacity-0"}`}
+      className={`pointer-events-none fixed inset-0 z-50 bg-black transition-opacity duration-900 ease-out ${opaque ? "opacity-100" : "opacity-0"}`}
     />
   );
 }
@@ -212,6 +215,7 @@ export default function GameShell() {
   useOrientationLock();
 
   useEffect(() => {
+    preloadGameAssets();
     if (!playerName && !isDemo) {
       navigate("/");
       return;
@@ -219,9 +223,13 @@ export default function GameShell() {
     if (isDemo && !playerName) {
       useAppStore.getState().setPlayerName("Commander");
     }
-    if (missionId && gameMission !== missionId) {
-      setMission(missionId);
-      send("LAUNCH_MISSION");
+    if (missionId) {
+      if (gameMission !== missionId) {
+        setMission(missionId);
+      }
+      if (useGameStore.getState().phase === "select") {
+        send("LAUNCH_MISSION");
+      }
     }
   }, [missionId, gameMission, playerName, navigate, setMission, send, isDemo]);
 
@@ -252,6 +260,14 @@ export default function GameShell() {
 
   return (
     <div className="relative min-h-screen bg-bg text-fg">
+      {phase === "select" && (
+        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-space-950 text-regolith-200">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-signal border-t-transparent" />
+          <p className="mt-4 font-display text-sm tracking-widest uppercase text-regolith-400">
+            Initializing Flight Trajectory...
+          </p>
+        </div>
+      )}
       {isFlightPhase && <FlightScene />}
       {isSurfacePhase && <SurfaceScene />}
       {phase === "launch" && <LaunchScene />}
@@ -459,6 +475,7 @@ function LaunchScene() {
       >
         <LaunchSceneContent />
         <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} />
+        <Preload all />
       </Canvas>
       <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-end pb-12">
         <div className="rounded-lg bg-space-950/85 px-6 py-3 backdrop-blur">

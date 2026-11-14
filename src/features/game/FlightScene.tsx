@@ -1,7 +1,7 @@
 import { useRef, useEffect, useMemo, useState, Suspense, type RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
-import { Stars, useGLTF } from "@react-three/drei";
+import { Stars, useGLTF, Preload } from "@react-three/drei";
 import { damp, damp3, dampQ, cubic, sine } from "maath/easing";
 import { Effects } from "./Effects";
 import { EarthAtmosphere } from "./EarthAtmosphere";
@@ -893,14 +893,14 @@ function FlightAnimator({
       phase === "touchdown" ||
       phase === "stepOut";
 
-    // Seamless cross-dissolve across orbital-to-landing teleport so zero jump is visible
+    // Subtle atmospheric entry haze across orbital-to-terminal landing transition — no pitch-black blackout!
     if (cutVeilRef.current) {
       let veil = 0;
       if (phase === "descent") {
-        if (progress >= 0.22 && progress < LAND_CUT_AT) {
-          veil = ease((progress - 0.22) / (LAND_CUT_AT - 0.22));
-        } else if (progress >= LAND_CUT_AT && progress < 0.42) {
-          veil = 1 - ease((progress - LAND_CUT_AT) / 0.12);
+        if (progress >= 0.27 && progress < LAND_CUT_AT) {
+          veil = 0.3 * ease((progress - 0.27) / (LAND_CUT_AT - 0.27));
+        } else if (progress >= LAND_CUT_AT && progress < 0.35) {
+          veil = 0.3 * (1 - ease((progress - LAND_CUT_AT) / 0.05));
         }
       }
       cutVeilRef.current.style.opacity = String(veil);
@@ -1358,10 +1358,7 @@ function LandingGround() {
   useFrame((_, dt) => {
     elapsedRef.current += dt;
     const phase = phaseRef.current;
-    const dur = DUR[phase] || 5;
-    const progress = Math.min(elapsedRef.current / dur, 1);
-    const show = (phase === "descent" && progress >= LAND_CUT_AT)
-      || phase === "touchdown" || phase === "stepOut";
+    const show = phase === "descent" || phase === "touchdown" || phase === "stepOut";
     if (groupRef.current) groupRef.current.visible = show;
   });
 
@@ -1408,10 +1405,7 @@ function MarsLandingGround() {
   useFrame((_, dt) => {
     elapsedRef.current += dt;
     const phase = phaseRef.current;
-    const dur = DUR[phase] || 5;
-    const progress = Math.min(elapsedRef.current / dur, 1);
-    const show = (phase === "descent" && progress >= LAND_CUT_AT)
-      || phase === "touchdown" || phase === "stepOut";
+    const show = phase === "descent" || phase === "touchdown" || phase === "stepOut";
     if (groupRef.current) groupRef.current.visible = show;
   });
 
@@ -1646,7 +1640,7 @@ export function FlightScene() {
     const minTimer = setTimeout(() => {
       cancelWait = onNarrationComplete(() => {
         setStepOutFading(true);
-        sendTimer = setTimeout(() => send("STEP_OUT"), 2200);
+        sendTimer = setTimeout(() => send("STEP_OUT"), 900);
       }, 10000);
     }, 7600);
     return () => {
@@ -1668,6 +1662,7 @@ export function FlightScene() {
         <color attach="background" args={["#020408"]} />
         <FlightContent cutVeilRef={cutVeilRef} />
         <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} />
+        <Preload all />
       </Canvas>
       {/* Cross-dissolve veil across orbital-to-landing cut */}
       <div
@@ -1690,7 +1685,7 @@ export function FlightScene() {
         </div>
       )}
       <div
-        className={`pointer-events-none absolute inset-0 z-30 bg-black transition-opacity duration-[2200ms] ease-in ${stepOutFading ? "opacity-100" : "opacity-0"}`}
+        className={`pointer-events-none absolute inset-0 z-30 bg-black transition-opacity duration-900 ease-in ${stepOutFading ? "opacity-100" : "opacity-0"}`}
       />
     </div>
   );

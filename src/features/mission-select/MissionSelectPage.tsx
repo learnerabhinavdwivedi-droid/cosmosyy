@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useAppStore } from "@/store/useAppStore";
 import { gameAudio } from "@/lib/gameAudio";
 import { unlockAudio, preloadNarration } from "@/lib/narration";
+import { preloadGameAssets } from "@/lib/assetPreload";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -282,6 +283,7 @@ export default function MissionSelectPage() {
   const activeMissions = planetTab === "mars" ? MARS_MISSIONS : MOON_MISSIONS;
 
   useEffect(() => {
+    preloadGameAssets();
     if (isDemo) {
       if (!playerName) setPlayerName("Commander");
       startMission("apollo-11");
