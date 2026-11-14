@@ -153,25 +153,32 @@ export function onNarrationComplete(cb: () => void, maxWaitMs = 12000): () => vo
   };
 }
 
-export function stopNarration(): void {
+export function stopNarration(immediate = false): void {
   if (currentNarration) {
     const h = currentNarration;
     h.off("end");
     h.off("loaderror");
     h.off("playerror");
     h.off("stop");
-    h.fade(h.volume(), 0, 500);
     const prevTimer = stopTimers.get(h);
     if (prevTimer) clearTimeout(prevTimer);
-    stopTimers.set(
-      h,
-      setTimeout(() => {
-        h.stop();
-        stopTimers.delete(h);
-      }, 550),
-    );
+    if (immediate) {
+      try { h.stop(); } catch {}
+      stopTimers.delete(h);
+    } else {
+      h.fade(h.volume(), 0, 300);
+      stopTimers.set(
+        h,
+        setTimeout(() => {
+          try { h.stop(); } catch {}
+          stopTimers.delete(h);
+        }, 320),
+      );
+    }
     currentNarration = null;
   }
+  narrationBusy = false;
+  completionListeners.clear();
   notifyComplete();
 }
 

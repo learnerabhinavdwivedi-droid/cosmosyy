@@ -180,7 +180,12 @@ function LandscapeNudge() {
 
   return (
     <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-5 bg-space-950/95 backdrop-blur-xl px-4 text-center">
-      <div className="animate-[spin_2s_ease-in-out_infinite_alternate] text-6xl">📱</div>
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-signal/40 bg-signal/10 shadow-[0_0_24px_rgba(245,158,11,0.2)] animate-[spin_3s_ease-in-out_infinite_alternate]">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-signal">
+          <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+          <path d="M12 18h.01" />
+        </svg>
+      </div>
       <p className="max-w-xs font-display text-xl sm:text-2xl font-bold text-regolith-100">
         Please rotate your phone to landscape mode
       </p>
@@ -192,7 +197,12 @@ function LandscapeNudge() {
         onClick={() => enter()}
         className="mt-2 flex items-center gap-2 rounded-xl border border-signal bg-signal/20 hover:bg-signal/30 active:scale-95 px-5 py-3 text-sm font-bold text-signal shadow-lg shadow-signal/20 backdrop-blur transition touch-manipulation cursor-pointer"
       >
-        <span className="text-base">⛶</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="15 3 21 3 21 9" />
+          <polyline points="9 21 3 21 3 15" />
+          <line x1="21" y1="3" x2="14" y2="10" />
+          <line x1="3" y1="21" x2="10" y2="14" />
+        </svg>
         <span>{t("fullscreen.rotateAndFocus")}</span>
       </button>
     </div>
@@ -305,7 +315,12 @@ export default function GameShell() {
             onClick={() => enter()}
             className="flex items-center gap-1.5 rounded-full border border-signal/60 bg-space-950/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-signal shadow-lg shadow-signal/20 backdrop-blur active:scale-95 transition cursor-pointer"
           >
-            <span className="text-xs">⛶</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 3 21 3 21 9" />
+              <polyline points="9 21 3 21 3 15" />
+              <line x1="21" y1="3" x2="14" y2="10" />
+              <line x1="3" y1="21" x2="10" y2="14" />
+            </svg>
             <span>{t("fullscreen.enter")}</span>
           </button>
         </div>

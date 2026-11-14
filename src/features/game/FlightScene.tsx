@@ -9,7 +9,7 @@ import { useGameStore, type GamePhase } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { getMissionOrNull, type MissionSpec, type Planet } from "@/lib/missionData";
 import { gameAudio } from "@/lib/gameAudio";
-import { onNarrationComplete } from "@/lib/narration";
+import { onNarrationComplete, stopNarration } from "@/lib/narration";
 import { isTouchDevice } from "@/lib/useMobile";
 import { useFullscreen } from "@/lib/fullscreen";
 import { getSolarPanelTexture, getCharredHeatShieldTexture } from "./heritage3D/textures";
@@ -1644,10 +1644,12 @@ function FlightHUD({ onSkip }: { onSkip: () => void }) {
             {label}
           </p>
         </div>
-        <div className="flex items-center gap-2.5 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3">
           <div className="text-right">
             <p className="text-[10px] sm:text-xs text-regolith-400">
-              {t("flight.commander", { name: playerName })}
+              {playerName?.toLowerCase().startsWith("commander")
+                ? playerName
+                : t("flight.commander", { name: playerName || "Pilot" })}
             </p>
             {phase === "descent" && (
               <p className="font-mono text-base sm:text-lg font-bold text-signal">
@@ -1663,24 +1665,59 @@ function FlightHUD({ onSkip }: { onSkip: () => void }) {
           <button
             type="button"
             onClick={toggleFullscreen}
-            className="pointer-events-auto flex items-center justify-center gap-1.5 rounded-lg border border-space-700/80 bg-space-950/80 hover:bg-space-850 px-2 sm:px-2.5 py-1.5 text-xs font-semibold text-regolith-300 hover:text-white backdrop-blur transition hover:border-signal/50 active:scale-95 touch-manipulation shadow-lg"
+            className="pointer-events-auto flex items-center justify-center gap-1.5 rounded-lg border border-space-700/80 bg-space-950/85 hover:bg-space-900 px-2 sm:px-2.5 py-1.5 text-xs font-semibold text-regolith-300 hover:text-white backdrop-blur transition hover:border-signal/50 active:scale-95 touch-manipulation shadow-md"
             aria-label={isFullscreen ? t("fullscreen.exitHint") : t("fullscreen.enterHint")}
             title={isFullscreen ? t("fullscreen.exitHint") : t("fullscreen.enterHint")}
           >
-            <span className="text-sm leading-none">{isFullscreen ? "🗗" : "⛶"}</span>
-            <span className="hidden sm:inline text-[11px]">
+            {isFullscreen ? (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="4 14 10 14 10 20" />
+                <polyline points="20 10 14 10 14 4" />
+                <line x1="14" y1="10" x2="21" y2="3" />
+                <line x1="3" y1="21" x2="10" y2="14" />
+              </svg>
+            ) : (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="15 3 21 3 21 9" />
+                <polyline points="9 21 3 21 3 15" />
+                <line x1="21" y1="3" x2="14" y2="10" />
+                <line x1="3" y1="21" x2="10" y2="14" />
+              </svg>
+            )}
+            <span className="hidden sm:inline text-[11px] font-mono">
               {isFullscreen ? t("fullscreen.exit") : t("fullscreen.enter")}
             </span>
           </button>
           <button
             type="button"
             onClick={onSkip}
-            className="pointer-events-auto flex items-center gap-1.5 rounded-lg border border-signal/50 bg-space-950/80 hover:bg-space-850 px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-signal backdrop-blur transition hover:border-signal active:scale-95 touch-manipulation shadow-lg"
-            aria-label="Skip to surface landing"
+            className="pointer-events-auto group relative flex items-center gap-2 rounded-lg border border-signal/60 bg-space-950/90 hover:bg-space-900 px-3 py-1.5 text-xs font-mono font-bold tracking-wider text-signal hover:text-amber-300 hover:border-signal backdrop-blur transition-all duration-200 active:scale-95 touch-manipulation shadow-[0_0_12px_rgba(245,158,11,0.2)] hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] cursor-pointer"
+            aria-label={t("flight.skipAria", { defaultValue: "Skip directly to surface landing" })}
             title="Skip to surface (or press S)"
           >
-            <span>{t("flight.skip")}</span>
-            <span className="text-[10px]">⏩</span>
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-signal" />
+            </span>
+            <span className="uppercase">{t("flight.skip")}</span>
+            <kbd className="hidden sm:inline-flex items-center justify-center rounded border border-signal/40 bg-signal/15 px-1 py-0.5 text-[9px] font-mono font-semibold text-signal group-hover:border-signal/70">
+              S
+            </kbd>
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="transition-transform duration-200 group-hover:translate-x-0.5 text-signal"
+              aria-hidden="true"
+            >
+              <polyline points="13 17 18 12 13 7" />
+              <polyline points="6 17 11 12 6 7" />
+            </svg>
           </button>
         </div>
       </div>
@@ -1737,18 +1774,23 @@ export function FlightScene() {
   const send = useGameStore((s) => s.send);
 
   const handleSkip = useCallback(() => {
+    stopNarration(true);
+    gameAudio.stopEngine();
+    gameAudio.stopSpaceDrone();
     send("SKIP_TO_SURFACE");
   }, [send]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
       if (e.key === "s" || e.key === "S") {
-        send("SKIP_TO_SURFACE");
+        handleSkip();
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [send]);
+  }, [handleSkip]);
   const missionId = useGameStore((s) => s.missionId);
   const mission = useMemo(() => getMissionOrNull(missionId), [missionId]);
   const gates = useMemo(() => getGates(mission?.planet ?? "moon", mission?.missionType), [mission]);
