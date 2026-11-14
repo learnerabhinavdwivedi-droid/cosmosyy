@@ -23,6 +23,7 @@ import { Terrain, GroundPlane } from "./Terrain";
 import { EarthAtmosphere } from "./EarthAtmosphere";
 import { getSunPosition, getEarthPosition } from "./sunPosition";
 import { TouchControls } from "./TouchControls";
+import { HologramInspect } from "./HologramInspect";
 import * as THREE from "three";
 
 const SCAN_RANGE = 8;
@@ -1489,7 +1490,7 @@ export function SurfaceScene() {
         onFlag={touchFlag}
         onLaunch={touchLaunch}
       />
-      {phase === "inspect" && <InspectOverlay objects={mission.objects} missionId={missionId ?? "apollo-11"} isMars={mission.planet === "mars"} />}
+      {phase === "inspect" && <HologramInspect objects={mission.objects} missionId={missionId ?? "apollo-11"} isMars={mission.planet === "mars"} />}
     </div>
   );
 }

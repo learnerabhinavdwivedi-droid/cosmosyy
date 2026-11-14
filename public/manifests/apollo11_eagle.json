@@ -1,0 +1,265 @@
+{
+  "id": "apollo11_eagle",
+  "title": "Apollo 11 Eagle descent stage",
+  "region": "moon",
+  "archetype": "lander",
+  "model": "models/apollo11_eagle.glb",
+  "components": [
+    {
+      "name": "descent_platform",
+      "center_m": [
+        0.0,
+        -0.0,
+        1.1
+      ],
+      "bbox_min_m": [
+        -1.05,
+        -1.05,
+        0.86
+      ],
+      "bbox_max_m": [
+        1.05,
+        1.05,
+        1.34
+      ],
+      "explode_vector": [
+        0.0,
+        -0.0,
+        0.605
+      ]
+    },
+    {
+      "name": "upper_housing",
+      "center_m": [
+        -0.0,
+        -0.0,
+        1.9
+      ],
+      "bbox_min_m": [
+        -0.72,
+        -0.72,
+        1.375
+      ],
+      "bbox_max_m": [
+        0.72,
+        0.72,
+        2.425
+      ],
+      "explode_vector": [
+        -0.0,
+        -0.0,
+        1.125
+      ]
+    },
+    {
+      "name": "landing_leg_0",
+      "center_m": [
+        -0.77,
+        -0.77,
+        0.65
+      ],
+      "bbox_min_m": [
+        -0.84,
+        -0.84,
+        -0.05
+      ],
+      "bbox_max_m": [
+        -0.7,
+        -0.7,
+        1.35
+      ],
+      "explode_vector": [
+        -0.424,
+        -0.424,
+        0.518
+      ]
+    },
+    {
+      "name": "footpad_0",
+      "center_m": [
+        -1.1,
+        -1.1,
+        0.07
+      ],
+      "bbox_min_m": [
+        -1.42,
+        -1.42,
+        0.035
+      ],
+      "bbox_max_m": [
+        -0.78,
+        -0.78,
+        0.105
+      ],
+      "explode_vector": [
+        -0.605,
+        -0.605,
+        0.278
+      ]
+    },
+    {
+      "name": "landing_leg_1",
+      "center_m": [
+        -0.77,
+        0.77,
+        0.65
+      ],
+      "bbox_min_m": [
+        -0.84,
+        0.7,
+        -0.05
+      ],
+      "bbox_max_m": [
+        -0.7,
+        0.84,
+        1.35
+      ],
+      "explode_vector": [
+        -0.424,
+        0.424,
+        0.678
+      ]
+    },
+    {
+      "name": "footpad_1",
+      "center_m": [
+        -1.1,
+        1.1,
+        0.07
+      ],
+      "bbox_min_m": [
+        -1.42,
+        0.78,
+        0.035
+      ],
+      "bbox_max_m": [
+        -0.78,
+        1.42,
+        0.105
+      ],
+      "explode_vector": [
+        -0.605,
+        0.605,
+        0.039
+      ]
+    },
+    {
+      "name": "landing_leg_2",
+      "center_m": [
+        0.77,
+        -0.77,
+        0.65
+      ],
+      "bbox_min_m": [
+        0.7,
+        -0.84,
+        -0.05
+      ],
+      "bbox_max_m": [
+        0.84,
+        -0.7,
+        1.35
+      ],
+      "explode_vector": [
+        0.424,
+        -0.424,
+        0.437
+      ]
+    },
+    {
+      "name": "footpad_2",
+      "center_m": [
+        1.1,
+        -1.1,
+        0.07
+      ],
+      "bbox_min_m": [
+        0.78,
+        -1.42,
+        0.035
+      ],
+      "bbox_max_m": [
+        1.42,
+        -0.78,
+        0.105
+      ],
+      "explode_vector": [
+        0.605,
+        -0.605,
+        0.198
+      ]
+    },
+    {
+      "name": "landing_leg_3",
+      "center_m": [
+        0.77,
+        0.77,
+        0.65
+      ],
+      "bbox_min_m": [
+        0.7,
+        0.7,
+        -0.05
+      ],
+      "bbox_max_m": [
+        0.84,
+        0.84,
+        1.35
+      ],
+      "explode_vector": [
+        0.424,
+        0.424,
+        0.597
+      ]
+    },
+    {
+      "name": "footpad_3",
+      "center_m": [
+        1.1,
+        1.1,
+        0.07
+      ],
+      "bbox_min_m": [
+        0.78,
+        0.78,
+        0.035
+      ],
+      "bbox_max_m": [
+        1.42,
+        1.42,
+        0.105
+      ],
+      "explode_vector": [
+        0.605,
+        0.605,
+        0.359
+      ]
+    },
+    {
+      "name": "antenna",
+      "center_m": [
+        -0.0,
+        -0.0,
+        2.85
+      ],
+      "bbox_min_m": [
+        -0.04,
+        -0.04,
+        2.425
+      ],
+      "bbox_max_m": [
+        0.04,
+        0.04,
+        3.275
+      ],
+      "explode_vector": [
+        -0.0,
+        -0.0,
+        1.567
+      ]
+    }
+  ],
+  "dimensions_status": "illustrative invented scale; NOT measured NASA dimensions",
+  "geometry_status": "procedural blockout, NOT photogrammetry or engineering CAD",
+  "source_status": "user-provided mission list; reference links not individually verified"
+}

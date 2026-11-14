@@ -1,0 +1,173 @@
+{
+  "id": "ingenuity",
+  "title": "Ingenuity helicopter",
+  "region": "mars",
+  "archetype": "helicopter",
+  "model": "models/ingenuity.glb",
+  "components": [
+    {
+      "name": "fuselage",
+      "center_m": [
+        0.0,
+        0.0,
+        0.8
+      ],
+      "bbox_min_m": [
+        -0.4,
+        -0.275,
+        0.6
+      ],
+      "bbox_max_m": [
+        0.4,
+        0.275,
+        1.0
+      ],
+      "explode_vector": [
+        0.0,
+        0.0,
+        0.44
+      ]
+    },
+    {
+      "name": "rotor_-1",
+      "center_m": [
+        -0.0,
+        0.0,
+        1.26
+      ],
+      "bbox_min_m": [
+        -1.35,
+        -0.045,
+        1.2425
+      ],
+      "bbox_max_m": [
+        1.35,
+        0.045,
+        1.2775
+      ],
+      "explode_vector": [
+        -0.0,
+        0.0,
+        0.773
+      ]
+    },
+    {
+      "name": "rotor_1",
+      "center_m": [
+        -0.0,
+        0.0,
+        1.44
+      ],
+      "bbox_min_m": [
+        -1.35,
+        -0.045,
+        1.4225
+      ],
+      "bbox_max_m": [
+        1.35,
+        0.045,
+        1.4575
+      ],
+      "explode_vector": [
+        -0.0,
+        0.0,
+        0.952
+      ]
+    },
+    {
+      "name": "rotor_mast",
+      "center_m": [
+        -0.0,
+        -0.0,
+        1.2
+      ],
+      "bbox_min_m": [
+        -0.04,
+        -0.04,
+        0.775
+      ],
+      "bbox_max_m": [
+        0.04,
+        0.04,
+        1.625
+      ],
+      "explode_vector": [
+        -0.0,
+        -0.0,
+        0.9
+      ]
+    },
+    {
+      "name": "landing_skid_-1",
+      "center_m": [
+        -0.0,
+        -0.43,
+        0.12
+      ],
+      "bbox_min_m": [
+        -0.625,
+        -0.465,
+        0.085
+      ],
+      "bbox_max_m": [
+        0.625,
+        -0.395,
+        0.155
+      ],
+      "explode_vector": [
+        -0.0,
+        -0.236,
+        0.386
+      ]
+    },
+    {
+      "name": "landing_skid_1",
+      "center_m": [
+        -0.0,
+        0.43,
+        0.12
+      ],
+      "bbox_min_m": [
+        -0.625,
+        0.395,
+        0.085
+      ],
+      "bbox_max_m": [
+        0.625,
+        0.465,
+        0.155
+      ],
+      "explode_vector": [
+        -0.0,
+        0.236,
+        0.066
+      ]
+    },
+    {
+      "name": "solar_panel",
+      "center_m": [
+        -0.0,
+        0.0,
+        1.13
+      ],
+      "bbox_min_m": [
+        -0.4,
+        -0.25,
+        1.1125
+      ],
+      "bbox_max_m": [
+        0.4,
+        0.25,
+        1.1475
+      ],
+      "explode_vector": [
+        -0.0,
+        0.0,
+        0.701
+      ]
+    }
+  ],
+  "dimensions_status": "illustrative invented scale; NOT measured NASA dimensions",
+  "geometry_status": "procedural blockout, NOT photogrammetry or engineering CAD",
+  "source_status": "user-provided mission list; reference links not individually verified"
+}

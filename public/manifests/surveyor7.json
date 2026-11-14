@@ -1,0 +1,219 @@
+{
+  "id": "surveyor7",
+  "title": "Surveyor 7",
+  "region": "moon",
+  "archetype": "surveyor",
+  "model": "models/surveyor7.glb",
+  "components": [
+    {
+      "name": "central_body",
+      "center_m": [
+        0.0,
+        -0.0,
+        1.2
+      ],
+      "bbox_min_m": [
+        -0.55,
+        -0.55,
+        0.7
+      ],
+      "bbox_max_m": [
+        0.55,
+        0.55,
+        1.7
+      ],
+      "explode_vector": [
+        0.0,
+        -0.0,
+        0.66
+      ]
+    },
+    {
+      "name": "landing_leg_0",
+      "center_m": [
+        -0.66,
+        -0.42,
+        0.65
+      ],
+      "bbox_min_m": [
+        -0.73,
+        -0.49,
+        -0.1
+      ],
+      "bbox_max_m": [
+        -0.59,
+        -0.35,
+        1.4
+      ],
+      "explode_vector": [
+        -0.363,
+        -0.231,
+        0.437
+      ]
+    },
+    {
+      "name": "footpad_0",
+      "center_m": [
+        -1.1,
+        -0.7,
+        0.08
+      ],
+      "bbox_min_m": [
+        -1.32,
+        -0.92,
+        0.045
+      ],
+      "bbox_max_m": [
+        -0.88,
+        -0.48,
+        0.115
+      ],
+      "explode_vector": [
+        -0.605,
+        -0.385,
+        0.204
+      ]
+    },
+    {
+      "name": "landing_leg_1",
+      "center_m": [
+        0.66,
+        -0.42,
+        0.65
+      ],
+      "bbox_min_m": [
+        0.59,
+        -0.49,
+        -0.1
+      ],
+      "bbox_max_m": [
+        0.73,
+        -0.35,
+        1.4
+      ],
+      "explode_vector": [
+        0.363,
+        -0.231,
+        0.597
+      ]
+    },
+    {
+      "name": "footpad_1",
+      "center_m": [
+        1.1,
+        -0.7,
+        0.08
+      ],
+      "bbox_min_m": [
+        0.88,
+        -0.92,
+        0.045
+      ],
+      "bbox_max_m": [
+        1.32,
+        -0.48,
+        0.115
+      ],
+      "explode_vector": [
+        0.605,
+        -0.385,
+        0.364
+      ]
+    },
+    {
+      "name": "landing_leg_2",
+      "center_m": [
+        0.0,
+        0.72,
+        0.65
+      ],
+      "bbox_min_m": [
+        -0.07,
+        0.65,
+        -0.1
+      ],
+      "bbox_max_m": [
+        0.07,
+        0.79,
+        1.4
+      ],
+      "explode_vector": [
+        0.0,
+        0.396,
+        0.357
+      ]
+    },
+    {
+      "name": "footpad_2",
+      "center_m": [
+        0.0,
+        1.2,
+        0.08
+      ],
+      "bbox_min_m": [
+        -0.22,
+        0.98,
+        0.045
+      ],
+      "bbox_max_m": [
+        0.22,
+        1.42,
+        0.115
+      ],
+      "explode_vector": [
+        0.0,
+        0.66,
+        0.124
+      ]
+    },
+    {
+      "name": "solar_array",
+      "center_m": [
+        -0.0,
+        0.0,
+        2.15
+      ],
+      "bbox_min_m": [
+        -0.55,
+        -0.45,
+        2.125
+      ],
+      "bbox_max_m": [
+        0.55,
+        0.45,
+        2.175
+      ],
+      "explode_vector": [
+        -0.0,
+        0.0,
+        1.342
+      ]
+    },
+    {
+      "name": "camera",
+      "center_m": [
+        0.5,
+        -0.0,
+        1.8
+      ],
+      "bbox_min_m": [
+        0.34,
+        -0.16,
+        1.625
+      ],
+      "bbox_max_m": [
+        0.66,
+        0.16,
+        1.975
+      ],
+      "explode_vector": [
+        0.275,
+        -0.0,
+        1.23
+      ]
+    }
+  ],
+  "dimensions_status": "illustrative invented scale; NOT measured NASA dimensions",
+  "geometry_status": "procedural blockout, NOT photogrammetry or engineering CAD",
+  "source_status": "user-provided mission list; reference links not individually verified"
+}

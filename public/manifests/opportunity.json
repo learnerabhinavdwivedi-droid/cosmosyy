@@ -1,0 +1,265 @@
+{
+  "id": "opportunity",
+  "title": "Opportunity rover",
+  "region": "mars",
+  "archetype": "rover",
+  "model": "models/opportunity.glb",
+  "components": [
+    {
+      "name": "chassis",
+      "center_m": [
+        -0.0,
+        0.0,
+        0.65
+      ],
+      "bbox_min_m": [
+        -1.0,
+        -0.625,
+        0.49
+      ],
+      "bbox_max_m": [
+        1.0,
+        0.625,
+        0.81
+      ],
+      "explode_vector": [
+        -0.0,
+        0.0,
+        0.358
+      ]
+    },
+    {
+      "name": "equipment_deck",
+      "center_m": [
+        0.0,
+        0.0,
+        0.95
+      ],
+      "bbox_min_m": [
+        -0.825,
+        -0.525,
+        0.875
+      ],
+      "bbox_max_m": [
+        0.825,
+        0.525,
+        1.025
+      ],
+      "explode_vector": [
+        0.0,
+        0.0,
+        0.602
+      ]
+    },
+    {
+      "name": "wheel_-1_-1",
+      "center_m": [
+        -0.77,
+        -0.79,
+        0.34
+      ],
+      "bbox_min_m": [
+        -0.835,
+        -1.03,
+        0.1
+      ],
+      "bbox_max_m": [
+        -0.705,
+        -0.55,
+        0.58
+      ],
+      "explode_vector": [
+        -0.424,
+        -0.435,
+        0.347
+      ]
+    },
+    {
+      "name": "wheel_-1_1",
+      "center_m": [
+        -0.77,
+        0.79,
+        0.34
+      ],
+      "bbox_min_m": [
+        -0.835,
+        0.55,
+        0.1
+      ],
+      "bbox_max_m": [
+        -0.705,
+        1.03,
+        0.58
+      ],
+      "explode_vector": [
+        -0.424,
+        0.434,
+        0.427
+      ]
+    },
+    {
+      "name": "wheel_0_-1",
+      "center_m": [
+        -0.0,
+        -0.79,
+        0.34
+      ],
+      "bbox_min_m": [
+        -0.065,
+        -1.03,
+        0.1
+      ],
+      "bbox_max_m": [
+        0.065,
+        -0.55,
+        0.58
+      ],
+      "explode_vector": [
+        -0.0,
+        -0.435,
+        0.507
+      ]
+    },
+    {
+      "name": "wheel_0_1",
+      "center_m": [
+        -0.0,
+        0.79,
+        0.34
+      ],
+      "bbox_min_m": [
+        -0.065,
+        0.55,
+        0.1
+      ],
+      "bbox_max_m": [
+        0.065,
+        1.03,
+        0.58
+      ],
+      "explode_vector": [
+        -0.0,
+        0.434,
+        0.187
+      ]
+    },
+    {
+      "name": "wheel_1_-1",
+      "center_m": [
+        0.77,
+        -0.79,
+        0.34
+      ],
+      "bbox_min_m": [
+        0.705,
+        -1.03,
+        0.1
+      ],
+      "bbox_max_m": [
+        0.835,
+        -0.55,
+        0.58
+      ],
+      "explode_vector": [
+        0.424,
+        -0.435,
+        0.267
+      ]
+    },
+    {
+      "name": "wheel_1_1",
+      "center_m": [
+        0.77,
+        0.79,
+        0.34
+      ],
+      "bbox_min_m": [
+        0.705,
+        0.55,
+        0.1
+      ],
+      "bbox_max_m": [
+        0.835,
+        1.03,
+        0.58
+      ],
+      "explode_vector": [
+        0.424,
+        0.434,
+        0.347
+      ]
+    },
+    {
+      "name": "camera_mast",
+      "center_m": [
+        0.5,
+        -0.0,
+        1.55
+      ],
+      "bbox_min_m": [
+        0.445,
+        -0.055,
+        1.0
+      ],
+      "bbox_max_m": [
+        0.555,
+        0.055,
+        2.1
+      ],
+      "explode_vector": [
+        0.275,
+        -0.0,
+        1.092
+      ]
+    },
+    {
+      "name": "camera_head",
+      "center_m": [
+        0.5,
+        0.0,
+        2.1
+      ],
+      "bbox_min_m": [
+        0.33,
+        -0.15,
+        2.0
+      ],
+      "bbox_max_m": [
+        0.67,
+        0.15,
+        2.2
+      ],
+      "explode_vector": [
+        0.275,
+        0.0,
+        1.475
+      ]
+    },
+    {
+      "name": "solar_panel",
+      "center_m": [
+        -0.05,
+        -0.0,
+        1.15
+      ],
+      "bbox_min_m": [
+        -0.825,
+        -0.55,
+        1.125
+      ],
+      "bbox_max_m": [
+        0.725,
+        0.55,
+        1.175
+      ],
+      "explode_vector": [
+        -0.028,
+        -0.0,
+        0.632
+      ]
+    }
+  ],
+  "dimensions_status": "illustrative invented scale; NOT measured NASA dimensions",
+  "geometry_status": "procedural blockout, NOT photogrammetry or engineering CAD",
+  "source_status": "user-provided mission list; reference links not individually verified"
+}

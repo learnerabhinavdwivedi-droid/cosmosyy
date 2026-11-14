@@ -1,0 +1,127 @@
+{
+  "id": "kepler",
+  "title": "Kepler Space Telescope",
+  "region": "deep_space",
+  "archetype": "telescope",
+  "model": "models/kepler.glb",
+  "components": [
+    {
+      "name": "main_bus",
+      "center_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bbox_min_m": [
+        -0.55,
+        -0.525,
+        -0.6
+      ],
+      "bbox_max_m": [
+        0.55,
+        0.525,
+        0.6
+      ],
+      "explode_vector": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "optical_tube",
+      "center_m": [
+        -0.0,
+        -0.0,
+        0.9
+      ],
+      "bbox_min_m": [
+        -0.48,
+        -0.48,
+        0.0
+      ],
+      "bbox_max_m": [
+        0.48,
+        0.48,
+        1.8
+      ],
+      "explode_vector": [
+        -0.0,
+        -0.0,
+        0.575
+      ]
+    },
+    {
+      "name": "solar_array_-1",
+      "center_m": [
+        -1.65,
+        0.0,
+        -0.0
+      ],
+      "bbox_min_m": [
+        -2.65,
+        -0.475,
+        -0.025
+      ],
+      "bbox_max_m": [
+        -0.65,
+        0.475,
+        0.025
+      ],
+      "explode_vector": [
+        -0.908,
+        0.0,
+        0.16
+      ]
+    },
+    {
+      "name": "solar_array_1",
+      "center_m": [
+        1.65,
+        0.0,
+        -0.0
+      ],
+      "bbox_min_m": [
+        0.65,
+        -0.475,
+        -0.025
+      ],
+      "bbox_max_m": [
+        2.65,
+        0.475,
+        0.025
+      ],
+      "explode_vector": [
+        0.908,
+        0.0,
+        0.24
+      ]
+    },
+    {
+      "name": "communications_mast",
+      "center_m": [
+        -0.0,
+        -0.0,
+        1.3
+      ],
+      "bbox_min_m": [
+        -0.05,
+        -0.05,
+        0.95
+      ],
+      "bbox_max_m": [
+        0.05,
+        0.05,
+        1.65
+      ],
+      "explode_vector": [
+        -0.0,
+        -0.0,
+        1.035
+      ]
+    }
+  ],
+  "dimensions_status": "illustrative invented scale; NOT measured NASA dimensions",
+  "geometry_status": "procedural blockout, NOT photogrammetry or engineering CAD",
+  "source_status": "user-provided mission list; reference links not individually verified"
+}
