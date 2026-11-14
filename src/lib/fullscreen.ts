@@ -20,17 +20,23 @@ export async function requestFullscreen(
 ): Promise<boolean> {
   try {
     const el = element as HTMLElement & {
-      webkitRequestFullscreen?: () => Promise<void>;
-      mozRequestFullScreen?: () => Promise<void>;
-      msRequestFullscreen?: () => Promise<void>;
+      webkitRequestFullscreen?: (options?: unknown) => Promise<void>;
+      mozRequestFullScreen?: (options?: unknown) => Promise<void>;
+      msRequestFullscreen?: (options?: unknown) => Promise<void>;
     };
 
+    const options = { navigationUI: "hide" } as FullscreenOptions;
+
     if (el.requestFullscreen) {
-      await el.requestFullscreen();
+      try {
+        await el.requestFullscreen(options);
+      } catch {
+        await el.requestFullscreen();
+      }
     } else if (el.webkitRequestFullscreen) {
-      await el.webkitRequestFullscreen();
+      await el.webkitRequestFullscreen(options);
     } else if (el.mozRequestFullScreen) {
-      await el.mozRequestFullScreen();
+      await el.mozRequestFullScreen(options);
     } else if (el.msRequestFullscreen) {
       await el.msRequestFullscreen();
     }

@@ -27,6 +27,7 @@ import { getThemeColor3 } from "./objectThemes";
 import { getTerrainElevation } from "./terrainHeight";
 import { getHologramModel } from "./hologramMapping";
 import { hasDedicated3DModel, HeritageObject3D } from "./heritage3D/Heritage3DDispatcher";
+import { AmericanFlag3D } from "./heritage3D/MoonArtifacts";
 import * as THREE from "three";
 
 const SCAN_RANGE = 8;
@@ -406,7 +407,7 @@ const _moveDir = new THREE.Vector3();
 const _lookTarget = new THREE.Vector3();
 
 const playerState = {
-  x: 5, z: 10, heading: 0, isMoving: false, speed: 0,
+  x: 5, z: 10, heading: 0, isMoving: false, speed: 0, groundY: 0,
 };
 
 function DustParticles({ planet }: { planet?: string }) {
@@ -437,7 +438,7 @@ function DustParticles({ planet }: { planet?: string }) {
           posAttr.setXYZ(
             i,
             playerState.x + (Math.sin(i * 7.31) * 2 - 1) * spread,
-            0.05,
+            playerState.groundY + 0.05,
             playerState.z + (Math.sin(i * 13.7) * 2 - 1) * spread,
           );
           vel[i * 3] = (Math.sin(i * 3.7) * 2 - 1) * 0.3;
@@ -774,6 +775,7 @@ function PlayerController({
     playerState.heading = euler.current.y;
     playerState.isMoving = isMoving && wasOnGround.current;
     playerState.speed = velocity.current.length();
+    playerState.groundY = currentGroundY;
   });
 
   return null;
@@ -886,6 +888,8 @@ function SurfaceSceneContent({
   missionId: string;
 }) {
   const found = useGameStore((s) => s.objectsFoundThisRun);
+  const phase = useGameStore((s) => s.phase);
+  const hasFlag = useAppStore((s) => s.progress.missions[missionId]?.flagPlanted ?? false);
   const mission = useMemo(() => getMission(missionId), [missionId]);
   const objects = mission.objects;
   const isMars = mission.planet === "mars";
@@ -961,6 +965,11 @@ function SurfaceSceneContent({
         <Suspense fallback={null}>
           <Footprints lat={mission.landing.lat} lon={mission.landing.lon} />
         </Suspense>
+      )}
+      {!isMars && (hasFlag || phase === "flagPlanted") && (
+        <group position={[3.8, getTerrainElevation(3.8, 6.2, "moon", mission.landing.lat, mission.landing.lon), 6.2]}>
+          <AmericanFlag3D scale={1.0} />
+        </group>
       )}
 
       <ProximityDetector setNearObjectId={setNearObjectId} setObjectDistances={setObjectDistances} objects={objects} />

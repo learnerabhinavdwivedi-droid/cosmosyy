@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Progress } from "@/components/ui/progress";
-import { useFullscreen, requestFullscreen } from "@/lib/fullscreen";
+import { useFullscreen } from "@/lib/fullscreen";
 import { isTouchDevice } from "@/lib/useMobile";
 import { Maximize2 } from "lucide-react";
 
@@ -28,7 +28,7 @@ export function LoadingScreen({ progress = 0 }: LoadingScreenProps) {
   const { t } = useTranslation();
   const [factIdx, setFactIdx] = useState(0);
   const [factFade, setFactFade] = useState(true);
-  const fullscreen = useFullscreen();
+  const { isFullscreen: inFullscreen, enter } = useFullscreen();
   const touch = isTouchDevice();
 
   useEffect(() => {
@@ -43,8 +43,8 @@ export function LoadingScreen({ progress = 0 }: LoadingScreenProps) {
   }, []);
 
   const handleContainerTap = () => {
-    if (touch && !fullscreen) {
-      requestFullscreen().catch(() => {});
+    if (touch && !inFullscreen) {
+      enter().catch(() => {});
     }
   };
 
@@ -79,16 +79,16 @@ export function LoadingScreen({ progress = 0 }: LoadingScreenProps) {
         </p>
       </div>
 
-      {touch && !fullscreen && (
+      {touch && !inFullscreen && (
         <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
-            requestFullscreen().catch(() => {});
+            enter().catch(() => {});
           }}
-          className="mt-2 flex items-center gap-2 rounded-full border border-signal/40 bg-signal/15 px-4 py-2 text-xs font-bold uppercase tracking-wider text-signal shadow-lg shadow-signal/15 backdrop-blur transition hover:bg-signal/25 active:scale-95 animate-pulse"
+          className="mt-2 flex items-center gap-2 rounded-full border border-signal/60 bg-signal/20 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-signal shadow-lg shadow-signal/20 backdrop-blur transition hover:bg-signal/30 active:scale-95 animate-pulse cursor-pointer"
         >
-          <Maximize2 className="h-3.5 w-3.5" />
+          <Maximize2 className="h-4 w-4" />
           <span>{t("fullscreen.tapToFocus")}</span>
         </button>
       )}
