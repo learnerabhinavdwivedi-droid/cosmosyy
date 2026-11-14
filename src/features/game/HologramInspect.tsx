@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState, useMemo, Suspense } from "react";
-import { useTranslation } from "react-i18next";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useGLTF, Html, OrbitControls } from "@react-three/drei";
+import { useGLTF, OrbitControls } from "@react-three/drei";
 import { useGameStore } from "@/store/useGameStore";
 import { getMission, type HeritageObject } from "@/lib/missionData";
 import { isTouchDevice } from "@/lib/useMobile";
@@ -22,7 +21,7 @@ const HOLO_BORDER = "rgba(0,212,255,0.35)";
 /* ─── Holographic 3D model with auto-rotate + explode ─── */
 function HoloModel({
   url,
-  explode,
+  explode: _explode,
   wireframe,
 }: {
   url: string;
@@ -181,7 +180,7 @@ function ComponentLabels({ manifest }: { manifest: HologramManifest }) {
 
   return (
     <div className="flex flex-col gap-2.5 py-2">
-      {parts.map((p, i) => (
+      {parts.map((p) => (
         <div key={p.name} className="flex items-center gap-2.5 group">
           {/* Icon */}
           <div
@@ -244,8 +243,6 @@ function InfoPanel({
   crew: { commander: string; lmp: string; cmp: string };
   isMars: boolean;
 }) {
-  const { t } = useTranslation();
-
   return (
     <div
       className="h-full overflow-y-auto rounded-xl border p-5 backdrop-blur-xl"

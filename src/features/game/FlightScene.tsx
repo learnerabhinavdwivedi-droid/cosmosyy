@@ -489,6 +489,323 @@ function OrbitPath({ isMars }: { isMars: boolean }) {
   );
 }
 
+function MarsCruiseStageContent() {
+  return (
+    <group>
+      {/* ── Main Bus / Equipment Ring ── */}
+      {/* Outer titanium structural ring */}
+      <mesh>
+        <cylinderGeometry args={[0.44, 0.44, 0.24, 32]} />
+        <meshStandardMaterial color="#c2c7cc" metalness={0.78} roughness={0.24} />
+      </mesh>
+      {/* Top and bottom dark collar rims */}
+      <mesh position={[0, 0.12, 0]}>
+        <cylinderGeometry args={[0.455, 0.455, 0.025, 32]} />
+        <meshStandardMaterial color="#35383e" metalness={0.8} roughness={0.3} />
+      </mesh>
+      <mesh position={[0, -0.12, 0]}>
+        <cylinderGeometry args={[0.455, 0.455, 0.025, 32]} />
+        <meshStandardMaterial color="#35383e" metalness={0.8} roughness={0.3} />
+      </mesh>
+      {/* Central gold MLI thermal blanket band */}
+      <mesh position={[0, 0, 0]}>
+        <cylinderGeometry args={[0.445, 0.445, 0.14, 32]} />
+        <meshStandardMaterial color="#d4a338" metalness={0.88} roughness={0.22} />
+      </mesh>
+      {/* Upper equipment deck with thermal louvers */}
+      <mesh position={[0, 0.122, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.15, 0.44, 32]} />
+        <meshStandardMaterial color="#8e949c" metalness={0.65} roughness={0.35} side={THREE.DoubleSide} />
+      </mesh>
+
+      {/* ── Internal Propellant Tanks (4 gold spherical titanium tanks) ── */}
+      {[45, 135, 225, 315].map((deg) => {
+        const rad = (deg * Math.PI) / 180;
+        return (
+          <mesh key={deg} position={[Math.cos(rad) * 0.24, 0, Math.sin(rad) * 0.24]}>
+            <sphereGeometry args={[0.11, 16, 16]} />
+            <meshStandardMaterial color="#e5b440" metalness={0.92} roughness={0.18} />
+          </mesh>
+        );
+      })}
+
+      {/* ── Central Main Engine / Retrorocket Nozzle ── */}
+      <mesh position={[0, -0.18, 0]}>
+        <cylinderGeometry args={[0.08, 0.15, 0.14, 20]} />
+        <meshStandardMaterial color="#2d3036" metalness={0.85} roughness={0.25} />
+      </mesh>
+      {/* Inner nozzle throat with amber glow */}
+      <mesh position={[0, -0.25, 0]}>
+        <cylinderGeometry args={[0.04, 0.07, 0.02, 16]} />
+        <meshStandardMaterial color="#ff7722" emissive="#cc4400" emissiveIntensity={0.6} metalness={0.3} roughness={0.7} />
+      </mesh>
+
+      {/* ── 4 RCS Thruster Outrigger Assemblies (90° intervals) ── */}
+      {[0, 90, 180, 270].map((deg) => {
+        const rad = (deg * Math.PI) / 180;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+        return (
+          <group key={deg} position={[cos * 0.45, -0.02, sin * 0.45]} rotation={[0, -rad, 0]}>
+            {/* Outrigger structural bracket */}
+            <mesh position={[0.04, 0, 0]}>
+              <boxGeometry args={[0.08, 0.03, 0.06]} />
+              <meshStandardMaterial color="#40444c" metalness={0.7} roughness={0.3} />
+            </mesh>
+            {/* Gold heat shield deflector plate */}
+            <mesh position={[0.07, 0, 0]} rotation={[0, Math.PI / 4, 0]}>
+              <boxGeometry args={[0.01, 0.08, 0.08]} />
+              <meshStandardMaterial color="#dfa535" metalness={0.9} roughness={0.2} />
+            </mesh>
+            {/* 3 micro-nozzles (roll, pitch, yaw) */}
+            <mesh position={[0.08, 0.035, 0]}>
+              <cylinderGeometry args={[0.008, 0.015, 0.035, 8]} />
+              <meshStandardMaterial color="#22252a" metalness={0.85} roughness={0.2} />
+            </mesh>
+            <mesh position={[0.08, -0.035, 0]} rotation={[Math.PI, 0, 0]}>
+              <cylinderGeometry args={[0.008, 0.015, 0.035, 8]} />
+              <meshStandardMaterial color="#22252a" metalness={0.85} roughness={0.2} />
+            </mesh>
+            <mesh position={[0.095, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
+              <cylinderGeometry args={[0.008, 0.015, 0.035, 8]} />
+              <meshStandardMaterial color="#22252a" metalness={0.85} roughness={0.2} />
+            </mesh>
+          </group>
+        );
+      })}
+
+      {/* ── High-Gain Parabolic Antenna (HGA) on Steerable Gimbal Boom ── */}
+      <group position={[0.26, 0.16, 0.22]} rotation={[-0.32, 0.45, 0.2]}>
+        {/* Gimbal mounting pedestal */}
+        <mesh position={[0, -0.04, 0]}>
+          <cylinderGeometry args={[0.025, 0.035, 0.08, 12]} />
+          <meshStandardMaterial color="#3a3e46" metalness={0.8} roughness={0.3} />
+        </mesh>
+        {/* Gold articulated hinge actuator */}
+        <mesh position={[0, 0.01, 0]}>
+          <sphereGeometry args={[0.028, 12, 12]} />
+          <meshStandardMaterial color="#d89f28" metalness={0.9} roughness={0.2} />
+        </mesh>
+        {/* Parabolic reflector dish */}
+        <mesh position={[0, 0.09, 0]}>
+          <cylinderGeometry args={[0.18, 0.05, 0.05, 24]} />
+          <meshStandardMaterial color="#f2f0eb" metalness={0.4} roughness={0.35} />
+        </mesh>
+        {/* Gold thermal backing on dish */}
+        <mesh position={[0, 0.065, 0]}>
+          <cylinderGeometry args={[0.176, 0.048, 0.01, 24]} />
+          <meshStandardMaterial color="#cda032" metalness={0.85} roughness={0.25} />
+        </mesh>
+        {/* Central feed horn strut + subreflector */}
+        <mesh position={[0, 0.15, 0]}>
+          <cylinderGeometry args={[0.008, 0.014, 0.11, 8]} />
+          <meshStandardMaterial color="#a0a4aa" metalness={0.7} roughness={0.3} />
+        </mesh>
+        <mesh position={[0, 0.21, 0]}>
+          <sphereGeometry args={[0.018, 12, 12]} />
+          <meshStandardMaterial color="#e0ded8" metalness={0.6} roughness={0.3} />
+        </mesh>
+      </group>
+
+      {/* ── Twin Star Tracker Camera Baffles & Sun Sensor ── */}
+      <group position={[-0.24, 0.14, 0.24]} rotation={[0.4, -0.3, 0]}>
+        <mesh position={[-0.03, 0, 0]}>
+          <cylinderGeometry args={[0.022, 0.026, 0.09, 12]} />
+          <meshStandardMaterial color="#1a1c20" metalness={0.9} roughness={0.2} />
+        </mesh>
+        <mesh position={[0.03, 0, 0]}>
+          <cylinderGeometry args={[0.022, 0.026, 0.09, 12]} />
+          <meshStandardMaterial color="#1a1c20" metalness={0.9} roughness={0.2} />
+        </mesh>
+        {/* Camera lenses (deep anti-reflective blue) */}
+        <mesh position={[-0.03, 0.046, 0]}>
+          <cylinderGeometry args={[0.018, 0.018, 0.005, 12]} />
+          <meshStandardMaterial color="#0055aa" emissive="#002255" emissiveIntensity={0.5} roughness={0.1} />
+        </mesh>
+        <mesh position={[0.03, 0.046, 0]}>
+          <cylinderGeometry args={[0.018, 0.018, 0.005, 12]} />
+          <meshStandardMaterial color="#0055aa" emissive="#002255" emissiveIntensity={0.5} roughness={0.1} />
+        </mesh>
+      </group>
+
+      {/* ── Magnetometer / Science Sensor Mast ── */}
+      <group position={[0, 0.1, -0.42]} rotation={[-0.25, 0, 0]}>
+        <mesh position={[0, 0.18, 0]}>
+          <cylinderGeometry args={[0.008, 0.012, 0.36, 8]} />
+          <meshStandardMaterial color="#2e3238" metalness={0.7} roughness={0.3} />
+        </mesh>
+        <mesh position={[0, 0.37, 0]}>
+          <sphereGeometry args={[0.025, 12, 12]} />
+          <meshStandardMaterial color="#dfa230" metalness={0.9} roughness={0.2} />
+        </mesh>
+      </group>
+
+      {/* ── Solar Array Wings (Port & Starboard) ── */}
+      {/* Starboard Wing (+X) */}
+      <group position={[0.45, 0, 0]}>
+        {/* Root hinge & drive gimbal */}
+        <mesh position={[0.05, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.03, 0.03, 0.1, 12]} />
+          <meshStandardMaterial color="#353840" metalness={0.8} roughness={0.25} />
+        </mesh>
+        {/* Gold structural actuator cuff */}
+        <mesh position={[0.08, 0, 0]}>
+          <boxGeometry args={[0.04, 0.06, 0.06]} />
+          <meshStandardMaterial color="#d89f28" metalness={0.9} roughness={0.2} />
+        </mesh>
+        {/* Primary Inboard Solar Panel Frame */}
+        <mesh position={[0.55, 0, 0]}>
+          <boxGeometry args={[0.88, 0.02, 0.44]} />
+          <meshStandardMaterial color="#1e222a" metalness={0.8} roughness={0.3} />
+        </mesh>
+        {/* Deep Cosmic Blue Photovoltaic Cells (Upper Surface) */}
+        <mesh position={[0.55, 0.012, 0]}>
+          <boxGeometry args={[0.84, 0.004, 0.4]} />
+          <meshStandardMaterial color="#0c2a5c" metalness={0.65} roughness={0.28} />
+        </mesh>
+        {/* Photovoltaic Cells (Lower Surface) */}
+        <mesh position={[0.55, -0.012, 0]}>
+          <boxGeometry args={[0.84, 0.004, 0.4]} />
+          <meshStandardMaterial color="#0c2a5c" metalness={0.65} roughness={0.28} />
+        </mesh>
+        {/* Gold solar busbars / interconnect grid lines */}
+        {[-0.14, 0, 0.14].map((zOffset) => (
+          <mesh key={zOffset} position={[0.55, 0.015, zOffset]}>
+            <boxGeometry args={[0.82, 0.002, 0.01]} />
+            <meshStandardMaterial color="#e5b842" metalness={0.9} roughness={0.2} />
+          </mesh>
+        ))}
+        {/* Outboard Wing Extension Panel */}
+        <mesh position={[1.18, 0, 0]}>
+          <boxGeometry args={[0.36, 0.018, 0.38]} />
+          <meshStandardMaterial color="#1e222a" metalness={0.8} roughness={0.3} />
+        </mesh>
+        <mesh position={[1.18, 0.011, 0]}>
+          <boxGeometry args={[0.33, 0.004, 0.34]} />
+          <meshStandardMaterial color="#0c2a5c" metalness={0.65} roughness={0.28} />
+        </mesh>
+      </group>
+
+      {/* Port Wing (-X) */}
+      <group position={[-0.45, 0, 0]} rotation={[0, Math.PI, 0]}>
+        {/* Root hinge & drive gimbal */}
+        <mesh position={[0.05, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.03, 0.03, 0.1, 12]} />
+          <meshStandardMaterial color="#353840" metalness={0.8} roughness={0.25} />
+        </mesh>
+        {/* Gold structural actuator cuff */}
+        <mesh position={[0.08, 0, 0]}>
+          <boxGeometry args={[0.04, 0.06, 0.06]} />
+          <meshStandardMaterial color="#d89f28" metalness={0.9} roughness={0.2} />
+        </mesh>
+        {/* Primary Inboard Solar Panel Frame */}
+        <mesh position={[0.55, 0, 0]}>
+          <boxGeometry args={[0.88, 0.02, 0.44]} />
+          <meshStandardMaterial color="#1e222a" metalness={0.8} roughness={0.3} />
+        </mesh>
+        {/* Deep Cosmic Blue Photovoltaic Cells (Upper Surface) */}
+        <mesh position={[0.55, 0.012, 0]}>
+          <boxGeometry args={[0.84, 0.004, 0.4]} />
+          <meshStandardMaterial color="#0c2a5c" metalness={0.65} roughness={0.28} />
+        </mesh>
+        {/* Photovoltaic Cells (Lower Surface) */}
+        <mesh position={[0.55, -0.012, 0]}>
+          <boxGeometry args={[0.84, 0.004, 0.4]} />
+          <meshStandardMaterial color="#0c2a5c" metalness={0.65} roughness={0.28} />
+        </mesh>
+        {/* Gold solar busbars / interconnect grid lines */}
+        {[-0.14, 0, 0.14].map((zOffset) => (
+          <mesh key={zOffset} position={[0.55, 0.015, zOffset]}>
+            <boxGeometry args={[0.82, 0.002, 0.01]} />
+            <meshStandardMaterial color="#e5b842" metalness={0.9} roughness={0.2} />
+          </mesh>
+        ))}
+        {/* Outboard Wing Extension Panel */}
+        <mesh position={[1.18, 0, 0]}>
+          <boxGeometry args={[0.36, 0.018, 0.38]} />
+          <meshStandardMaterial color="#1e222a" metalness={0.8} roughness={0.3} />
+        </mesh>
+        <mesh position={[1.18, 0.011, 0]}>
+          <boxGeometry args={[0.33, 0.004, 0.34]} />
+          <meshStandardMaterial color="#0c2a5c" metalness={0.65} roughness={0.28} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+function MarsAeroshellContent() {
+  return (
+    <group position={[0, 0.15, 0]}>
+      {/* ── Conical Backshell (Aft Aero-Shell with Thermal Protection Tiles) ── */}
+      <mesh position={[0, 0.14, 0]}>
+        <coneGeometry args={[0.56, 0.52, 28]} />
+        <meshStandardMaterial
+          color="#ebe7de"
+          roughness={0.48}
+          metalness={0.2}
+        />
+      </mesh>
+      {/* Parachute Mortar Canister at Apex */}
+      <mesh position={[0, 0.39, 0]}>
+        <cylinderGeometry args={[0.12, 0.14, 0.08, 20]} />
+        <meshStandardMaterial color="#3a3d42" metalness={0.75} roughness={0.3} />
+      </mesh>
+      {/* Mortar ejection cover plate */}
+      <mesh position={[0, 0.435, 0]}>
+        <cylinderGeometry args={[0.11, 0.11, 0.015, 20]} />
+        <meshStandardMaterial color="#b05830" metalness={0.5} roughness={0.5} />
+      </mesh>
+      {/* Parachute bridle attachment brackets */}
+      {[0, 120, 240].map((deg) => {
+        const rad = (deg * Math.PI) / 180;
+        return (
+          <mesh key={deg} position={[Math.cos(rad) * 0.13, 0.38, Math.sin(rad) * 0.13]}>
+            <boxGeometry args={[0.02, 0.04, 0.02]} />
+            <meshStandardMaterial color="#22252a" metalness={0.8} roughness={0.3} />
+          </mesh>
+        );
+      })}
+
+      {/* Marmon Clamp Band Interface Ring (Separator with gold release bolts) */}
+      <mesh position={[0, -0.11, 0]}>
+        <cylinderGeometry args={[0.575, 0.575, 0.04, 32]} />
+        <meshStandardMaterial color="#40444c" metalness={0.82} roughness={0.28} />
+      </mesh>
+      {/* Golden explosive separation bolt assemblies around perimeter */}
+      {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => {
+        const rad = (deg * Math.PI) / 180;
+        return (
+          <mesh key={deg} position={[Math.cos(rad) * 0.582, -0.11, Math.sin(rad) * 0.582]}>
+            <cylinderGeometry args={[0.012, 0.012, 0.05, 8]} />
+            <meshStandardMaterial color="#dfa838" metalness={0.9} roughness={0.2} />
+          </mesh>
+        );
+      })}
+
+      {/* ── Forward Ablative Heat Shield (Blunt Cone TPS) ── */}
+      <mesh position={[0, -0.19, 0]} rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[0.58, 0.16, 32]} />
+        <meshStandardMaterial
+          color="#2a2521"
+          metalness={0.25}
+          roughness={0.82}
+        />
+      </mesh>
+      {/* Aerodynamic Shoulder Lip */}
+      <mesh position={[0, -0.12, 0]}>
+        <torusGeometry args={[0.575, 0.014, 12, 32]} />
+        <meshStandardMaterial color="#322c26" metalness={0.3} roughness={0.7} />
+      </mesh>
+      {/* Stagnation nose cap */}
+      <mesh position={[0, -0.27, 0]}>
+        <sphereGeometry args={[0.08, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+        <meshStandardMaterial color="#1e1916" metalness={0.2} roughness={0.9} />
+      </mesh>
+    </group>
+  );
+}
+
 const _shipCopy = new THREE.Vector3();
 const _aheadCopy = new THREE.Vector3();
 const _targetQuat = new THREE.Quaternion();
@@ -824,34 +1141,10 @@ function FlightAnimator({
         <group ref={marsProbeRef} scale={0.42} rotation={[Math.PI / 2, 0, 0]} visible={false}>
           {/* Detachable Cruise Stage / Orbiter Ring */}
           <group ref={marsCruiseRef} position={[0, -0.45, 0]}>
-            <mesh>
-              <cylinderGeometry args={[0.38, 0.38, 0.28, 16]} />
-              <meshStandardMaterial color="#b8b8b8" metalness={0.75} roughness={0.3} />
-            </mesh>
-            <mesh position={[0, -0.22, 0]}>
-              <cylinderGeometry args={[0.22, 0.08, 0.06, 12]} />
-              <meshStandardMaterial color="#d8d8d8" metalness={0.8} roughness={0.2} />
-            </mesh>
-            <mesh position={[0.92, 0, 0]}>
-              <boxGeometry args={[0.9, 0.015, 0.36]} />
-              <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.45} />
-            </mesh>
-            <mesh position={[-0.92, 0, 0]}>
-              <boxGeometry args={[0.9, 0.015, 0.36]} />
-              <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.45} />
-            </mesh>
+            <MarsCruiseStageContent />
           </group>
           {/* Conical Entry Aeroshell + Backshell + Heat Shield */}
-          <group position={[0, 0.15, 0]}>
-            <mesh position={[0, 0.12, 0]}>
-              <coneGeometry args={[0.52, 0.55, 16]} />
-              <meshStandardMaterial color="#d8d2c6" metalness={0.35} roughness={0.5} />
-            </mesh>
-            <mesh position={[0, -0.18, 0]} rotation={[Math.PI, 0, 0]}>
-              <coneGeometry args={[0.54, 0.14, 16]} />
-              <meshStandardMaterial color="#3c2a21" metalness={0.2} roughness={0.75} />
-            </mesh>
-          </group>
+          <MarsAeroshellContent />
         </group>
 
         {/* Mars Surface Descent Pod / Lander + Parachute + Heat Shield Drop */}
@@ -919,6 +1212,30 @@ function FlightAnimator({
             <cylinderGeometry args={[0.02, 0.02, 0.12, 8]} />
             <meshStandardMaterial color="#aaaaaa" metalness={0.6} roughness={0.4} />
           </mesh>
+
+          {/* Doppler radar altimeter (surface ranging radar) */}
+          <group position={[0.24, -0.06, 0.24]} rotation={[0.3, 0.4, 0]}>
+            <mesh>
+              <cylinderGeometry args={[0.07, 0.02, 0.03, 16]} />
+              <meshStandardMaterial color="#c0c0c0" metalness={0.8} roughness={0.25} />
+            </mesh>
+            <mesh position={[0, -0.02, 0]}>
+              <boxGeometry args={[0.03, 0.02, 0.03]} />
+              <meshStandardMaterial color="#dfa230" metalness={0.9} roughness={0.2} />
+            </mesh>
+          </group>
+
+          {/* Panoramic Camera / Science Mast */}
+          <group position={[-0.22, 0.46, -0.2]} rotation={[0, 0.2, 0]}>
+            <mesh position={[0, 0.12, 0]}>
+              <cylinderGeometry args={[0.012, 0.016, 0.24, 8]} />
+              <meshStandardMaterial color="#40444c" metalness={0.7} roughness={0.3} />
+            </mesh>
+            <mesh position={[0, 0.25, 0]}>
+              <boxGeometry args={[0.06, 0.04, 0.04]} />
+              <meshStandardMaterial color="#d4a238" metalness={0.85} roughness={0.25} />
+            </mesh>
+          </group>
 
           {/* Supersonic Parachute + Bridle */}
           <group ref={chuteRef} position={[0, 2.3, 0]} visible={false}>
@@ -1005,18 +1322,7 @@ function FlightAnimator({
       {/* Stage 2 Mars Cruise Stage separating away before entry */}
       <group ref={marsCruiseSepRef} visible={false}>
         <group rotation={[Math.PI / 2, 0, 0]}>
-          <mesh>
-            <cylinderGeometry args={[0.38, 0.38, 0.28, 16]} />
-            <meshStandardMaterial color="#b8b8b8" metalness={0.75} roughness={0.3} />
-          </mesh>
-          <mesh position={[0.92, 0, 0]}>
-            <boxGeometry args={[0.9, 0.015, 0.36]} />
-            <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.45} />
-          </mesh>
-          <mesh position={[-0.92, 0, 0]}>
-            <boxGeometry args={[0.9, 0.015, 0.36]} />
-            <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.45} />
-          </mesh>
+          <MarsCruiseStageContent />
         </group>
       </group>
     </>
