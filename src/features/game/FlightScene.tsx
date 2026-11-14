@@ -11,6 +11,7 @@ import { getMissionOrNull, type MissionSpec, type Planet } from "@/lib/missionDa
 import { gameAudio } from "@/lib/gameAudio";
 import { onNarrationComplete } from "@/lib/narration";
 import { isTouchDevice } from "@/lib/useMobile";
+import { getSolarPanelTexture, getCharredHeatShieldTexture } from "./heritage3D/textures";
 import * as THREE from "three";
 
 const EARTH = new THREE.Vector3(-28, 0, -20);
@@ -478,8 +479,16 @@ function OrbitPath({ isMars }: { isMars: boolean }) {
   }, []);
 
   const lineObj = useMemo(() => {
-    const mat = new THREE.LineBasicMaterial({ color: isMars ? "#ff8855" : "#6ee7ff", transparent: true, opacity: 0.3 });
-    return new THREE.Line(geo, mat);
+    const mat = new THREE.LineDashedMaterial({
+      color: isMars ? "#ffaa77" : "#88e0ff",
+      transparent: true,
+      opacity: 0.22,
+      dashSize: 0.5,
+      gapSize: 0.25,
+    });
+    const line = new THREE.Line(geo, mat);
+    line.computeLineDistances();
+    return line;
   }, [geo, isMars]);
 
   return (
@@ -490,6 +499,8 @@ function OrbitPath({ isMars }: { isMars: boolean }) {
 }
 
 export function MarsCruiseStageContent() {
+  const solarTex = useMemo(() => getSolarPanelTexture(), []);
+
   return (
     <group>
       {/* ── Main Bus / Equipment Ring ── */}
@@ -640,7 +651,7 @@ export function MarsCruiseStageContent() {
         </mesh>
       </group>
 
-      {/* ── Solar Array Wings (Port & Starboard) ── */}
+      {/* ── Solar Array Wings (Port & Starboard) with Silicon Solar Cell PBR Texture ── */}
       {/* Starboard Wing (+X) */}
       <group position={[0.45, 0, 0]}>
         {/* Root hinge & drive gimbal */}
@@ -658,15 +669,15 @@ export function MarsCruiseStageContent() {
           <boxGeometry args={[0.88, 0.02, 0.44]} />
           <meshStandardMaterial color="#1e222a" metalness={0.8} roughness={0.3} />
         </mesh>
-        {/* Deep Cosmic Blue Photovoltaic Cells (Upper Surface) */}
+        {/* Silicon Photovoltaic Cells with PBR Grid (Upper Surface) */}
         <mesh position={[0.55, 0.012, 0]}>
           <boxGeometry args={[0.84, 0.004, 0.4]} />
-          <meshStandardMaterial color="#0c2a5c" metalness={0.65} roughness={0.28} />
+          <meshStandardMaterial map={solarTex} metalness={0.75} roughness={0.22} />
         </mesh>
         {/* Photovoltaic Cells (Lower Surface) */}
         <mesh position={[0.55, -0.012, 0]}>
           <boxGeometry args={[0.84, 0.004, 0.4]} />
-          <meshStandardMaterial color="#0c2a5c" metalness={0.65} roughness={0.28} />
+          <meshStandardMaterial map={solarTex} metalness={0.75} roughness={0.22} />
         </mesh>
         {/* Gold solar busbars / interconnect grid lines */}
         {[-0.14, 0, 0.14].map((zOffset) => (
@@ -682,7 +693,7 @@ export function MarsCruiseStageContent() {
         </mesh>
         <mesh position={[1.18, 0.011, 0]}>
           <boxGeometry args={[0.33, 0.004, 0.34]} />
-          <meshStandardMaterial color="#0c2a5c" metalness={0.65} roughness={0.28} />
+          <meshStandardMaterial map={solarTex} metalness={0.75} roughness={0.22} />
         </mesh>
       </group>
 
@@ -703,15 +714,15 @@ export function MarsCruiseStageContent() {
           <boxGeometry args={[0.88, 0.02, 0.44]} />
           <meshStandardMaterial color="#1e222a" metalness={0.8} roughness={0.3} />
         </mesh>
-        {/* Deep Cosmic Blue Photovoltaic Cells (Upper Surface) */}
+        {/* Silicon Photovoltaic Cells (Upper Surface) */}
         <mesh position={[0.55, 0.012, 0]}>
           <boxGeometry args={[0.84, 0.004, 0.4]} />
-          <meshStandardMaterial color="#0c2a5c" metalness={0.65} roughness={0.28} />
+          <meshStandardMaterial map={solarTex} metalness={0.75} roughness={0.22} />
         </mesh>
         {/* Photovoltaic Cells (Lower Surface) */}
         <mesh position={[0.55, -0.012, 0]}>
           <boxGeometry args={[0.84, 0.004, 0.4]} />
-          <meshStandardMaterial color="#0c2a5c" metalness={0.65} roughness={0.28} />
+          <meshStandardMaterial map={solarTex} metalness={0.75} roughness={0.22} />
         </mesh>
         {/* Gold solar busbars / interconnect grid lines */}
         {[-0.14, 0, 0.14].map((zOffset) => (
@@ -727,7 +738,7 @@ export function MarsCruiseStageContent() {
         </mesh>
         <mesh position={[1.18, 0.011, 0]}>
           <boxGeometry args={[0.33, 0.004, 0.34]} />
-          <meshStandardMaterial color="#0c2a5c" metalness={0.65} roughness={0.28} />
+          <meshStandardMaterial map={solarTex} metalness={0.75} roughness={0.22} />
         </mesh>
       </group>
     </group>
@@ -735,15 +746,17 @@ export function MarsCruiseStageContent() {
 }
 
 function MarsAeroshellContent() {
+  const heatShieldTex = useMemo(() => getCharredHeatShieldTexture(), []);
+
   return (
     <group position={[0, 0.15, 0]}>
-      {/* ── Conical Backshell (Aft Aero-Shell with Thermal Protection Tiles) ── */}
+      {/* ── Conical Backshell (Aft Aero-Shell with Thermal Protection System) ── */}
       <mesh position={[0, 0.14, 0]}>
-        <coneGeometry args={[0.56, 0.52, 28]} />
+        <coneGeometry args={[0.56, 0.52, 32]} />
         <meshStandardMaterial
           color="#ebe7de"
-          roughness={0.48}
-          metalness={0.2}
+          roughness={0.55}
+          metalness={0.15}
         />
       </mesh>
       {/* Parachute Mortar Canister at Apex */}
@@ -783,24 +796,24 @@ function MarsAeroshellContent() {
         );
       })}
 
-      {/* ── Forward Ablative Heat Shield (Blunt Cone TPS) ── */}
-      <mesh position={[0, -0.19, 0]} rotation={[Math.PI, 0, 0]}>
-        <coneGeometry args={[0.58, 0.16, 32]} />
+      {/* ── Forward Ablative Heat Shield with Charred PICA-X Tiles ── */}
+      <mesh position={[0, -0.18, 0]} rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[0.575, 0.17, 32]} />
         <meshStandardMaterial
-          color="#2a2521"
+          map={heatShieldTex}
+          roughness={0.78}
           metalness={0.25}
-          roughness={0.82}
         />
       </mesh>
-      {/* Aerodynamic Shoulder Lip */}
-      <mesh position={[0, -0.12, 0]}>
-        <torusGeometry args={[0.575, 0.014, 12, 32]} />
-        <meshStandardMaterial color="#322c26" metalness={0.3} roughness={0.7} />
+      {/* Aerodynamic Shoulder Ring Transition */}
+      <mesh position={[0, -0.11, 0]}>
+        <cylinderGeometry args={[0.575, 0.575, 0.02, 32]} />
+        <meshStandardMaterial color="#68564a" metalness={0.4} roughness={0.6} />
       </mesh>
       {/* Stagnation nose cap */}
-      <mesh position={[0, -0.27, 0]}>
+      <mesh position={[0, -0.265, 0]}>
         <sphereGeometry args={[0.08, 16, 16, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
-        <meshStandardMaterial color="#1e1916" metalness={0.2} roughness={0.9} />
+        <meshStandardMaterial color="#42342c" metalness={0.3} roughness={0.8} />
       </mesh>
     </group>
   );

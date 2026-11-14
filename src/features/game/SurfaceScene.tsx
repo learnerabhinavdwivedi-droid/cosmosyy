@@ -25,6 +25,7 @@ import { HologramInspect } from "./HologramInspect";
 import { getThemeColor3 } from "./objectThemes";
 import { getTerrainElevation } from "./terrainHeight";
 import { getHologramModel } from "./hologramMapping";
+import { hasDedicated3DModel, HeritageObject3D } from "./heritage3D/Heritage3DDispatcher";
 import * as THREE from "three";
 
 const SCAN_RANGE = 8;
@@ -183,9 +184,10 @@ function HeritageMarker({
   const innerRingRef = useRef<THREE.Mesh>(null);
   const pulseRef = useRef<THREE.Mesh>(null);
 
+  const isDedicated = missionId ? hasDedicated3DModel(missionId, obj.id) : false;
   const modelEntry = useMemo(
-    () => (missionId ? getHologramModel(missionId, obj.id) : null),
-    [missionId, obj.id],
+    () => (missionId && !isDedicated ? getHologramModel(missionId, obj.id) : null),
+    [missionId, obj.id, isDedicated],
   );
 
   useFrame(() => {
@@ -228,11 +230,17 @@ function HeritageMarker({
   return (
     <group position={[obj.position[0], obj.position[1] + terrainY, obj.position[2]]}>
       {/* Real 3D physical heritage object with Blender finish */}
-      {modelEntry && (
+      {missionId && isDedicated ? (
+        <HeritageObject3D
+          missionId={missionId}
+          objectId={obj.id}
+          scale={1.0}
+        />
+      ) : modelEntry ? (
         <Suspense fallback={null}>
           <GroundObject url={modelEntry.modelPath} baseScale={1.2} />
         </Suspense>
-      )}
+      ) : null}
 
       <FloatingArrow isFound={isFound} themeColor={themeColor} distance={distance} />
 

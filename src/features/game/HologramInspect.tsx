@@ -12,6 +12,11 @@ import {
   getDisplayComponents,
   type HologramManifest,
 } from "./hologramMapping";
+import {
+  hasDedicated3DModel,
+  HeritageObject3D,
+  getDedicatedComponents,
+} from "./heritage3D/Heritage3DDispatcher";
 import { getObjectTheme, type ObjectTheme } from "./objectThemes";
 import * as THREE from "three";
 
@@ -177,20 +182,59 @@ function AutoCamera() {
   return null;
 }
 
+/* ─── Dedicated Procedural 3D Model with Blender Finish ─── */
+function DedicatedHoloModel({
+  missionId,
+  objectId,
+  explode,
+  wireframe,
+}: {
+  missionId: string;
+  objectId: string;
+  explode: number;
+  wireframe?: boolean;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame((_, delta) => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += delta * 0.22;
+    }
+  });
+
+  return (
+    <group ref={groupRef} position={[0, -0.2, 0]}>
+      <HeritageObject3D
+        missionId={missionId}
+        objectId={objectId}
+        wireframe={wireframe}
+        explode={explode}
+        scale={1.6}
+      />
+    </group>
+  );
+}
+
 /* ─── 3D Viewer canvas with Blender Finish ─── */
 function HoloCanvas({
+  missionId,
+  objectId,
   modelUrl,
   explode,
   wireframe,
   theme,
   manifest,
 }: {
+  missionId: string;
+  objectId: string;
   modelUrl: string;
   explode: number;
   wireframe?: boolean;
   theme: ObjectTheme;
   manifest?: HologramManifest | null;
 }) {
+  const isDedicated = hasDedicated3DModel(missionId, objectId);
+
   return (
     <Canvas
       gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
@@ -199,13 +243,22 @@ function HoloCanvas({
     >
       <StudioLighting />
       <Suspense fallback={null}>
-        <HoloModel
-          url={modelUrl}
-          explode={explode}
-          wireframe={wireframe}
-          themeColor={theme.primary}
-          manifest={manifest}
-        />
+        {isDedicated ? (
+          <DedicatedHoloModel
+            missionId={missionId}
+            objectId={objectId}
+            explode={explode}
+            wireframe={wireframe}
+          />
+        ) : (
+          <HoloModel
+            url={modelUrl}
+            explode={explode}
+            wireframe={wireframe}
+            themeColor={theme.primary}
+            manifest={manifest}
+          />
+        )}
       </Suspense>
       <ContactShadow />
       <AutoCamera />
@@ -224,9 +277,24 @@ function HoloCanvas({
   );
 }
 
-/* ─── Component label list (left panel with GLB) ─── */
-function ComponentLabels({ manifest, theme }: { manifest: HologramManifest; theme: ObjectTheme }) {
-  const parts = useMemo(() => getDisplayComponents(manifest), [manifest]);
+/* ─── Component label list (left panel with GLB or Dedicated 3D) ─── */
+function ComponentLabels({
+  missionId,
+  objectId,
+  manifest,
+  theme,
+}: {
+  missionId: string;
+  objectId: string;
+  manifest: HologramManifest | null;
+  theme: ObjectTheme;
+}) {
+  const parts = useMemo(() => {
+    if (hasDedicated3DModel(missionId, objectId)) {
+      return getDedicatedComponents(missionId, objectId);
+    }
+    return manifest ? getDisplayComponents(manifest) : [];
+  }, [missionId, objectId, manifest]);
 
   return (
     <div className="flex flex-col gap-2 py-2">
@@ -549,7 +617,9 @@ export function HologramInspect({
 
   if (!obj) return null;
 
-  const has3D = !!modelEntry;
+  const isDedicated = hasDedicated3DModel(missionId, obj.id);
+  const has3D = isDedicated || !!modelEntry;
+  const hasComponents = isDedicated || (!!manifest?.components && manifest.components.length > 0);
 
   return (
     <div
@@ -572,7 +642,9 @@ export function HologramInspect({
             >
               <div className="relative flex-1">
                 <HoloCanvas
-                  modelUrl={modelEntry!.modelPath}
+                  missionId={missionId}
+                  objectId={obj.id}
+                  modelUrl={modelEntry ? modelEntry.modelPath : ""}
                   explode={explode}
                   wireframe={wireframe}
                   theme={theme}
@@ -599,7 +671,7 @@ export function HologramInspect({
               </div>
 
               {/* Orbit controls hint */}
-              {(!manifest?.components || manifest.components.length === 0) && (
+              {!hasComponents && (
                 <div className="pointer-events-none absolute bottom-3 left-3 z-10 flex items-center gap-1.5 rounded-full bg-space-950/70 px-2.5 py-1 text-[9px] font-mono text-regolith-300 backdrop-blur-sm border border-space-800">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   <span>Orbit 360° · Scroll to Zoom</span>
@@ -607,7 +679,7 @@ export function HologramInspect({
               )}
 
               {/* Exploded view slider if components available */}
-              {manifest?.components && manifest.components.length > 0 && (
+              {hasComponents && (
                 <div
                   className="absolute bottom-3 left-3 right-3 z-10 flex flex-col gap-1 rounded-lg border p-2 backdrop-blur-md"
                   style={{ borderColor: theme.border, background: "rgba(7,9,13,0.85)" }}
@@ -629,7 +701,12 @@ export function HologramInspect({
                     style={{ accentColor: theme.primary }}
                   />
                   <div className="mt-1 max-h-16 overflow-y-auto">
-                    <ComponentLabels manifest={manifest} theme={theme} />
+                    <ComponentLabels
+                      missionId={missionId}
+                      objectId={obj.id}
+                      manifest={manifest}
+                      theme={theme}
+                    />
                   </div>
                 </div>
               )}
