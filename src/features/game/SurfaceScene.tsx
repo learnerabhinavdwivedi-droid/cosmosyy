@@ -677,7 +677,8 @@ function PlayerController({
     const startGroundY = getTerrainElevation(5, 10, planet ?? "moon", lat, lon);
     physY.current = startGroundY + EYE_HEIGHT;
     camera.position.set(5, physY.current, 10);
-    euler.current.y = -0.4;
+    euler.current.y = 0.46;
+    euler.current.x = -0.05;
     camera.quaternion.setFromEuler(euler.current);
 
     return () => {
