@@ -27,7 +27,6 @@ import { getThemeColor3 } from "./objectThemes";
 import { getTerrainElevation } from "./terrainHeight";
 import { getHologramModel } from "./hologramMapping";
 import { hasDedicated3DModel, HeritageObject3D } from "./heritage3D/Heritage3DDispatcher";
-import { AmericanFlag3D } from "./heritage3D/MoonArtifacts";
 import * as THREE from "three";
 
 const SCAN_RANGE = 8;
@@ -230,7 +229,7 @@ function HeritageMarker({
   );
 
   return (
-    <group position={[obj.position[0], obj.position[1] + terrainY, obj.position[2]]}>
+    <group position={[obj.position[0], obj.position[1] + terrainY - 0.035, obj.position[2]]}>
       {/* Real 3D physical heritage object with Blender finish */}
       {missionId && isDedicated ? (
         <HeritageObject3D
@@ -888,8 +887,6 @@ function SurfaceSceneContent({
   missionId: string;
 }) {
   const found = useGameStore((s) => s.objectsFoundThisRun);
-  const phase = useGameStore((s) => s.phase);
-  const hasFlag = useAppStore((s) => s.progress.missions[missionId]?.flagPlanted ?? false);
   const mission = useMemo(() => getMission(missionId), [missionId]);
   const objects = mission.objects;
   const isMars = mission.planet === "mars";
@@ -939,7 +936,7 @@ function SurfaceSceneContent({
       ) : (
         <Suspense fallback={null}>
           <LMDescent
-            position={[0, getTerrainElevation(0, 0, "moon", mission.landing.lat, mission.landing.lon), 0]}
+            position={[0, getTerrainElevation(0, 0, "moon", mission.landing.lat, mission.landing.lon) - 0.1, 0]}
             scale={1}
           />
         </Suspense>
@@ -965,11 +962,6 @@ function SurfaceSceneContent({
         <Suspense fallback={null}>
           <Footprints lat={mission.landing.lat} lon={mission.landing.lon} />
         </Suspense>
-      )}
-      {!isMars && (hasFlag || phase === "flagPlanted") && (
-        <group position={[3.8, getTerrainElevation(3.8, 6.2, "moon", mission.landing.lat, mission.landing.lon), 6.2]}>
-          <AmericanFlag3D scale={1.0} />
-        </group>
       )}
 
       <ProximityDetector setNearObjectId={setNearObjectId} setObjectDistances={setObjectDistances} objects={objects} />

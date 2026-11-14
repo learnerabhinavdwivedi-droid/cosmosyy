@@ -8,6 +8,7 @@ import { AudioTransmissionDeck } from "./AudioTransmissionDeck";
 import { ArtifactInfoPanel } from "./ArtifactInfoPanel";
 import { ExplodeController } from "./ExplodeController";
 import { MissionCompartmentDrawer } from "./MissionCompartmentDrawer";
+import { hasStoryPacket, getStoryPacket, ObjectStoryCard } from "@/features/story";
 
 interface HologramInspectProps {
   objects: HeritageObject[];
@@ -23,6 +24,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
   const [wireframe, setWireframe] = useState(false);
   const [explode, setExplode] = useState(0);
   const [manifest, setManifest] = useState<HologramManifest | null>(null);
+  const [showStory, setShowStory] = useState(false);
 
   const mission = useMemo(() => getMission(missionId), [missionId]);
 
@@ -38,6 +40,9 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
     () => (obj ? getHologramModel(missionId, obj.id) : null),
     [missionId, obj],
   );
+
+  const hasStory = useMemo(() => (obj ? hasStoryPacket(missionId, obj.id) : false), [missionId, obj]);
+  const storyPacket = useMemo(() => (hasStory && obj ? getStoryPacket(missionId, obj.id) : null), [hasStory, missionId, obj]);
 
   useEffect(() => {
     if (!modelEntry) {
@@ -104,7 +109,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
               />
             </div>
 
-            {/* Category badge & wireframe toggle */}
+            {/* Category badge, wireframe toggle & 3D story launcher */}
             <div className="absolute left-3 top-3 right-3 z-10 flex items-center justify-between pointer-events-auto">
               <span
                 className="rounded px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]"
@@ -112,14 +117,26 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
               >
                 {theme.category}
               </span>
-              <button
-                type="button"
-                onClick={() => setWireframe((v) => !v)}
-                className="rounded border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider transition hover:bg-space-800 cursor-pointer"
-                style={{ borderColor: theme.border, color: theme.primary, background: theme.primaryDim }}
-              >
-                {wireframe ? "Mode: X-Ray Wireframe" : "Mode: Blender PBR"}
-              </button>
+              <div className="flex items-center gap-1.5">
+                {hasStory && storyPacket && (
+                  <button
+                    type="button"
+                    onClick={() => setShowStory(true)}
+                    className="flex items-center gap-1 rounded border border-sky-400/80 bg-sky-500/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-sky-300 transition hover:bg-sky-500/30 cursor-pointer shadow-sm animate-pulse min-h-[28px]"
+                  >
+                    <span>🎬</span>
+                    <span>3D Story</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setWireframe((v) => !v)}
+                  className="rounded border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider transition hover:bg-space-800 cursor-pointer min-h-[28px]"
+                  style={{ borderColor: theme.border, color: theme.primary, background: theme.primaryDim }}
+                >
+                  {wireframe ? "Mode: X-Ray Wireframe" : "Mode: Blender PBR"}
+                </button>
+              </div>
             </div>
 
             {/* Exploded subsystem controls */}
@@ -181,6 +198,11 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
       >
         ✕
       </button>
+
+      {/* 3D Object Story Card Modal */}
+      {showStory && storyPacket && (
+        <ObjectStoryCard packet={storyPacket} onClose={() => setShowStory(false)} />
+      )}
     </div>
   );
 }

@@ -183,5 +183,18 @@
   "error": {
     "heading": "Something went wrong",
     "reload": "Reload"
+  },
+  "story": {
+    "playStory": "Play Story",
+    "pause": "Pause",
+    "resume": "Play",
+    "replay": "Replay",
+    "next": "Next Scene",
+    "prev": "Previous Scene",
+    "kids": "Kids",
+    "explorer": "Explorer",
+    "captions": "Captions",
+    "sound": "Sound",
+    "watchStory": "Watch 3D Story Card"
   }
 }

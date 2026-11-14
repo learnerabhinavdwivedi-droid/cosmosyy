@@ -267,12 +267,8 @@ export default function GameShell() {
 
   useEffect(() => {
     preloadGameAssets();
-    if (!playerName && !isDemo) {
-      navigate("/");
-      return;
-    }
-    if (isDemo && !playerName) {
-      useAppStore.getState().setPlayerName("Commander");
+    if (!playerName) {
+      useAppStore.getState().setPlayerName(isDemo ? "Commander" : "Astronaut");
     }
     if (missionId) {
       if (gameMission !== missionId) {

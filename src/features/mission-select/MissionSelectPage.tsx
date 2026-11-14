@@ -302,7 +302,9 @@ export default function MissionSelectPage() {
   };
 
   const handleLaunch = (missionId: string) => {
-    if (!playerName) return;
+    if (!playerName) {
+      setPlayerName(nameInput.trim() || "Astronaut");
+    }
     if (isTouchDevice()) {
       requestFullscreen().catch(() => {});
     }

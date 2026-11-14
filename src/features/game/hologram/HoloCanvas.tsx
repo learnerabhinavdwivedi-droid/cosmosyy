@@ -89,9 +89,9 @@ function HoloModel({
     const size = b.getSize(new THREE.Vector3());
     const center = b.getCenter(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
-    const targetSize = 0.85;
+    const targetSize = 0.60;
     const scale = targetSize / (maxDim || 1);
-    return { center, scale };
+    return { center, scale, minY: b.min.y };
   }, [clonedScene]);
 
   return (
@@ -100,7 +100,7 @@ function HoloModel({
         scale={[box.scale, box.scale, box.scale]}
         position={[
           -box.center.x * box.scale,
-          -box.center.y * box.scale,
+          -box.minY * box.scale - 0.32,
           -box.center.z * box.scale,
         ]}
       >
@@ -133,21 +133,21 @@ function StudioLighting({ themeColor = "#38bdf8" }: { themeColor?: string }) {
 /* ─── Studio Pedestal Contact Shadow & Glowing Reticle ─── */
 function ContactShadow({ themeColor = "#38bdf8" }: { themeColor?: string }) {
   return (
-    <group position={[0, -0.48, 0]}>
+    <group position={[0, -0.32, 0]}>
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.2, 48]} />
+        <circleGeometry args={[1.0, 48]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.7} depthWrite={false} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.6, 48]} />
+        <circleGeometry args={[1.35, 48]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.35} depthWrite={false} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.008, 0]}>
-        <ringGeometry args={[1.28, 1.31, 64]} />
+        <ringGeometry args={[1.05, 1.08, 64]} />
         <meshBasicMaterial color={themeColor} transparent opacity={0.25} depthWrite={false} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-        <ringGeometry args={[1.45, 1.48, 64]} />
+        <ringGeometry args={[1.2, 1.23, 64]} />
         <meshBasicMaterial color={themeColor} transparent opacity={0.5} depthWrite={false} />
       </mesh>
     </group>
@@ -158,14 +158,14 @@ function ContactShadow({ themeColor = "#38bdf8" }: { themeColor?: string }) {
 function AutoCamera() {
   const { camera } = useThree();
   useEffect(() => {
-    camera.position.set(2.8, 1.35, 2.8);
-    camera.lookAt(0, -0.02, 0);
+    camera.position.set(3.2, 1.45, 3.2);
+    camera.lookAt(0, 0, 0);
   }, [camera]);
   return null;
 }
 
 /* ─── Clean object bounding box fit without compounding transform bug ─── */
-function fitObject(pivot: THREE.Group, content: THREE.Group, targetSize = 0.85): boolean {
+function fitObject(pivot: THREE.Group, content: THREE.Group, targetSize = 0.60): boolean {
   pivot.position.set(0, 0, 0);
   pivot.scale.set(1, 1, 1);
   pivot.rotation.set(0, 0, 0);
@@ -182,7 +182,7 @@ function fitObject(pivot: THREE.Group, content: THREE.Group, targetSize = 0.85):
 
   const s = targetSize / maxDim;
   pivot.scale.set(s, s, s);
-  pivot.position.set(-center.x * s, -center.y * s, -center.z * s);
+  pivot.position.set(-center.x * s, -box.min.y * s - 0.32, -center.z * s);
   return true;
 }
 
@@ -209,7 +209,7 @@ function DedicatedHoloModel({
 
   useLayoutEffect(() => {
     if (!contentRef.current || !pivotRef.current) return;
-    if (fitObject(pivotRef.current, contentRef.current, 0.85)) {
+    if (fitObject(pivotRef.current, contentRef.current, 0.60)) {
       centeredRef.current = true;
     }
   }, [missionId, objectId, explode]);
@@ -219,7 +219,7 @@ function DedicatedHoloModel({
       groupRef.current.rotation.y += delta * 0.22;
     }
     if (!centeredRef.current && contentRef.current && pivotRef.current) {
-      if (fitObject(pivotRef.current, contentRef.current, 0.85)) {
+      if (fitObject(pivotRef.current, contentRef.current, 0.60)) {
         centeredRef.current = true;
       }
     }
@@ -265,7 +265,7 @@ export function HoloCanvas({
   return (
     <Canvas
       gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
-      camera={{ fov: 36, near: 0.1, far: 100, position: [2.8, 1.35, 2.8] }}
+      camera={{ fov: 36, near: 0.1, far: 100, position: [3.2, 1.45, 3.2] }}
       style={{ background: "transparent" }}
     >
       <StudioLighting themeColor={theme.primary} />
@@ -291,8 +291,9 @@ export function HoloCanvas({
       <AutoCamera />
       <OrbitControls
         enableZoom={true}
-        minDistance={1.4}
-        maxDistance={5.5}
+        minDistance={1.8}
+        maxDistance={6.0}
+        target={[0, 0, 0]}
         enablePan={false}
         enableDamping={true}
         dampingFactor={0.05}

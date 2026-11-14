@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 const LandingPage = lazy(() => import("@/features/landing/LandingPage"));
 const MissionSelectPage = lazy(
@@ -13,9 +14,11 @@ const SettingsPage = lazy(() => import("@/features/settings/SettingsPage"));
 
 function withSuspense(Component: React.ComponentType) {
   return (
-    <Suspense fallback={<LoadingScreen />}>
-      <Component />
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<LoadingScreen />}>
+        <Component />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
 

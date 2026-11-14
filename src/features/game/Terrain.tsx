@@ -28,17 +28,20 @@ export function STLTerrain({ stlPath, orthoPath }: { stlPath: string; orthoPath:
     const geo = geometry.clone();
     geo.center();
 
+    // Rotate first so X is East-West, Z is North-South, and Y is Up
+    geo.rotateX(-Math.PI / 2);
+
     const bbox = new THREE.Box3().setFromBufferAttribute(
       geo.getAttribute("position") as THREE.BufferAttribute,
     );
     const scaleX = bbox.max.x - bbox.min.x;
     const scaleZ = bbox.max.z - bbox.min.z;
-    const maxDim = Math.max(scaleX, scaleZ);
+    const maxDim = Math.max(scaleX, scaleZ) || 255.5;
 
     const targetSize = 200;
     const s = targetSize / maxDim;
-    geo.scale(s, s * 0.5, s);
-    geo.rotateX(-Math.PI / 2);
+    // Equal horizontal scale for X and Z, realistic vertical relief
+    geo.scale(s, s * 0.45, s);
     geo.computeVertexNormals();
     generatePlanarUVs(geo);
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useProgress } from "@react-three/drei";
 import { Progress } from "@/components/ui/progress";
 import { useFullscreen } from "@/lib/fullscreen";
 import { isTouchDevice } from "@/lib/useMobile";
@@ -24,12 +25,30 @@ interface LoadingScreenProps {
   progress?: number;
 }
 
-export function LoadingScreen({ progress = 0 }: LoadingScreenProps) {
+export function LoadingScreen({ progress: explicitProgress }: LoadingScreenProps) {
   const { t } = useTranslation();
   const [factIdx, setFactIdx] = useState(0);
   const [factFade, setFactFade] = useState(true);
   const { isFullscreen: inFullscreen, enter } = useFullscreen();
   const touch = isTouchDevice();
+
+  const { active, progress: dreiProgress } = useProgress();
+  const [smoothSimProgress, setSmoothSimProgress] = useState(15);
+
+  useEffect(() => {
+    if (active || explicitProgress !== undefined) return;
+    const interval = setInterval(() => {
+      setSmoothSimProgress((p) => (p < 88 ? p + (88 - p) * 0.12 : p));
+    }, 200);
+    return () => clearInterval(interval);
+  }, [active, explicitProgress]);
+
+  const progress =
+    explicitProgress !== undefined
+      ? explicitProgress
+      : active
+        ? Math.max(dreiProgress, 8)
+        : smoothSimProgress;
 
   useEffect(() => {
     const interval = setInterval(() => {
