@@ -49,7 +49,13 @@
       "position": [18, 0, 12],
       "description": "The sky crane hover stage lowered Curiosity on 7.6-metre nylon tethers, then flew away to crash-land 650 metres from the rover. This was the first use of the sky crane landing system. HiRISE images from orbit show the dark blast marks where its retrorockets hit the surface. The wreckage remains where it fell.",
       "xp": 50,
-      "source": "NASA/JPL Mars Science Laboratory"
+      "source": "NASA/JPL Mars Science Laboratory",
+      "scienceDiscovery": "Demonstrated the first-ever sky crane landing, proving that heavy payloads can be precision-delivered to the Martian surface.",
+      "legacy": "The wreckage and blast marks are visible from orbit via HiRISE; the sky crane design was reused for Perseverance in 2021.",
+      "status": "defunct",
+      "firstPerson": "I am the sky crane — the craziest landing system ever invented. I hovered on rocket engines, lowered Curiosity on cables like a spider lowering an egg, and then flew away to crash. Engineers called me 'seven minutes of terror'. My wreckage lies 650 metres from the rover I saved, and my design flew again for Perseverance.",
+      "yearDeployed": 2012,
+      "yearLastContact": 2012
     },
     {
       "id": "cu-drill-holes",
@@ -57,7 +63,12 @@
       "position": [8, 0, -10],
       "description": "Curiosity has drilled dozens of holes into Martian bedrock, each about 1.6 cm wide and up to 6.5 cm deep. The powdered rock is delivered to the SAM and CheMin instruments inside the rover. Early drill samples at Yellowknife Bay revealed clay minerals and evidence of an ancient freshwater lake environment suitable for microbial life.",
       "xp": 50,
-      "source": "NASA/JPL Mars Science Laboratory"
+      "source": "NASA/JPL Mars Science Laboratory",
+      "scienceDiscovery": "Delivered powdered rock to SAM and CheMin instruments, revealing clay minerals and organic molecules in Martian bedrock for the first time.",
+      "legacy": "Dozens of drill holes across Gale Crater mark Curiosity's path, each one a tiny window into Mars's ancient chemistry.",
+      "status": "operational",
+      "firstPerson": "I am tiny holes in Martian rock — each just 1.6 centimetres wide. But inside me, Curiosity found clay minerals, organic molecules, and the chemical ingredients of life. Every hole is a question asked and answered. Scientists on Earth pour over the data I provide. I am small, but I hold big secrets.",
+      "yearDeployed": 2013
     },
     {
       "id": "cu-yellowknife",
@@ -65,7 +76,12 @@
       "position": [-14, 0, 7],
       "description": "Yellowknife Bay was the first major science target. Curiosity found mudstone containing clay minerals, sulphate minerals, and the chemical elements needed for life: carbon, hydrogen, nitrogen, oxygen, phosphorus, and sulphur. This discovery fulfilled the mission's primary goal: confirming that Mars once had environments habitable for microbes.",
       "xp": 50,
-      "source": "NASA/JPL Mars Science Laboratory"
+      "source": "NASA/JPL Mars Science Laboratory",
+      "scienceDiscovery": "Contained mudstone with all six elements essential for life (C, H, N, O, P, S) plus clay minerals — fulfilling the mission's goal of confirming ancient habitability.",
+      "legacy": "Yellowknife Bay is where the habitability question was answered; Curiosity's drill holes there are among the most scientifically important marks on Mars.",
+      "status": "defunct",
+      "firstPerson": "I am Yellowknife Bay, a shallow depression of ancient mudstone. Curiosity drilled into me and found everything life needs: carbon, hydrogen, nitrogen, oxygen, phosphorus, and sulphur. All six, right here in my rock. That was the moment scientists could say for certain: Mars was once a place where life could have existed.",
+      "yearDeployed": 2013
     },
     {
       "id": "cu-calibration-target",
@@ -73,7 +89,12 @@
       "position": [-6, 0, -15],
       "description": "Mounted on the rover's deck, the MAHLI calibration target includes a 1909 Lincoln penny (chosen for its fine detail), colour chips, a metric bar graphic, and a UV-fluorescent target. It is used to calibrate the Mars Hand Lens Imager. The penny belongs to principal investigator Ken Edgett — it is the only US coin on Mars.",
       "xp": 50,
-      "source": "NASA/JPL Mars Science Laboratory"
+      "source": "NASA/JPL Mars Science Laboratory",
+      "scienceDiscovery": "Provides a known reference for colour, scale, and UV fluorescence so scientists can ensure MAHLI images are accurate across Mars's changing conditions.",
+      "legacy": "The 1909 Lincoln penny on Mars is a beloved cultural artefact — the only U.S. coin on another planet, still riding on Curiosity's deck.",
+      "status": "operational",
+      "firstPerson": "I carry a 1909 Lincoln penny, colour chips, and a ruler — not very exciting, right? But every time Curiosity takes a close-up photo of a rock, she photographs me first to make sure her colours and scale are correct. I am the yardstick of Mars. And that penny? It belongs to a scientist named Ken Edgett. It is the only coin on another planet.",
+      "yearDeployed": 2012
     },
     {
       "id": "cu-mount-sharp",
@@ -81,7 +102,12 @@
       "position": [15, 0, 18],
       "description": "Rising 5.5 km above the crater floor, Mount Sharp is a layered mountain of sedimentary rock. Each layer records a chapter of Mars's environmental history. As Curiosity climbs, it reads that history: from clay-rich layers (wet era) through sulphate layers (drying era) to dry oxidised layers at the top. It is a geological time machine.",
       "xp": 50,
-      "source": "NASA/JPL Mars Science Laboratory"
+      "source": "NASA/JPL Mars Science Laboratory",
+      "scienceDiscovery": "Its layered sedimentary rock records billions of years of Martian climate change — from a wet, habitable world to the cold, dry planet we see today.",
+      "legacy": "Mount Sharp is Curiosity's ongoing destination; the rover continues to climb and read Mars's environmental history layer by layer.",
+      "status": "operational",
+      "firstPerson": "I am Mount Sharp, a 5.5-kilometre mountain of layered rock in the centre of Gale Crater. Each of my layers is a page in Mars's autobiography. At my base, clay tells of a wet world. Higher up, sulphates record a drying planet. At my peak, only dust and rust remain. Curiosity is reading me like a book, one layer at a time.",
+      "yearDeployed": 2014
     }
   ]
 }

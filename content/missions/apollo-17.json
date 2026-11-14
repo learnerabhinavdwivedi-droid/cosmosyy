@@ -22,6 +22,15 @@
     "metersPerUnit": 1,
     "note": "Generic moon surface — no site-specific DTM available yet"
   },
+  "keyDiscovery": "Harrison Schmitt discovered orange volcanic glass beads at Shorty Crater — 3.7-billion-year-old evidence of ancient lunar fire-fountain eruptions, proving the Moon was once geologically active.",
+  "missionLegacy": "The last crewed mission to the Moon collected more samples (110.5 kg) and spent more time on the surface (74.6 hours) than any other, setting records that still stand over fifty years later.",
+  "funFact": "Apollo 17 launched at night — the only nighttime Saturn V launch — and the fireball was visible from 800 kilometres away, lighting up the Florida coast like a second sunrise.",
+  "heritageNote": "The Taurus-Littrow site is recognized under the Artemis Accords (Section 9) as a historically significant location; as the last place humans walked on the Moon, it carries unique cultural weight for future lunar explorers.",
+  "timeline": {
+    "launch": "1972-12-07T05:33:00Z",
+    "landing": "1972-12-11T19:54:57Z",
+    "endOfMission": "1972-12-19T19:24:59Z"
+  },
   "objects": [
     {
       "id": "descent-stage",
@@ -29,7 +38,12 @@
       "position": [0, 0, 0],
       "description": "Lower half of Lunar Module Challenger. The last crewed spacecraft to land on the Moon. Cernan and Schmitt spent a record 75 hours on the surface with three EVAs totalling 22 hours.",
       "xp": 50,
-      "source": "LROC imagery; Apollo 17 Traverse Map (NASA)"
+      "source": "LROC imagery; Apollo 17 Traverse Map (NASA)",
+      "scienceDiscovery": "Supported the longest crewed stay on the Moon (74.6 hours), demonstrating that humans could conduct sustained scientific fieldwork on another world.",
+      "legacy": "Remains in Taurus-Littrow valley; the last crewed spacecraft on the lunar surface. Its plaque reads: 'Here Man completed his first explorations of the Moon.'",
+      "status": "defunct",
+      "firstPerson": "I am Challenger, the last Lunar Module to touch the Moon. Gene and Jack spent three record-breaking days with me in the Taurus-Littrow valley, surrounded by mountains taller than the Grand Canyon is deep. My plaque says 'Here Man completed his first explorations of the Moon.' It was supposed to say 'first' — but no one has come back since.",
+      "yearDeployed": 1972
     },
     {
       "id": "flag",
@@ -37,7 +51,12 @@
       "position": [-5, 0, 7],
       "description": "The last flag planted on the Moon. Cernan's final words on the surface: 'We leave as we came and, God willing, as we shall return, with peace and hope for all mankind.'",
       "xp": 50,
-      "source": "AS17-134-20382; Apollo 17 EVA-3 transcript"
+      "source": "AS17-134-20382; Apollo 17 EVA-3 transcript",
+      "scienceDiscovery": "Documented the final moments of human presence on the Moon; the flag deployment photographs provide the last visual record of crewed activity on the lunar surface.",
+      "legacy": "LROC images from 2011 show the Apollo 17 flag is still standing, casting a clear shadow — the last flag planted on the Moon by human hands.",
+      "status": "defunct",
+      "firstPerson": "I am the last flag planted on the Moon. Before Gene climbed the ladder for the final time, he said: 'We leave as we came and, God willing, as we shall return, with peace and hope for all mankind.' Those words were meant as a promise, not a farewell. I am still waiting.",
+      "yearDeployed": 1972
     },
     {
       "id": "lrv",
@@ -45,7 +64,12 @@
       "position": [100, 0, 25],
       "description": "The third and final lunar rover. Cernan set the unofficial lunar speed record of 17.1 km/h on this vehicle. Parked at its final TV position to film the last human departure from the Moon.",
       "xp": 50,
-      "source": "AS17-143-21933; LROC imagery"
+      "source": "AS17-143-21933; LROC imagery",
+      "scienceDiscovery": "Enabled exploration across 35.9 km of the Taurus-Littrow valley, reaching geological stations at the North and South Massifs and Shorty Crater where the orange soil was discovered.",
+      "legacy": "Holds the unofficial lunar speed record of 17.1 km/h set by Cernan; parked at its final TV position to film humanity's last departure from the Moon.",
+      "status": "defunct",
+      "firstPerson": "I am the third and final lunar rover, and I hold the speed record — Gene pushed me to 17.1 km/h bouncing across the valley floor. Together we drove 35.9 kilometres through some of the most spectacular scenery on the Moon. Houston aimed my camera for the very last time, and I filmed Gene and Jack leaving. I am the last car anyone has driven on the Moon.",
+      "yearDeployed": 1972
     },
     {
       "id": "alsep",
@@ -53,7 +77,13 @@
       "position": [-65, 0, -185],
       "description": "Apollo 17's experiment suite — the most advanced of all Apollo packages. Included a lunar seismic profiling experiment, gravimeter, atmospheric composition experiment, and surface electrical properties experiment.",
       "xp": 50,
-      "source": "Apollo 17 ALSEP deployment map (NASA)"
+      "source": "Apollo 17 ALSEP deployment map (NASA)",
+      "scienceDiscovery": "Its lunar seismic profiling experiment used explosive charges to map subsurface geology, and its gravimeter detected the first evidence of free oscillations of the Moon.",
+      "legacy": "The most advanced ALSEP package deployed; operated until NASA shut down all ALSEP stations on 30 September 1977.",
+      "status": "defunct",
+      "firstPerson": "I am the last and most advanced ALSEP, carrying instruments no previous station had — a gravimeter that measured the Moon's tidal flexing, a mass spectrometer that sniffed the vanishingly thin lunar atmosphere, and explosive charges for deep seismic profiling. I was the final science station humans left on the Moon, and I reported home for five years.",
+      "yearDeployed": 1972,
+      "yearLastContact": 1977
     },
     {
       "id": "lrrr",
@@ -61,7 +91,12 @@
       "position": [-60, 0, -180],
       "description": "The last retroreflector placed on the Moon. Together with the Apollo 11, 14, and 15 reflectors plus two French-built reflectors on Soviet Lunokhod rovers, it forms a network still used for precision measurements.",
       "xp": 50,
-      "source": "Apollo 17 ALSEP deployment map (NASA)"
+      "source": "Apollo 17 ALSEP deployment map (NASA)",
+      "scienceDiscovery": "Completes the network of lunar retroreflectors that enables precise measurement of the Earth-Moon system, contributing to tests of gravitational physics and lunar interior models.",
+      "legacy": "Part of the five-reflector lunar network (three Apollo, two Lunokhod) that continues to be used for laser ranging experiments worldwide.",
+      "status": "operational",
+      "firstPerson": "I am the last retroreflector placed on the Moon. Together with my siblings at Tranquility Base, Fra Mauro, and Hadley Rille — and two French-built reflectors on Soviet Lunokhod rovers — I form a network that spans the near side. Scientists bounce lasers off us to track the Moon's orbit with extraordinary precision. We are still working, all of us.",
+      "yearDeployed": 1972
     },
     {
       "id": "orange-soil",
@@ -69,7 +104,12 @@
       "position": [45, 0, -120],
       "description": "At Shorty Crater, Schmitt — the only geologist to walk on the Moon — discovered orange soil: tiny beads of volcanic glass erupted 3.7 billion years ago. One of the most important geological finds of the programme.",
       "xp": 50,
-      "source": "AS17-137-20990; Apollo 17 Preliminary Science Report"
+      "source": "AS17-137-20990; Apollo 17 Preliminary Science Report",
+      "scienceDiscovery": "The orange glass beads proved the Moon had volcanic fire-fountain eruptions 3.7 billion years ago and contained volatile elements that changed theories about the Moon's formation and water content.",
+      "legacy": "Samples of the orange soil (sample 74220) remain among the most studied lunar materials; recent analysis revealed they contain water trapped in volcanic glass, reshaping theories about the Moon's interior.",
+      "status": "dormant",
+      "firstPerson": "I am the orange soil at Shorty Crater — tiny beads of volcanic glass that erupted from deep inside the Moon 3.7 billion years ago. When Jack Schmitt spotted my bright colour against the grey regolith, he shouted with excitement. I am proof that the Moon was once a world of fire. Scientists recently found water trapped inside my glass beads — changing everything they thought about how dry the Moon is.",
+      "yearDeployed": 1972
     }
   ],
   "models": {

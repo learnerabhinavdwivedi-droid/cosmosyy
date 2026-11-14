@@ -20,6 +20,15 @@
     "metersPerUnit": 1,
     "note": "NASA 3D-Resources Apollo 11 Landing Site relief model; LROC NAC DTM 50cm orthophoto"
   },
+  "keyDiscovery": "First human landing on another world proved the Moon's surface could support crewed spacecraft and that humans could work effectively in one-sixth gravity.",
+  "missionLegacy": "Demonstrated that humans could travel to and safely return from another celestial body, inspiring generations of scientists, engineers, and explorers worldwide.",
+  "funFact": "Neil Armstrong's first step was watched live on TV by an estimated 600 million people — about one-fifth of the entire world's population at the time.",
+  "heritageNote": "Tranquility Base is protected under NASA's 2011 recommendations for lunar historic site preservation; the Artemis Accords (Section 9) formally recognize the need to preserve outer space heritage sites including Apollo landing locations.",
+  "timeline": {
+    "launch": "1969-07-16T13:32:00Z",
+    "landing": "1969-07-20T20:17:40Z",
+    "endOfMission": "1969-07-24T16:50:35Z"
+  },
   "objects": [
     {
       "id": "descent-stage",
@@ -27,7 +36,12 @@
       "position": [0, 0, 0],
       "description": "Lower half of the Lunar Module Eagle. Served as the launch platform for the ascent stage. Bears a stainless-steel plaque: \"Here men from the planet Earth first set foot upon the Moon July 1969, A.D. We came in peace for all mankind.\"",
       "xp": 50,
-      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)"
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)",
+      "scienceDiscovery": "Proved that a piloted spacecraft could safely land on and launch from the lunar surface, validating the Lunar Orbit Rendezvous mission architecture.",
+      "legacy": "Remains at Tranquility Base; its plaque reading 'We came in peace for all mankind' is humanity's first permanent marker on another world.",
+      "status": "defunct",
+      "firstPerson": "I am Eagle's lower half, the stage that held the engine which slowed us from orbit to touchdown. Neil and Buzz climbed down my ladder to take humanity's first steps on the Moon. My upper half flew away, but I stay here forever, carrying a plaque signed by the crew and President Nixon.",
+      "yearDeployed": 1969
     },
     {
       "id": "flag",
@@ -35,7 +49,12 @@
       "position": [-7.05, 0, 7.30],
       "description": "Planted by Armstrong and Aldrin approximately 8 metres from the LM. The nylon flag had a horizontal rod to keep it extended in the vacuum. After decades of unfiltered UV, it is almost certainly bleached white.",
       "xp": 50,
-      "source": "LROC shapefile APOLLO_11_EQUIPMENT; AS11-40-5874"
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT; AS11-40-5874",
+      "scienceDiscovery": "Documented materials behavior in the lunar vacuum and showed the difficulty of planting objects in compacted regolith — the pole only penetrated about 15 centimetres.",
+      "legacy": "Buzz Aldrin reported seeing the flag knocked over by the ascent engine exhaust; LROC images from 2009 show no shadow at this location, confirming it likely fell.",
+      "status": "defunct",
+      "firstPerson": "I was the first flag planted on another world. Buzz and Neil struggled to push my pole into the hard lunar soil. When Eagle's engine fired for liftoff, the blast knocked me over. After more than fifty years of raw sunlight with no atmosphere to protect me, I have faded to white — but I was here first.",
+      "yearDeployed": 1969
     },
     {
       "id": "lrrr",
@@ -43,7 +62,12 @@
       "position": [-1.61, 0, -21.36],
       "description": "An array of 100 fused-silica corner-cube prisms. Still in use today — observatories on Earth fire a laser pulse at it and measure the round-trip time to track the Moon's orbit to centimetre precision.",
       "xp": 50,
-      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)"
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)",
+      "scienceDiscovery": "Enabled the discovery that the Moon is receding from Earth at 3.8 centimetres per year and confirmed Einstein's general theory of relativity to extraordinary precision.",
+      "legacy": "Still fully operational — observatories at Apache Point (New Mexico) and Grasse (France) fire lasers at it regularly, achieving millimetre-level Earth-Moon distance measurements.",
+      "status": "operational",
+      "firstPerson": "I am the Laser Ranging Retroreflector, and I am still working after more than fifty years. Every night, observatories on Earth aim a laser at my 100 glass prisms, and I bounce the light straight back. Scientists use my reflections to measure the Moon's distance down to the millimetre — that is how they discovered I am slowly drifting away from Earth.",
+      "yearDeployed": 1969
     },
     {
       "id": "psep",
@@ -51,7 +75,13 @@
       "position": [0.67, 0, -28.12],
       "description": "Solar-powered seismometer deployed by Aldrin. Detected moonquakes, meteorite impacts, and the vibration from the ascent stage liftoff. Operated for 21 days before its power ran out.",
       "xp": 50,
-      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)"
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)",
+      "scienceDiscovery": "Detected the first moonquakes ever recorded and measured seismic waves from the ascent stage liftoff, revealing that the Moon has a layered internal structure.",
+      "legacy": "Operated for only 21 days before its solar power system overheated and failed; its brief dataset helped design the long-lived ALSEP seismometers on later missions.",
+      "status": "defunct",
+      "firstPerson": "I am the Passive Seismic Experiment, the first seismometer on another world. Buzz placed me gently on the regolith and I listened. I felt the ground shake when Eagle's ascent engine fired, and I caught tiny moonquakes before my solar panels overheated after just 21 days. But those three weeks changed everything we knew about the Moon's interior.",
+      "yearDeployed": 1969,
+      "yearLastContact": 1969
     },
     {
       "id": "tv-camera",
@@ -59,7 +89,12 @@
       "position": [-15.83, 0, 19.00],
       "description": "The Westinghouse black-and-white TV camera that broadcast the first moonwalk to 600 million viewers. Armstrong set it on a tripod to film the EVA.",
       "xp": 50,
-      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)"
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)",
+      "scienceDiscovery": "Transmitted the first live television broadcast from another world, enabling 600 million people to witness the moonwalk in real time and document the EVA procedures.",
+      "legacy": "Remains at Tranquility Base on its tripod; the original slow-scan video tapes were accidentally overwritten at NASA, but restored copies survive from broadcast recordings.",
+      "status": "defunct",
+      "firstPerson": "I am the television camera that showed Earth its first moonwalk. When Neil climbed down the ladder, I was watching from the MESA bay. He moved me to a tripod so I could film both astronauts working. Six hundred million people saw the world through my lens that night — the largest TV audience in history.",
+      "yearDeployed": 1969
     },
     {
       "id": "mesa",
@@ -67,7 +102,12 @@
       "position": [-1.99, 0, 1.12],
       "description": "The fold-down equipment bay on the LM descent stage. Armstrong's first step onto the Moon was captured by a TV camera mounted here. Stored tools, sample bags, and the US flag.",
       "xp": 50,
-      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)"
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)",
+      "scienceDiscovery": "Provided the deployment platform for surface tools, sample containers, and the TV camera, enabling the first systematic lunar sample collection of 21.6 kilograms of material.",
+      "legacy": "Remains attached to the descent stage at Tranquility Base; its fold-down design became the standard equipment bay architecture for all subsequent Lunar Modules.",
+      "status": "defunct",
+      "firstPerson": "I am the Modular Equipment Stowage Assembly, the fold-down shelf on Eagle's side. When Neil pulled my handle, I swung open and a tiny TV camera mounted on me captured his first step. I held the tools, sample bags, and the flag — everything they needed for their two and a half hours outside.",
+      "yearDeployed": 1969
     },
     {
       "id": "swc",
@@ -75,7 +115,12 @@
       "position": [-4.02, 0, 7.88],
       "description": "An aluminium foil sheet deployed on a pole, facing the Sun. Collected solar wind particles (helium, neon, argon) for 77 minutes, then rolled up and returned to Earth for analysis.",
       "xp": 50,
-      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)"
+      "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)",
+      "scienceDiscovery": "Captured solar wind ions including helium-3, helium-4, neon, and argon, providing the first direct measurements of solar wind composition at the lunar surface.",
+      "legacy": "The foil was rolled up and returned to Earth for laboratory analysis at the University of Bern; the deployment pole remains at Tranquility Base.",
+      "status": "defunct",
+      "firstPerson": "I am the Solar Wind Composition experiment — a sheet of aluminium foil on a pole, facing the Sun. For 77 minutes I stood there catching tiny particles streaming from the Sun that Earth's magnetic field normally deflects. Then Buzz rolled me up and carried me home so scientists could read what the Sun had written on my surface.",
+      "yearDeployed": 1969
     }
   ],
   "models": {

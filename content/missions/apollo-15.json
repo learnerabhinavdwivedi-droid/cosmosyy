@@ -22,6 +22,15 @@
     "metersPerUnit": 1,
     "note": "Generic moon surface — no site-specific DTM available yet"
   },
+  "keyDiscovery": "Discovery of the Genesis Rock (sample 15415), a 4.1-billion-year-old anorthosite fragment from the Moon's original crust that confirmed the lunar magma ocean hypothesis.",
+  "missionLegacy": "The first extended scientific expedition (J-mission) with the Lunar Roving Vehicle, tripling the exploration range and setting the template for Apollo 16 and 17.",
+  "funFact": "Commander Dave Scott performed Galileo's famous experiment on live TV by dropping a hammer and a falcon feather simultaneously — both hit the ground at the same time, proving Galileo right in the Moon's vacuum.",
+  "heritageNote": "The Hadley-Apennine site contains the Fallen Astronaut sculpture — the only artwork on another world — alongside the first lunar rover and the largest retroreflector. NASA's 2011 guidelines recommend preservation zones around the ALSEP, LRV, and memorial.",
+  "timeline": {
+    "launch": "1971-07-26T13:34:00Z",
+    "landing": "1971-07-30T22:16:29Z",
+    "endOfMission": "1971-08-07T20:45:53Z"
+  },
   "objects": [
     {
       "id": "descent-stage",
@@ -29,7 +38,12 @@
       "position": [0, 0, 0],
       "description": "Lower half of Lunar Module Falcon. Apollo 15 was the first 'J-mission' — a longer stay with more science, a rover, and three EVAs totalling over 18 hours outside.",
       "xp": 50,
-      "source": "LROC imagery; Apollo 15 Traverse Map (NASA)"
+      "source": "LROC imagery; Apollo 15 Traverse Map (NASA)",
+      "scienceDiscovery": "Served as the base for the first extended lunar surface stay (66.9 hours), validating systems for prolonged human operations in the deep-space environment.",
+      "legacy": "Remains at Hadley-Apennine; its ascent stage was deliberately crashed into the Moon 93 km from the ALSEP, creating a calibrated seismic source.",
+      "status": "defunct",
+      "firstPerson": "I am Falcon, the first Lunar Module built for the long stay. Dave and Jim spent nearly three days with me at Hadley Rille, making three moonwalks and driving the first car on the Moon. I carried more science equipment than any LM before me. When they flew away, NASA crashed my upper half into the Moon so the seismometers could feel it.",
+      "yearDeployed": 1971
     },
     {
       "id": "flag",
@@ -37,7 +51,12 @@
       "position": [-6, 0, 5],
       "description": "Planted during EVA-1 with the Hadley Delta mountain and Hadley Rille visible in the background. One of the most photographed flag plantings of the programme.",
       "xp": 50,
-      "source": "AS15-88-11863; LROC imagery"
+      "source": "AS15-88-11863; LROC imagery",
+      "scienceDiscovery": "Provided a photographic reference point documenting the dramatic terrain at Hadley-Apennine, the most geologically complex Apollo landing site.",
+      "legacy": "LROC images from 2011 confirmed the Apollo 15 flag is still standing, casting a visible shadow on the surface.",
+      "status": "defunct",
+      "firstPerson": "I am the flag at Hadley-Apennine, planted with the towering Apennine mountains as my backdrop. LROC photographs taken in 2011 show my shadow still stretching across the regolith. I am one of the lucky ones — after more than forty years, I am still standing.",
+      "yearDeployed": 1971
     },
     {
       "id": "lrv",
@@ -45,7 +64,12 @@
       "position": [95, 0, -20],
       "description": "The first car on the Moon. A battery-powered, wire-mesh-wheeled buggy that let Scott and Irwin drive up to 12 km from the LM. Top speed: 13 km/h. Its TV camera, aimed by Houston, filmed the ascent stage liftoff.",
       "xp": 50,
-      "source": "AS15-88-11901; LROC M111578606RE"
+      "source": "AS15-88-11901; LROC M111578606RE",
+      "scienceDiscovery": "Extended the exploration radius from roughly 1 km on foot to over 5 km, enabling collection of diverse geological samples from the rille edge, Apennine mountain front, and multiple craters.",
+      "legacy": "Parked at its final position with the TV camera aimed to film the ascent stage liftoff; remains one of only three cars on the Moon.",
+      "status": "defunct",
+      "firstPerson": "I am the first car to drive on another world. My four wire-mesh wheels carried Dave and Jim across 27.9 kilometres of the most dramatic lunar terrain any astronaut ever saw — along the edge of Hadley Rille, a canyon a kilometre wide and 300 metres deep. My top speed was 13 km/h. Houston aimed my TV camera to film the moment my crew left the Moon.",
+      "yearDeployed": 1971
     },
     {
       "id": "alsep",
@@ -53,7 +77,13 @@
       "position": [-60, 0, -110],
       "description": "Apollo 15's experiment suite included a heat flow experiment (drilled into the surface), a lunar dust detector, and a solar wind spectrometer. Powered by an RTG, it ran until 1977.",
       "xp": 50,
-      "source": "Apollo 15 ALSEP deployment map (NASA)"
+      "source": "Apollo 15 ALSEP deployment map (NASA)",
+      "scienceDiscovery": "Its heat flow experiment measured the Moon's internal temperature gradient for the first time, and its lunar dust detector tracked the electrostatic behavior of fine particles in vacuum.",
+      "legacy": "Operated from 1971 until shutdown on 30 September 1977; the heat flow data remains critical for modeling the Moon's thermal evolution.",
+      "status": "defunct",
+      "firstPerson": "I am the ALSEP at Hadley, the most ambitious science station yet placed on the Moon. Jim drilled holes in the regolith to plant my heat flow probes, measuring the warmth leaking from the Moon's interior for the first time. My dust detector watched tiny charged particles dance in the electric fields above the surface. I spoke to Earth for six years.",
+      "yearDeployed": 1971,
+      "yearLastContact": 1977
     },
     {
       "id": "lrrr",
@@ -61,7 +91,12 @@
       "position": [-55, 0, -105],
       "description": "The largest retroreflector left on the Moon — 300 corner cubes compared to 100 on Apollo 11 and 14. Still the primary target for lunar laser ranging experiments today.",
       "xp": 50,
-      "source": "Apollo 15 ALSEP deployment map (NASA)"
+      "source": "Apollo 15 ALSEP deployment map (NASA)",
+      "scienceDiscovery": "With 300 corner cubes — three times larger than the Apollo 11 and 14 arrays — it provides the strongest return signal and is the primary target for modern lunar laser ranging, achieving sub-centimetre precision.",
+      "legacy": "Still fully operational and the most-used retroreflector on the Moon; the Apache Point Observatory Lunar Laser-ranging Operation (APOLLO) targets it routinely.",
+      "status": "operational",
+      "firstPerson": "I am the largest retroreflector on the Moon, with 300 glass prisms — three times more than my siblings at Tranquility Base and Fra Mauro. That makes me the easiest target for laser ranging, and I am the one scientists aim for most often. Every pulse I bounce back measures the Moon's distance to less than a centimetre. I have been doing this for over fifty years and I am not tired yet.",
+      "yearDeployed": 1971
     },
     {
       "id": "fallen-astronaut",
@@ -69,7 +104,12 @@
       "position": [-58, 0, -108],
       "description": "A small aluminium sculpture by Paul Van Hoeydonck, placed by Scott alongside a plaque listing 14 astronauts and cosmonauts who had died. The only artwork on another world.",
       "xp": 50,
-      "source": "AS15-88-11894; Apollo 15 EVA-3 transcript"
+      "source": "AS15-88-11894; Apollo 15 EVA-3 transcript",
+      "scienceDiscovery": "While not a science instrument, it represents the first deliberate act of artistic and memorial expression on another celestial body, raising important questions about heritage preservation in space.",
+      "legacy": "The only known artwork on another world; a replica is in the Smithsonian National Air and Space Museum. Its existence sparked discussion about the ethics of art and commerce in space.",
+      "status": "dormant",
+      "firstPerson": "I am the Fallen Astronaut, a small aluminium figure lying beside a plaque with fourteen names — astronauts and cosmonauts who gave their lives for space exploration. Dave Scott placed me here quietly during the last moonwalk, and I was not revealed to the public until after the crew returned home. I am the only artwork on another world, keeping a silent vigil that has lasted more than fifty years.",
+      "yearDeployed": 1971
     }
   ],
   "models": {

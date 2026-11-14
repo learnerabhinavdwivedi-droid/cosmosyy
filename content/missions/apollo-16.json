@@ -22,6 +22,15 @@
     "metersPerUnit": 1,
     "note": "Generic moon surface — no site-specific DTM available yet"
   },
+  "keyDiscovery": "Proved that the Descartes highlands were formed by massive impact processes, not volcanism as geologists had predicted, fundamentally changing the understanding of lunar geological history.",
+  "missionLegacy": "Deployed the first astronomical observatory on another world — George Carruthers' far-ultraviolet camera — capturing images of Earth's hydrogen geocorona and deep-space objects in wavelengths impossible to observe from Earth.",
+  "funFact": "John Young jumped nearly a metre off the ground while saluting the flag — the famous photograph by Charlie Duke shows both feet clearly off the surface, a feat only possible in one-sixth gravity.",
+  "heritageNote": "The Descartes site is the only Apollo landing in the lunar highlands and preserves the Far Ultraviolet Camera/Spectrograph — the first telescope operated from another world — and the Duke family photo, a uniquely personal artifact among the hardware left behind.",
+  "timeline": {
+    "launch": "1972-04-16T17:54:00Z",
+    "landing": "1972-04-21T02:23:35Z",
+    "endOfMission": "1972-04-27T19:45:05Z"
+  },
   "objects": [
     {
       "id": "descent-stage",
@@ -29,7 +38,12 @@
       "position": [0, 0, 0],
       "description": "Lower half of Lunar Module Orion. Young and Duke explored the Descartes highlands — a region geologists hoped was volcanic but turned out to be impact breccia.",
       "xp": 50,
-      "source": "LROC imagery; Apollo 16 Traverse Map (NASA)"
+      "source": "LROC imagery; Apollo 16 Traverse Map (NASA)",
+      "scienceDiscovery": "Landing in the highlands tested geological predictions about lunar volcanism — the crew's samples disproved the volcanic hypothesis, showing the terrain was formed entirely by massive asteroid impacts.",
+      "legacy": "Remains at Descartes; its ascent stage developed a guidance malfunction after separation and tumbled onto the Moon in an uncontrolled impact.",
+      "status": "defunct",
+      "firstPerson": "I am Orion, and I landed in the highlands where geologists expected to find ancient volcanoes. Instead, John and Charlie found nothing but impact breccia — rocks shattered and fused by asteroid strikes billions of years ago. It was not what anyone expected, but proving a theory wrong is just as important as proving one right.",
+      "yearDeployed": 1972
     },
     {
       "id": "flag",
@@ -37,7 +51,12 @@
       "position": [-5, 0, 6],
       "description": "Planted during EVA-1. The famous photo of Young saluting the flag while jumping off the ground was taken by Duke — Young's feet are clearly off the surface in lunar gravity.",
       "xp": 50,
-      "source": "AS16-113-18339; LROC imagery"
+      "source": "AS16-113-18339; LROC imagery",
+      "scienceDiscovery": "The jumping salute photograph became an iconic demonstration of lunar gravity — Young's body position and height off the ground helped scientists calculate the reduced gravitational acceleration at the surface.",
+      "legacy": "LROC images from 2012 confirm the Apollo 16 flag is still standing, casting a shadow on the highland surface.",
+      "status": "defunct",
+      "firstPerson": "I am the flag that John Young jumped beside. When Charlie Duke snapped that famous photo, John was nearly a metre off the ground in his full spacesuit, saluting me mid-air. In one-sixth gravity, even a suited astronaut can leap like a gymnast. That picture became one of the most iconic images of the Apollo programme.",
+      "yearDeployed": 1972
     },
     {
       "id": "lrv",
@@ -45,7 +64,12 @@
       "position": [85, 0, -15],
       "description": "The second rover on the Moon. Young and Duke drove it to a maximum distance of 4.5 km from the LM during their three EVAs, covering 26.7 km total. Its TV camera broadcast the ascent liftoff live.",
       "xp": 50,
-      "source": "AS16-107-17446; LROC imagery"
+      "source": "AS16-107-17446; LROC imagery",
+      "scienceDiscovery": "Enabled collection of samples from North Ray Crater 4.5 km away, reaching the deepest impact-excavated material sampled during the entire Apollo programme.",
+      "legacy": "Parked at its final TV position to film the departure from Descartes; one of three rovers remaining on the Moon.",
+      "status": "defunct",
+      "firstPerson": "I am the second Lunar Roving Vehicle. John drove me to North Ray Crater, the most distant point any Apollo rover reached relative to the LM. Standing on the rim of that giant crater, the astronauts could see House Rock — a boulder bigger than a house, blasted up from deep underground. My TV camera filmed them leaving as Houston tilted me skyward to catch the ascent.",
+      "yearDeployed": 1972
     },
     {
       "id": "alsep",
@@ -53,7 +77,13 @@
       "position": [-30, 0, -80],
       "description": "Apollo 16's experiment package included a passive seismometer, active seismometer (with mortar-launched grenades), magnetometer, and heat flow experiment. Transmitted data until 1977.",
       "xp": 50,
-      "source": "Apollo 16 ALSEP deployment map (NASA)"
+      "source": "Apollo 16 ALSEP deployment map (NASA)",
+      "scienceDiscovery": "Its active seismic experiment used mortar-launched grenades and thumper charges to map the subsurface, revealing a 12-metre-deep fragmental regolith layer over fractured bedrock at Descartes.",
+      "legacy": "Operated until 30 September 1977; the mortar package was only partially fired due to risk of damaging nearby instruments.",
+      "status": "defunct",
+      "firstPerson": "I am the ALSEP at Descartes. My most dramatic instrument was the active seismic experiment — it fired small grenades into the ground to create vibrations I could measure. Scientists were nervous about breaking my other instruments, so they only fired some of the charges. Still, I mapped the layers of broken rock beneath me and reported home for five years.",
+      "yearDeployed": 1972,
+      "yearLastContact": 1977
     },
     {
       "id": "uv-camera",
@@ -61,7 +91,12 @@
       "position": [-12, 0, 8],
       "description": "The first telescope operated from another world. George Carruthers' UV camera photographed Earth's geocorona, the Milky Way, the Large Magellanic Cloud, and nebulae — all in wavelengths blocked by Earth's atmosphere.",
       "xp": 50,
-      "source": "AS16-114-18439; Apollo 16 UV astronomy results"
+      "source": "AS16-114-18439; Apollo 16 UV astronomy results",
+      "scienceDiscovery": "Captured the first astronomical photographs from another world, imaging Earth's hydrogen geocorona, the Large Magellanic Cloud, and nebulae in far-ultraviolet wavelengths that cannot penetrate Earth's atmosphere.",
+      "legacy": "Remains at Descartes; it was designed by Dr. George Carruthers of the Naval Research Laboratory, who was later inducted into the National Inventors Hall of Fame for this work.",
+      "status": "defunct",
+      "firstPerson": "I am the Far Ultraviolet Camera, the first telescope operated from another world. Dr. George Carruthers built me to see what no Earth telescope can — ultraviolet light from stars and galaxies that our atmosphere blocks. From my perch on the Moon, I photographed Earth's glowing hydrogen halo, the Milky Way, and distant nebulae. I am still here, the oldest observatory on the Moon.",
+      "yearDeployed": 1972
     },
     {
       "id": "family-photo",
@@ -69,7 +104,12 @@
       "position": [20, 0, -40],
       "description": "Charlie Duke left a plastic-wrapped family photo on the surface — a portrait of himself, his wife Dorothy, and their sons Charles and Tom. The back reads: 'This is the family of Astronaut Duke from Planet Earth. Landed on the Moon, April 1972.'",
       "xp": 50,
-      "source": "AS16-117-18841; Duke interview transcripts"
+      "source": "AS16-117-18841; Duke interview transcripts",
+      "scienceDiscovery": "While not a science instrument, it documents the human dimension of lunar exploration — the personal connections astronauts maintained during the most isolated missions in history.",
+      "legacy": "The plastic-wrapped photograph remains on the surface at Descartes; decades of intense UV radiation have likely destroyed the image, but the plastic wrapping may preserve some trace.",
+      "status": "defunct",
+      "firstPerson": "I am a family portrait — Charlie Duke, his wife Dorothy, and their sons Charles and Tom, smiling together on a warm day back home. Charlie wrapped me in plastic and laid me gently on the grey dust. On my back he wrote: 'This is the family of Astronaut Duke from Planet Earth. Landed on the Moon, April 1972.' The Sun has probably bleached my image away, but I am still here.",
+      "yearDeployed": 1972
     }
   ],
   "models": {
