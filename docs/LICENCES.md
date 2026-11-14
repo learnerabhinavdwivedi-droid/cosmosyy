@@ -36,7 +36,6 @@ Every asset, font, and non-MIT library used in this project.
 | Martian Volcanic Landscape (martian-landscape.png) | User-supplied original custom art | Project-owned | Landing page footer planetary rocky terrain base |
 | Cosmic Space Hero Backdrop (hero-space-bg.jpg) | User-supplied original custom art | Project-owned | Landing page hero deep space spiral galaxy background |
 | Mars Landscape Wallpaper (mars-landscape-wallpaper.jpg) | User-supplied original custom art | Project-owned | Landing page hero primary Mars landscape wallpaper |
-| PhonePe QR Code (phonepe-qr.jpg) | User-supplied PhonePe merchant QR asset | Project-owned | Support / Donate PhonePe payment QR modal |
 | ESA imagery | ESA (sci.esa.int) | CC BY-SA 3.0 IGO [verify] | Do NOT ship in H1 until licence confirmed per-asset |
 | ISRO imagery | ISRO (isro.gov.in) | [verify] | Reuse terms unclear; do NOT ship in H1 until confirmed |
 

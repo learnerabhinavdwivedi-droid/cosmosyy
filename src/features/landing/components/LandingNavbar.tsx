@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { Volume2, VolumeX } from "lucide-react";
-import { gameAudio, playBeep } from "@/lib/gameAudio";
-import { PhonePeModal } from "./PhonePeModal";
+import { Volume2, VolumeX, Rocket } from "lucide-react";
+import { gameAudio } from "@/lib/gameAudio";
 
 export function LandingNavbar() {
   const [soundPlaying, setSoundPlaying] = useState(false);
-  const [isPhonePeOpen, setIsPhonePeOpen] = useState(false);
 
   const toggleSound = () => {
     gameAudio.unlock();
@@ -71,8 +69,8 @@ export function LandingNavbar() {
               </span>
             </Link>
 
-            {/* Action Buttons: Sound, Buy Me a Coffee, LinkedIn */}
-            <div className="flex items-center gap-1.5 sm:gap-3">
+            {/* Action Buttons: Sound & Missions */}
+            <div className="flex items-center gap-2 sm:gap-3">
               {/* Audio Preview Toggle Pill */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -80,7 +78,7 @@ export function LandingNavbar() {
                 onClick={toggleSound}
                 aria-label={soundPlaying ? "Mute space ambient sound" : "Play space ambient sound preview"}
                 title={soundPlaying ? "Mute ambient sound" : "Play space ambient sound preview"}
-                className={`flex min-h-[40px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold backdrop-blur-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                className={`flex min-h-[40px] items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold backdrop-blur-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                   soundPlaying
                     ? "border-ok-500/70 bg-ok-500/20 text-ok-400 shadow-[0_0_12px_rgba(34,197,94,0.35)]"
                     : "border-white/20 bg-space-900/70 text-regolith-200 hover:text-white hover:border-white/40 hover:bg-space-800/80"
@@ -99,54 +97,19 @@ export function LandingNavbar() {
                 )}
               </motion.button>
 
-              {/* PhonePe Glowing Purple Pill */}
-              <motion.button
-                whileHover={{ scale: 1.05, y: -1 }}
-                whileTap={{ scale: 0.95 }}
-                type="button"
-                onClick={() => {
-                  setIsPhonePeOpen(true);
-                  playBeep(750, 0.08);
-                }}
-                aria-label="Support Cosmosyy via PhonePe or UPI"
-                className="flex min-h-[40px] items-center gap-1.5 rounded-full border border-purple-500/70 bg-gradient-to-r from-purple-600/30 via-indigo-600/25 to-violet-600/30 px-3 py-1.5 text-xs font-bold text-purple-200 shadow-[0_0_14px_rgba(147,51,234,0.35)] transition-all hover:border-purple-400 hover:bg-purple-600/40 hover:text-white hover:shadow-purple-500/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 cursor-pointer"
+              {/* Start Mission Quick Pill */}
+              <Link
+                to="/missions"
+                className="flex min-h-[40px] items-center gap-1.5 rounded-full border border-signal-500/70 bg-signal-500/20 px-4 py-1.5 text-xs font-bold text-signal-400 shadow-[0_0_14px_rgba(255,107,44,0.25)] transition-all hover:border-signal-400 hover:bg-signal-500/35 hover:text-white hover:shadow-signal-500/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-400"
               >
-                <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#5f259f] text-white font-bold text-[10px] select-none shrink-0 shadow-sm">
-                  पे
-                </div>
-                <span className="hidden sm:inline">Support on PhonePe</span>
-                <span className="inline sm:hidden text-[11px]">PhonePe</span>
-              </motion.button>
-
-              {/* LinkedIn Glowing Blue Pill */}
-              <motion.a
-                whileHover={{ scale: 1.05, y: -1 }}
-                whileTap={{ scale: 0.95 }}
-                href="https://www.linkedin.com/in/abhinav-dwivedi-b074a136a/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Abhinav Dwivedi on LinkedIn"
-                className="flex min-h-[40px] items-center gap-1.5 rounded-full border border-sky-500/70 bg-sky-500/25 px-3 py-1.5 text-xs font-bold text-sky-200 shadow-[0_0_16px_rgba(14,165,233,0.35)] transition-all hover:border-sky-400 hover:bg-sky-500/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
-              >
-                <svg
-                  className="h-3.5 w-3.5 fill-current shrink-0"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                </svg>
-                <span className="hidden sm:inline">LinkedIn</span>
-              </motion.a>
+                <Rocket className="h-3.5 w-3.5 text-signal-400 shrink-0" />
+                <span className="hidden sm:inline">Launch Mission</span>
+                <span className="inline sm:hidden">Missions</span>
+              </Link>
             </div>
           </div>
         </div>
       </div>
-
-      {/* PhonePe Modal */}
-      <PhonePeModal
-        isOpen={isPhonePeOpen}
-        onClose={() => setIsPhonePeOpen(false)}
-      />
     </header>
   );
 }

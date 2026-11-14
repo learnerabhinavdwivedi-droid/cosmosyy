@@ -139,11 +139,11 @@ function GameAudioController() {
 function useOrientationLock() {
   useEffect(() => {
     if (!isTouchDevice()) return;
-    const so = screen.orientation;
+    const so = screen.orientation as (ScreenOrientation & { lock?: (o: string) => Promise<void>; unlock?: () => void }) | undefined;
     if (!so?.lock) return;
     so.lock("landscape-primary").catch(() => {});
     return () => {
-      so.unlock();
+      so?.unlock?.();
     };
   }, []);
 }

@@ -1,13 +1,7 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "motion/react";
-import { Sparkles, Compass } from "lucide-react";
-import { playBeep } from "../../../lib/gameAudio";
-import { PhonePeModal } from "./PhonePeModal";
+import { Sparkles, ExternalLink } from "lucide-react";
 
 export function LandingFooter() {
-  const [isPhonePeOpen, setIsPhonePeOpen] = useState(false);
-
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -91,16 +85,8 @@ export function LandingFooter() {
 
             <div className="mt-5 flex items-center gap-2">
               <span className="flex h-2 w-2 rounded-full bg-signal-500 animate-pulse" />
-              <p className="text-xs text-regolith-200">
-                Crafted with ❤️ by{" "}
-                <a
-                  href="https://devabhinav.xyz/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-bold text-amber-400 underline decoration-amber-500/60 underline-offset-4 transition-colors hover:text-amber-300 hover:decoration-amber-400"
-                >
-                  Abhinav Dwivedi
-                </a>
+              <p className="text-xs text-regolith-300">
+                Crafted for space exploration enthusiasts & curious young minds.
               </p>
             </div>
 
@@ -204,59 +190,61 @@ export function LandingFooter() {
             </div>
           </div>
 
-          {/* Column 4 — Connect & Support (3 cols) */}
+          {/* Column 4 — NASA Open Data & Archives (3 cols) */}
           <div className="flex flex-col lg:col-span-3">
             <p className="font-display text-xs font-bold uppercase tracking-widest text-amber-400 drop-shadow-[0_0_8px_rgba(255,180,0,0.4)]">
-              Connect & Support
+              NASA Open Data
             </p>
             <p className="mt-2 text-xs text-regolith-400 leading-relaxed">
-              Cosmosyy is an educational open-data space exploration project by Abhinav Dwivedi.
+              Cosmosyy utilizes official open science data, telemetry archives, and imagery from NASA.
             </p>
 
-            <div className="mt-4 flex flex-col gap-3">
-              {/* Support via PhonePe Button */}
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                type="button"
-                onClick={() => {
-                  setIsPhonePeOpen(true);
-                  playBeep(750, 0.08);
-                }}
-                className="flex items-center justify-center gap-2 rounded-xl border border-purple-500/80 bg-gradient-to-r from-purple-600/30 via-indigo-600/30 to-violet-600/30 px-5 py-2.5 text-xs font-bold text-purple-200 shadow-[0_0_15px_rgba(147,51,234,0.3)] transition-all hover:border-purple-400 hover:bg-purple-600/40 hover:text-white hover:shadow-purple-500/40 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
-              >
-                <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#5f259f] text-white font-bold text-[10px] select-none shrink-0 shadow-sm">
-                  पे
-                </div>
-                <span>Support via PhonePe</span>
-              </motion.button>
-
-              {/* LinkedIn Button */}
-              <motion.a
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                href="https://www.linkedin.com/in/abhinav-dwivedi-b074a136a/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 rounded-xl border border-sky-500/70 bg-sky-500/25 px-5 py-2.5 text-xs font-bold text-sky-200 shadow-[0_0_16px_rgba(14,165,233,0.3)] transition-all hover:border-sky-400 hover:bg-sky-500/35 hover:text-white"
-              >
-                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                </svg>
-                <span>Connect on LinkedIn</span>
-              </motion.a>
-
-              {/* Portfolio Link */}
-              <a
-                href="https://devabhinav.xyz/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-1 flex items-center justify-center gap-1.5 text-center text-xs font-bold text-amber-400 hover:text-amber-300 underline underline-offset-4 decoration-amber-500/40 hover:decoration-amber-400 transition-colors"
-              >
-                <Compass className="h-3.5 w-3.5" />
-                <span>devabhinav.xyz</span>
-              </a>
-            </div>
+            <ul className="mt-4 space-y-2.5 text-xs font-semibold text-regolith-300">
+              <li>
+                <a
+                  href="https://nssdca.gsfc.nasa.gov/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 hover:text-amber-300 transition-colors"
+                >
+                  <ExternalLink className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                  <span>NASA NSSDCA Master Archive</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.lroc.asu.edu/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 hover:text-amber-300 transition-colors"
+                >
+                  <ExternalLink className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                  <span>LROC Lunar Landing Sites</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.hq.nasa.gov/alsj/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 hover:text-amber-300 transition-colors"
+                >
+                  <ExternalLink className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                  <span>Apollo Lunar Surface Journal</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/nasa/NASA-3D-Resources"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 hover:text-amber-300 transition-colors"
+                >
+                  <ExternalLink className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                  <span>NASA 3D Resources</span>
+                </a>
+              </li>
+            </ul>
           </div>
 
         </div>
@@ -271,12 +259,6 @@ export function LandingFooter() {
           </p>
         </div>
       </div>
-
-      {/* PhonePe Modal */}
-      <PhonePeModal
-        isOpen={isPhonePeOpen}
-        onClose={() => setIsPhonePeOpen(false)}
-      />
     </footer>
   );
 }

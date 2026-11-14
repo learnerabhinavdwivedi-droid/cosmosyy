@@ -1,5 +1,4 @@
 import { useRef, useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { isTouchDevice } from "@/lib/useMobile";
 import { useTouchStore } from "@/store/useTouchStore";
 import { useGameStore } from "@/store/useGameStore";
@@ -28,7 +27,6 @@ export function TouchControls({
   onFlag: () => void;
   onLaunch: () => void;
 }) {
-  const { t } = useTranslation();
   const phase = useGameStore((s) => s.phase);
   const lookFingerId = useRef<number | null>(null);
   const lookLastX = useRef(0);
@@ -51,6 +49,7 @@ export function TouchControls({
   const handleLookStart = useCallback((e: React.TouchEvent) => {
     for (let i = 0; i < e.changedTouches.length; i++) {
       const touch = e.changedTouches[i];
+      if (!touch) continue;
       if (touch.clientX > window.innerWidth * 0.4 && lookFingerId.current === null) {
         lookFingerId.current = touch.identifier;
         lookLastX.current = touch.clientX;
@@ -62,6 +61,7 @@ export function TouchControls({
   const handleLookMove = useCallback((e: React.TouchEvent) => {
     for (let i = 0; i < e.changedTouches.length; i++) {
       const touch = e.changedTouches[i];
+      if (!touch) continue;
       if (touch.identifier === lookFingerId.current) {
         const dx = touch.clientX - lookLastX.current;
         const dy = touch.clientY - lookLastY.current;
@@ -74,7 +74,8 @@ export function TouchControls({
 
   const handleLookEnd = useCallback((e: React.TouchEvent) => {
     for (let i = 0; i < e.changedTouches.length; i++) {
-      if (e.changedTouches[i].identifier === lookFingerId.current) {
+      const touch = e.changedTouches[i];
+      if (touch && touch.identifier === lookFingerId.current) {
         lookFingerId.current = null;
       }
     }
@@ -84,6 +85,7 @@ export function TouchControls({
   const handleJoystickStart = useCallback((e: React.TouchEvent) => {
     for (let i = 0; i < e.changedTouches.length; i++) {
       const touch = e.changedTouches[i];
+      if (!touch) continue;
       if (touch.clientX <= window.innerWidth * 0.4 && joystickFingerId.current === null) {
         joystickFingerId.current = touch.identifier;
         setJoystick({
@@ -100,6 +102,7 @@ export function TouchControls({
   const handleJoystickMove = useCallback((e: React.TouchEvent) => {
     for (let i = 0; i < e.changedTouches.length; i++) {
       const touch = e.changedTouches[i];
+      if (!touch) continue;
       if (touch.identifier === joystickFingerId.current) {
         setJoystick((prev) => {
           const dx = touch.clientX - prev.originX;
@@ -122,7 +125,8 @@ export function TouchControls({
 
   const handleJoystickEnd = useCallback((e: React.TouchEvent) => {
     for (let i = 0; i < e.changedTouches.length; i++) {
-      if (e.changedTouches[i].identifier === joystickFingerId.current) {
+      const touch = e.changedTouches[i];
+      if (touch && touch.identifier === joystickFingerId.current) {
         joystickFingerId.current = null;
         setJoystick({ active: false, originX: 0, originY: 0, currentX: 0, currentY: 0 });
         useTouchStore.getState().setMove(0, 0);

@@ -31,8 +31,7 @@ describe("LandingPage", () => {
       );
       expect(screen.getAllByText(/Ready for Liftoff/i).length).toBeGreaterThan(0);
       expect(screen.getByText("START MISSION")).toBeInTheDocument();
-      expect(screen.getAllByText(/PhonePe/i).length).toBeGreaterThan(0);
-      expect(screen.getAllByText("LinkedIn").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("Launch Mission").length).toBeGreaterThan(0);
       expect(
         screen.getByAltText("Cosmosyy Cartoon Astronaut Mascot"),
       ).toBeInTheDocument();
@@ -49,16 +48,10 @@ describe("LandingPage", () => {
         screen.getAllByAltText(/Martian/i).length,
       ).toBeGreaterThan(0);
 
-      // Verify Abhinav Dwivedi hyperlink to devabhinav.xyz
-      const authorLink = screen.getByRole("link", { name: "Abhinav Dwivedi" });
-      expect(authorLink).toHaveAttribute("href", "https://devabhinav.xyz/");
-
-      // Verify LinkedIn link
-      const linkedinLinks = screen.getAllByRole("link", { name: /LinkedIn/i });
-      expect(linkedinLinks[0]).toHaveAttribute(
-        "href",
-        "https://www.linkedin.com/in/abhinav-dwivedi-b074a136a/",
-      );
+      // Verify NASA open data resource links in footer
+      expect(screen.getByText("NASA NSSDCA Master Archive")).toBeInTheDocument();
+      const nssdcaLink = screen.getByRole("link", { name: /NASA NSSDCA Master Archive/i });
+      expect(nssdcaLink).toHaveAttribute("href", "https://nssdca.gsfc.nasa.gov/");
     },
     20000,
   );
