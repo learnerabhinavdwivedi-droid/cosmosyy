@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { getApollo11Elevation } from "./apollo11Heights";
 
 let elevationData: Uint8Array | null = null;
 let dataWidth = 0;
@@ -60,6 +61,13 @@ export function getTerrainElevation(
   lon = 0,
 ): number {
   const isMars = planet === "mars";
+
+  // Apollo 11 Tranquility Base uses the high-resolution NASA STL relief mesh
+  const isApollo11 = !isMars && Math.abs(lat - 0.67409) < 0.01;
+  if (isApollo11) {
+    return getApollo11Elevation(x, z);
+  }
+
   const displacementScale = isMars ? 4.0 : 3.5;
   const baseOffset = -0.5;
 

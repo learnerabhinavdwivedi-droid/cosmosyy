@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useMemo, Suspense } from "react";
+import { useRef, useEffect, useLayoutEffect, useState, useMemo, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, OrbitControls } from "@react-three/drei";
 import { useGameStore } from "@/store/useGameStore";
@@ -106,7 +106,8 @@ function HoloModel({
     const size = b.getSize(new THREE.Vector3());
     const center = b.getCenter(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
-    const scale = 2.4 / (maxDim || 1);
+    const targetSize = 1.70;
+    const scale = targetSize / (maxDim || 1);
     return { center, scale };
   }, [clonedScene]);
 
@@ -152,20 +153,20 @@ function StudioLighting() {
 /* ─── Studio Pedestal Contact Shadow ─── */
 function ContactShadow() {
   return (
-    <group position={[0, -1.25, 0]}>
+    <group position={[0, -1.02, 0]}>
       {/* Dark radial contact shadow on floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.5, 48]} />
+        <circleGeometry args={[1.3, 48]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.65} depthWrite={false} />
       </mesh>
       {/* Outer soft shadow feather */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[2.2, 48]} />
+        <circleGeometry args={[1.9, 48]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.3} depthWrite={false} />
       </mesh>
       {/* Studio turntable ring */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-        <ringGeometry args={[1.98, 2.02, 64]} />
+        <ringGeometry args={[1.78, 1.82, 64]} />
         <meshBasicMaterial color="#3a404c" transparent opacity={0.5} depthWrite={false} />
       </mesh>
     </group>
@@ -176,7 +177,7 @@ function ContactShadow() {
 function AutoCamera() {
   const { camera } = useThree();
   useEffect(() => {
-    camera.position.set(3.2, 2.0, 3.2);
+    camera.position.set(3.0, 1.8, 3.0);
     camera.lookAt(0, 0, 0);
   }, [camera]);
   return null;
@@ -195,6 +196,21 @@ function DedicatedHoloModel({
   wireframe?: boolean;
 }) {
   const groupRef = useRef<THREE.Group>(null);
+  const pivotRef = useRef<THREE.Group>(null);
+  const contentRef = useRef<THREE.Group>(null);
+
+  useLayoutEffect(() => {
+    if (!contentRef.current || !pivotRef.current) return;
+    contentRef.current.updateWorldMatrix(true, true);
+    const box = new THREE.Box3().setFromObject(contentRef.current);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const targetSize = 1.70;
+    const s = maxDim > 0.001 ? targetSize / maxDim : 1.0;
+    pivotRef.current.scale.set(s, s, s);
+    pivotRef.current.position.set(-center.x * s, -center.y * s, -center.z * s);
+  }, [missionId, objectId]);
 
   useFrame((_, delta) => {
     if (groupRef.current) {
@@ -203,14 +219,18 @@ function DedicatedHoloModel({
   });
 
   return (
-    <group ref={groupRef} position={[0, -0.2, 0]}>
-      <HeritageObject3D
-        missionId={missionId}
-        objectId={objectId}
-        wireframe={wireframe}
-        explode={explode}
-        scale={1.6}
-      />
+    <group ref={groupRef}>
+      <group ref={pivotRef}>
+        <group ref={contentRef}>
+          <HeritageObject3D
+            missionId={missionId}
+            objectId={objectId}
+            wireframe={wireframe}
+            explode={explode}
+            scale={1.0}
+          />
+        </group>
+      </group>
     </group>
   );
 }
@@ -238,7 +258,7 @@ function HoloCanvas({
   return (
     <Canvas
       gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
-      camera={{ fov: 38, near: 0.1, far: 100, position: [3.2, 2.0, 3.2] }}
+      camera={{ fov: 38, near: 0.1, far: 100, position: [3.0, 1.8, 3.0] }}
       style={{ background: "transparent" }}
     >
       <StudioLighting />
