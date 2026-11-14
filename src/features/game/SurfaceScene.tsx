@@ -322,22 +322,29 @@ function ProximityDetector({
   objects: HeritageObject[];
 }) {
   const { camera } = useThree();
-  const found = useGameStore((s) => s.objectsFoundThisRun);
+  const foundRef = useRef(useGameStore.getState().objectsFoundThisRun);
   const prevNearest = useRef<string | null>(null);
   const prevProximity = useRef<Set<string>>(new Set());
   const lastPingTime = useRef(0);
+  const distancesRef = useRef<Record<string, number>>({});
+  const distanceUpdateTimer = useRef(0);
 
-  useFrame(() => {
+  useEffect(
+    () => useGameStore.subscribe((s) => { foundRef.current = s.objectsFoundThisRun; }),
+    [],
+  );
+
+  useFrame((_state, rawDelta) => {
     let nearest: string | null = null;
     let minDist = SCAN_RANGE;
-    const distances: Record<string, number> = {};
+    const found = foundRef.current;
     const nowInProximity = new Set<string>();
 
     for (const obj of objects) {
       const dx = camera.position.x - obj.position[0];
       const dz = camera.position.z - obj.position[2];
       const dist = Math.sqrt(dx * dx + dz * dz);
-      distances[obj.id] = dist;
+      distancesRef.current[obj.id] = dist;
 
       if (found.includes(obj.id) || obj.id === "descent-stage" || obj.hidden) continue;
 
@@ -351,7 +358,11 @@ function ProximityDetector({
       }
     }
 
-    setObjectDistances(distances);
+    distanceUpdateTimer.current += rawDelta;
+    if (distanceUpdateTimer.current > 0.25) {
+      distanceUpdateTimer.current = 0;
+      setObjectDistances({ ...distancesRef.current });
+    }
 
     for (const id of nowInProximity) {
       if (!prevProximity.current.has(id)) {
@@ -778,20 +789,26 @@ function InspectCamera({
   lon?: number;
 }) {
   const { camera } = useThree();
-  const inspecting = useGameStore((s) => s.inspecting);
-  const phase = useGameStore((s) => s.phase);
+  const phaseRef = useRef(useGameStore.getState().phase);
+  const inspectingRef = useRef(useGameStore.getState().inspecting);
   const smoothedLook = useRef(new THREE.Vector3());
 
-  useEffect(() => {
-    if (phase === "inspect") {
-      camera.getWorldDirection(smoothedLook.current);
-      smoothedLook.current.multiplyScalar(4).add(camera.position);
-    }
-  }, [phase, inspecting.objectId, camera]);
+  useEffect(
+    () => useGameStore.subscribe((s) => {
+      const prev = phaseRef.current;
+      phaseRef.current = s.phase;
+      inspectingRef.current = s.inspecting;
+      if (s.phase === "inspect" && prev !== "inspect") {
+        camera.getWorldDirection(smoothedLook.current);
+        smoothedLook.current.multiplyScalar(4).add(camera.position);
+      }
+    }),
+    [camera],
+  );
 
   useFrame((_state, rawDelta) => {
-    if (phase !== "inspect" || !inspecting.objectId) return;
-    const obj = objects.find((o) => o.id === inspecting.objectId);
+    if (phaseRef.current !== "inspect" || !inspectingRef.current.objectId) return;
+    const obj = objects.find((o) => o.id === inspectingRef.current.objectId);
     if (!obj) return;
 
     const dt = Math.min(rawDelta, 0.05);
