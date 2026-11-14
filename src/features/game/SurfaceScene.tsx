@@ -23,13 +23,22 @@ import { EarthAtmosphere } from "./EarthAtmosphere";
 import { getSunPosition, getEarthPosition } from "./sunPosition";
 import { TouchControls } from "./TouchControls";
 import { HologramInspect } from "./HologramInspect";
+import MarsLander from "./MarsLander";
+import {
+  Exosuit,
+  WalkerHUD,
+  dampAngle,
+  DEFAULT_MOON_CFG,
+  DEFAULT_MARS_CFG,
+} from "./AstronautWalker";
 import { getThemeColor3 } from "./objectThemes";
 import { getTerrainElevation } from "./terrainHeight";
 import { getHologramModel } from "./hologramMapping";
 import { hasDedicated3DModel, HeritageObject3D } from "./heritage3D/Heritage3DDispatcher";
+import { AmericanFlag3D } from "./heritage3D/MoonArtifacts";
 import * as THREE from "three";
 
-const SCAN_RANGE = 8;
+const SCAN_RANGE = 12;
 
 function HoloParticles({ color, speed }: { color: string; speed: number }) {
   const ref = useRef<THREE.Points>(null);
@@ -404,9 +413,22 @@ const BOB_FREQ = 6;
 const BOB_AMP = 0.03;
 const _moveDir = new THREE.Vector3();
 const _lookTarget = new THREE.Vector3();
+const _targetCamPos = new THREE.Vector3();
+const _lookAtPos = new THREE.Vector3();
 
 const playerState = {
-  x: 5, z: 10, heading: 0, isMoving: false, speed: 0, groundY: 0,
+  x: 5,
+  y: 0,
+  z: 10,
+  heading: 0,
+  isMoving: false,
+  speed: 0,
+  groundY: 0,
+  onGround: true,
+  sprint: false,
+  thrusting: false,
+  isJumping: false,
+  footCount: 0,
 };
 
 function DustParticles({ planet }: { planet?: string }) {
@@ -615,19 +637,29 @@ function PlayerController({
   planet,
   lat = 0,
   lon = 0,
+  viewMode = "pov",
 }: {
   planet?: string;
   lat?: number;
   lon?: number;
+  viewMode?: "pov" | "walker" | "lander";
 }) {
   const { camera } = useThree();
+  const playerPos = useRef(new THREE.Vector3(5, GROUND_Y + EYE_HEIGHT, 10));
   const velocity = useRef(new THREE.Vector3());
   const verticalVel = useRef(0);
   const physY = useRef(GROUND_Y + EYE_HEIGHT);
-  const euler = useRef(new THREE.Euler(0, 0, 0, "YXZ"));
+  const euler = useRef(new THREE.Euler(0, 0.46, 0, "YXZ"));
+  const orbitYaw = useRef(0.46);
+  const orbitPitch = useRef(0.22);
+  const camDist = useRef(5.2);
+  const bodyHeading = useRef(0.46);
   const keys = useRef<Record<string, boolean>>({});
   const isPointerLocked = useRef(false);
+  const isMouseDown = useRef(false);
   const phaseRef = useRef(useGameStore.getState().phase);
+  const viewModeRef = useRef(viewMode);
+  viewModeRef.current = viewMode;
   const bobPhase = useRef(0);
   const bobOffset = useRef(0);
   const wasOnGround = useRef(true);
@@ -641,11 +673,24 @@ function PlayerController({
       if (s.phase === "inspect") {
         document.exitPointerLock();
       } else if (prev === "inspect") {
-        euler.current.setFromQuaternion(camera.quaternion, "YXZ");
+        if (viewModeRef.current === "pov") {
+          euler.current.setFromQuaternion(camera.quaternion, "YXZ");
+        }
       }
     });
     return unsub;
   }, [camera]);
+
+  // Sync orientation when viewMode toggles
+  useEffect(() => {
+    if (viewMode === "walker") {
+      orbitYaw.current = euler.current.y;
+      bodyHeading.current = euler.current.y + Math.PI;
+    } else if (viewMode === "pov") {
+      euler.current.y = orbitYaw.current;
+      euler.current.x = 0;
+    }
+  }, [viewMode]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -654,15 +699,33 @@ function PlayerController({
     const onKeyUp = (e: KeyboardEvent) => {
       keys.current[e.code] = false;
     };
+    const onMouseDown = (e: MouseEvent) => {
+      if (e.button === 0) isMouseDown.current = true;
+    };
+    const onMouseUp = () => {
+      isMouseDown.current = false;
+    };
     const onMouseMove = (e: MouseEvent) => {
-      if (!isPointerLocked.current) return;
-      euler.current.y -= e.movementX * 0.002;
-      euler.current.x -= e.movementY * 0.002;
-      euler.current.x = Math.max(
-        -Math.PI / 2,
-        Math.min(Math.PI / 2, euler.current.x),
-      );
-      camera.quaternion.setFromEuler(euler.current);
+      if (viewModeRef.current === "pov") {
+        if (!isPointerLocked.current) return;
+        euler.current.y -= e.movementX * 0.002;
+        euler.current.x -= e.movementY * 0.002;
+        euler.current.x = Math.max(
+          -Math.PI / 2,
+          Math.min(Math.PI / 2, euler.current.x),
+        );
+        camera.quaternion.setFromEuler(euler.current);
+      } else {
+        if (isPointerLocked.current || isMouseDown.current) {
+          orbitYaw.current -= e.movementX * 0.003;
+          orbitPitch.current = Math.max(-0.25, Math.min(1.1, orbitPitch.current - e.movementY * 0.003));
+        }
+      }
+    };
+    const onWheel = (e: WheelEvent) => {
+      if (viewModeRef.current === "walker") {
+        camDist.current = Math.max(2.5, Math.min(10.0, camDist.current + e.deltaY * 0.004));
+      }
     };
     const onPointerLockChange = () => {
       isPointerLocked.current = document.pointerLockElement !== null;
@@ -670,6 +733,9 @@ function PlayerController({
 
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
+    window.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("wheel", onWheel, { passive: true });
     if (!isTouchDevice()) {
       window.addEventListener("mousemove", onMouseMove);
       document.addEventListener("pointerlockchange", onPointerLockChange);
@@ -677,6 +743,7 @@ function PlayerController({
 
     const startGroundY = getTerrainElevation(5, 10, planet ?? "moon", lat, lon);
     physY.current = startGroundY + EYE_HEIGHT;
+    playerPos.current.set(5, physY.current, 10);
     camera.position.set(5, physY.current, 10);
     euler.current.y = 0.46;
     euler.current.x = -0.05;
@@ -685,6 +752,9 @@ function PlayerController({
     return () => {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
+      window.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener("wheel", onWheel);
       if (!isTouchDevice()) {
         window.removeEventListener("mousemove", onMouseMove);
         document.removeEventListener("pointerlockchange", onPointerLockChange);
@@ -704,51 +774,81 @@ function PlayerController({
     const touch = useTouchStore.getState();
     const { dx: tLookX, dy: tLookY } = touch.consumeLookDelta();
     if (tLookX !== 0 || tLookY !== 0) {
-      euler.current.y -= tLookX;
-      euler.current.x -= tLookY;
-      euler.current.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler.current.x));
-      camera.quaternion.setFromEuler(euler.current);
+      if (viewModeRef.current === "pov") {
+        euler.current.y -= tLookX;
+        euler.current.x -= tLookY;
+        euler.current.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler.current.x));
+        camera.quaternion.setFromEuler(euler.current);
+      } else {
+        orbitYaw.current -= tLookX * 1.5;
+        orbitPitch.current = Math.max(-0.25, Math.min(1.1, orbitPitch.current - tLookY * 1.5));
+      }
     }
 
     const k = keys.current;
     const running = k["ShiftLeft"] || k["ShiftRight"] || touch.sprint;
     const speed = running ? RUN_SPEED : WALK_SPEED;
+
+    let moveForward = 0;
+    let moveRight = 0;
+
+    if (k["KeyW"] || k["ArrowUp"]) moveForward += 1;
+    if (k["KeyS"] || k["ArrowDown"]) moveForward -= 1;
+    if (k["KeyD"] || k["ArrowRight"]) moveRight += 1;
+    if (k["KeyA"] || k["ArrowLeft"]) moveRight -= 1;
+
+    if (touch.moveZ !== 0) moveForward -= touch.moveZ;
+    if (touch.moveX !== 0) moveRight += touch.moveX;
+
+    const isMoving = moveForward !== 0 || moveRight !== 0;
     _moveDir.set(0, 0, 0);
 
-    // Keyboard input
-    if (k["KeyW"] || k["ArrowUp"]) _moveDir.z -= 1;
-    if (k["KeyS"] || k["ArrowDown"]) _moveDir.z += 1;
-    if (k["KeyA"] || k["ArrowLeft"]) _moveDir.x -= 1;
-    if (k["KeyD"] || k["ArrowRight"]) _moveDir.x += 1;
-
-    // Touch joystick input
-    if (touch.moveX !== 0 || touch.moveZ !== 0) {
-      _moveDir.x += touch.moveX;
-      _moveDir.z += touch.moveZ;
-    }
-
-    const isMoving = _moveDir.length() > 0;
-
     if (isMoving) {
-      _moveDir.normalize();
-      _moveDir.applyQuaternion(camera.quaternion);
-      _moveDir.y = 0;
-      _moveDir.normalize();
+      if (viewModeRef.current === "pov") {
+        _moveDir.set(moveRight, 0, -moveForward).normalize();
+        _moveDir.applyQuaternion(camera.quaternion);
+        _moveDir.y = 0;
+        _moveDir.normalize();
+      } else {
+        const s = Math.sin(orbitYaw.current);
+        const c = Math.cos(orbitYaw.current);
+        _moveDir.x = -s * moveForward + c * moveRight;
+        _moveDir.z = -c * moveForward - s * moveRight;
+        _moveDir.normalize();
+
+        const targetHeading = Math.atan2(_moveDir.x, _moveDir.z);
+        bodyHeading.current = dampAngle(bodyHeading.current, targetHeading, 12, delta);
+      }
     }
 
     const accelFactor = 1 - Math.exp(-6 * delta);
     velocity.current.lerp(_moveDir.multiplyScalar(speed), accelFactor);
-    camera.position.x += velocity.current.x * delta;
-    camera.position.z += velocity.current.z * delta;
+    playerPos.current.x += velocity.current.x * delta;
+    playerPos.current.z += velocity.current.z * delta;
 
-    const currentGroundY = getTerrainElevation(camera.position.x, camera.position.z, planet ?? "moon", lat, lon);
+    const currentGroundY = getTerrainElevation(
+      playerPos.current.x,
+      playerPos.current.z,
+      planet ?? "moon",
+      lat,
+      lon,
+    );
     const onGround = physY.current <= currentGroundY + EYE_HEIGHT + 0.05;
 
-    if ((k["Space"] || touch.jump) && onGround) {
-      verticalVel.current = jumpV0;
+    const isThrusting = (k["Space"] || touch.jump) ?? false;
+
+    if (isThrusting && onGround) {
+      verticalVel.current = Math.max(verticalVel.current, jumpV0);
     }
 
     verticalVel.current -= gravity * delta;
+
+    if (isThrusting) {
+      const thrustAccel = planet === "mars" ? 9.5 : 5.8;
+      const maxClimb = planet === "mars" ? 6.5 : 7.5;
+      verticalVel.current = Math.min(verticalVel.current + thrustAccel * delta, maxClimb);
+    }
+
     physY.current += verticalVel.current * delta;
 
     if (physY.current < currentGroundY + EYE_HEIGHT) {
@@ -767,17 +867,85 @@ function PlayerController({
       bobPhase.current = 0;
       bobOffset.current *= Math.exp(-10 * delta);
     }
-    camera.position.y = physY.current + bobOffset.current;
+    playerPos.current.y = physY.current;
 
-    playerState.x = camera.position.x;
-    playerState.z = camera.position.z;
-    playerState.heading = euler.current.y;
+    playerState.x = playerPos.current.x;
+    playerState.y = playerPos.current.y;
+    playerState.z = playerPos.current.z;
+    playerState.groundY = currentGroundY;
+    playerState.heading = viewModeRef.current === "walker" ? bodyHeading.current : euler.current.y;
     playerState.isMoving = isMoving && wasOnGround.current;
     playerState.speed = velocity.current.length();
-    playerState.groundY = currentGroundY;
+    playerState.onGround = wasOnGround.current;
+    playerState.sprint = running;
+    playerState.thrusting = isThrusting;
+    playerState.isJumping = !wasOnGround.current;
+
+    if (viewModeRef.current === "pov") {
+      camera.position.set(playerPos.current.x, physY.current + bobOffset.current, playerPos.current.z);
+      camera.quaternion.setFromEuler(euler.current);
+    } else {
+      const pitch = Math.max(-0.25, Math.min(1.05, orbitPitch.current));
+      const dist = camDist.current;
+      const targetEyeY = physY.current;
+      const cx = playerPos.current.x + Math.sin(orbitYaw.current) * dist * Math.cos(pitch);
+      const cy = targetEyeY + Math.sin(pitch) * dist + 0.1;
+      const cz = playerPos.current.z + Math.cos(orbitYaw.current) * dist * Math.cos(pitch);
+      _targetCamPos.set(cx, Math.max(cy, currentGroundY + 0.5), cz);
+      camera.position.lerp(_targetCamPos, Math.min(1, 14 * delta));
+      _lookAtPos.set(playerPos.current.x, targetEyeY - 0.4, playerPos.current.z);
+      camera.lookAt(_lookAtPos);
+    }
   });
 
   return null;
+}
+
+function AstronautExosuit({
+  visible,
+  planet,
+}: {
+  visible: boolean;
+  planet?: string;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const exosuitRef = useRef<Exosuit | null>(null);
+  const cfg = planet === "mars" ? DEFAULT_MARS_CFG : DEFAULT_MOON_CFG;
+
+  useEffect(() => {
+    if (!groupRef.current) return;
+    const suit = new Exosuit(groupRef.current, null);
+    exosuitRef.current = suit;
+    return () => {
+      suit.dispose();
+      exosuitRef.current = null;
+    };
+  }, []);
+
+  useFrame((_state, rawDelta) => {
+    const suit = exosuitRef.current;
+    if (!suit || !groupRef.current) return;
+
+    groupRef.current.visible = visible;
+    if (!visible) return;
+
+    const delta = Math.min(rawDelta, 0.05);
+    const astronautFeetY = playerState.y - EYE_HEIGHT;
+    suit.root.position.set(playerState.x, astronautFeetY, playerState.z);
+    suit.root.rotation.y = playerState.heading;
+
+    suit.animate(
+      delta,
+      {
+        speed: playerState.speed,
+        grounded: playerState.onGround,
+        thrusting: playerState.thrusting,
+      },
+      cfg,
+    );
+  });
+
+  return <group ref={groupRef} />;
 }
 
 function InspectCamera({
@@ -879,14 +1047,18 @@ function SurfaceSceneContent({
   nearObjectId,
   objectDistances,
   missionId,
+  viewMode = "pov",
 }: {
   setNearObjectId: (id: string | null) => void;
   setObjectDistances: (d: Record<string, number>) => void;
   nearObjectId: string | null;
   objectDistances: Record<string, number>;
   missionId: string;
+  viewMode?: "pov" | "walker" | "lander";
 }) {
   const found = useGameStore((s) => s.objectsFoundThisRun);
+  const phase = useGameStore((s) => s.phase);
+  const hasFlag = useAppStore((s) => s.progress.missions[missionId]?.flagPlanted ?? false);
   const mission = useMemo(() => getMission(missionId), [missionId]);
   const objects = mission.objects;
   const isMars = mission.planet === "mars";
@@ -964,8 +1136,18 @@ function SurfaceSceneContent({
         </Suspense>
       )}
 
+      {(phase === "flagPlanted" || hasFlag) && !isMars && (
+        <group
+          position={[2, getTerrainElevation(2, 2, "moon", mission.landing.lat, mission.landing.lon), 2]}
+          scale={[0.9, 0.9, 0.9]}
+        >
+          <AmericanFlag3D scale={1.0} />
+        </group>
+      )}
+
       <ProximityDetector setNearObjectId={setNearObjectId} setObjectDistances={setObjectDistances} objects={objects} />
-      <PlayerController planet={mission.planet} lat={mission.landing.lat} lon={mission.landing.lon} />
+      <PlayerController planet={mission.planet} lat={mission.landing.lat} lon={mission.landing.lon} viewMode={viewMode} />
+      <AstronautExosuit visible={viewMode === "walker"} planet={mission.planet} />
       <InspectCamera objects={objects} planet={mission.planet} lat={mission.landing.lat} lon={mission.landing.lon} />
     </>
   );
@@ -1363,24 +1545,56 @@ export function SurfaceScene() {
   const findObject = useAppStore((s) => s.findObject);
   const [nearObjectId, setNearObjectId] = useState<string | null>(null);
   const [objectDistances, setObjectDistances] = useState<Record<string, number>>({});
+  const [viewMode, setViewMode] = useState<"pov" | "walker" | "lander">("pov");
+  const [, setWalkerTick] = useState(0);
   const mission = useMemo(() => getMission(missionId ?? "apollo-11"), [missionId]);
+
+  useEffect(() => {
+    if (viewMode !== "walker") return;
+    const interval = setInterval(() => setWalkerTick((t) => t + 1), 100);
+    return () => clearInterval(interval);
+  }, [viewMode]);
+
+  const touchScan = useCallback(
+    (targetId?: string) => {
+      const objId = targetId || nearObjectId;
+      if (!objId || !missionId) return;
+      const isNew = !found.includes(objId);
+      if (isNew) {
+        addFoundObject(objId);
+        findObject(missionId, objId);
+      }
+      if (document.pointerLockElement) {
+        document.exitPointerLock();
+      }
+      send("START_INSPECT", { objectId: objId });
+      gameAudio.playScanComplete();
+    },
+    [nearObjectId, found, missionId, addFoundObject, findObject, send],
+  );
+
+  // Global key listener for 'V' (toggle view) and 'E' (inspect nearby object)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.code === "KeyV") {
+        setViewMode((current) => (current === "pov" ? "walker" : "pov"));
+      }
+      if ((e.code === "KeyE" || e.key === "e" || e.key === "E") && !e.repeat) {
+        if (nearObjectId && phase !== "inspect") {
+          touchScan(nearObjectId);
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [nearObjectId, phase, touchScan]);
 
   const handleCanvasClick = useCallback(() => {
     if (!isTouchDevice()) {
       document.body.requestPointerLock();
     }
   }, []);
-
-  const touchScan = useCallback(() => {
-    if (!nearObjectId || !missionId) return;
-    const isNew = !found.includes(nearObjectId);
-    if (isNew) {
-      addFoundObject(nearObjectId);
-      findObject(missionId, nearObjectId);
-    }
-    send("START_INSPECT", { objectId: nearObjectId });
-    gameAudio.playScanComplete();
-  }, [nearObjectId, found, missionId, addFoundObject, findObject, send]);
 
   const touchFlag = useCallback(() => {
     if (!missionId) return;
@@ -1397,6 +1611,54 @@ export function SurfaceScene() {
 
   return (
     <div className="relative h-screen w-full">
+      {/* 1. TOP VIEW MODE SWITCHER PILL */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 rounded-full border border-white/10 bg-space-950/80 p-1.5 backdrop-blur-xl shadow-2xl pointer-events-auto">
+        <button
+          type="button"
+          onClick={() => setViewMode("pov")}
+          className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold transition cursor-pointer font-mono ${
+            viewMode === "pov"
+              ? "bg-signal text-space-950 shadow-md ring-1 ring-cyan-300"
+              : "text-regolith-300 hover:text-white hover:bg-space-800/60"
+          }`}
+          title="First-Person Helmet View [V to toggle]"
+        >
+          <span>👁️</span>
+          <span>POV View</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setViewMode("walker")}
+          className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold transition cursor-pointer font-mono ${
+            viewMode === "walker"
+              ? "bg-signal text-space-950 shadow-md ring-1 ring-cyan-300"
+              : "text-regolith-300 hover:text-white hover:bg-space-800/60"
+          }`}
+          title="3D Astronaut Walker Simulation [V to toggle]"
+        >
+          <span>🚶</span>
+          <span>Astronaut Walker</span>
+        </button>
+
+        {mission.planet === "mars" && (
+          <button
+            type="button"
+            onClick={() => setViewMode("lander")}
+            className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold transition cursor-pointer font-mono ${
+              viewMode === "lander"
+                ? "bg-orange-500 text-white shadow-md ring-1 ring-orange-300"
+                : "text-regolith-300 hover:text-white hover:bg-space-800/60"
+            }`}
+            title="Interactive Mars Lander (3D)"
+          >
+            <span>🛸</span>
+            <span>Mars Lander</span>
+          </button>
+        )}
+      </div>
+
+      {/* 2. MAIN THREE.JS CANVAS */}
       <div className="h-full w-full" onClick={handleCanvasClick}>
         <Canvas
           shadows
@@ -1418,20 +1680,82 @@ export function SurfaceScene() {
             setObjectDistances={setObjectDistances}
             objectDistances={objectDistances}
             missionId={missionId ?? "apollo-11"}
+            viewMode={viewMode}
           />
           <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} vignetteDarkness={0.6} />
           <Preload all />
         </Canvas>
       </div>
-      <SurfaceHUD nearObjectId={nearObjectId} objects={mission.objects} planet={mission.planet} missionType={mission.missionType} />
-      <TouchControls
-        nearObjectId={nearObjectId}
-        canScan={canScan}
-        onScan={touchScan}
-        onFlag={touchFlag}
-        onLaunch={touchLaunch}
-      />
-      {phase === "inspect" && <HologramInspect objects={mission.objects} missionId={missionId ?? "apollo-11"} isMars={mission.planet === "mars"} />}
+
+      {/* 3. POV HUD & Mobile Controls */}
+      {viewMode === "pov" && (
+        <>
+          <SurfaceHUD
+            nearObjectId={nearObjectId}
+            objects={mission.objects}
+            planet={mission.planet}
+            missionType={mission.missionType}
+          />
+          <TouchControls
+            nearObjectId={nearObjectId}
+            canScan={canScan}
+            onScan={() => touchScan()}
+            onFlag={touchFlag}
+            onLaunch={touchLaunch}
+          />
+        </>
+      )}
+
+      {/* 4. ASTRONAUT WALKER HUD OVERLAY */}
+      {viewMode === "walker" && (
+        <>
+          <WalkerHUD
+            speed={playerState.speed}
+            grounded={playerState.onGround}
+            thrusting={playerState.thrusting}
+            sprint={playerState.sprint}
+            footCount={playerState.footCount}
+            planet={mission.planet === "mars" ? "mars" : "moon"}
+            gravity={getSurfaceGravity(mission.planet ?? "moon")}
+            onSwitchView={() => setViewMode("pov")}
+            nearestObj={
+              nearObjectId
+                ? {
+                    id: nearObjectId,
+                    name: mission.objects.find((o) => o.id === nearObjectId)?.name ?? nearObjectId,
+                    dist: objectDistances[nearObjectId] ?? 0,
+                  }
+                : null
+            }
+            onInspectObject={touchScan}
+          />
+          {isTouchDevice() && (
+            <TouchControls
+              nearObjectId={nearObjectId}
+              canScan={canScan}
+              onScan={() => touchScan()}
+              onFlag={touchFlag}
+              onLaunch={touchLaunch}
+            />
+          )}
+        </>
+      )}
+
+      {/* 5. MARS LANDER VIEW: Dedicated CSS 3D Lander Component */}
+      {viewMode === "lander" && mission.planet === "mars" && (
+        <div className="absolute inset-0 z-20 bg-space-950">
+          <MarsLander onClose={() => setViewMode("pov")} />
+        </div>
+      )}
+
+      {/* 6. POST-SCAN HOLOGRAM INSPECTION OVERLAY */}
+      {phase === "inspect" && (
+        <HologramInspect
+          objects={mission.objects}
+          missionId={missionId ?? "apollo-11"}
+          isMars={mission.planet === "mars"}
+        />
+      )}
     </div>
   );
 }

@@ -33,56 +33,72 @@
     {
       "id": "descent-stage",
       "name": "Eagle Descent Stage",
-      "position": [0, 0, 0],
+      "position": [
+        0,
+        0,
+        0
+      ],
       "description": "Lower half of the Lunar Module Eagle. Served as the launch platform for the ascent stage. Bears a stainless-steel plaque: \"Here men from the planet Earth first set foot upon the Moon July 1969, A.D. We came in peace for all mankind.\"",
       "xp": 50,
       "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)",
       "scienceDiscovery": "Proved that a piloted spacecraft could safely land on and launch from the lunar surface, validating the Lunar Orbit Rendezvous mission architecture.",
       "legacy": "Remains at Tranquility Base; its plaque reading 'We came in peace for all mankind' is humanity's first permanent marker on another world.",
       "status": "defunct",
-      "firstPerson": "I am Eagle's lower half, the stage that held the engine which slowed us from orbit to touchdown. Neil and Buzz climbed down my ladder to take humanity's first steps on the Moon. My upper half flew away, but I stay here forever, carrying a plaque signed by the crew and President Nixon.",
+      "firstPerson": "Yo, check the blueprint! I am the Eagle Descent Stage — absolute certified moon OG! Neil and Buzz got all the clout and history books, but bro, my rocket engine did all the heavy lifting to stick that landing with barely twelve seconds of fuel left. Zero cap! Their ascent stage ditched me and bounced back to Earth, but I am still chillin right here at Tranquility Base with a bronze plaque flexing on the entire cosmos: We came in peace for all mankind! Built different, bro!",
       "yearDeployed": 1969,
       "nasaImageId": "as11-40-5927"
     },
     {
       "id": "flag",
       "name": "American Flag",
-      "position": [-7.05, 0, 7.30],
+      "position": [
+        -7.05,
+        0,
+        7.3
+      ],
       "description": "Planted by Armstrong and Aldrin approximately 8 metres from the LM. The nylon flag had a horizontal rod to keep it extended in the vacuum. After decades of unfiltered UV, it is almost certainly bleached white.",
       "xp": 50,
       "source": "LROC shapefile APOLLO_11_EQUIPMENT; AS11-40-5874",
       "scienceDiscovery": "Documented materials behavior in the lunar vacuum and showed the difficulty of planting objects in compacted regolith — the pole only penetrated about 15 centimetres.",
       "legacy": "Buzz Aldrin reported seeing the flag knocked over by the ascent engine exhaust; LROC images from 2009 show no shadow at this location, confirming it likely fell.",
       "status": "defunct",
-      "firstPerson": "I was the first flag planted on another world. Buzz and Neil struggled to push my pole into the hard lunar soil. When Eagle's engine fired for liftoff, the blast knocked me over. After more than fifty years of raw sunlight with no atmosphere to protect me, I have faded to white — but I was here first.",
+      "firstPerson": "Bro, look at me — the ultimate cosmic flex! I was the very first flag planted under an alien sky! Neil and Buzz had to literally wrestle the rock-hard lunar ground just to jam my pole into the dirt. But real talk? When Eagle's engine blasted off for Earth, the exhaust cooked me and knocked me flat on my face. Fifty-plus years of raw solar radiation bleached all my colors completely white, but no cap, I staked the claim first. Living rent-free on the Moon forever!",
       "yearDeployed": 1969,
       "nasaImageId": "as11-40-5874"
     },
     {
       "id": "lrrr",
       "name": "Laser Ranging Retroreflector",
-      "position": [-1.61, 0, -21.36],
+      "position": [
+        -1.61,
+        0,
+        -21.36
+      ],
       "description": "An array of 100 fused-silica corner-cube prisms. Still in use today — observatories on Earth fire a laser pulse at it and measure the round-trip time to track the Moon's orbit to centimetre precision.",
       "xp": 50,
       "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)",
       "scienceDiscovery": "Enabled the discovery that the Moon is receding from Earth at 3.8 centimetres per year and confirmed Einstein's general theory of relativity to extraordinary precision.",
       "legacy": "Still fully operational — observatories at Apache Point (New Mexico) and Grasse (France) fire lasers at it regularly, achieving millimetre-level Earth-Moon distance measurements.",
       "status": "operational",
-      "firstPerson": "I am the Laser Ranging Retroreflector, and I am still working after more than fifty years. Every night, observatories on Earth aim a laser at my 100 glass prisms, and I bounce the light straight back. Scientists use my reflections to measure the Moon's distance down to the millimetre — that is how they discovered I am slowly drifting away from Earth.",
+      "firstPerson": "Hold up, let me cook! I am the Laser Retroreflector, and I am the only Apollo 11 experiment that is still 100% active today! Earth scientists literally shoot high-powered laser beams at my quartz prisms every single night, and I bounce that photon beam straight back to sender. We measured the Moon's distance down to the millimeter and proved our Moon is drifting away by four centimeters every single year! Fifty-five years in space and still putting up MVP numbers with zero electricity. Absolute cheat code!",
       "yearDeployed": 1969,
       "nasaImageId": "as11-40-5952"
     },
     {
       "id": "psep",
       "name": "Passive Seismic Experiment Package",
-      "position": [0.67, 0, -28.12],
+      "position": [
+        0.67,
+        0,
+        -28.12
+      ],
       "description": "Solar-powered seismometer deployed by Aldrin. Detected moonquakes, meteorite impacts, and the vibration from the ascent stage liftoff. Operated for 21 days before its power ran out.",
       "xp": 50,
       "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)",
       "scienceDiscovery": "Detected the first moonquakes ever recorded and measured seismic waves from the ascent stage liftoff, revealing that the Moon has a layered internal structure.",
       "legacy": "Operated for only 21 days before its solar power system overheated and failed; its brief dataset helped design the long-lived ALSEP seismometers on later missions.",
       "status": "defunct",
-      "firstPerson": "I am the Passive Seismic Experiment, the first seismometer on another world. Buzz placed me gently on the regolith and I listened. I felt the ground shake when Eagle's ascent engine fired, and I caught tiny moonquakes before my solar panels overheated after just 21 days. But those three weeks changed everything we knew about the Moon's interior.",
+      "firstPerson": "Ayo, listen up! I am the Passive Seismic Experiment — literally the Moon's first pair of AirPods! Buzz carefully dropped me onto the lunar dust, and I spent three wild weeks listening to the deep lunar silence. Every time a meteorite slammed into the crust or a moonquake hit, I caught the vibe and beamed the seismic data home. The brutal lunar sun fried my solar panels after twenty-one days, but I already leaked the biggest secret: the Moon is not a dead rock inside. Game over!",
       "yearDeployed": 1969,
       "yearLastContact": 1969,
       "nasaImageId": "as11-40-5948"
@@ -90,42 +106,54 @@
     {
       "id": "tv-camera",
       "name": "TV Camera",
-      "position": [-15.83, 0, 19.00],
+      "position": [
+        -15.83,
+        0,
+        19.0
+      ],
       "description": "The Westinghouse black-and-white TV camera that broadcast the first moonwalk to 600 million viewers. Armstrong set it on a tripod to film the EVA.",
       "xp": 50,
       "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)",
       "scienceDiscovery": "Transmitted the first live television broadcast from another world, enabling 600 million people to witness the moonwalk in real time and document the EVA procedures.",
       "legacy": "Remains at Tranquility Base on its tripod; the original slow-scan video tapes were accidentally overwritten at NASA, but restored copies survive from broadcast recordings.",
       "status": "defunct",
-      "firstPerson": "I am the television camera that showed Earth its first moonwalk. When Neil climbed down the ladder, I was watching from the MESA bay. He moved me to a tripod so I could film both astronauts working. Six hundred million people saw the world through my lens that night — the largest TV audience in history.",
+      "firstPerson": "Yo! I am the legendary Westinghouse TV Camera, and I am the reason your grandparents did not miss history! While Neil was climbing down the ladder, I was mounted on the MESA bay, capturing that historic one giant leap live for over 600 million people watching on Earth. That was the biggest global livestream in human history before the internet even existed. The picture was fuzzy black-and-white, but the hype was pure cinema!",
       "yearDeployed": 1969,
       "nasaImageId": "as11-40-5882"
     },
     {
       "id": "mesa",
       "name": "MESA (Modular Equipment Stowage)",
-      "position": [-1.99, 0, 1.12],
+      "position": [
+        -1.99,
+        0,
+        1.12
+      ],
       "description": "The fold-down equipment bay on the LM descent stage. Armstrong's first step onto the Moon was captured by a TV camera mounted here. Stored tools, sample bags, and the US flag.",
       "xp": 50,
       "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)",
       "scienceDiscovery": "Provided the deployment platform for surface tools, sample containers, and the TV camera, enabling the first systematic lunar sample collection of 21.6 kilograms of material.",
       "legacy": "Remains attached to the descent stage at Tranquility Base; its fold-down design became the standard equipment bay architecture for all subsequent Lunar Modules.",
       "status": "defunct",
-      "firstPerson": "I am the Modular Equipment Stowage Assembly, the fold-down shelf on Eagle's side. When Neil pulled my handle, I swung open and a tiny TV camera mounted on me captured his first step. I held the tools, sample bags, and the flag — everything they needed for their two and a half hours outside.",
+      "firstPerson": "Ayo, meet the ultimate cosmic trunk! I am MESA — the Swiss Army Knife of the Apollo 11 mission. Neil pulled a simple lanyard on the porch ladder, and BAM! I folded down like the tailgate of an interstellar pickup truck. I was packing the TV camera, the rock collection boxes, the tools, and the flag. Basically, the astronauts could not do a single thing without opening me first. Main character energy right here in Sea of Tranquility!",
       "yearDeployed": 1969,
       "nasaImageId": "as11-40-5928"
     },
     {
       "id": "swc",
       "name": "Solar Wind Composition Experiment",
-      "position": [-4.02, 0, 7.88],
+      "position": [
+        -4.02,
+        0,
+        7.88
+      ],
       "description": "An aluminium foil sheet deployed on a pole, facing the Sun. Collected solar wind particles (helium, neon, argon) for 77 minutes, then rolled up and returned to Earth for analysis.",
       "xp": 50,
       "source": "LROC shapefile APOLLO_11_EQUIPMENT (Gonzales et al. 2019)",
       "scienceDiscovery": "Captured solar wind ions including helium-3, helium-4, neon, and argon, providing the first direct measurements of solar wind composition at the lunar surface.",
       "legacy": "The foil was rolled up and returned to Earth for laboratory analysis at the University of Bern; the deployment pole remains at Tranquility Base.",
       "status": "defunct",
-      "firstPerson": "I am the Solar Wind Composition experiment — a sheet of aluminium foil on a pole, facing the Sun. For 77 minutes I stood there catching tiny particles streaming from the Sun that Earth's magnetic field normally deflects. Then Buzz rolled me up and carried me home so scientists could read what the Sun had written on my surface.",
+      "firstPerson": "Bro, look at me! People think I am just a glorified roll of kitchen aluminium foil on a stick, but I was running ultra-high-tech physics! For seventy-seven minutes, I stood face-to-face with the unfiltered Sun, trapping pure solar wind ions — Helium, Neon, Argon — right into my metallic sheet. Buzz rolled me up, shoved me into the sample bag, and took me back to Earth so scientists could decode the secrets of the Sun. Talk about low budget, infinite ROI!",
       "yearDeployed": 1969,
       "nasaImageId": "as11-40-5872"
     }
