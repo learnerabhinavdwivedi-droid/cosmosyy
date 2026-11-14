@@ -1526,26 +1526,26 @@ function FlightHUD() {
   return (
     <div className="pointer-events-none absolute inset-0 z-10 flex flex-col">
       {/* Top bar */}
-      <div className="flex items-start justify-between px-4 pt-4">
+      <div className="flex items-start justify-between px-3 sm:px-4 pt-3 sm:pt-4">
         <div>
-          <p className="text-xs font-medium tracking-wide text-regolith-400">
+          <p className="text-[10px] sm:text-xs font-medium tracking-wide text-regolith-400">
             {mission?.name?.toUpperCase() || "APOLLO"}
           </p>
-          <p className="font-display text-lg font-semibold text-signal">
+          <p className="font-display text-base sm:text-lg font-semibold text-signal">
             {label}
           </p>
         </div>
         <div className="text-right">
-          <p className="text-xs text-regolith-400">
+          <p className="text-[10px] sm:text-xs text-regolith-400">
             {t("flight.commander", { name: playerName })}
           </p>
           {phase === "descent" && (
-            <p className="font-mono text-lg font-bold text-signal">
+            <p className="font-mono text-base sm:text-lg font-bold text-signal">
               {t("flight.alt", { alt: alt.toLocaleString() })}
             </p>
           )}
           {phase === "touchdown" && (
-            <p className="font-mono text-lg font-bold text-signal">
+            <p className="font-mono text-base sm:text-lg font-bold text-signal">
               {t("flight.altContact")}
             </p>
           )}
@@ -1571,13 +1571,13 @@ function FlightHUD() {
       </div>
 
       {/* Narration subtitle */}
-      <div className="mt-auto px-4 pb-6">
-        <div className="mx-auto max-w-2xl rounded-lg bg-space-950/85 px-6 py-4 backdrop-blur">
-          <div className="flex items-baseline gap-3">
-            <span className="shrink-0 text-xs font-bold tracking-widest text-signal">
+      <div className="mt-auto px-3 sm:px-4 pb-4 sm:pb-6">
+        <div className="mx-auto max-w-2xl rounded-lg bg-space-950/85 px-4 py-3 sm:px-6 sm:py-4 backdrop-blur">
+          <div className="flex items-baseline gap-2 sm:gap-3">
+            <span className="shrink-0 text-[10px] sm:text-xs font-bold tracking-widest text-signal">
               {label.toUpperCase() || "FLIGHT"}
             </span>
-            <p className="text-base leading-relaxed text-regolith-200">
+            <p className="text-xs sm:text-base leading-relaxed text-regolith-200">
               {narration}
             </p>
           </div>
@@ -1680,10 +1680,10 @@ export function FlightScene() {
       />
       <FlightHUD />
       {gate && (
-        <div className="absolute inset-x-0 bottom-24 z-20 flex justify-center">
+        <div className="absolute inset-x-0 bottom-20 sm:bottom-24 z-20 flex justify-center px-4">
           <button
             onClick={() => send(gate.event)}
-            className="animate-pulse rounded-lg border border-signal/60 bg-signal/20 px-10 py-4 font-display text-lg sm:text-xl font-semibold text-signal backdrop-blur transition hover:bg-signal/30 min-h-[56px]"
+            className="touch-manipulation animate-pulse rounded-lg border border-signal/60 bg-signal/20 px-6 sm:px-10 py-3 sm:py-4 font-display text-base sm:text-xl font-semibold text-signal backdrop-blur transition hover:bg-signal/30 active:scale-95 min-h-[48px] sm:min-h-[56px]"
           >
             {isTouchDevice() ? t(gate.labelKey) : `[Space] ${t(gate.labelKey)}`}
           </button>
