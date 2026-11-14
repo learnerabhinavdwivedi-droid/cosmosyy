@@ -13,4 +13,16 @@ export default defineConfig({
       "@": resolve(__dirname, "src"),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1500,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "three-vendor": ["three", "@react-three/fiber", "@react-three/drei"],
+          "react-vendor": ["react", "react-dom", "react-router-dom", "zustand"],
+          "audio-vendor": ["howler"],
+        },
+      },
+    },
+  },
 });
