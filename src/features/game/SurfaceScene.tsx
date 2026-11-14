@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
-import { Stars, Text } from "@react-three/drei";
+import { Stars, Text, useGLTF } from "@react-three/drei";
 import { Effects } from "./Effects";
 import { useGameStore } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
@@ -24,6 +24,7 @@ import { TouchControls } from "./TouchControls";
 import { HologramInspect } from "./HologramInspect";
 import { getThemeColor3 } from "./objectThemes";
 import { getTerrainElevation } from "./terrainHeight";
+import { getHologramModel } from "./hologramMapping";
 import * as THREE from "three";
 
 const SCAN_RANGE = 8;
@@ -121,6 +122,44 @@ function FloatingArrow({ isFound, themeColor, distance }: { isFound: boolean; th
   );
 }
 
+/* ─── Ground Physical 3D Object with Authentic Blender Finish ─── */
+function GroundObject({ url, baseScale = 1.0 }: { url: string; baseScale?: number }) {
+  const { scene } = useGLTF(url);
+  const cloned = useMemo(() => scene.clone(true), [scene]);
+
+  useEffect(() => {
+    cloned.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+  }, [cloned]);
+
+  const box = useMemo(() => {
+    const b = new THREE.Box3().setFromObject(cloned);
+    const size = b.getSize(new THREE.Vector3());
+    const center = b.getCenter(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scale = baseScale / (maxDim || 1);
+    const bottomY = b.min.y;
+    return { center, scale, bottomY };
+  }, [cloned, baseScale]);
+
+  return (
+    <group
+      scale={[box.scale, box.scale, box.scale]}
+      position={[
+        -box.center.x * box.scale,
+        -box.bottomY * box.scale,
+        -box.center.z * box.scale,
+      ]}
+    >
+      <primitive object={cloned} />
+    </group>
+  );
+}
+
 function HeritageMarker({
   obj,
   isFound,
@@ -129,6 +168,7 @@ function HeritageMarker({
   isMars,
   lat = 0,
   lon = 0,
+  missionId,
 }: {
   obj: HeritageObject;
   isFound: boolean;
@@ -137,10 +177,16 @@ function HeritageMarker({
   isMars?: boolean;
   lat?: number;
   lon?: number;
+  missionId?: string;
 }) {
   const outerRingRef = useRef<THREE.Mesh>(null);
   const innerRingRef = useRef<THREE.Mesh>(null);
   const pulseRef = useRef<THREE.Mesh>(null);
+
+  const modelEntry = useMemo(
+    () => (missionId ? getHologramModel(missionId, obj.id) : null),
+    [missionId, obj.id],
+  );
 
   useFrame(() => {
     const t = Date.now() * 0.001;
@@ -181,6 +227,13 @@ function HeritageMarker({
 
   return (
     <group position={[obj.position[0], obj.position[1] + terrainY, obj.position[2]]}>
+      {/* Real 3D physical heritage object with Blender finish */}
+      {modelEntry && (
+        <Suspense fallback={null}>
+          <GroundObject url={modelEntry.modelPath} baseScale={1.2} />
+        </Suspense>
+      )}
+
       <FloatingArrow isFound={isFound} themeColor={themeColor} distance={distance} />
 
       <mesh
@@ -507,6 +560,20 @@ function Footprints({ lat = 0, lon = 0 }: { lat?: number; lon?: number }) {
   );
 }
 
+function getMarsBaseModel(missionId: string): { url: string; scale: number } {
+  if (missionId === "mars-viking-1") return { url: "/models/heritage/viking1.glb", scale: 2.2 };
+  if (missionId === "mars-viking-2") return { url: "/models/heritage/viking2.glb", scale: 2.2 };
+  if (missionId === "mars-pathfinder") return { url: "/models/heritage/sojourner.glb", scale: 1.8 };
+  if (missionId.startsWith("mars-spirit")) return { url: "/models/heritage/spirit.glb", scale: 2.0 };
+  if (missionId.startsWith("mars-opportunity")) return { url: "/models/heritage/opportunity.glb", scale: 2.0 };
+  if (missionId === "mars-curiosity" || missionId === "mars-perseverance") {
+    return { url: "/models/heritage/opportunity.glb", scale: 2.8 };
+  }
+  if (missionId === "mars-insight") return { url: "/models/heritage/insight.glb", scale: 2.2 };
+  if (missionId === "mars-phoenix") return { url: "/models/heritage/phoenix.glb", scale: 2.2 };
+  return { url: "/models/heritage/viking1.glb", scale: 2.2 };
+}
+
 function MarsBase({
   missionId,
   position = [0, 0, 0],
@@ -514,85 +581,12 @@ function MarsBase({
   missionId: string;
   position?: [number, number, number];
 }) {
-  const isRover = missionId.startsWith("mars-spirit") || missionId.startsWith("mars-opportunity")
-    || missionId.startsWith("mars-curiosity") || missionId.startsWith("mars-perseverance");
-  const isLargeRover = missionId === "mars-curiosity" || missionId === "mars-perseverance";
-
-  if (isRover) {
-    const s = isLargeRover ? 1.0 : 0.65;
-    return (
-      <group position={position} scale={s}>
-        {/* Rover body */}
-        <mesh position={[0, 0.35, 0]}>
-          <boxGeometry args={[1.2, 0.4, 0.8]} />
-          <meshStandardMaterial color="#c8c0b0" metalness={0.5} roughness={0.4} />
-        </mesh>
-        {/* Mast */}
-        <mesh position={[0.3, 0.85, 0]}>
-          <cylinderGeometry args={[0.03, 0.03, 0.7, 6]} />
-          <meshStandardMaterial color="#aaa8a0" metalness={0.6} roughness={0.3} />
-        </mesh>
-        {/* Camera head */}
-        <mesh position={[0.3, 1.25, 0]}>
-          <boxGeometry args={[0.15, 0.1, 0.12]} />
-          <meshStandardMaterial color="#404040" metalness={0.7} roughness={0.3} />
-        </mesh>
-        {/* Wheels (6) */}
-        {([-0.5, 0, 0.5] as const).map((xOff) => (
-          [0.45, -0.45].map((zOff) => (
-            <mesh key={`${xOff}-${zOff}`} position={[xOff, 0.12, zOff]} rotation={[Math.PI / 2, 0, 0]}>
-              <cylinderGeometry args={[0.12, 0.12, 0.06, 12]} />
-              <meshStandardMaterial color="#555555" metalness={0.3} roughness={0.7} />
-            </mesh>
-          ))
-        ))}
-        {/* Solar panel (Spirit/Opportunity only) */}
-        {!isLargeRover && (
-          <mesh position={[0, 0.58, 0]}>
-            <boxGeometry args={[1.4, 0.02, 1.0]} />
-            <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.5} />
-          </mesh>
-        )}
-        {/* RTG arm (Curiosity/Perseverance only) */}
-        {isLargeRover && (
-          <mesh position={[-0.8, 0.35, 0]} rotation={[0, 0, -0.3]}>
-            <cylinderGeometry args={[0.06, 0.06, 0.6, 8]} />
-            <meshStandardMaterial color="#884422" metalness={0.3} roughness={0.6} />
-          </mesh>
-        )}
-      </group>
-    );
-  }
-
-  // Lander (Viking, Pathfinder)
-  const isPf = missionId === "mars-pathfinder";
+  const { url, scale } = useMemo(() => getMarsBaseModel(missionId), [missionId]);
   return (
     <group position={position}>
-      {/* Lander body */}
-      <mesh position={[0, 0.4, 0]}>
-        <cylinderGeometry args={[0.5, 0.6, 0.5, isPf ? 6 : 8]} />
-        <meshStandardMaterial color="#c8c0b0" metalness={0.5} roughness={0.4} />
-      </mesh>
-      {/* Legs (3) */}
-      {[0, 120, 240].map((deg) => {
-        const rad = (deg * Math.PI) / 180;
-        return (
-          <mesh key={deg} position={[Math.cos(rad) * 0.7, 0.12, Math.sin(rad) * 0.7]} rotation={[0, 0, Math.cos(rad) * 0.3]}>
-            <cylinderGeometry args={[0.03, 0.03, 0.5, 4]} />
-            <meshStandardMaterial color="#888888" metalness={0.6} roughness={0.4} />
-          </mesh>
-        );
-      })}
-      {/* Antenna dish */}
-      <mesh position={[0, 0.75, 0]}>
-        <cylinderGeometry args={[0.25, 0.08, 0.06, 12]} />
-        <meshStandardMaterial color="#d0d0d0" metalness={0.7} roughness={0.3} />
-      </mesh>
-      {/* Antenna mast */}
-      <mesh position={[0, 0.9, 0]}>
-        <cylinderGeometry args={[0.015, 0.015, 0.3, 4]} />
-        <meshStandardMaterial color="#aaaaaa" metalness={0.6} roughness={0.4} />
-      </mesh>
+      <Suspense fallback={null}>
+        <GroundObject url={url} baseScale={scale} />
+      </Suspense>
     </group>
   );
 }
@@ -930,6 +924,7 @@ function SurfaceSceneContent({
           isMars={isMars}
           lat={mission.landing.lat}
           lon={mission.landing.lon}
+          missionId={missionId}
         />
       ))}
 

@@ -15,40 +15,51 @@ import {
 import { getObjectTheme, type ObjectTheme } from "./objectThemes";
 import * as THREE from "three";
 
-/* ─── Holographic 3D model ─── */
+/* ─── Studio 3D Model with Blender PBR Finish ─── */
 function HoloModel({
   url,
   explode,
   wireframe,
-  themeColor,
   manifest,
 }: {
   url: string;
   explode: number;
   wireframe?: boolean;
-  themeColor: string;
+  themeColor?: string;
   manifest?: HologramManifest | null;
 }) {
   const { scene } = useGLTF(url);
   const groupRef = useRef<THREE.Group>(null);
   const clonedScene = useMemo(() => scene.clone(true), [scene]);
 
+  // Preserve authentic Blender PBR textures, metallics, and foils
   useEffect(() => {
     clonedScene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        mesh.material = new THREE.MeshStandardMaterial({
-          color: new THREE.Color(themeColor),
-          emissive: new THREE.Color(themeColor),
-          emissiveIntensity: wireframe ? 0.6 : 0.35,
-          transparent: true,
-          opacity: wireframe ? 0.4 : 0.85,
-          wireframe: !!wireframe,
-          side: THREE.DoubleSide,
-        });
+        if (!mesh.userData.origMaterial) {
+          mesh.userData.origMaterial = mesh.material;
+        }
+
+        if (wireframe) {
+          mesh.material = new THREE.MeshStandardMaterial({
+            color: new THREE.Color("#44eeff"),
+            emissive: new THREE.Color("#0088cc"),
+            emissiveIntensity: 0.5,
+            transparent: true,
+            opacity: 0.45,
+            wireframe: true,
+            side: THREE.DoubleSide,
+          });
+        } else {
+          // Restore authentic original Blender PBR materials & textures!
+          mesh.material = mesh.userData.origMaterial;
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
+        }
       }
     });
-  }, [clonedScene, wireframe, themeColor]);
+  }, [clonedScene, wireframe]);
 
   // Exploded view animation / subsystem offset
   useEffect(() => {
@@ -81,7 +92,7 @@ function HoloModel({
 
   useFrame((_, delta) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.3;
+      groupRef.current.rotation.y += delta * 0.22;
     }
   });
 
@@ -90,7 +101,7 @@ function HoloModel({
     const size = b.getSize(new THREE.Vector3());
     const center = b.getCenter(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
-    const scale = 2.2 / (maxDim || 1);
+    const scale = 2.4 / (maxDim || 1);
     return { center, scale };
   }, [clonedScene]);
 
@@ -110,50 +121,49 @@ function HoloModel({
   );
 }
 
-/* ─── Holographic ground rings ─── */
-function HoloRings({ color }: { color: string }) {
-  const ringsRef = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
-    if (!ringsRef.current) return;
-    ringsRef.current.rotation.y = state.clock.elapsedTime * 0.15;
-  });
-
+/* ─── Blender Studio 3-Point Lighting Setup ─── */
+function StudioLighting() {
   return (
-    <group ref={ringsRef} position={[0, -1.4, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-      {[1.0, 1.5, 2.0, 2.5].map((r, i) => (
-        <mesh key={i}>
-          <ringGeometry args={[r - 0.02, r, 64]} />
-          <meshBasicMaterial
-            color={color}
-            transparent
-            opacity={0.25 - i * 0.05}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-      ))}
-      <mesh>
-        <circleGeometry args={[0.8, 64]} />
-        <meshBasicMaterial color={color} transparent opacity={0.08} />
-      </mesh>
-    </group>
+    <>
+      <ambientLight intensity={0.8} color="#ffffff" />
+      {/* Key light — warm sunlight casting specular highlights */}
+      <directionalLight
+        position={[5, 8, 5]}
+        intensity={2.6}
+        color="#fffbf0"
+        castShadow
+        shadow-mapSize={[1024, 1024]}
+      />
+      {/* Fill light — soft diffused sky fill from opposite side */}
+      <directionalLight position={[-6, 3, -4]} intensity={1.2} color="#a0b8d8" />
+      {/* Rim / Kicker backlight — crisp edge silhouette separation */}
+      <directionalLight position={[0, 5, -7]} intensity={2.8} color="#d4e8ff" />
+      {/* Bottom bounce light from surface */}
+      <pointLight position={[0, -2.5, 0]} intensity={0.7} color="#ffffff" />
+    </>
   );
 }
 
-/* ─── Scan line sweep ─── */
-function ScanLine({ color }: { color: string }) {
-  const ref = useRef<THREE.Mesh>(null);
-
-  useFrame((state) => {
-    if (!ref.current) return;
-    ref.current.position.y = Math.sin(state.clock.elapsedTime * 1.2) * 1.5;
-  });
-
+/* ─── Studio Pedestal Contact Shadow ─── */
+function ContactShadow() {
   return (
-    <mesh ref={ref}>
-      <planeGeometry args={[4, 0.02]} />
-      <meshBasicMaterial color={color} transparent opacity={0.4} side={THREE.DoubleSide} />
-    </mesh>
+    <group position={[0, -1.25, 0]}>
+      {/* Dark radial contact shadow on floor */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[1.5, 48]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.65} depthWrite={false} />
+      </mesh>
+      {/* Outer soft shadow feather */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[2.2, 48]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.3} depthWrite={false} />
+      </mesh>
+      {/* Studio turntable ring */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
+        <ringGeometry args={[1.98, 2.02, 64]} />
+        <meshBasicMaterial color="#3a404c" transparent opacity={0.5} depthWrite={false} />
+      </mesh>
+    </group>
   );
 }
 
@@ -161,13 +171,13 @@ function ScanLine({ color }: { color: string }) {
 function AutoCamera() {
   const { camera } = useThree();
   useEffect(() => {
-    camera.position.set(3, 2, 3);
+    camera.position.set(3.2, 2.0, 3.2);
     camera.lookAt(0, 0, 0);
   }, [camera]);
   return null;
 }
 
-/* ─── 3D Viewer canvas ─── */
+/* ─── 3D Viewer canvas with Blender Finish ─── */
 function HoloCanvas({
   modelUrl,
   explode,
@@ -183,13 +193,11 @@ function HoloCanvas({
 }) {
   return (
     <Canvas
-      gl={{ alpha: true, antialias: true }}
-      camera={{ fov: 40, near: 0.1, far: 100, position: [3, 2, 3] }}
+      gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
+      camera={{ fov: 38, near: 0.1, far: 100, position: [3.2, 2.0, 3.2] }}
       style={{ background: "transparent" }}
     >
-      <ambientLight intensity={0.3} />
-      <directionalLight position={[5, 5, 5]} intensity={0.6} color={theme.primary} />
-      <pointLight position={[0, -2, 0]} intensity={0.4} color={theme.primary} />
+      <StudioLighting />
       <Suspense fallback={null}>
         <HoloModel
           url={modelUrl}
@@ -199,184 +207,20 @@ function HoloCanvas({
           manifest={manifest}
         />
       </Suspense>
-      <HoloRings color={theme.primary} />
-      <ScanLine color={theme.primary} />
+      <ContactShadow />
       <AutoCamera />
       <OrbitControls
-        enableZoom={false}
+        enableZoom={true}
+        minDistance={1.4}
+        maxDistance={5.5}
         enablePan={false}
+        enableDamping={true}
+        dampingFactor={0.05}
         autoRotate={false}
-        minPolarAngle={Math.PI / 4}
-        maxPolarAngle={Math.PI / 2.2}
+        minPolarAngle={Math.PI / 6}
+        maxPolarAngle={Math.PI / 1.95}
       />
     </Canvas>
-  );
-}
-
-/* ─── Category SVG icon (for objects without 3D model) ─── */
-function CategoryIcon({ type, color }: { type: string; color: string }) {
-  const sw = 1.5;
-  const common = { fill: "none", stroke: color, strokeWidth: sw, opacity: 0.5 };
-
-  switch (type) {
-    case "spacecraft":
-      return (
-        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
-          <polygon points="35,25 65,25 72,55 28,55" />
-          <line x1="28" y1="55" x2="15" y2="82" />
-          <line x1="72" y1="55" x2="85" y2="82" />
-          <ellipse cx="15" cy="85" rx="8" ry="2.5" />
-          <ellipse cx="85" cy="85" rx="8" ry="2.5" />
-          <line x1="50" y1="25" x2="50" y2="12" />
-          <circle cx="50" cy="8" r="5" />
-          <rect x="38" y="36" width="24" height="12" rx="2" />
-          <line x1="50" y1="55" x2="50" y2="70" />
-          <polygon points="44,70 56,70 58,78 42,78" />
-        </svg>
-      );
-    case "science":
-      return (
-        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
-          <circle cx="50" cy="50" r="35" />
-          <circle cx="50" cy="50" r="22" />
-          <circle cx="50" cy="50" r="8" />
-          <circle cx="50" cy="50" r="2" fill={color} stroke="none" />
-          <line x1="50" y1="15" x2="50" y2="5" />
-          <line x1="50" y1="95" x2="50" y2="85" />
-          <line x1="15" y1="50" x2="5" y2="50" />
-          <line x1="95" y1="50" x2="85" y2="50" />
-          <line x1="26" y1="26" x2="19" y2="19" />
-          <line x1="74" y1="74" x2="81" y2="81" />
-          <line x1="74" y1="26" x2="81" y2="19" />
-          <line x1="26" y1="74" x2="19" y2="81" />
-        </svg>
-      );
-    case "rover":
-      return (
-        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
-          <rect x="22" y="35" width="56" height="22" rx="4" />
-          <rect x="26" y="26" width="18" height="11" rx="2" />
-          <line x1="56" y1="35" x2="66" y2="22" />
-          <circle cx="69" cy="19" r="5" />
-          <circle cx="30" cy="70" r="10" />
-          <circle cx="70" cy="70" r="10" />
-          <line x1="30" y1="57" x2="30" y2="60" />
-          <line x1="70" y1="57" x2="70" y2="60" />
-          <rect x="30" y="40" width="6" height="4" rx="1" fill={color} stroke="none" opacity="0.3" />
-          <rect x="40" y="40" width="6" height="4" rx="1" fill={color} stroke="none" opacity="0.3" />
-          <rect x="50" y="40" width="6" height="4" rx="1" fill={color} stroke="none" opacity="0.3" />
-        </svg>
-      );
-    case "memorial":
-      return (
-        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
-          <line x1="28" y1="88" x2="28" y2="18" />
-          <rect x="28" y="18" width="42" height="28" />
-          <line x1="28" y1="32" x2="70" y2="32" />
-          <line x1="28" y1="18" x2="70" y2="18" />
-          <polygon points="48,22 49,25 52,25 50,27 51,30 48,28 45,30 46,27 44,25 47,25" fill={color} stroke="none" opacity="0.6" />
-          <polygon points="58,22 59,25 62,25 60,27 61,30 58,28 55,30 56,27 54,25 57,25" fill={color} stroke="none" opacity="0.6" />
-          <polygon points="48,35 49,38 52,38 50,40 51,43 48,41 45,43 46,40 44,38 47,38" fill={color} stroke="none" opacity="0.4" />
-        </svg>
-      );
-    case "equipment":
-      return (
-        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
-          <circle cx="50" cy="32" r="18" />
-          <circle cx="50" cy="32" r="12" />
-          <circle cx="50" cy="32" r="4" fill={color} stroke="none" opacity="0.3" />
-          <line x1="50" y1="50" x2="50" y2="82" />
-          <line x1="32" y1="82" x2="68" y2="82" />
-          <line x1="50" y1="68" x2="36" y2="82" />
-          <line x1="50" y1="68" x2="64" y2="82" />
-          <rect x="44" y="56" width="12" height="6" rx="1" />
-        </svg>
-      );
-    case "geological":
-      return (
-        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
-          <path d="M10,78 Q25,55 40,62 Q55,69 70,48 Q82,34 92,38" />
-          <path d="M10,68 Q25,48 40,52 Q55,56 70,38 Q82,26 92,28" />
-          <path d="M10,58 Q30,42 50,44 Q65,46 80,22 Q88,16 92,18" />
-          <circle cx="38" cy="52" r="3" fill={color} stroke="none" opacity="0.4" />
-          <circle cx="58" cy="40" r="2.5" fill={color} stroke="none" opacity="0.3" />
-          <circle cx="75" cy="32" r="2" fill={color} stroke="none" opacity="0.35" />
-          <circle cx="28" cy="65" r="1.8" fill={color} stroke="none" opacity="0.25" />
-          <path d="M15,85 L30,70 L50,75 L70,60 L90,65" strokeDasharray="3 2" />
-        </svg>
-      );
-    case "helicopter":
-      return (
-        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
-          <rect x="40" y="42" width="20" height="26" rx="5" />
-          <line x1="50" y1="42" x2="50" y2="32" />
-          <line x1="18" y1="32" x2="82" y2="32" />
-          <ellipse cx="18" cy="32" rx="3" ry="1" />
-          <ellipse cx="82" cy="32" rx="3" ry="1" />
-          <line x1="50" y1="68" x2="50" y2="78" />
-          <line x1="36" y1="78" x2="64" y2="78" />
-          <line x1="40" y1="52" x2="28" y2="62" />
-          <line x1="60" y1="52" x2="72" y2="62" />
-          <circle cx="50" cy="55" r="3" fill={color} stroke="none" opacity="0.3" />
-        </svg>
-      );
-    default:
-      return (
-        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
-          <circle cx="50" cy="50" r="30" />
-          <circle cx="50" cy="50" r="15" />
-          <circle cx="50" cy="50" r="3" fill={color} stroke="none" />
-        </svg>
-      );
-  }
-}
-
-/* ─── Blueprint view (left panel for non-GLB objects) ─── */
-function BlueprintView({ obj, theme }: { obj: HeritageObject; theme: ObjectTheme }) {
-  return (
-    <div
-      className="relative flex h-full flex-col overflow-hidden rounded-xl border"
-      style={{ borderColor: theme.border, background: "rgba(7,9,13,0.85)" }}
-    >
-      {/* Grid background */}
-      <div
-        className="absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage: `linear-gradient(${theme.primary} 1px, transparent 1px), linear-gradient(90deg, ${theme.primary} 1px, transparent 1px)`,
-          backgroundSize: "32px 32px",
-        }}
-      />
-      {/* Corner brackets */}
-      <div className="absolute left-3 top-3 h-6 w-6 border-l-2 border-t-2" style={{ borderColor: theme.primary }} />
-      <div className="absolute right-3 top-3 h-6 w-6 border-r-2 border-t-2" style={{ borderColor: theme.primary }} />
-      <div className="absolute bottom-3 left-3 h-6 w-6 border-b-2 border-l-2" style={{ borderColor: theme.primary }} />
-      <div className="absolute bottom-3 right-3 h-6 w-6 border-b-2 border-r-2" style={{ borderColor: theme.primary }} />
-      {/* Category icon */}
-      <div className="absolute inset-0 flex items-center justify-center p-12">
-        <CategoryIcon type={theme.iconType} color={theme.primary} />
-      </div>
-      {/* Scan line animation */}
-      <div
-        className="absolute left-0 right-0 h-px animate-pulse"
-        style={{
-          background: `linear-gradient(90deg, transparent, ${theme.primary}, transparent)`,
-          top: "50%",
-        }}
-      />
-      {/* Bottom label */}
-      <div className="mt-auto relative z-10 p-4">
-        <span
-          className="inline-block rounded px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]"
-          style={{ background: theme.primaryDim, color: theme.primary }}
-        >
-          {theme.category}
-        </span>
-        <p className="mt-1.5 text-sm font-bold text-regolith-100">{obj.name}</p>
-        {obj.yearDeployed && (
-          <p className="mt-0.5 text-[10px] text-regolith-400">Deployed {obj.yearDeployed}</p>
-        )}
-      </div>
-    </div>
   );
 }
 
@@ -648,7 +492,7 @@ export function HologramInspect({
   const [visible, setVisible] = useState(false);
   const [manifest, setManifest] = useState<HologramManifest | null>(null);
   const [explode, setExplode] = useState(0);
-  const [wireframe, setWireframe] = useState(true);
+  const [wireframe, setWireframe] = useState(false);
   const howlRef = useRef<Howl | null>(null);
 
   const theme = useMemo(
@@ -737,7 +581,7 @@ export function HologramInspect({
               </div>
 
               {/* Category + wireframe toggle overlay */}
-              <div className="absolute left-3 top-3 right-3 z-10 flex items-center justify-between">
+              <div className="absolute left-3 top-3 right-3 z-10 flex items-center justify-between pointer-events-auto">
                 <span
                   className="rounded px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]"
                   style={{ background: theme.primaryDim, color: theme.primary }}
@@ -747,12 +591,20 @@ export function HologramInspect({
                 <button
                   type="button"
                   onClick={() => setWireframe((v) => !v)}
-                  className="rounded border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider transition hover:bg-space-800"
+                  className="rounded border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider transition hover:bg-space-800"
                   style={{ borderColor: theme.border, color: theme.primary, background: theme.primaryDim }}
                 >
-                  {wireframe ? "Wireframe" : "Solid Holo"}
+                  {wireframe ? "Mode: X-Ray Wireframe" : "Mode: Blender PBR"}
                 </button>
               </div>
+
+              {/* Orbit controls hint */}
+              {(!manifest?.components || manifest.components.length === 0) && (
+                <div className="pointer-events-none absolute bottom-3 left-3 z-10 flex items-center gap-1.5 rounded-full bg-space-950/70 px-2.5 py-1 text-[9px] font-mono text-regolith-300 backdrop-blur-sm border border-space-800">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Orbit 360° · Scroll to Zoom</span>
+                </div>
+              )}
 
               {/* Exploded view slider if components available */}
               {manifest?.components && manifest.components.length > 0 && (
@@ -783,7 +635,21 @@ export function HologramInspect({
               )}
             </div>
           ) : (
-            <BlueprintView obj={obj} theme={theme} />
+            <div
+              className="relative flex-1 overflow-hidden rounded-xl border flex flex-col items-center justify-center p-6 text-center"
+              style={{ borderColor: theme.border, background: "rgba(7,9,13,0.85)" }}
+            >
+              <span
+                className="inline-block rounded px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]"
+                style={{ background: theme.primaryDim, color: theme.primary }}
+              >
+                {theme.category}
+              </span>
+              <p className="mt-3 text-base font-bold text-regolith-100">{obj.name}</p>
+              {obj.yearDeployed && (
+                <p className="mt-1 text-xs text-regolith-400">Deployed {obj.yearDeployed}</p>
+              )}
+            </div>
           )}
         </div>
 
