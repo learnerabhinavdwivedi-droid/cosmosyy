@@ -38,10 +38,33 @@ import { hasDedicated3DModel, HeritageObject3D } from "./heritage3D/Heritage3DDi
 import { AmericanFlag3D } from "./heritage3D/MoonArtifacts";
 import * as THREE from "three";
 
+let _smokeTexture: THREE.CanvasTexture | null = null;
+function getSmokeTexture(): THREE.CanvasTexture {
+  if (_smokeTexture) return _smokeTexture;
+  const canvas = document.createElement("canvas");
+  canvas.width = 128;
+  canvas.height = 128;
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    grad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+    grad.addColorStop(0.25, "rgba(235, 235, 235, 0.65)");
+    grad.addColorStop(0.5, "rgba(195, 195, 195, 0.28)");
+    grad.addColorStop(0.8, "rgba(150, 150, 150, 0.07)");
+    grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 128, 128);
+  }
+  _smokeTexture = new THREE.CanvasTexture(canvas);
+  _smokeTexture.needsUpdate = true;
+  return _smokeTexture;
+}
+
 const SCAN_RANGE = 12;
 
 function HoloParticles({ color, speed }: { color: string; speed: number }) {
   const ref = useRef<THREE.Points>(null);
+  const smokeTex = useMemo(() => getSmokeTexture(), []);
   const count = 14;
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -79,10 +102,11 @@ function HoloParticles({ color, speed }: { color: string; speed: number }) {
         />
       </bufferGeometry>
       <pointsMaterial
+        map={smokeTex}
         color={color}
-        size={0.08}
+        size={0.24}
         transparent
-        opacity={0.8}
+        opacity={0.85}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
         sizeAttenuation
@@ -331,7 +355,6 @@ function ProximityDetector({
   setObjectDistances: (d: Record<string, number>) => void;
   objects: HeritageObject[];
 }) {
-  const { camera } = useThree();
   const foundRef = useRef(useGameStore.getState().objectsFoundThisRun);
   const prevNearest = useRef<string | null>(null);
   const prevProximity = useRef<Set<string>>(new Set());
@@ -350,20 +373,25 @@ function ProximityDetector({
     const found = foundRef.current;
     const nowInProximity = new Set<string>();
 
+    // Use astronaut player position on ground for accurate proximity detection
+    const px = playerState.x;
+    const pz = playerState.z;
+
     for (const obj of objects) {
-      const dx = camera.position.x - obj.position[0];
-      const dz = camera.position.z - obj.position[2];
+      if (obj.hidden) continue;
+      const dx = px - obj.position[0];
+      const dz = pz - obj.position[2];
       const dist = Math.sqrt(dx * dx + dz * dz);
       distancesRef.current[obj.id] = dist;
-
-      if (found.includes(obj.id) || obj.id === "descent-stage" || obj.hidden) continue;
 
       if (dist < PROXIMITY_RANGE) {
         nowInProximity.add(obj.id);
       }
 
-      if (dist < minDist) {
-        minDist = dist;
+      // Prioritize unfound objects, but still allow already found objects to be detected & inspected
+      const effectiveDist = found.includes(obj.id) ? dist + 4 : dist;
+      if (dist < SCAN_RANGE && effectiveDist < minDist) {
+        minDist = effectiveDist;
         nearest = obj.id;
       }
     }
@@ -394,8 +422,8 @@ function ProximityDetector({
   return null;
 }
 
-const MOON_G = 1.0;
-const MARS_G = 2.3;
+const MOON_G = 1.62;
+const MARS_G = 3.72;
 const EYE_HEIGHT = 1.7;
 const GROUND_Y = 0;
 const MOON_JUMP_V0 = 2.6;
@@ -434,9 +462,11 @@ const playerState = {
 };
 
 function DustParticles({ planet }: { planet?: string }) {
-  const dustColor = planet === "mars" ? "#c4856a" : "#b8b0a0";
+  const isMars = planet === "mars";
+  const dustColor = isMars ? "#c4856a" : "#cfc9bd";
   const ref = useRef<THREE.Points>(null);
-  const count = 40;
+  const smokeTex = useMemo(() => getSmokeTexture(), []);
+  const count = 70;
   const lifetimes = useRef(new Float32Array(count));
   const velocities = useRef(new Float32Array(count * 3));
 
@@ -450,42 +480,52 @@ function DustParticles({ planet }: { planet?: string }) {
     const vel = velocities.current;
     if (!lt || !vel) return;
 
+    const feetY = playerState.y - EYE_HEIGHT;
+    const isMoving = playerState.isMoving;
+    const isThrusting = playerState.thrusting;
+
     for (let i = 0; i < count; i++) {
       const currentLt = lt[i];
       if (currentLt === undefined) continue;
       const newLt = currentLt - delta;
       lt[i] = newLt;
+
       if (newLt <= 0) {
-        if (playerState.isMoving) {
-          const spread = 0.4;
+        if (isMoving || isThrusting) {
+          const spread = isThrusting ? 0.55 : 0.28;
           posAttr.setXYZ(
             i,
             playerState.x + (Math.sin(i * 7.31) * 2 - 1) * spread,
-            playerState.groundY + 0.05,
+            (isThrusting ? feetY : playerState.groundY) + 0.04,
             playerState.z + (Math.sin(i * 13.7) * 2 - 1) * spread,
           );
-          vel[i * 3] = (Math.sin(i * 3.7) * 2 - 1) * 0.3;
-          vel[i * 3 + 1] = 0.15 + Math.sin(i * 5.1) * 0.1;
-          vel[i * 3 + 2] = (Math.sin(i * 9.2) * 2 - 1) * 0.3;
-          lt[i] = 1.5 + Math.sin(i * 2.3) * 0.5;
+          const spd = isThrusting ? 0.5 : 0.22;
+          vel[i * 3] = (Math.sin(i * 3.7) * 2 - 1) * spd;
+          vel[i * 3 + 1] = (isThrusting ? -0.05 : 0.12) + (i % 5) * 0.03;
+          vel[i * 3 + 2] = (Math.sin(i * 9.2) * 2 - 1) * spd;
+          lt[i] = 1.3 + Math.sin(i * 2.3) * 0.4;
         } else {
-          posAttr.setXYZ(i, 0, -10, 0);
+          posAttr.setXYZ(i, 0, -200, 0);
           lt[i] = 0.1;
         }
       } else {
         const vx = vel[i * 3] ?? 0;
         const vy = vel[i * 3 + 1] ?? 0;
         const vz = vel[i * 3 + 2] ?? 0;
+        // Smoky billowy dissipation
+        vel[i * 3] = vx * (1 - 1.8 * delta);
+        vel[i * 3 + 1] = vy * (1 - 1.0 * delta) + (isMars ? 0.02 : 0.01) * delta;
+        vel[i * 3 + 2] = vz * (1 - 1.8 * delta);
         const x = posAttr.getX(i) + vx * delta;
         const y = posAttr.getY(i) + vy * delta;
         const z = posAttr.getZ(i) + vz * delta;
-        vel[i * 3 + 1] = vy - 0.08 * delta;
-        posAttr.setXYZ(i, x, Math.max(0, y), z);
+        posAttr.setXYZ(i, x, y, z);
       }
     }
     posAttr.needsUpdate = true;
-    (ref.current.material as THREE.PointsMaterial).opacity =
-      playerState.isMoving ? 0.35 : 0;
+    if (ref.current.material instanceof THREE.PointsMaterial) {
+      ref.current.material.opacity = (isMoving || isThrusting) ? 0.4 : 0;
+    }
   });
 
   return (
@@ -494,11 +534,13 @@ function DustParticles({ planet }: { planet?: string }) {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} count={count} />
       </bufferGeometry>
       <pointsMaterial
+        map={smokeTex}
         color={dustColor}
-        size={0.06}
+        size={0.42}
         transparent
-        opacity={0.35}
+        opacity={0.4}
         depthWrite={false}
+        blending={THREE.NormalBlending}
         sizeAttenuation
       />
     </points>
@@ -508,6 +550,7 @@ function DustParticles({ planet }: { planet?: string }) {
 function AmbientDust({ planet }: { planet?: string }) {
   const dustColor = planet === "mars" ? "#9a7060" : "#a09888";
   const ref = useRef<THREE.Points>(null);
+  const smokeTex = useMemo(() => getSmokeTexture(), []);
   const count = 80;
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -541,10 +584,11 @@ function AmbientDust({ planet }: { planet?: string }) {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} count={count} />
       </bufferGeometry>
       <pointsMaterial
+        map={smokeTex}
         color={dustColor}
-        size={0.02}
+        size={0.16}
         transparent
-        opacity={0.2}
+        opacity={0.25}
         depthWrite={false}
         sizeAttenuation
       />
@@ -1586,17 +1630,22 @@ export function SurfaceScene() {
     [nearObjectId, found, missionId, addFoundObject, findObject, send],
   );
 
-  // Global key listener for 'V' (toggle view mode between POV and Walker)
+  // Global key listener for 'V' (toggle view mode between POV and Walker) & 'E' (inspect nearby object)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.code === "KeyV") {
         setViewMode((current) => (current === "pov" ? "walker" : "pov"));
       }
+      if ((e.code === "KeyE" || e.key === "e" || e.key === "E") && !e.repeat) {
+        if (nearObjectId && phase !== "inspect") {
+          touchScan(nearObjectId);
+        }
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [nearObjectId, phase, touchScan]);
 
   const handleCanvasClick = useCallback(() => {
     if (!isTouchDevice()) {
