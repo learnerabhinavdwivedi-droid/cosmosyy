@@ -25,10 +25,10 @@ export function MissionCompartmentDrawer({
 
   return (
     <div
-      className="mt-2.5 rounded-xl border p-2.5 backdrop-blur-md shrink-0 flex flex-col gap-2"
+      className="rounded-xl border p-2.5 backdrop-blur-md flex flex-col gap-2 shadow-lg"
       style={{
         borderColor: theme.border,
-        background: "rgba(8,11,18,0.85)",
+        background: "rgba(8,11,18,0.88)",
       }}
     >
       {/* Header with mission compartment title & archived count */}

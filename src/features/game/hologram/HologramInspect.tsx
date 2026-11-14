@@ -123,7 +123,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-20 overflow-hidden transition-opacity duration-500 select-none ${
+      className={`fixed inset-0 z-50 overflow-hidden transition-opacity duration-500 select-none ${
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
@@ -289,7 +289,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
         </div>
 
         {/* BOTTOM FLOATING DOCK (Audio Transmission, Explode & Artifact Switcher) */}
-        <div className="flex flex-col gap-2.5 pointer-events-auto max-w-5xl w-full mx-auto">
+        <div className="flex flex-col gap-2 pointer-events-auto max-w-5xl w-full mx-auto pb-1 sm:pb-3">
           {/* Subsystem Explode Controller (Centered Glass Pill) */}
           <div className="self-center">
             <ExplodeController
@@ -303,7 +303,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
           </div>
 
           {/* Lower Bar: In-Helmet Audio Transmission & Mission Artifact Drawer */}
-          <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-2.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-2.5">
             {/* Audio Transmission Deck */}
             <AudioTransmissionDeck
               missionId={missionId}

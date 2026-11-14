@@ -148,10 +148,10 @@ export function AudioTransmissionDeck({
 
   return (
     <div
-      className="mt-2.5 rounded-xl border p-2.5 backdrop-blur-md shrink-0 flex flex-col gap-2"
+      className="rounded-xl border p-2.5 backdrop-blur-md flex flex-col gap-2 shadow-lg"
       style={{
         borderColor: theme.border,
-        background: "rgba(10,14,22,0.85)",
+        background: "rgba(10,14,22,0.88)",
       }}
     >
       <div className="flex items-center justify-between">
@@ -184,17 +184,6 @@ export function AudioTransmissionDeck({
               CC
             </button>
           )}
-          {hasStory && onOpenStory && (
-            <button
-              type="button"
-              onClick={onOpenStory}
-              className="flex items-center gap-1 rounded-full border border-sky-400 bg-sky-500/25 px-2.5 py-0.5 text-[9px] font-mono font-bold uppercase text-sky-200 hover:bg-sky-500/40 hover:scale-105 active:scale-95 transition cursor-pointer shadow-[0_0_10px_rgba(56,189,248,0.3)] animate-pulse"
-              title="Launch Cinematic 3D Story [T]"
-            >
-              <span>🎬</span>
-              <span>3D Story</span>
-            </button>
-          )}
           <span className="font-mono text-[10px] text-regolith-400">
             {formatTime(currentTime)} / {formatTime(duration)}
           </span>
@@ -202,7 +191,7 @@ export function AudioTransmissionDeck({
       </div>
 
       {/* Responsive audio visualizer + Controls row */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5">
         {/* Play/Pause Button */}
         <button
           type="button"
@@ -253,6 +242,19 @@ export function AudioTransmissionDeck({
             />
           </div>
         </div>
+
+        {/* 3D Cinematic Story Action Button */}
+        {hasStory && onOpenStory && (
+          <button
+            type="button"
+            onClick={onOpenStory}
+            className="shrink-0 flex items-center gap-1.5 rounded-lg border border-sky-400/90 bg-sky-500/20 px-2.5 py-1 text-[10px] font-mono font-bold uppercase text-sky-200 hover:bg-sky-500/40 hover:scale-105 active:scale-95 transition cursor-pointer shadow-[0_0_12px_rgba(56,189,248,0.3)] animate-pulse"
+            title="Launch Cinematic 3D Story Movie [Press T]"
+          >
+            <span>🎬</span>
+            <span>3D Story</span>
+          </button>
+        )}
       </div>
 
       {/* Clean, toggleable transcript preview */}

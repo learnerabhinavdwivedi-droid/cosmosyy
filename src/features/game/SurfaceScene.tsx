@@ -1690,7 +1690,7 @@ export function SurfaceScene() {
       </div>
 
       {/* 3. POV HUD & Mobile Controls */}
-      {viewMode === "pov" && (
+      {viewMode === "pov" && phase !== "inspect" && (
         <>
           <SurfaceHUD
             nearObjectId={nearObjectId}
@@ -1709,7 +1709,7 @@ export function SurfaceScene() {
       )}
 
       {/* 4. ASTRONAUT WALKER HUD OVERLAY */}
-      {viewMode === "walker" && (
+      {viewMode === "walker" && phase !== "inspect" && (
         <>
           <WalkerHUD
             speed={playerState.speed}

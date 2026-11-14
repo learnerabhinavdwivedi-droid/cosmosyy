@@ -29,21 +29,25 @@ export function ExplodeController({
 
   return (
     <div
-      className="absolute bottom-3 left-3 right-3 z-10 flex flex-col gap-1.5 rounded-lg border px-3 py-2 backdrop-blur-md pointer-events-auto transition-all shadow-lg"
+      className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 rounded-2xl border px-4 py-2 backdrop-blur-xl pointer-events-auto transition-all shadow-2xl"
       style={{
         borderColor: theme.border,
-        background: "rgba(7,9,13,0.85)",
+        background: "rgba(8,12,20,0.88)",
       }}
     >
-      <div className="flex items-center justify-between text-[10px] font-mono">
-        <span
-          className="font-bold tracking-wider uppercase flex items-center gap-1.5"
-          style={{ color: theme.primary }}
-        >
-          <span>⛶</span>
-          <span>Subsystem Explode</span>
+      <div className="flex items-center gap-2 text-[10px] font-mono shrink-0">
+        <span style={{ color: theme.primary }}>⛶</span>
+        <span className="font-bold tracking-wider uppercase text-regolith-300">
+          Subsystem Explode
         </span>
-        <span className="font-bold text-regolith-200">
+        <span
+          className="rounded px-1.5 py-0.2 font-mono font-bold text-[9px] border"
+          style={{
+            borderColor: theme.border,
+            background: theme.primaryDim,
+            color: theme.primary,
+          }}
+        >
           {Math.round(explode * 100)}%
         </span>
       </div>
@@ -55,15 +59,15 @@ export function ExplodeController({
         step="0.01"
         value={explode}
         onChange={(e) => setExplode(parseFloat(e.target.value))}
-        className="h-1.5 w-full cursor-pointer appearance-none rounded-lg bg-space-800"
+        className="h-1.5 w-36 sm:w-56 cursor-pointer appearance-none rounded-lg bg-space-800"
         style={{ accentColor: theme.primary }}
         aria-label="Explode subsystem parts"
       />
 
       {/* Clean horizontal chips when exploded */}
       {explode > 0.05 && parts.length > 0 && (
-        <div className="flex items-center gap-1.5 overflow-x-auto pt-0.5 no-scrollbar">
-          {parts.map((p) => (
+        <div className="hidden sm:flex items-center gap-1 overflow-x-auto max-w-xs no-scrollbar">
+          {parts.slice(0, 3).map((p) => (
             <span
               key={p.name}
               className="shrink-0 rounded px-1.5 py-0.5 text-[9px] font-mono border"
@@ -76,6 +80,11 @@ export function ExplodeController({
               {p.displayName}
             </span>
           ))}
+          {parts.length > 3 && (
+            <span className="text-[9px] font-mono text-regolith-400">
+              +{parts.length - 3}
+            </span>
+          )}
         </div>
       )}
     </div>
