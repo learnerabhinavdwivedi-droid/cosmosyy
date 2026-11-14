@@ -432,10 +432,14 @@ const WALK_SPEED = 2;
 const RUN_SPEED = 4.5;
 
 function getSurfaceGravity(planet: string): number {
-  return planet === "mars" ? MARS_G : MOON_G;
+  if (planet === "mars") return MARS_G;
+  if (planet === "deep-space") return 0.28;
+  return MOON_G;
 }
 function getJumpV0(planet: string): number {
-  return planet === "mars" ? MARS_JUMP_V0 : MOON_JUMP_V0;
+  if (planet === "mars") return MARS_JUMP_V0;
+  if (planet === "deep-space") return 2.2;
+  return MOON_JUMP_V0;
 }
 const BOB_FREQ = 6;
 const BOB_AMP = 0.03;
@@ -1146,7 +1150,7 @@ function SurfaceSceneContent({
 
       <SunLight lat={mission.landing.lat} lon={mission.landing.lon} evaDate={mission.evaSunTime} planet={mission.planet} />
 
-      {!isMars && (
+      {mission.planet === "moon" && (
         <Suspense fallback={null}>
           <EarthInSky lat={mission.landing.lat} lon={mission.landing.lon} />
         </Suspense>
@@ -1162,14 +1166,14 @@ function SurfaceSceneContent({
           missionId={missionId}
           position={[0, getTerrainElevation(0, 0, "mars", mission.landing.lat, mission.landing.lon), 0]}
         />
-      ) : (
+      ) : mission.planet === "moon" ? (
         <Suspense fallback={null}>
           <LMDescent
             position={[0, getTerrainElevation(0, 0, "moon", mission.landing.lat, mission.landing.lon) - 0.1, 0]}
             scale={1}
           />
         </Suspense>
-      )}
+      ) : null}
 
       {objects.map((obj) => (
         <HeritageMarker
@@ -1774,7 +1778,7 @@ export function SurfaceScene() {
             thrusting={playerState.thrusting}
             sprint={playerState.sprint}
             footCount={playerState.footCount}
-            planet={mission.planet === "mars" ? "mars" : "moon"}
+            planet={mission.planet ?? "moon"}
             gravity={getSurfaceGravity(mission.planet ?? "moon")}
             onSwitchView={() => setViewMode("pov")}
             nearestObj={

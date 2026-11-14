@@ -57,6 +57,24 @@ import {
   BackshellParachute3D,
   RoverWheelTracks3D,
 } from "./MarsArtifacts";
+import {
+  DawnSpacecraft3D,
+  CerealiaFacula3D,
+  GRaNDSensor3D,
+  DawnIonEngine3D,
+  NEARShoemaker3D,
+  XGRSSpectrometer3D,
+  NEARSolarWings3D,
+  ErosPondedRegolith3D,
+  VoyagerProbe3D,
+  GoldenRecord3D,
+  RTGPowerBoom3D,
+  PlasmaWaveAntenna3D,
+  KeplerTelescope3D,
+  CCDFocalPlane3D,
+  ReactionWheelAssembly3D,
+  PhotometerSunshield3D,
+} from "./missions/deepSpace";
 
 export interface Heritage3DProps {
   missionId: string;
@@ -142,6 +160,31 @@ export function getDedicated3DComponent(
   if (objectId === "v1-cameras") return VikingFacsimileCameras3D;
   if (objectId === "v1-antenna") return VikingAntenna3D;
   if (objectId === "v1-seismometer") return VikingSeismometer3D;
+
+  // ── Deep Space & Asteroids ──
+  // Dawn
+  if (objectId === "dawn-spacecraft") return DawnSpacecraft3D;
+  if (objectId === "cerealia-facula") return CerealiaFacula3D;
+  if (objectId === "grand-sensor") return GRaNDSensor3D;
+  if (objectId === "dawn-ion-engine") return DawnIonEngine3D;
+
+  // NEAR Shoemaker
+  if (objectId === "near-spacecraft") return NEARShoemaker3D;
+  if (objectId === "xgrs-spectrometer") return XGRSSpectrometer3D;
+  if (objectId === "near-solar-wings") return NEARSolarWings3D;
+  if (objectId === "eros-ponded-regolith") return ErosPondedRegolith3D;
+
+  // Voyager
+  if (objectId === "voyager-probe") return VoyagerProbe3D;
+  if (objectId === "golden-record") return GoldenRecord3D;
+  if (objectId === "rtg-power-boom") return RTGPowerBoom3D;
+  if (objectId === "plasma-wave-antenna") return PlasmaWaveAntenna3D;
+
+  // Kepler
+  if (objectId === "kepler-telescope") return KeplerTelescope3D;
+  if (objectId === "ccd-focal-plane") return CCDFocalPlane3D;
+  if (objectId === "reaction-wheel-assembly") return ReactionWheelAssembly3D;
+  if (objectId === "photometer-sunshield") return PhotometerSunshield3D;
 
   return null;
 }
@@ -465,5 +508,99 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
     { name: "ejecta", displayName: "Sharp Basalt Ejecta Blocks", explode: [0, 0.35, 0] },
     { name: "rim", displayName: "200m Impact Crater Ejecta Berm", explode: [0, 0.15, 0] },
     { name: "tracks", displayName: "Spirit Dual Rover Tracks on Rim Crest", explode: [0, 0.25, 0] },
+  ],
+
+  // ── Deep Space & Asteroids ──
+  // Dawn
+  "dawn-spacecraft": [
+    { name: "bus", displayName: "Core Instrument Bus & Gold MLI", explode: [0, 0, 0] },
+    { name: "dish", displayName: "1.5m High-Gain Antenna Dish", explode: [0, 0.35, 0] },
+    { name: "wings", displayName: "Twin 8m Xenon Solar Arrays", explode: [0.45, 0, 0] },
+    { name: "engines", displayName: "Triple NSTAR Ion Thruster Pods", explode: [0, -0.3, 0] },
+  ],
+  "cerealia-facula": [
+    { name: "basin", displayName: "Occator Crater Impact Floor", explode: [0, 0, 0] },
+    { name: "salt-dome", displayName: "Cerealia Sodium Carbonate Dome", explode: [0, 0.3, 0] },
+    { name: "vent", displayName: "Hydrothermal Cryovolcanic Vent", explode: [0, 0.45, 0] },
+  ],
+  "grand-sensor": [
+    { name: "housing", displayName: "BGO Gamma-Ray Housing", explode: [0, 0, 0] },
+    { name: "collimator", displayName: "Lithium Glass Neutron Detector", explode: [0, 0.35, 0] },
+    { name: "electronics", displayName: "Subsurface Telemetry Processor", explode: [0, -0.2, 0] },
+  ],
+  "dawn-ion-engine": [
+    { name: "thruster", displayName: "NSTAR Discharge Chamber", explode: [0, 0, 0] },
+    { name: "grid", displayName: "Molybdenum Accelerator Grids", explode: [0, 0.3, 0] },
+    { name: "plasma", displayName: "Ionized Xenon Blue Plasma Jet", explode: [0, 0.5, 0] },
+  ],
+
+  // NEAR Shoemaker
+  "near-spacecraft": [
+    { name: "bus", displayName: "Octagonal Aluminum Spacecraft Bus", explode: [0, 0, 0] },
+    { name: "dish", displayName: "1.5m High-Gain Parabolic Dish", explode: [0, 0.35, 0] },
+    { name: "wings", displayName: "4 Gallium-Arsenide Solar Panels", explode: [0.35, 0, 0] },
+    { name: "boulders", displayName: "Asteroid 433 Eros Surface Boulders", explode: [0, -0.25, 0] },
+  ],
+  "xgrs-spectrometer": [
+    { name: "detector", displayName: "Scintillation Crystal Detector", explode: [0, 0, 0] },
+    { name: "shield", displayName: "Bismuth Germanate Shield", explode: [0, 0.3, 0] },
+    { name: "collimator", displayName: "Solar X-Ray Collimator Filter", explode: [0, -0.2, 0] },
+  ],
+  "near-solar-wings": [
+    { name: "panel-port", displayName: "Port Gallium-Arsenide Array", explode: [-0.35, 0, 0] },
+    { name: "panel-stbd", displayName: "Starboard Gallium-Arsenide Array", explode: [0.35, 0, 0] },
+    { name: "struts", displayName: "Deployment Actuator Hinges", explode: [0, -0.25, 0] },
+  ],
+  "eros-ponded-regolith": [
+    { name: "crater-rim", displayName: "Shattered Impact Depression Rim", explode: [0, 0, 0] },
+    { name: "dust-pond", displayName: "Electrostatic Levitation Dust Pond", explode: [0, 0.25, 0] },
+    { name: "boulders", displayName: "Perched Chondrite Boulders", explode: [0.3, 0.15, 0] },
+  ],
+
+  // Voyager
+  "voyager-probe": [
+    { name: "dish", displayName: "3.7m Parabolic High-Gain Dish", explode: [0, 0.45, 0] },
+    { name: "bus", displayName: "10-Sided Electronics Bus & Gold MLI", explode: [0, 0, 0] },
+    { name: "rtg", displayName: "Nuclear RTG Power Boom", explode: [-0.4, 0, 0] },
+    { name: "mag", displayName: "13m Magnetometer Boom", explode: [0.4, 0, 0] },
+  ],
+  "golden-record": [
+    { name: "disc", displayName: "12-Inch Gold-Plated Copper Disc", explode: [0, 0, 0] },
+    { name: "cover", displayName: "Protective Inscribed Aluminum Cover", explode: [0, 0.35, 0] },
+    { name: "needle", displayName: "Phonograph Cartridge & Stylus", explode: [0.25, 0.15, 0] },
+  ],
+  "rtg-power-boom": [
+    { name: "truss", displayName: "Deployable Beryllium Boom Truss", explode: [0, 0, 0] },
+    { name: "rtg1", displayName: "MHW-RTG 1 (Plutonium-238 Core)", explode: [-0.3, 0.25, 0] },
+    { name: "rtg2", displayName: "MHW-RTG 2 (Plutonium-238 Core)", explode: [0, 0.25, 0] },
+    { name: "rtg3", displayName: "MHW-RTG 3 (Plutonium-238 Core)", explode: [0.3, 0.25, 0] },
+  ],
+  "plasma-wave-antenna": [
+    { name: "mount", displayName: "Electronics Preamp Housing", explode: [0, 0, 0] },
+    { name: "boom-a", displayName: "10m Upper Dipole Antenna Element", explode: [-0.35, 0.3, 0] },
+    { name: "boom-b", displayName: "10m Lower Dipole Antenna Element", explode: [0.35, 0.3, 0] },
+  ],
+
+  // Kepler
+  "kepler-telescope": [
+    { name: "barrel", displayName: "0.95m Schmidt Optical Barrel", explode: [0, 0, 0] },
+    { name: "sunshade", displayName: "Angled Carbon-Composite Sunshield", explode: [0, 0.4, 0] },
+    { name: "bus", displayName: "Hexagonal Spacecraft Service Bus", explode: [0, -0.3, 0] },
+    { name: "solar", displayName: "Curved Body-Mounted Solar Panels", explode: [0, 0, -0.35] },
+  ],
+  "ccd-focal-plane": [
+    { name: "substrate", displayName: "Curved Ceramic Base Plate", explode: [0, 0, 0] },
+    { name: "chips", displayName: "42 Silicon Photometer CCD Chips", explode: [0, 0.3, 0] },
+    { name: "wiring", displayName: "Gold Wire Bonds & Preamps", explode: [0, 0.45, 0] },
+  ],
+  "reaction-wheel-assembly": [
+    { name: "mount", displayName: "Precision Mounting Bracket", explode: [0, 0, 0] },
+    { name: "wheels", displayName: "4 Pyramidal Orthogonal Flywheels", explode: [0.3, 0.25, 0] },
+    { name: "motors", displayName: "Brushless DC Torque Motors", explode: [0, -0.2, 0] },
+  ],
+  "photometer-sunshield": [
+    { name: "baffle", displayName: "Light-Absorbing Thermal Baffle", explode: [0, 0.35, 0] },
+    { name: "solar", displayName: "Integrated Photovoltaic Panel", explode: [0, 0, -0.25] },
+    { name: "blanket", displayName: "Multi-Layer MLI Thermal Blanket", explode: [0, -0.2, 0] },
   ],
 };

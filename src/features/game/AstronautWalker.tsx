@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { type HeritageObject } from "@/lib/missionData";
+import { type HeritageObject, type Planet } from "@/lib/missionData";
 
 // ─────────────────────────────────────────────────────────────────
 // CONFIG (tuned for Moon vs Mars)
@@ -965,7 +965,7 @@ export interface WalkerHUDProps {
   thrusting: boolean;
   sprint: boolean;
   footCount: number;
-  planet: "moon" | "mars";
+  planet: Planet;
   gravity: number;
   onSwitchView?: () => void;
   nearestObj?: { id: string; name: string; dist: number } | null;
@@ -1004,7 +1004,8 @@ export function WalkerHUD({
   };
 
   const isMars = planet === "mars";
-  const accentColor = isMars ? "#ff8a55" : "#00d4ff";
+  const isDeepSpace = planet === "deep-space";
+  const accentColor = isMars ? "#ff8a55" : isDeepSpace ? "#c084fc" : "#00d4ff";
 
   return (
     <div className="absolute inset-0 pointer-events-none select-none font-mono">
@@ -1019,7 +1020,11 @@ export function WalkerHUD({
         <div className="flex items-center gap-2 mb-1.5">
           <span className="h-2 w-2 rounded-full animate-pulse" style={{ background: accentColor }} />
           <span className="text-xs font-black tracking-[0.25em] text-white uppercase">
-            {isMars ? "ARES EXOSUIT // MARS" : "APOLLO EXOSUIT // MOON"}
+            {isMars
+              ? "ARES EXOSUIT // MARS"
+              : isDeepSpace
+              ? "VOYAGER EXOSUIT // DEEP SPACE"
+              : "APOLLO EXOSUIT // MOON"}
           </span>
         </div>
         <div className="text-[11px] leading-relaxed text-regolith-300">
@@ -1117,7 +1122,7 @@ export function WalkerHUD({
 export interface AstronautWalkerProps {
   className?: string;
   style?: React.CSSProperties;
-  planet?: "moon" | "mars";
+  planet?: Planet;
   objects?: HeritageObject[];
   onSwitchView?: () => void;
   onInspectObject?: (id: string) => void;
