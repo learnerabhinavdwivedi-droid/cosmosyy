@@ -1,0 +1,211 @@
+{
+  "id": "pe-delta",
+  "missionId": "mars-perseverance",
+  "name": "Jezero Delta Remnant",
+  "kind": "geological-site",
+  "environment": "mars-surface",
+  "fate": "left-on-surface",
+  "year": 2022,
+  "nssdcaId": "PIA25331",
+  "model": {
+    "glb": null,
+    "procedural": "pe-delta",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Jezero Delta Remnant was deployed at Jezero Crater during Perseverance (Mars 2020) in 2022.",
+      "source": "NASA/JPL Mars 2020",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "Jezero Crater contains a well-preserved river delta where a river once flowed into the ancient lake. Perseverance explored the delta and found sedimentary rocks with organic molecules and minerals formed in water. The layered structure preserves evidence of changing water levels and environments over billions of years.",
+      "source": "NASA/JPL Mars 2020",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the Martian environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "Contains sedimentary rocks with organic molecules and water-formed minerals, preserving billions of years of changing lake environments and possible biosignatures.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Remains preserved in the arid regolith at Jezero Crater.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "The Jezero delta is one of the most promising places to search for ancient Martian life, and Perseverance's samples from here are the highest-priority targets for Mars Sample Return.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am Jezero Delta Remnant. I arrived here at Jezero Crater in 2022.",
+      "explorer": "Jezero Delta Remnant, Perseverance (Mars 2020): deployed at Jezero Crater in 2022.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "Jezero Crater contains a well-preserved river delta where a river once flowed into the ancient lake. Perseverance explored the delta and found sedimentary rocks with organic molecules and minerals formed in water. The layered structure preserves evidence of.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "Contains sedimentary rocks with organic molecules and water-formed minerals, preserving billions of years of changing lake environments and possible biosignatures.",
+      "explorer": "Contains sedimentary rocks with organic molecules and water-formed minerals, preserving billions of years of changing lake environments and possible biosignatures.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
+      "explorer": "Fate: left on surface. Position recorded at coordinates [18, -8].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "The Jezero delta is one of the most promising places to search for ancient Martian life, and Perseverance's samples from here are the highest-priority targets for.",
+      "explorer": "The Jezero delta is one of the most promising places to search for ancient Martian life, and Perseverance's samples from here are the highest-priority targets for Mars Sample Return.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}

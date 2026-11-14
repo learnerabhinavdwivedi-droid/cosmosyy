@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { StoryPacketSchema, getStoryPacket, hasStoryPacket } from "./storySchema";
+import {
+  StoryPacketSchema,
+  getStoryPacket,
+  hasStoryPacket,
+  getAllStoryPackets,
+} from "./storySchema";
 import swcJson from "../../../content/stories/apollo-11/swc.story.json";
 
 describe("storySchema", () => {
@@ -20,6 +25,18 @@ describe("storySchema", () => {
     const packet = getStoryPacket("apollo-11", "swc");
     expect(packet).not.toBeNull();
     expect(packet?.name).toBe("Solar Wind Composition Experiment");
+  });
+
+  it("registry loads all 73 Object Story Packets across all missions", () => {
+    const all = getAllStoryPackets();
+    expect(all.length).toBe(73);
+
+    for (const packet of all) {
+      expect(packet.scenes.length).toBeGreaterThanOrEqual(5);
+      expect(packet.scenes.length).toBeLessThanOrEqual(8);
+      expect(packet.facts.length).toBeGreaterThanOrEqual(1);
+      expect(hasStoryPacket(packet.missionId, packet.id)).toBe(true);
+    }
   });
 
   it("rejects packet with fewer than 5 scenes", () => {

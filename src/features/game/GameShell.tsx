@@ -266,7 +266,7 @@ export default function GameShell() {
   useOrientationLock();
 
   useEffect(() => {
-    preloadGameAssets();
+    preloadGameAssets(missionId);
     if (!playerName) {
       useAppStore.getState().setPlayerName(isDemo ? "Commander" : "Astronaut");
     }

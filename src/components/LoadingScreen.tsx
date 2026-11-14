@@ -33,22 +33,40 @@ export function LoadingScreen({ progress: explicitProgress }: LoadingScreenProps
   const touch = isTouchDevice();
 
   const { active, progress: dreiProgress } = useProgress();
-  const [smoothSimProgress, setSmoothSimProgress] = useState(15);
+  const [smoothSimProgress, setSmoothSimProgress] = useState(18);
+  const [showBypass, setShowBypass] = useState(false);
 
   useEffect(() => {
-    if (active || explicitProgress !== undefined) return;
+    if (explicitProgress !== undefined) return;
     const interval = setInterval(() => {
-      setSmoothSimProgress((p) => (p < 88 ? p + (88 - p) * 0.12 : p));
-    }, 200);
-    return () => clearInterval(interval);
-  }, [active, explicitProgress]);
+      setSmoothSimProgress((p) => {
+        if (p < 94) {
+          return p + Math.max(0.4, (94 - p) * 0.08);
+        }
+        return p;
+      });
+    }, 120);
+
+    const bypassTimer = setTimeout(() => {
+      setShowBypass(true);
+    }, 7000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(bypassTimer);
+    };
+  }, [explicitProgress]);
 
   const progress =
     explicitProgress !== undefined
       ? explicitProgress
-      : active
-        ? Math.max(dreiProgress, 8)
-        : smoothSimProgress;
+      : Math.min(
+          99,
+          Math.max(
+            smoothSimProgress,
+            active ? Math.max(dreiProgress, 18) : smoothSimProgress,
+          ),
+        );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -70,9 +88,9 @@ export function LoadingScreen({ progress: explicitProgress }: LoadingScreenProps
   return (
     <div
       onClick={handleContainerTap}
-      className="flex min-h-screen min-h-[100dvh] flex-col items-center justify-center gap-6 bg-space-950 px-4 select-none touch-manipulation cursor-pointer"
+      className="flex min-h-screen min-h-[100dvh] flex-col items-center justify-center gap-3 sm:gap-6 bg-space-950 px-4 py-4 select-none touch-manipulation cursor-pointer"
     >
-      <h1 className="font-display text-3xl tracking-widest text-regolith-200">
+      <h1 className="font-display text-2xl sm:text-3xl tracking-widest text-regolith-200">
         {t("app.title")}
       </h1>
 
@@ -81,36 +99,55 @@ export function LoadingScreen({ progress: explicitProgress }: LoadingScreenProps
           value={progress}
           className="h-1.5 bg-space-800"
         />
-        <p className="mt-2 text-center text-xs text-regolith-400">
+        <p className="mt-1.5 text-center text-xs font-mono text-regolith-400">
           {Math.round(progress)}%
         </p>
       </div>
 
-      <div className="h-20 max-w-md text-center">
-        <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-signal">
+      <div className="h-14 sm:h-20 max-w-md text-center px-2">
+        <p className="mb-0.5 text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-signal">
           {t("loading.didYouKnow")}
         </p>
         <p
-          className="text-sm leading-relaxed text-regolith-300 transition-opacity duration-300"
+          className="text-xs sm:text-sm leading-snug sm:leading-relaxed text-regolith-300 transition-opacity duration-300 line-clamp-2"
           style={{ opacity: factFade ? 1 : 0 }}
         >
           {FACTS[factIdx]}
         </p>
       </div>
 
-      {touch && !inFullscreen && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            enter().catch(() => {});
-          }}
-          className="mt-2 flex items-center gap-2 rounded-full border border-signal/60 bg-signal/20 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-signal shadow-lg shadow-signal/20 backdrop-blur transition hover:bg-signal/30 active:scale-95 animate-pulse cursor-pointer"
-        >
-          <Maximize2 className="h-4 w-4" />
-          <span>{t("fullscreen.tapToFocus")}</span>
-        </button>
-      )}
+      <div className="flex flex-col items-center gap-1.5">
+        {touch && !inFullscreen ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              enter().catch(() => {});
+            }}
+            className="flex items-center gap-2 rounded-full border border-signal/70 bg-signal/20 px-5 py-2 text-xs font-bold uppercase tracking-wider text-signal shadow-lg shadow-signal/25 backdrop-blur transition hover:bg-signal/30 active:scale-95 animate-pulse cursor-pointer"
+          >
+            <Maximize2 className="h-3.5 w-3.5" />
+            <span>{t("fullscreen.tapToFocus", "Tap to hide browser bar & focus")}</span>
+          </button>
+        ) : touch && inFullscreen ? (
+          <span className="text-[11px] font-mono text-signal/80 tracking-wider">
+            ✓ Fullscreen Focus Active
+          </span>
+        ) : null}
+
+        {showBypass && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              window.location.reload();
+            }}
+            className="mt-1 text-[11px] underline text-regolith-400 hover:text-signal transition"
+          >
+            Taking too long? Tap to reload
+          </button>
+        )}
+      </div>
     </div>
   );
 }

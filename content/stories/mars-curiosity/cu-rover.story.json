@@ -1,0 +1,211 @@
+{
+  "id": "cu-rover",
+  "missionId": "mars-curiosity",
+  "name": "Curiosity Rover",
+  "kind": "rover",
+  "environment": "mars-surface",
+  "fate": "operational-on-surface",
+  "year": 2012,
+  "nssdcaId": "PIA16239",
+  "model": {
+    "glb": null,
+    "procedural": "cu-rover",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Curiosity Rover was deployed at Gale Crater during Curiosity (MSL) in 2012.",
+      "source": "NASA/JPL Mars Science Laboratory",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "Curiosity is a car-sized rover that landed on 6 August 2012 using an audacious sky crane manoeuvre. Weighing 899 kg, it is powered by a plutonium-238 radioisotope thermoelectric generator, so unlike Spirit and Opportunity, dust storms cannot end its mission. Curiosity carries 10 science instruments and has been climbing Mount Sharp since 2014.",
+      "source": "NASA/JPL Mars Science Laboratory",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the Martian environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "Confirmed that Gale Crater once held a habitable freshwater lake environment with all six elements essential for life.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Still operational and communicating.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "Still operational and climbing Mount Sharp as of 2024, having driven over 30 km and drilled dozens of rock samples.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am Curiosity Rover. I arrived here at Gale Crater in 2012.",
+      "explorer": "Curiosity Rover, Curiosity (MSL): deployed at Gale Crater in 2012.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "Curiosity is a car-sized rover that landed on 6 August 2012 using an audacious sky crane manoeuvre. Weighing 899 kg, it is powered by a plutonium-238 radioisotope thermoelectric generator, so unlike Spirit and Opportunity, dust storms cannot end.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "Confirmed that Gale Crater once held a habitable freshwater lake environment with all six elements essential for life.",
+      "explorer": "Confirmed that Gale Crater once held a habitable freshwater lake environment with all six elements essential for life.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "I am still working out here every single day, listening and measuring.",
+      "explorer": "Fate: operational on surface. Position recorded at coordinates [3, -2].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "Still operational and climbing Mount Sharp as of 2024, having driven over 30 km and drilled dozens of rock samples.",
+      "explorer": "Still operational and climbing Mount Sharp as of 2024, having driven over 30 km and drilled dozens of rock samples.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}

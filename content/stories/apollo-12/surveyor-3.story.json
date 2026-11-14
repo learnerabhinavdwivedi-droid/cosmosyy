@@ -1,0 +1,211 @@
+{
+  "id": "surveyor-3",
+  "missionId": "apollo-12",
+  "name": "Surveyor 3",
+  "kind": "science-instrument",
+  "environment": "moon-surface",
+  "fate": "left-on-surface",
+  "year": 1967,
+  "nssdcaId": "as12-48-7133",
+  "model": {
+    "glb": null,
+    "procedural": "surveyor-3",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Surveyor 3 was deployed at Ocean of Storms during Apollo 12 in 1967.",
+      "source": "AS12-48-7100; LROC imagery",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "NASA's unmanned probe that soft-landed on 20 April 1967, two and a half years before Apollo 12. Conrad and Bean walked to it, inspected it, and cut off its TV camera to bring back to Earth. The rest of Surveyor 3 is still here.",
+      "source": "AS12-48-7100; LROC imagery",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the lunar environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "After 31 months on the Moon, its retrieved camera and soil scoop showed the effects of micrometeorite bombardment and solar radiation on hardware, providing data for long-duration spacecraft design.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Remains preserved in the arid regolith at Ocean of Storms.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "The retrieved TV camera is on display at the Smithsonian National Air and Space Museum; analysis of bacteria reportedly found inside it sparked decades of scientific debate about contamination protocols.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am Surveyor 3. I arrived here at Ocean of Storms in 1967.",
+      "explorer": "Surveyor 3, Apollo 12: deployed at Ocean of Storms in 1967.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "NASA's unmanned probe that soft-landed on 20 April 1967, two and a half years before Apollo 12. Conrad and Bean walked to it, inspected it, and cut off its TV camera to bring back to Earth. The rest.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "After 31 months on the Moon, its retrieved camera and soil scoop showed the effects of micrometeorite bombardment and solar radiation on hardware, providing data for.",
+      "explorer": "After 31 months on the Moon, its retrieved camera and soil scoop showed the effects of micrometeorite bombardment and solar radiation on hardware, providing data for long-duration spacecraft design.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
+      "explorer": "Fate: left on surface. Position recorded at coordinates [50, -155].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "The retrieved TV camera is on display at the Smithsonian National Air and Space Museum; analysis of bacteria reportedly found inside it sparked decades of scientific.",
+      "explorer": "The retrieved TV camera is on display at the Smithsonian National Air and Space Museum; analysis of bacteria reportedly found inside it sparked decades of scientific debate about contamination protocols.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}

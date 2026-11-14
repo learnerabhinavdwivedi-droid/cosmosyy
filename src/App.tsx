@@ -8,6 +8,8 @@ import { isFullscreen, requestFullscreen } from "@/lib/fullscreen";
 
 function GlobalMobileFullscreenFocus() {
   useEffect(() => {
+    sessionStorage.removeItem("cosmosyy_chunk_reload");
+
     if (!isTouchDevice()) return;
 
     const handleFirstTouch = () => {
@@ -18,10 +20,12 @@ function GlobalMobileFullscreenFocus() {
 
     window.addEventListener("touchend", handleFirstTouch, { passive: true });
     window.addEventListener("pointerup", handleFirstTouch, { passive: true });
+    window.addEventListener("click", handleFirstTouch, { passive: true });
 
     return () => {
       window.removeEventListener("touchend", handleFirstTouch);
       window.removeEventListener("pointerup", handleFirstTouch);
+      window.removeEventListener("click", handleFirstTouch);
     };
   }, []);
 

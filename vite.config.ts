@@ -17,10 +17,16 @@ export default defineConfig({
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
-        manualChunks: {
-          "three-vendor": ["three", "@react-three/fiber", "@react-three/drei"],
-          "react-vendor": ["react", "react-dom", "react-router-dom", "zustand"],
-          "audio-vendor": ["howler"],
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("three") || id.includes("@react-three")) {
+              return "three-vendor";
+            }
+            if (id.includes("howler")) {
+              return "audio-vendor";
+            }
+            return "vendor";
+          }
         },
       },
     },

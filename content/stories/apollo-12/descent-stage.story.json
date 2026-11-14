@@ -1,0 +1,211 @@
+{
+  "id": "descent-stage",
+  "missionId": "apollo-12",
+  "name": "Intrepid Descent Stage",
+  "kind": "descent-stage",
+  "environment": "moon-surface",
+  "fate": "left-on-surface",
+  "year": 1969,
+  "nssdcaId": "as12-46-6737",
+  "model": {
+    "glb": null,
+    "procedural": "descent-stage",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Intrepid Descent Stage was deployed at Ocean of Storms during Apollo 12 in 1969.",
+      "source": "LROC imagery; Apollo 12 Traverse Map (NASA)",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "Lower half of Lunar Module Intrepid. Conrad and Bean landed just 163 metres from their target — the unmanned Surveyor 3 probe that had been sitting on the Moon since April 1967.",
+      "source": "LROC imagery; Apollo 12 Traverse Map (NASA)",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the lunar environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "Validated the precision landing guidance system that allowed subsequent missions to target scientifically valuable terrain features.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Remains preserved in the arid regolith at Ocean of Storms.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "Remains in the Ocean of Storms; its ascent stage was deliberately crashed into the Moon to calibrate the Apollo 12 seismometer.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am Intrepid Descent Stage. I arrived here at Ocean of Storms in 1969.",
+      "explorer": "Intrepid Descent Stage, Apollo 12: deployed at Ocean of Storms in 1969.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "Lower half of Lunar Module Intrepid. Conrad and Bean landed just 163 metres from their target — the unmanned Surveyor 3 probe that had been sitting on the Moon since April 1967.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "Validated the precision landing guidance system that allowed subsequent missions to target scientifically valuable terrain features.",
+      "explorer": "Validated the precision landing guidance system that allowed subsequent missions to target scientifically valuable terrain features.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
+      "explorer": "Fate: left on surface. Position recorded at coordinates [0, 0].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "Remains in the Ocean of Storms; its ascent stage was deliberately crashed into the Moon to calibrate the Apollo 12 seismometer.",
+      "explorer": "Remains in the Ocean of Storms; its ascent stage was deliberately crashed into the Moon to calibrate the Apollo 12 seismometer.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}

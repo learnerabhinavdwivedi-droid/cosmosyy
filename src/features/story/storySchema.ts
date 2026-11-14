@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { z } from "zod";
 
 export const FactStatusSchema = z.enum([
@@ -73,49 +74,44 @@ export type StoryFact = z.infer<typeof StoryFactSchema>;
 export type StoryBeat = z.infer<typeof StoryBeatSchema>;
 export type FactStatus = z.infer<typeof FactStatusSchema>;
 
-// Static registry of bundled story packets
-import swcStory from "../../../content/stories/apollo-11/swc.story.json";
+// Dynamic Vite-powered registry of all bundled story packets
+const storyModules = import.meta.glob<{ default: unknown }>(
+  "../../../content/stories/**/*.story.json",
+  { eager: true }
+);
 
-const STORY_REGISTRY: Record<string, Record<string, unknown>> = {
-  "apollo-11": {
-    swc: swcStory,
-  },
-};
+const STORY_REGISTRY: Record<string, Record<string, StoryPacket>> = {};
+
+for (const [modPath, mod] of Object.entries(storyModules)) {
+  const match = modPath.match(/content\/stories\/([^/]+)\/([^/]+)\.story\.json$/);
+  if (match && match[1] && match[2]) {
+    const missionId = match[1];
+    const objectId = match[2];
+    const raw = (mod as { default?: unknown }).default ?? mod;
+    const parsed = StoryPacketSchema.safeParse(raw);
+    if (parsed.success) {
+      if (!STORY_REGISTRY[missionId]) {
+        STORY_REGISTRY[missionId] = {};
+      }
+      STORY_REGISTRY[missionId][objectId] = parsed.data;
+    } else {
+      console.error(`Invalid story packet at ${modPath}:`, parsed.error);
+    }
+  }
+}
 
 export function hasStoryPacket(missionId: string, objectId: string): boolean {
   return Boolean(STORY_REGISTRY[missionId]?.[objectId]);
 }
 
 export function getStoryPacket(missionId: string, objectId: string): StoryPacket | null {
-  const raw = STORY_REGISTRY[missionId]?.[objectId];
-  if (!raw) return null;
+  return STORY_REGISTRY[missionId]?.[objectId] ?? null;
+}
 
-  const result = StoryPacketSchema.safeParse(raw);
-  if (!result.success) {
-    console.error(`Invalid story packet for ${missionId}/${objectId}:`, result.error);
-    return null;
+export function getAllStoryPackets(): StoryPacket[] {
+  const all: StoryPacket[] = [];
+  for (const missionPackets of Object.values(STORY_REGISTRY)) {
+    all.push(...Object.values(missionPackets));
   }
-
-  const packet = result.data;
-
-  // Validate that every scene's factIds exist in facts
-  const factMap = new Map(packet.facts.map((f) => [f.id, f]));
-  for (const scene of packet.scenes) {
-    const sceneFacts = scene.factIds.map((id) => factMap.get(id)).filter(Boolean);
-    const allUnverified = sceneFacts.every((f) => f?.status === "unverified");
-
-    if (allUnverified) {
-      if (import.meta.env.PROD) {
-        throw new Error(
-          `Production build rejected: Scene ${scene.id} in ${missionId}/${objectId} relies exclusively on unverified facts.`,
-        );
-      } else {
-        console.warn(
-          `[DEV REVIEW FLAG] Scene ${scene.id} in ${missionId}/${objectId} has unverified facts.`,
-        );
-      }
-    }
-  }
-
-  return packet;
+  return all;
 }

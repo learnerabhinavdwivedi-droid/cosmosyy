@@ -1,0 +1,211 @@
+{
+  "id": "alsep",
+  "missionId": "apollo-12",
+  "name": "ALSEP Central Station",
+  "kind": "science-instrument",
+  "environment": "moon-surface",
+  "fate": "left-on-surface",
+  "year": 1969,
+  "nssdcaId": "as12-46-6813",
+  "model": {
+    "glb": null,
+    "procedural": "alsep",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "ALSEP Central Station was deployed at Ocean of Storms during Apollo 12 in 1969.",
+      "source": "Apollo 12 ALSEP deployment map (NASA)",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "The Apollo Lunar Surface Experiments Package — a suite of scientific instruments powered by a plutonium-238 RTG. Included a seismometer, magnetometer, solar wind spectrometer, and more. Transmitted data to Earth until September 1977.",
+      "source": "Apollo 12 ALSEP deployment map (NASA)",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the lunar environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "Its seismometer detected the deliberate crash of the Intrepid ascent stage, producing vibrations that rang for nearly an hour — revealing the Moon's highly fractured upper crust.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Remains preserved in the arid regolith at Ocean of Storms.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "Transmitted data continuously for nearly eight years until NASA shut down all ALSEP stations on 30 September 1977 to save budget.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am ALSEP Central Station. I arrived here at Ocean of Storms in 1969.",
+      "explorer": "ALSEP Central Station, Apollo 12: deployed at Ocean of Storms in 1969.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "The Apollo Lunar Surface Experiments Package — a suite of scientific instruments powered by a plutonium-238 RTG. Included a seismometer, magnetometer, solar wind spectrometer, and more. Transmitted data to Earth until September 1977.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "Its seismometer detected the deliberate crash of the Intrepid ascent stage, producing vibrations that rang for nearly an hour — revealing the Moon's highly fractured upper.",
+      "explorer": "Its seismometer detected the deliberate crash of the Intrepid ascent stage, producing vibrations that rang for nearly an hour — revealing the Moon's highly fractured upper crust.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
+      "explorer": "Fate: left on surface. Position recorded at coordinates [-40, -125].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "Transmitted data continuously for nearly eight years until NASA shut down all ALSEP stations on 30 September 1977 to save budget.",
+      "explorer": "Transmitted data continuously for nearly eight years until NASA shut down all ALSEP stations on 30 September 1977 to save budget.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}

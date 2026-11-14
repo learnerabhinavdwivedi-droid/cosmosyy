@@ -1,16 +1,33 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, type ComponentType } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-const LandingPage = lazy(() => import("@/features/landing/LandingPage"));
-const MissionSelectPage = lazy(
+function lazyWithRetry<T extends ComponentType<any>>(
+  factory: () => Promise<{ default: T }>,
+) {
+  return lazy(() =>
+    factory().catch((err) => {
+      // If a dynamic chunk failed to load (e.g. fresh deployment or intermittent mobile signal),
+      // reload once to fetch new manifest/chunks.
+      const key = "cosmosyy_chunk_reload";
+      if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, "1");
+        window.location.reload();
+      }
+      throw err;
+    }),
+  );
+}
+
+const LandingPage = lazyWithRetry(() => import("@/features/landing/LandingPage"));
+const MissionSelectPage = lazyWithRetry(
   () => import("@/features/mission-select/MissionSelectPage"),
 );
-const GameShell = lazy(() => import("@/features/game/GameShell"));
-const CreditsPage = lazy(() => import("@/features/credits/CreditsPage"));
-const AboutPage = lazy(() => import("@/features/about/AboutPage"));
-const SettingsPage = lazy(() => import("@/features/settings/SettingsPage"));
+const GameShell = lazyWithRetry(() => import("@/features/game/GameShell"));
+const CreditsPage = lazyWithRetry(() => import("@/features/credits/CreditsPage"));
+const AboutPage = lazyWithRetry(() => import("@/features/about/AboutPage"));
+const SettingsPage = lazyWithRetry(() => import("@/features/settings/SettingsPage"));
 
 function withSuspense(Component: React.ComponentType) {
   return (

@@ -218,6 +218,7 @@ export function ObjectStoryCard({ packet, onClose }: ObjectStoryCardProps) {
         {/* 3D Scene Layer */}
         <div className="absolute inset-0">
           <StoryScene
+            packet={packet}
             sceneIndex={state.sceneIndex}
             action={currentScene.action}
             cameraKeyframe={currentScene.camera}

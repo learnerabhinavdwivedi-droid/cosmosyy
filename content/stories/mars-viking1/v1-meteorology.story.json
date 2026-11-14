@@ -1,0 +1,211 @@
+{
+  "id": "v1-meteorology",
+  "missionId": "mars-viking1",
+  "name": "Meteorology Station",
+  "kind": "science-instrument",
+  "environment": "mars-surface",
+  "fate": "left-on-surface",
+  "year": 1976,
+  "nssdcaId": "PIA00382",
+  "model": {
+    "glb": null,
+    "procedural": "v1-meteorology",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Meteorology Station was deployed at Chryse Planitia during Viking 1 in 1976.",
+      "source": "NASA/JPL Viking Mission",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "Viking 1's meteorology boom measured temperature, wind speed, wind direction, and atmospheric pressure. It recorded the first Martian weather reports: temperatures ranging from -89°C at dawn to -31°C in the afternoon, with winds of 2–7 m/s. It also detected the first dust storms from ground level.",
+      "source": "NASA/JPL Viking Mission",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the Martian environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "Recorded the first weather reports from another planet, revealing temperatures from -89°C to -31°C and wind speeds of 2–7 m/s.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Remains preserved in the arid regolith at Chryse Planitia.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "Its design directly informed the meteorology instruments on every subsequent Mars lander, including Phoenix and InSight.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am Meteorology Station. I arrived here at Chryse Planitia in 1976.",
+      "explorer": "Meteorology Station, Viking 1: deployed at Chryse Planitia in 1976.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "Viking 1's meteorology boom measured temperature, wind speed, wind direction, and atmospheric pressure. It recorded the first Martian weather reports: temperatures ranging from -89°C at dawn to -31°C in the afternoon, with winds of 2–7 m/s. It also.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "Recorded the first weather reports from another planet, revealing temperatures from -89°C to -31°C and wind speeds of 2–7 m/s.",
+      "explorer": "Recorded the first weather reports from another planet, revealing temperatures from -89°C to -31°C and wind speeds of 2–7 m/s.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
+      "explorer": "Fate: left on surface. Position recorded at coordinates [-12, 5].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "Its design directly informed the meteorology instruments on every subsequent Mars lander, including Phoenix and InSight.",
+      "explorer": "Its design directly informed the meteorology instruments on every subsequent Mars lander, including Phoenix and InSight.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}

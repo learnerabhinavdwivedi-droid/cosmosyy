@@ -1,8 +1,11 @@
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import type { StoryPacket } from "./storySchema";
+import { HeritageObject3D } from "../game/heritage3D/Heritage3DDispatcher";
 
 export interface StorySceneProps {
+  packet?: StoryPacket;
   sceneIndex: number;
   action: string;
   cameraKeyframe: {
@@ -55,8 +58,8 @@ function StoryCameraRig({
   return null;
 }
 
-/* ─── Lunar Terrain & Stars ─── */
-function StoryEnvironment() {
+/* ─── Lunar & Martian Terrain & Atmosphere ─── */
+function StoryEnvironment({ isMars = false }: { isMars?: boolean }) {
   const starsGeo = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     const count = 600;
@@ -95,17 +98,21 @@ function StoryEnvironment() {
     <>
       {/* Starfield */}
       <points geometry={starsGeo}>
-        <pointsMaterial size={0.12} color="#ffffff" transparent opacity={0.7} />
+        <pointsMaterial size={0.12} color={isMars ? "#ffedd5" : "#ffffff"} transparent opacity={isMars ? 0.45 : 0.75} />
       </points>
 
-      {/* Lunar Ground */}
+      {/* Ground Surface: Red Regolith for Mars, Slate Grey for Moon */}
       <mesh
         geometry={groundGeo}
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, -0.05, 0]}
         receiveShadow
       >
-        <meshStandardMaterial color="#475569" roughness={0.96} metalness={0.0} />
+        <meshStandardMaterial
+          color={isMars ? "#883311" : "#475569"}
+          roughness={0.96}
+          metalness={0.0}
+        />
       </mesh>
     </>
   );
@@ -304,38 +311,91 @@ function SWCExperimentModel({
   );
 }
 
+/* ─── Universal Authentic Heritage Object with Cinematic Story Actions ─── */
+function DedicatedStoryObject({
+  missionId,
+  objectId,
+  action,
+  isPlaying,
+  reduceMotion,
+}: {
+  missionId: string;
+  objectId: string;
+  action: string;
+  isPlaying?: boolean;
+  reduceMotion?: boolean;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame((_, delta) => {
+    if (!groupRef.current || reduceMotion) return;
+    if (action === "spin" || action === "legacy") {
+      groupRef.current.rotation.y += delta * 0.35;
+    } else if (isPlaying) {
+      groupRef.current.rotation.y += delta * 0.06;
+    }
+  });
+
+  const explodeFactor = action === "mechanism" ? 0.35 : action === "closeup" ? 0.12 : 0;
+
+  return (
+    <group ref={groupRef} position={[0, -0.32, 0]}>
+      <HeritageObject3D
+        missionId={missionId}
+        objectId={objectId}
+        explode={explodeFactor}
+        scale={1.0}
+      />
+    </group>
+  );
+}
+
 /* ─── Main 3D Canvas Scene ─── */
 export function StoryScene({
+  packet,
   action,
   cameraKeyframe,
   reduceMotion = false,
   isPlaying = true,
 }: StorySceneProps) {
+  const isMars = packet?.environment === "mars-surface" || packet?.missionId.startsWith("mars") || false;
+  const isSWC = packet?.id === "swc";
+
   return (
     <Canvas
       gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
       camera={{ fov: 40, near: 0.1, far: 100, position: cameraKeyframe.pos }}
-      style={{ background: "#020408" }}
+      style={{ background: isMars ? "#160604" : "#020408" }}
     >
-      {/* Aerospace Lighting */}
-      <ambientLight intensity={0.35} color="#e2e8f0" />
+      {/* Dynamic Aerospace Lighting */}
+      <ambientLight intensity={isMars ? 0.6 : 0.35} color={isMars ? "#fed7aa" : "#e2e8f0"} />
       <directionalLight
         position={[-12, 8, 12]}
         intensity={2.8}
-        color="#fffbeb"
+        color={isMars ? "#ffedd5" : "#fffbeb"}
         castShadow
         shadow-mapSize={[1024, 1024]}
       />
-      <directionalLight position={[10, 4, -8]} intensity={0.6} color="#60a5fa" />
-      <hemisphereLight args={["#93c5fd", "#1e293b", 0.4]} />
+      <directionalLight position={[10, 4, -8]} intensity={0.6} color={isMars ? "#ea580c" : "#60a5fa"} />
+      <hemisphereLight args={[isMars ? "#f97316" : "#93c5fd", isMars ? "#431407" : "#1e293b", 0.4]} />
 
-      <StoryEnvironment />
+      <StoryEnvironment isMars={isMars} />
 
-      <SWCExperimentModel
-        action={action}
-        isPlaying={isPlaying}
-        reduceMotion={reduceMotion}
-      />
+      {isSWC ? (
+        <SWCExperimentModel
+          action={action}
+          isPlaying={isPlaying}
+          reduceMotion={reduceMotion}
+        />
+      ) : packet ? (
+        <DedicatedStoryObject
+          missionId={packet.missionId}
+          objectId={packet.id}
+          action={action}
+          isPlaying={isPlaying}
+          reduceMotion={reduceMotion}
+        />
+      ) : null}
 
       <StoryCameraRig
         cameraKeyframe={cameraKeyframe}

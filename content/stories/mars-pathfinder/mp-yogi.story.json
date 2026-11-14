@@ -1,0 +1,211 @@
+{
+  "id": "mp-yogi",
+  "missionId": "mars-pathfinder",
+  "name": "Yogi Rock",
+  "kind": "geological-site",
+  "environment": "mars-surface",
+  "fate": "left-on-surface",
+  "year": 1997,
+  "nssdcaId": "PIA02406",
+  "model": {
+    "glb": null,
+    "procedural": "mp-yogi",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Yogi Rock was deployed at Ares Vallis during Mars Pathfinder in 1997.",
+      "source": "NASA/JPL Mars Pathfinder",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "Yogi was a large rock near the Pathfinder landing site, about one metre tall. Sojourner spent several sols driving to and analysing Yogi. APXS measurements showed it had a basaltic composition, different from Barnacle Bill, indicating variety in the local geology. Wind-sculpted features on its surface showed evidence of aeolian erosion.",
+      "source": "NASA/JPL Mars Pathfinder",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the Martian environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "Showed a basaltic composition contrasting with nearby Barnacle Bill, proving geological diversity exists within metres on the Martian surface.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Remains preserved in the arid regolith at Ares Vallis.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "Yogi remains at Ares Vallis, its wind-sculpted face slowly being reshaped by Martian dust storms over the decades.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am Yogi Rock. I arrived here at Ares Vallis in 1997.",
+      "explorer": "Yogi Rock, Mars Pathfinder: deployed at Ares Vallis in 1997.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "Yogi was a large rock near the Pathfinder landing site, about one metre tall. Sojourner spent several sols driving to and analysing Yogi. APXS measurements showed it had a basaltic composition, different from Barnacle Bill, indicating variety in.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "Showed a basaltic composition contrasting with nearby Barnacle Bill, proving geological diversity exists within metres on the Martian surface.",
+      "explorer": "Showed a basaltic composition contrasting with nearby Barnacle Bill, proving geological diversity exists within metres on the Martian surface.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
+      "explorer": "Fate: left on surface. Position recorded at coordinates [-13, 12].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "Yogi remains at Ares Vallis, its wind-sculpted face slowly being reshaped by Martian dust storms over the decades.",
+      "explorer": "Yogi remains at Ares Vallis, its wind-sculpted face slowly being reshaped by Martian dust storms over the decades.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}

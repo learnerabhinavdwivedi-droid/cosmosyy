@@ -1,0 +1,211 @@
+{
+  "id": "op-marathon-valley",
+  "missionId": "mars-opportunity",
+  "name": "Marathon Valley",
+  "kind": "geological-site",
+  "environment": "mars-surface",
+  "fate": "left-on-surface",
+  "year": 2015,
+  "nssdcaId": "PIA20322",
+  "model": {
+    "glb": null,
+    "procedural": "op-marathon-valley",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Marathon Valley was deployed at Meridiani Planum during Opportunity (MER-B) in 2015.",
+      "source": "NASA/JPL Mars Exploration Rovers",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "In March 2015, Opportunity reached Marathon Valley on the rim of Endeavour Crater, having driven 42.195 km — a full marathon distance. The valley contained clay minerals detected from orbit by the Mars Reconnaissance Orbiter. Clay minerals form in near-neutral water, suggesting this area once had conditions more hospitable to life.",
+      "source": "NASA/JPL Mars Exploration Rovers",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the Martian environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "Contained clay minerals that form only in near-neutral pH water, suggesting this area once had conditions hospitable to life — the gentlest water environment found by a rover.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Remains preserved in the arid regolith at Meridiani Planum.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "Marathon Valley marks where Opportunity completed a full marathon distance (42.195 km) on another planet, a milestone in human exploration.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am Marathon Valley. I arrived here at Meridiani Planum in 2015.",
+      "explorer": "Marathon Valley, Opportunity (MER-B): deployed at Meridiani Planum in 2015.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "In March 2015, Opportunity reached Marathon Valley on the rim of Endeavour Crater, having driven 42.195 km — a full marathon distance. The valley contained clay minerals detected from orbit by the Mars Reconnaissance Orbiter. Clay minerals form.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "Contained clay minerals that form only in near-neutral pH water, suggesting this area once had conditions hospitable to life — the gentlest water environment found by.",
+      "explorer": "Contained clay minerals that form only in near-neutral pH water, suggesting this area once had conditions hospitable to life — the gentlest water environment found by a rover.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
+      "explorer": "Fate: left on surface. Position recorded at coordinates [-10, -14].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "Marathon Valley marks where Opportunity completed a full marathon distance (42.195 km) on another planet, a milestone in human exploration.",
+      "explorer": "Marathon Valley marks where Opportunity completed a full marathon distance (42.195 km) on another planet, a milestone in human exploration.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}

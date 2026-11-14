@@ -1,0 +1,211 @@
+{
+  "id": "flag",
+  "missionId": "apollo-15",
+  "name": "American Flag",
+  "kind": "memorial",
+  "environment": "moon-surface",
+  "fate": "left-on-surface",
+  "year": 1971,
+  "nssdcaId": "as15-88-11863",
+  "model": {
+    "glb": null,
+    "procedural": "flag",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "American Flag was deployed at Hadley Rille during Apollo 15 in 1971.",
+      "source": "AS15-88-11863; LROC imagery",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "Planted during EVA-1 with the Hadley Delta mountain and Hadley Rille visible in the background. One of the most photographed flag plantings of the programme.",
+      "source": "AS15-88-11863; LROC imagery",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the lunar environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "Provided a photographic reference point documenting the dramatic terrain at Hadley-Apennine, the most geologically complex Apollo landing site.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Remains preserved in the arid regolith at Hadley Rille.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "LROC images from 2011 confirmed the Apollo 15 flag is still standing, casting a visible shadow on the surface.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am American Flag. I arrived here at Hadley Rille in 1971.",
+      "explorer": "American Flag, Apollo 15: deployed at Hadley Rille in 1971.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "Planted during EVA-1 with the Hadley Delta mountain and Hadley Rille visible in the background. One of the most photographed flag plantings of the programme.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "Provided a photographic reference point documenting the dramatic terrain at Hadley-Apennine, the most geologically complex Apollo landing site.",
+      "explorer": "Provided a photographic reference point documenting the dramatic terrain at Hadley-Apennine, the most geologically complex Apollo landing site.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
+      "explorer": "Fate: left on surface. Position recorded at coordinates [-6, 5].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "LROC images from 2011 confirmed the Apollo 15 flag is still standing, casting a visible shadow on the surface.",
+      "explorer": "LROC images from 2011 confirmed the Apollo 15 flag is still standing, casting a visible shadow on the surface.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}

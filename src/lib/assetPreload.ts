@@ -1,35 +1,19 @@
 import { useGLTF } from "@react-three/drei";
 
-const KEY_MODELS = [
-  "/models/saturn-v.glb",
-  "/models/lunar-module.glb",
-  "/models/lm-descent.glb",
-  "/models/lm-ascent.glb",
-  "/models/astronaut.glb",
-  "/models/heritage/viking1.glb",
-  "/models/heritage/sojourner.glb",
-  "/models/heritage/spirit.glb",
-  "/models/heritage/opportunity.glb",
-  "/models/heritage/apollo11_eagle.glb",
-  "/models/heritage/apollo11_easep.glb",
-];
-
-const KEY_TEXTURES = [
-  "/textures/moon-color-4k.webp",
-  "/textures/moon-elevation-2k.png",
-  "/textures/mars-color-2k.jpg",
-  "/textures/earth.jpg",
-  "/textures/bootprint.jpg",
-];
-
 let preloaded = false;
 
-export function preloadGameAssets(): void {
+export function preloadGameAssets(missionId?: string): void {
   if (preloaded || typeof window === "undefined") return;
   preloaded = true;
 
-  // Warm up 3D GLTF models into three.js cache asynchronously
-  for (const model of KEY_MODELS) {
+  const isMars = missionId?.startsWith("mars-");
+
+  // Only preload models relevant to the current mission to save mobile bandwidth
+  const models = isMars
+    ? ["/models/heritage/viking1.glb", "/models/heritage/sojourner.glb"]
+    : ["/models/saturn-v.glb", "/models/lunar-module.glb", "/models/astronaut.glb"];
+
+  for (const model of models) {
     try {
       useGLTF.preload(model);
     } catch {
@@ -37,8 +21,12 @@ export function preloadGameAssets(): void {
     }
   }
 
-  // Warm up image and elevation textures into browser cache
-  for (const src of KEY_TEXTURES) {
+  // Only warm up the active planet textures
+  const textures = isMars
+    ? ["/textures/mars-color-2k.jpg"]
+    : ["/textures/earth.jpg", "/textures/moon-color-4k.webp"];
+
+  for (const src of textures) {
     const img = new Image();
     img.src = src;
   }

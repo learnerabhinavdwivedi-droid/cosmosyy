@@ -1,0 +1,211 @@
+{
+  "id": "op-rover",
+  "missionId": "mars-opportunity",
+  "name": "Opportunity Rover",
+  "kind": "rover",
+  "environment": "mars-surface",
+  "fate": "left-on-surface",
+  "year": 2004,
+  "nssdcaId": "PIA07855",
+  "model": {
+    "glb": null,
+    "procedural": "op-rover",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Opportunity Rover was deployed at Meridiani Planum during Opportunity (MER-B) in 2004.",
+      "source": "NASA/JPL Mars Exploration Rovers",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "Opportunity landed on 25 January 2004 for a 90-sol mission and operated for nearly 15 years — over 55 times its planned lifetime. It drove 45.16 km across the Martian surface, the longest distance travelled by any off-Earth wheeled vehicle. A planet-wide dust storm in June 2018 blocked sunlight to its solar panels. Last contact: 10 June 2018.",
+      "source": "NASA/JPL Mars Exploration Rovers",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the Martian environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "Provided the first ground-truth evidence that Mars once had sustained surface water, through haematite concretions and water-laid sedimentary rock at Meridiani Planum.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Remains preserved in the arid regolith at Meridiani Planum.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "Opportunity rests in Perseverance Valley on Endeavour Crater's rim, silent since the June 2018 global dust storm; NASA declared it lost on 13 February 2019.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am Opportunity Rover. I arrived here at Meridiani Planum in 2004.",
+      "explorer": "Opportunity Rover, Opportunity (MER-B): deployed at Meridiani Planum in 2004.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "Opportunity landed on 25 January 2004 for a 90-sol mission and operated for nearly 15 years — over 55 times its planned lifetime. It drove 45.16 km across the Martian surface, the longest distance travelled by any off-Earth.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "Provided the first ground-truth evidence that Mars once had sustained surface water, through haematite concretions and water-laid sedimentary rock at Meridiani Planum.",
+      "explorer": "Provided the first ground-truth evidence that Mars once had sustained surface water, through haematite concretions and water-laid sedimentary rock at Meridiani Planum.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
+      "explorer": "Fate: left on surface. Position recorded at coordinates [2, -3].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "Opportunity rests in Perseverance Valley on Endeavour Crater's rim, silent since the June 2018 global dust storm; NASA declared it lost on 13 February 2019.",
+      "explorer": "Opportunity rests in Perseverance Valley on Endeavour Crater's rim, silent since the June 2018 global dust storm; NASA declared it lost on 13 February 2019.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}
