@@ -836,7 +836,7 @@ function FlightAnimator({
   const shipRef = useRef<THREE.Group>(null);
   const saturnRef = useRef<THREE.Group>(null);
   const lmRef = useRef<THREE.Group>(null);
-  const flameRef = useRef<THREE.Mesh>(null);
+  const flameRef = useRef<THREE.Group>(null);
   const boosterRef = useRef<THREE.Group>(null);
   const sepFlashRef = useRef<THREE.Mesh>(null);
   const phaseRef = useRef(useGameStore.getState().phase);
@@ -868,7 +868,23 @@ function FlightAnimator({
 
   const { scene: saturnScene } = useGLTF("/models/saturn-v.glb");
   const { scene: lmScene } = useGLTF("/models/lunar-module.glb");
-  const saturnClone = useMemo(() => saturnScene.clone(true), [saturnScene]);
+  const saturnClone = useMemo(() => {
+    const clone = saturnScene.clone(true);
+    clone.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const m = child as THREE.Mesh;
+        m.castShadow = true;
+        m.receiveShadow = true;
+        if (m.material && (m.material as THREE.MeshStandardMaterial).isMeshStandardMaterial) {
+          const mat = (m.material as THREE.MeshStandardMaterial).clone();
+          mat.roughness = 0.38;
+          mat.metalness = 0.25;
+          m.material = mat;
+        }
+      }
+    });
+    return clone;
+  }, [saturnScene]);
   const lmClone = useMemo(() => lmScene.clone(true), [lmScene]);
   const boosterClone = useMemo(() => saturnScene.clone(true), [saturnScene]);
 
@@ -1127,15 +1143,18 @@ function FlightAnimator({
       const s = flameState.current.scale;
       flameRef.current.visible = s > 0.02;
       if (s > 0.02) {
-        const flicker = 0.85 + Math.sin(elapsed.current * 14) * 0.15;
-        flameRef.current.scale.set(s, s, s * flicker);
-      }
-      if (inLandingScene) {
-        flameRef.current.rotation.set(Math.PI, 0, 0);
-        flameRef.current.position.set(0, isMars ? -0.9 : -1, 0);
-      } else {
-        flameRef.current.rotation.set(-Math.PI / 2, 0, 0);
-        flameRef.current.position.set(0, 0, 1.5);
+        const t = elapsed.current;
+        const flicker = 0.93 + Math.sin(t * 34) * 0.05 + Math.cos(t * 52) * 0.03;
+        const radial = 0.96 + Math.sin(t * 24) * 0.04;
+        if (inLandingScene) {
+          flameRef.current.rotation.set(Math.PI, 0, 0);
+          flameRef.current.position.set(0, isMars ? -0.9 : -1, 0);
+          flameRef.current.scale.set(s * 0.45 * radial, s * 0.45 * radial, s * 0.45 * flicker);
+        } else {
+          flameRef.current.rotation.set(-Math.PI / 2, 0, 0);
+          flameRef.current.position.set(0, -0.3725, -0.08);
+          flameRef.current.scale.set(s * radial, s * radial, s * flicker);
+        }
       }
     }
   });
@@ -1297,20 +1316,101 @@ function FlightAnimator({
           </mesh>
         </group>
 
-        <mesh
-          ref={flameRef}
-          rotation={[-Math.PI / 2, 0, 0]}
-          position={[0, 0, 1.5]}
-        >
-          <coneGeometry args={[0.2, 2, 12]} />
-          <meshBasicMaterial
-            color="#ffb36b"
-            transparent
-            opacity={0.85}
-            blending={THREE.AdditiveBlending}
-            depthWrite={false}
+        {/* Realistic Multi-Layer Rocket Exhaust Plume */}
+        <group ref={flameRef} position={[0, -0.3725, -0.08]} rotation={[-Math.PI / 2, 0, 0]}>
+          {/* Dynamic Combustion Point Light (illuminates rocket tail & fins realistically) */}
+          <pointLight
+            color="#ff9a36"
+            intensity={4.5}
+            distance={12}
+            decay={1.8}
+            position={[0, 0.2, 0]}
           />
-        </mesh>
+
+          {/* 5 Individual F-1 Engine Nozzle Supersonic Jets */}
+          {([
+            [0, 0, 0],
+            [0, 0, 0.175],
+            [0, 0, -0.175],
+            [-0.175, 0, 0],
+            [0.175, 0, 0],
+          ] as const).map(([nx, ny, nz], i) => (
+            <group key={i} position={[nx, ny, nz]}>
+              {/* Nozzle white-hot shock core */}
+              <mesh position={[0, 0.45, 0]}>
+                <coneGeometry args={[0.07, 0.9, 12]} />
+                <meshBasicMaterial
+                  color="#ffffff"
+                  transparent
+                  opacity={0.95}
+                  blending={THREE.AdditiveBlending}
+                  depthWrite={false}
+                />
+              </mesh>
+              {/* Nozzle fiery golden cone */}
+              <mesh position={[0, 0.65, 0]}>
+                <coneGeometry args={[0.11, 1.3, 12]} />
+                <meshBasicMaterial
+                  color="#ffaa33"
+                  transparent
+                  opacity={0.8}
+                  blending={THREE.AdditiveBlending}
+                  depthWrite={false}
+                />
+              </mesh>
+            </group>
+          ))}
+
+          {/* Main Merged Supersonic Exhaust Plume: Inner Brilliant Core */}
+          <mesh position={[0, 1.25, 0]}>
+            <coneGeometry args={[0.22, 2.5, 16]} />
+            <meshBasicMaterial
+              color="#fff0cc"
+              transparent
+              opacity={0.92}
+              blending={THREE.AdditiveBlending}
+              depthWrite={false}
+            />
+          </mesh>
+
+          {/* Main Merged Supersonic Exhaust Plume: Mid Fiery Amber Layer */}
+          <mesh position={[0, 1.8, 0]}>
+            <coneGeometry args={[0.36, 3.6, 16]} />
+            <meshBasicMaterial
+              color="#ff8811"
+              transparent
+              opacity={0.75}
+              blending={THREE.AdditiveBlending}
+              depthWrite={false}
+            />
+          </mesh>
+
+          {/* Main Merged Supersonic Exhaust Plume: Outer Expanding Plasma Sheath */}
+          <mesh position={[0, 2.3, 0]}>
+            <coneGeometry args={[0.52, 4.6, 16]} />
+            <meshBasicMaterial
+              color="#ff4400"
+              transparent
+              opacity={0.45}
+              blending={THREE.AdditiveBlending}
+              depthWrite={false}
+            />
+          </mesh>
+
+          {/* Mach Disks / Shock Diamonds along the plume centerline */}
+          {[0.5, 0.95, 1.45, 2.0].map((y, idx) => (
+            <mesh key={`diamond-${idx}`} position={[0, y, 0]} rotation={[0, (idx * Math.PI) / 4, 0]}>
+              <octahedronGeometry args={[0.08 - idx * 0.012, 0]} />
+              <meshBasicMaterial
+                color="#ffffff"
+                transparent
+                opacity={0.9 - idx * 0.15}
+                blending={THREE.AdditiveBlending}
+                depthWrite={false}
+              />
+            </mesh>
+          ))}
+        </group>
       </group>
 
       {/* Stage 1 Rocket Booster drifting away cleanly (Moon & Mars) */}
