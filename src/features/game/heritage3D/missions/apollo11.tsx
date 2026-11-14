@@ -705,6 +705,8 @@ export function LunarModuleDescentStage3D({ explode = 0, wireframe = false, scal
             emissiveIntensity: 0.4,
             wireframe: true,
           });
+        } else if (mesh.material instanceof THREE.MeshStandardMaterial) {
+          mesh.material.roughness = Math.max(mesh.material.roughness, 0.38);
         }
         mesh.castShadow = true;
         mesh.receiveShadow = true;

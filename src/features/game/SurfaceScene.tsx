@@ -1741,7 +1741,7 @@ export function SurfaceScene() {
             missionId={missionId ?? "apollo-11"}
             viewMode={viewMode}
           />
-          <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} vignetteDarkness={0.6} />
+          <Effects bloom vignette bloomThreshold={0.82} bloomIntensity={0.65} vignetteDarkness={0.6} />
           <Preload all />
         </Canvas>
       </div>

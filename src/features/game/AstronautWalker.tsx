@@ -391,7 +391,7 @@ export class Exosuit {
     lampCyl.rotation.x = Math.PI / 2;
     mesh(head, new THREE.CircleGeometry(0.032, 16), this.mat.lamp, -0.27, 0.2, 0.111, false);
 
-    const lamp = (this.lamp = new THREE.SpotLight(0xffeedd, 1.8, 18, 0.55, 0.7, 1.8));
+    const lamp = (this.lamp = new THREE.SpotLight(0xffeedd, 0.8, 14, 0.6, 0.6, 1.8));
     lamp.position.set(-0.27, 0.2, 0.13);
     lamp.target.position.set(-0.15, -0.9, 6);
     head.add(lamp, lamp.target);
@@ -525,7 +525,7 @@ export class Exosuit {
 
     // Lamp
     this.lampK = damp(this.lampK, this.lampOn ? 1 : 0, 10, dt);
-    this.lamp.intensity = this.lampK * 1.8;
+    this.lamp.intensity = this.lampK * 0.8;
 
     // Tip blink
     if (this.tip && this.tip.material instanceof THREE.MeshStandardMaterial) {
