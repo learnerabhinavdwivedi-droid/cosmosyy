@@ -489,7 +489,7 @@ function OrbitPath({ isMars }: { isMars: boolean }) {
   );
 }
 
-function MarsCruiseStageContent() {
+export function MarsCruiseStageContent() {
   return (
     <group>
       {/* ── Main Bus / Equipment Ring ── */}

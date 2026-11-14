@@ -18,6 +18,7 @@ import { Terrain, GroundPlane } from "./Terrain";
 import { getSunPosition } from "./sunPosition";
 import { getMission, getMissionOrNull } from "@/lib/missionData";
 import { Effects } from "./Effects";
+import { MarsCruiseStageContent } from "./FlightScene";
 import * as THREE from "three";
 
 const FLIGHT_PHASES = new Set<string>(["flight", "coast", "orbit", "targetLocked", "descent", "touchdown", "stepOut"]);
@@ -354,27 +355,12 @@ function MarsAscentAnimator() {
 
   return (
     <group ref={ref}>
-      {/* Probe body */}
-      <mesh>
-        <cylinderGeometry args={[0.25, 0.3, 1.0, 12]} />
-        <meshStandardMaterial color="#b8b8b8" metalness={0.7} roughness={0.3} />
-      </mesh>
-      {/* Antenna */}
-      <mesh position={[0, 0.55, 0]}>
-        <cylinderGeometry args={[0.2, 0.06, 0.06, 12]} />
-        <meshStandardMaterial color="#d0d0d0" metalness={0.8} roughness={0.2} />
-      </mesh>
-      {/* Solar panels */}
-      <mesh position={[0.85, 0, 0]}>
-        <boxGeometry args={[0.7, 0.015, 0.3]} />
-        <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.5} />
-      </mesh>
-      <mesh position={[-0.85, 0, 0]}>
-        <boxGeometry args={[0.7, 0.015, 0.3]} />
-        <meshStandardMaterial color="#1a3366" metalness={0.4} roughness={0.5} />
-      </mesh>
+      {/* High-fidelity Mars spacecraft */}
+      <group scale={0.8} rotation={[0, 0, 0]}>
+        <MarsCruiseStageContent />
+      </group>
       {/* Flame */}
-      <mesh ref={flameRef} position={[0, -0.7, 0]} rotation={[Math.PI, 0, 0]}>
+      <mesh ref={flameRef} position={[0, -0.6, 0]} rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[0.2, 1.5, 8]} />
         <meshBasicMaterial
           color="#ffb36b"
