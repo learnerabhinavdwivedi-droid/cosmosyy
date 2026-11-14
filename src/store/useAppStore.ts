@@ -48,6 +48,7 @@ interface AppState {
   completeMission: (missionId: string) => void;
   startMission: (missionId: string) => void;
   setDemoMode: (on: boolean) => void;
+  resetProgress: () => void;
   getRank: () => "Cadet" | "Pilot" | "Commander";
 }
 
@@ -222,6 +223,15 @@ export const useAppStore = create<AppState>()(
         }),
 
       setDemoMode: (on) => set({ session: { demoMode: on } }),
+
+      resetProgress: () =>
+        set({
+          player: { name: "" },
+          progress: {
+            missions: { ...DEFAULT_MISSIONS },
+            totalXp: 0,
+          },
+        }),
 
       getRank: () => {
         const xp = get().progress.totalXp;
