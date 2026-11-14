@@ -20,14 +20,28 @@ import {
 export interface ObjectStoryCardProps {
   packet: ObjectStoryPacket;
   onClose?: () => void;
+  onSwitchToInspect?: () => void;
+  autoPlay?: boolean;
 }
 
-export function ObjectStoryCard({ packet, onClose }: ObjectStoryCardProps) {
+export function ObjectStoryCard({
+  packet,
+  onClose,
+  onSwitchToInspect,
+  autoPlay = true,
+}: ObjectStoryCardProps) {
   const { t, i18n } = useTranslation();
   const [state, dispatch] = useStoryPlayer(packet.scenes.length);
   const containerRef = useRef<HTMLDivElement>(null);
   const audioTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Auto-start playback on mount if requested
+  useEffect(() => {
+    if (autoPlay && state.status === "idle") {
+      dispatch({ type: "START" });
+    }
+  }, [autoPlay, state.status, dispatch]);
 
   // System prefers-reduced-motion check
   const [reducedMotion, setReducedMotion] = useState(() => {
@@ -209,12 +223,12 @@ export function ObjectStoryCard({ packet, onClose }: ObjectStoryCardProps) {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-2 sm:p-4 select-none touch-manipulation"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-2xl p-0 sm:p-4 select-none touch-manipulation"
       role="region"
       aria-label={`${packet.name} 3D Story Card`}
     >
-      {/* 16:9 Aspect Ratio Cinematic Stage */}
-      <div className="relative aspect-[16/9] w-full max-w-5xl max-h-[92vh] overflow-hidden rounded-2xl border border-sky-500/30 bg-space-950 shadow-2xl shadow-sky-950/50 flex flex-col">
+      {/* Responsive Cinematic Stage: Fullscreen on mobile, 16:9 Cinema Framed on desktop */}
+      <div className="relative h-full w-full sm:h-auto sm:aspect-[16/9] sm:max-w-5xl sm:max-h-[92vh] sm:rounded-2xl overflow-hidden border-0 sm:border border-sky-500/30 bg-space-950 shadow-2xl shadow-sky-950/50 flex flex-col">
         {/* 3D Scene Layer */}
         <div className="absolute inset-0">
           <StoryScene
@@ -239,6 +253,19 @@ export function ObjectStoryCard({ packet, onClose }: ObjectStoryCardProps) {
           </div>
 
           <div className="flex items-center gap-2 pointer-events-auto">
+            {/* Free 3D Orbit / Specs Mode Switcher */}
+            {onSwitchToInspect && (
+              <button
+                type="button"
+                onClick={onSwitchToInspect}
+                className="flex items-center gap-1.5 rounded-full border border-cyan-500/50 bg-cyan-950/80 px-3 py-1 text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-cyan-300 hover:bg-cyan-900/60 hover:scale-105 active:scale-95 transition cursor-pointer min-h-[36px] shadow-sm backdrop-blur"
+                title="Switch to Free 3D Orbit & NASA Specs"
+              >
+                <span>🔍</span>
+                <span className="hidden xs:inline">Free 3D</span>
+              </button>
+            )}
+
             {/* Mode Selector Pill (Kids / Explorer) */}
             <div className="flex rounded-full border border-space-700 bg-space-950/80 p-0.5 backdrop-blur shadow-sm">
               <button

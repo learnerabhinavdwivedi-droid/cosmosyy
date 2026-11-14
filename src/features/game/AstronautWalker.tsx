@@ -970,6 +970,7 @@ export interface WalkerHUDProps {
   onSwitchView?: () => void;
   nearestObj?: { id: string; name: string; dist: number } | null;
   onInspectObject?: (id: string) => void;
+  onOpenStory?: (id: string) => void;
 }
 
 export function WalkerHUD({
@@ -983,6 +984,7 @@ export function WalkerHUD({
   onSwitchView,
   nearestObj,
   onInspectObject,
+  onOpenStory,
 }: WalkerHUDProps) {
   const mode = thrusting
     ? "THRUSTERS"
@@ -1063,7 +1065,7 @@ export function WalkerHUD({
           <span className="text-amber-400">📡 PROXIMITY:</span>
           <span>{nearestObj.name}</span>
           <span className="font-mono text-regolith-400">({nearestObj.dist.toFixed(1)}m)</span>
-          {onInspectObject && nearestObj.dist <= 10 && (
+          {onInspectObject && nearestObj.dist <= 12 && (
             <button
               type="button"
               onClick={(e) => {
@@ -1073,6 +1075,19 @@ export function WalkerHUD({
               className="ml-2 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-3.5 py-1 text-[11px] font-black text-space-950 shadow-md transition hover:scale-105 active:scale-95 cursor-pointer"
             >
               [E] SCAN &amp; INSPECT
+            </button>
+          )}
+          {onOpenStory && nearestObj.dist <= 12 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenStory(nearestObj.id);
+              }}
+              className="ml-1.5 rounded-full border border-sky-400 bg-sky-500/30 px-3 py-1 text-[11px] font-black text-sky-200 shadow-md transition hover:scale-105 active:scale-95 cursor-pointer flex items-center gap-1"
+            >
+              <span>🎬</span>
+              <span>[T] 3D STORY</span>
             </button>
           )}
         </div>
@@ -1085,9 +1100,10 @@ export function WalkerHUD({
         <span className="text-white font-bold">SPACE</span> Thrusters / Jump &nbsp;|&nbsp;{" "}
         <span className="text-white font-bold">DRAG</span> Orbit Camera &nbsp;|&nbsp;{" "}
         <span className="text-white font-bold">V</span> Toggle POV
-        {nearestObj && nearestObj.dist <= 10 && (
+        {nearestObj && nearestObj.dist <= 12 && (
           <>
-            &nbsp;|&nbsp; <span className="text-amber-400 font-bold">E</span> Inspect
+            &nbsp;|&nbsp; <span className="text-amber-400 font-bold">E</span> Inspect &nbsp;|&nbsp;{" "}
+            <span className="text-sky-300 font-bold">T</span> 3D Story
           </>
         )}
       </div>

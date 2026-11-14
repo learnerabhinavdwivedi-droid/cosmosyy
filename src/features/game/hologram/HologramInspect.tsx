@@ -24,7 +24,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
   const [wireframe, setWireframe] = useState(false);
   const [explode, setExplode] = useState(0);
   const [manifest, setManifest] = useState<HologramManifest | null>(null);
-  const [showStory, setShowStory] = useState(false);
+  const [showStory, setShowStory] = useState(true);
   const [showIntel, setShowIntel] = useState(false);
   const [autoRotate, setAutoRotate] = useState(true);
   const [lightingMode, setLightingMode] = useState<LightingMode>("studio");
@@ -70,6 +70,20 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
     return () => clearTimeout(t);
   }, []);
 
+  // Global key listener for 'T' (3D Story) and 'Esc'
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if ((e.code === "KeyT" || e.key === "t" || e.key === "T") && !e.repeat) {
+        if (hasStory && storyPacket) {
+          setShowStory((prev) => !prev);
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [hasStory, storyPacket]);
+
   const handleClose = () => {
     setVisible(false);
     setTimeout(() => {
@@ -91,6 +105,18 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
   };
 
   if (!obj) return null;
+
+  // Primary Experience: 3D Animated Cinematic Story Movie
+  if (showStory && storyPacket) {
+    return (
+      <ObjectStoryCard
+        packet={storyPacket}
+        onClose={handleClose}
+        onSwitchToInspect={() => setShowStory(false)}
+        autoPlay={true}
+      />
+    );
+  }
 
   const isOperational = obj.status === "operational";
   const isDormant = obj.status === "dormant";
@@ -174,10 +200,12 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
               <button
                 type="button"
                 onClick={() => setShowStory(true)}
-                className="flex items-center gap-1.5 rounded-lg border border-sky-400/80 bg-sky-500/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-sky-300 transition hover:bg-sky-500/30 cursor-pointer shadow-md animate-pulse min-h-[30px]"
+                className="flex items-center gap-1.5 rounded-full border border-sky-400 bg-gradient-to-r from-sky-500/30 to-blue-600/30 px-3.5 py-1 text-[11px] font-mono font-black uppercase tracking-wider text-sky-200 shadow-[0_0_20px_rgba(56,189,248,0.5)] transition hover:scale-105 active:scale-95 cursor-pointer backdrop-blur-md animate-pulse min-h-[30px]"
+                title="Watch Cinematic 3D Story [Key T]"
               >
                 <span>🎬</span>
-                <span>3D Story</span>
+                <span>Watch 3D Story</span>
+                <span className="rounded bg-sky-400/30 px-1 py-0.5 text-[9px] text-sky-100 font-mono">[T]</span>
               </button>
             )}
 
@@ -283,6 +311,8 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
               objectName={obj.name}
               firstPersonLog={obj.firstPerson}
               theme={theme}
+              hasStory={hasStory}
+              onOpenStory={() => setShowStory(true)}
             />
 
             {/* Mission Artifact Compartment Drawer */}
@@ -331,11 +361,6 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
             />
           </div>
         </div>
-      )}
-
-      {/* 3D Object Story Card Modal */}
-      {showStory && storyPacket && (
-        <ObjectStoryCard packet={storyPacket} onClose={() => setShowStory(false)} />
       )}
     </div>
   );

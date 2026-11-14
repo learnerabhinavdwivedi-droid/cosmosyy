@@ -1611,52 +1611,54 @@ export function SurfaceScene() {
 
   return (
     <div className="relative h-screen w-full">
-      {/* 1. TOP VIEW MODE SWITCHER PILL */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 rounded-full border border-white/10 bg-space-950/80 p-1.5 backdrop-blur-xl shadow-2xl pointer-events-auto">
-        <button
-          type="button"
-          onClick={() => setViewMode("pov")}
-          className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold transition cursor-pointer font-mono ${
-            viewMode === "pov"
-              ? "bg-signal text-space-950 shadow-md ring-1 ring-cyan-300"
-              : "text-regolith-300 hover:text-white hover:bg-space-800/60"
-          }`}
-          title="First-Person Helmet View [V to toggle]"
-        >
-          <span>👁️</span>
-          <span>POV View</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setViewMode("walker")}
-          className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold transition cursor-pointer font-mono ${
-            viewMode === "walker"
-              ? "bg-signal text-space-950 shadow-md ring-1 ring-cyan-300"
-              : "text-regolith-300 hover:text-white hover:bg-space-800/60"
-          }`}
-          title="3D Astronaut Walker Simulation [V to toggle]"
-        >
-          <span>🚶</span>
-          <span>Astronaut Walker</span>
-        </button>
-
-        {mission.planet === "mars" && (
+      {/* 1. TOP VIEW MODE SWITCHER PILL (Hidden during inspect / 3D story) */}
+      {phase !== "inspect" && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 rounded-full border border-white/10 bg-space-950/80 p-1.5 backdrop-blur-xl shadow-2xl pointer-events-auto">
           <button
             type="button"
-            onClick={() => setViewMode("lander")}
+            onClick={() => setViewMode("pov")}
             className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold transition cursor-pointer font-mono ${
-              viewMode === "lander"
-                ? "bg-orange-500 text-white shadow-md ring-1 ring-orange-300"
+              viewMode === "pov"
+                ? "bg-signal text-space-950 shadow-md ring-1 ring-cyan-300"
                 : "text-regolith-300 hover:text-white hover:bg-space-800/60"
             }`}
-            title="Interactive Mars Lander (3D)"
+            title="First-Person Helmet View [V to toggle]"
           >
-            <span>🛸</span>
-            <span>Mars Lander</span>
+            <span>👁️</span>
+            <span>POV View</span>
           </button>
-        )}
-      </div>
+
+          <button
+            type="button"
+            onClick={() => setViewMode("walker")}
+            className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold transition cursor-pointer font-mono ${
+              viewMode === "walker"
+                ? "bg-signal text-space-950 shadow-md ring-1 ring-cyan-300"
+                : "text-regolith-300 hover:text-white hover:bg-space-800/60"
+            }`}
+            title="3D Astronaut Walker Simulation [V to toggle]"
+          >
+            <span>🚶</span>
+            <span>Astronaut Walker</span>
+          </button>
+
+          {mission.planet === "mars" && (
+            <button
+              type="button"
+              onClick={() => setViewMode("lander")}
+              className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-bold transition cursor-pointer font-mono ${
+                viewMode === "lander"
+                  ? "bg-orange-500 text-white shadow-md ring-1 ring-orange-300"
+                  : "text-regolith-300 hover:text-white hover:bg-space-800/60"
+              }`}
+              title="Interactive Mars Lander (3D)"
+            >
+              <span>🛸</span>
+              <span>Mars Lander</span>
+            </button>
+          )}
+        </div>
+      )}
 
       {/* 2. MAIN THREE.JS CANVAS */}
       <div className="h-full w-full" onClick={handleCanvasClick}>

@@ -83,7 +83,8 @@ const storyModules = import.meta.glob<{ default: unknown }>(
 const STORY_REGISTRY: Record<string, Record<string, StoryPacket>> = {};
 
 for (const [modPath, mod] of Object.entries(storyModules)) {
-  const match = modPath.match(/content\/stories\/([^/]+)\/([^/]+)\.story\.json$/);
+  const normalizedPath = modPath.replace(/\\/g, "/");
+  const match = normalizedPath.match(/content\/stories\/([^/]+)\/([^/]+)\.story\.json$/);
   if (match && match[1] && match[2]) {
     const missionId = match[1];
     const objectId = match[2];

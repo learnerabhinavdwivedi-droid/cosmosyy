@@ -339,7 +339,7 @@ function DedicatedStoryObject({
   const explodeFactor = action === "mechanism" ? 0.35 : action === "closeup" ? 0.12 : 0;
 
   return (
-    <group ref={groupRef} position={[0, -0.32, 0]}>
+    <group ref={groupRef} position={[0, 0, 0]}>
       <HeritageObject3D
         missionId={missionId}
         objectId={objectId}

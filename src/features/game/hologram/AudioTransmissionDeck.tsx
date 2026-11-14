@@ -9,6 +9,8 @@ interface AudioTransmissionDeckProps {
   objectName?: string;
   firstPersonLog?: string;
   theme: ObjectTheme;
+  hasStory?: boolean;
+  onOpenStory?: () => void;
 }
 
 export function AudioTransmissionDeck({
@@ -17,6 +19,8 @@ export function AudioTransmissionDeck({
   objectName: _objectName,
   firstPersonLog,
   theme,
+  hasStory,
+  onOpenStory,
 }: AudioTransmissionDeckProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
@@ -178,6 +182,17 @@ export function AudioTransmissionDeck({
               title="Toggle transcript caption"
             >
               CC
+            </button>
+          )}
+          {hasStory && onOpenStory && (
+            <button
+              type="button"
+              onClick={onOpenStory}
+              className="flex items-center gap-1 rounded-full border border-sky-400 bg-sky-500/25 px-2.5 py-0.5 text-[9px] font-mono font-bold uppercase text-sky-200 hover:bg-sky-500/40 hover:scale-105 active:scale-95 transition cursor-pointer shadow-[0_0_10px_rgba(56,189,248,0.3)] animate-pulse"
+              title="Launch Cinematic 3D Story [T]"
+            >
+              <span>🎬</span>
+              <span>3D Story</span>
             </button>
           )}
           <span className="font-mono text-[10px] text-regolith-400">
