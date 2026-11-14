@@ -90,9 +90,9 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
       <div className="absolute inset-0 bg-space-950/85 backdrop-blur-md" />
 
       {/* Two-panel layout */}
-      <div className="relative z-10 flex h-full flex-col md:flex-row items-stretch gap-4 p-4 pt-14 pb-14 overflow-y-auto md:overflow-hidden">
+      <div className="relative z-10 flex h-full flex-col md:flex-row items-stretch gap-3 md:gap-4 p-3 md:p-5 pt-12 md:pt-12 pb-3 md:pb-4 overflow-y-auto md:overflow-hidden">
         {/* LEFT PANEL — 3D Studio & Audio Transmission Deck */}
-        <div className="flex w-full md:w-[48%] flex-col min-h-[360px] md:min-h-0">
+        <div className="flex w-full md:w-[48%] flex-col min-h-[340px] md:min-h-0">
           <div
             className="relative flex-1 overflow-hidden rounded-xl border flex flex-col"
             style={{ borderColor: theme.border, background: "rgba(7,9,13,0.7)" }}
