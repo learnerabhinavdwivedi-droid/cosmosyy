@@ -20,9 +20,11 @@ export function ArtifactInfoPanel({
   const [activeTab, setActiveTab] = useState<"intel" | "specs">("intel");
   const [imgError, setImgError] = useState(false);
   const nssdcEntry = getNssdcCatalog(missionId, obj.id);
-  const nasaUrl = obj.nasaImageId
+  const localImgUrl = `/images/heritage/${missionId}/${obj.id}.jpg`;
+  const fallbackNasaUrl = obj.nasaImageId
     ? `https://images-assets.nasa.gov/image/${obj.nasaImageId}/${obj.nasaImageId}~thumb.jpg`
     : null;
+  const displayImgUrl = !imgError ? localImgUrl : fallbackNasaUrl;
 
   const isOperational = obj.status === "operational";
   const isDormant = obj.status === "dormant";
@@ -178,20 +180,24 @@ export function ArtifactInfoPanel({
             )}
 
             {/* Optional Authentic NASA Imagery */}
-            {nasaUrl && !imgError && (
+            {displayImgUrl && (
               <div
                 className="relative overflow-hidden rounded-lg border shrink-0 mt-1"
                 style={{ borderColor: theme.border }}
               >
                 <img
-                  src={nasaUrl}
+                  src={displayImgUrl}
                   alt={obj.name}
                   className="h-28 w-full object-cover"
-                  onError={() => setImgError(true)}
+                  onError={() => {
+                    if (!imgError) {
+                      setImgError(true);
+                    }
+                  }}
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent px-2.5 py-1">
                   <p className="text-[9px] font-mono text-regolith-300">
-                    NASA Image Archive // ID: {obj.nasaImageId}
+                    NASA Photographic Archive // {obj.name}
                   </p>
                 </div>
               </div>

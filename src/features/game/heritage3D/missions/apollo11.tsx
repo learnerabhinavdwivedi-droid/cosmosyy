@@ -4,7 +4,6 @@ import { useGLTF } from "@react-three/drei";
 import type { ArtifactProps } from "./shared";
 import {
   getAmericanFlagTexture,
-  getLRRRTexture,
   getSolarPanelTexture,
   getGoldKaptonTexture,
   getSilverMLITexture,
@@ -112,6 +111,7 @@ export function AmericanFlag3D({ explode = 0, wireframe = false, scale = 1 }: Ar
 }
 
 export function TVCamera3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactProps) {
+  const goldKaptonTex = useMemo(() => getGoldKaptonTexture(), []);
   const tripodY = -explode * 0.3;
   const cameraY = 0.95 + explode * 0.4;
   const lensZ = 0.22 + explode * 0.5;
@@ -120,12 +120,17 @@ export function TVCamera3D({ explode = 0, wireframe = false, scale = 1 }: Artifa
     <group scale={scale}>
       {/* 3-Legged Aluminum Tripod */}
       <group position={[0, tripodY, 0]}>
-        {/* Center mounting hub */}
+        {/* Center mounting hub with pan/tilt lock knob */}
         <mesh position={[0, 0.9, 0]} castShadow>
-          <cylinderGeometry args={[0.06, 0.06, 0.04, 16]} />
-          <meshStandardMaterial color="#475569" metalness={0.8} roughness={0.3} wireframe={wireframe} />
+          <cylinderGeometry args={[0.065, 0.065, 0.05, 16]} />
+          <meshStandardMaterial color="#475569" metalness={0.85} roughness={0.25} wireframe={wireframe} />
         </mesh>
-        {/* 3 Tripod legs spaced at 120° */}
+        <mesh position={[0.06, 0.9, 0]}>
+          <cylinderGeometry args={[0.015, 0.015, 0.04, 12]} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.2} wireframe={wireframe} />
+        </mesh>
+
+        {/* 3 Tripod legs spaced at 120° with disc footpads */}
         {[0, (2 * Math.PI) / 3, (4 * Math.PI) / 3].map((angle, i) => {
           const legLen = 1.05;
           const spreadR = 0.45;
@@ -144,82 +149,95 @@ export function TVCamera3D({ explode = 0, wireframe = false, scale = 1 }: Artifa
                 <cylinderGeometry args={[0.015, 0.012, legLen, 8]} />
                 <meshStandardMaterial
                   color="#94a3b8"
-                  metalness={0.85}
-                  roughness={0.25}
+                  metalness={0.88}
+                  roughness={0.22}
                   wireframe={wireframe}
                 />
               </mesh>
-              {/* Spreader bar */}
+              {/* Spreader tension strut */}
               <mesh position={[lx * 0.7, 0.3, lz * 0.7]} rotation={[0, -angle, 0]}>
                 <boxGeometry args={[spreadR * 0.4, 0.008, 0.008]} />
                 <meshStandardMaterial color="#64748b" metalness={0.7} roughness={0.4} wireframe={wireframe} />
               </mesh>
-              {/* Tripod footpad */}
+              {/* Circular lunar regolith footpad */}
               <mesh position={[footX, 0.01, footZ]}>
-                <cylinderGeometry args={[0.035, 0.035, 0.015, 12]} />
-                <meshStandardMaterial color="#334155" metalness={0.6} roughness={0.5} wireframe={wireframe} />
+                <cylinderGeometry args={[0.045, 0.05, 0.016, 16]} />
+                <meshStandardMaterial color="#334155" metalness={0.7} roughness={0.4} wireframe={wireframe} />
               </mesh>
             </group>
           );
         })}
+
+        {/* Coiled 100ft rubber telemetry power cable on ground */}
+        <mesh position={[0.2, 0.02, 0.15]} rotation={[-Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.16, 0.015, 8, 24]} />
+          <meshStandardMaterial color="#1e293b" roughness={0.9} wireframe={wireframe} />
+        </mesh>
       </group>
 
-      {/* Pan / Tilt Mounting Head & Handle */}
+      {/* Pan / Tilt Mounting Head & Aiming Handle */}
       <group position={[0, cameraY - 0.04, 0]}>
         <mesh castShadow>
-          <cylinderGeometry args={[0.035, 0.045, 0.06, 12]} />
-          <meshStandardMaterial color="#334155" metalness={0.8} roughness={0.3} wireframe={wireframe} />
+          <cylinderGeometry args={[0.038, 0.048, 0.065, 12]} />
+          <meshStandardMaterial color="#334155" metalness={0.85} roughness={0.25} wireframe={wireframe} />
         </mesh>
         {/* Aiming handle pointing back */}
         <mesh position={[0, -0.01, -0.16]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.01, 0.01, 0.18, 8]} />
-          <meshStandardMaterial color="#1e293b" metalness={0.5} roughness={0.6} wireframe={wireframe} />
+          <cylinderGeometry args={[0.01, 0.01, 0.2, 8]} />
+          <meshStandardMaterial color="#1e293b" metalness={0.6} roughness={0.4} wireframe={wireframe} />
         </mesh>
       </group>
 
       {/* Camera Housing Body */}
       <group position={[0, cameraY + 0.08, 0]}>
-        {/* Upper black textured camera body */}
+        {/* Upper black textured camera body with Westinghouse electronics */}
         <mesh castShadow receiveShadow>
           <boxGeometry args={[0.22, 0.16, 0.28]} />
-          <meshStandardMaterial color="#1e293b" metalness={0.4} roughness={0.6} wireframe={wireframe} />
+          <meshStandardMaterial color="#18181b" metalness={0.5} roughness={0.5} wireframe={wireframe} />
         </mesh>
-        {/* Lower gold Kapton MLI thermal blanket wrap */}
+        {/* Lower authentic gold Kapton MLI thermal blanket wrap */}
         <mesh position={[0, -0.06, 0]} castShadow>
-          <boxGeometry args={[0.225, 0.05, 0.285]} />
+          <boxGeometry args={[0.228, 0.055, 0.288]} />
           <meshStandardMaterial
+            map={goldKaptonTex}
             color="#d97706"
-            metalness={0.92}
-            roughness={0.2}
+            metalness={0.95}
+            roughness={0.16}
             wireframe={wireframe}
           />
         </mesh>
-        {/* Top carrying handle */}
+        {/* Top carrying handle and optical gunsight tube */}
         <mesh position={[0, 0.11, 0]}>
-          <boxGeometry args={[0.06, 0.04, 0.14]} />
-          <meshStandardMaterial color="#64748b" metalness={0.7} roughness={0.3} wireframe={wireframe} />
+          <boxGeometry args={[0.06, 0.04, 0.16]} />
+          <meshStandardMaterial color="#64748b" metalness={0.8} roughness={0.25} wireframe={wireframe} />
+        </mesh>
+        <mesh position={[0.06, 0.09, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.008, 0.008, 0.22, 8]} />
+          <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.2} wireframe={wireframe} />
         </mesh>
       </group>
 
       {/* Optical Lens Barrel Assembly */}
       <group position={[0, cameraY + 0.08, lensZ]}>
-        {/* Conical lens barrel */}
+        {/* Conical lens barrel with sunshade */}
         <mesh rotation={[Math.PI / 2, 0, 0]} castShadow>
-          <cylinderGeometry args={[0.055, 0.045, 0.14, 24]} />
-          <meshStandardMaterial color="#0f172a" metalness={0.7} roughness={0.3} wireframe={wireframe} />
+          <cylinderGeometry args={[0.058, 0.046, 0.15, 24]} />
+          <meshStandardMaterial color="#09090b" metalness={0.8} roughness={0.25} wireframe={wireframe} />
         </mesh>
-        {/* Aperture ring */}
+        {/* Knurled ribbed aperture & focus rings */}
         <mesh position={[0, 0, 0.02]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.058, 0.058, 0.02, 24]} />
-          <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.2} wireframe={wireframe} />
+          <cylinderGeometry args={[0.062, 0.062, 0.025, 24]} />
+          <meshStandardMaterial color="#a1a1aa" metalness={0.95} roughness={0.18} wireframe={wireframe} />
         </mesh>
-        {/* Front glass lens element with blue anti-reflective sheen */}
-        <mesh position={[0, 0, 0.075]} rotation={[Math.PI / 2, 0, 0]}>
-          <circleGeometry args={[0.05, 24]} />
+        {/* Front glass lens element with deep cyan anti-reflective sheen */}
+        <mesh position={[0, 0, 0.076]} rotation={[Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.052, 24]} />
           <meshStandardMaterial
-            color="#38bdf8"
-            metalness={0.9}
-            roughness={0.1}
+            color="#0284c7"
+            emissive="#0369a1"
+            emissiveIntensity={0.3}
+            metalness={0.95}
+            roughness={0.06}
             wireframe={wireframe}
           />
         </mesh>
@@ -229,69 +247,158 @@ export function TVCamera3D({ explode = 0, wireframe = false, scale = 1 }: Artifa
 }
 
 export function LaserRetroreflector3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactProps) {
-  const lrrrTex = useMemo(() => getLRRRTexture(), []);
-  const panelY = 0.28 + explode * 0.4;
-  const mountY = explode * -0.2;
+  const goldKaptonTex = useMemo(() => getGoldKaptonTexture(), []);
+  const panelY = 0.32 + explode * 0.45;
+  const mountY = explode * -0.25;
+
+  // 10x10 array coordinates for authentic 100 quartz retroreflector prisms
+  const prismCoords = useMemo(() => {
+    const coords: [number, number][] = [];
+    const step = 0.046;
+    const start = -4.5 * step;
+    for (let r = 0; r < 10; r++) {
+      for (let c = 0; c < 10; c++) {
+        coords.push([start + c * step, start + r * step]);
+      }
+    }
+    return coords;
+  }, []);
 
   return (
     <group scale={scale}>
       {/* Supporting Pedestal & Adjustable Mounting Legs */}
       <group position={[0, mountY, 0]}>
-        {/* Bottom regolith footprint frame */}
-        <mesh position={[0, 0.03, 0]} receiveShadow>
-          <boxGeometry args={[0.65, 0.03, 0.65]} />
-          <meshStandardMaterial color="#cbd5e1" metalness={0.8} roughness={0.3} wireframe={wireframe} />
+        {/* Ground Footprint Support Frame & Leveling Base */}
+        <mesh position={[0, 0.02, 0]} receiveShadow>
+          <cylinderGeometry args={[0.38, 0.42, 0.04, 16]} />
+          <meshStandardMaterial color="#cbd5e1" metalness={0.85} roughness={0.25} wireframe={wireframe} />
         </mesh>
-        {/* Tubular leveling legs */}
-        {([[-0.26, -0.26], [0.26, -0.26], [0, 0.26]] as [number, number][]).map(([x, z], i) => (
-          <mesh key={i} position={[x, 0.14, z]} castShadow>
-            <cylinderGeometry args={[0.02, 0.02, 0.22, 12]} />
-            <meshStandardMaterial color="#94a3b8" metalness={0.85} roughness={0.25} wireframe={wireframe} />
-          </mesh>
-        ))}
-        {/* Universal swivel joint */}
-        <mesh position={[0, 0.24, 0]}>
-          <sphereGeometry args={[0.045, 16, 16]} />
-          <meshStandardMaterial color="#64748b" metalness={0.85} roughness={0.25} wireframe={wireframe} />
+
+        {/* 3 Outrigger Telescoping Leveling Legs with Disc Footpads */}
+        {[0, 120, 240].map((deg) => {
+          const rad = (deg * Math.PI) / 180;
+          return (
+            <group key={deg} rotation={[0, rad, 0]}>
+              <mesh position={[0.22, 0.12, 0]} rotation={[0, 0, -0.45]} castShadow>
+                <cylinderGeometry args={[0.016, 0.016, 0.28, 12]} />
+                <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.2} wireframe={wireframe} />
+              </mesh>
+              {/* Circular footpad disc on regolith */}
+              <mesh position={[0.32, 0.015, 0]}>
+                <cylinderGeometry args={[0.055, 0.06, 0.02, 16]} />
+                <meshStandardMaterial color="#64748b" metalness={0.7} roughness={0.4} wireframe={wireframe} />
+              </mesh>
+            </group>
+          );
+        })}
+
+        {/* Swivel Pivot Ball Joint & Elevation Elevation Bracket */}
+        <mesh position={[0, 0.22, 0]} castShadow>
+          <sphereGeometry args={[0.055, 16, 16]} />
+          <meshStandardMaterial color="#475569" metalness={0.88} roughness={0.25} wireframe={wireframe} />
+        </mesh>
+        <mesh position={[0, 0.15, 0]}>
+          <cylinderGeometry args={[0.035, 0.045, 0.14, 16]} />
+          <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.2} wireframe={wireframe} />
         </mesh>
       </group>
 
-      {/* 45-degree Angled Retroreflector Panel */}
+      {/* 45-degree Angled Retroreflector Pallet Assembly */}
       <group position={[0, panelY, 0]} rotation={[-Math.PI / 4, 0, 0]}>
-        {/* White thermal control aluminum pallet frame */}
+        {/* Main Solid White Anodized Aerospace Pallet Tray */}
         <mesh castShadow receiveShadow>
-          <boxGeometry args={[0.54, 0.54, 0.08]} />
+          <boxGeometry args={[0.58, 0.58, 0.09]} />
           <meshStandardMaterial
             color="#f8fafc"
-            metalness={0.4}
-            roughness={0.35}
+            metalness={0.35}
+            roughness={0.3}
             wireframe={wireframe}
           />
         </mesh>
 
-        {/* 10x10 Quartz Prism Array Front Face */}
-        <mesh position={[0, 0, 0.042]} castShadow receiveShadow>
-          <planeGeometry args={[0.48, 0.48]} />
+        {/* Underside Gold Kapton Thermal MLI Blanket Wrap */}
+        <mesh position={[0, 0, -0.048]} receiveShadow>
+          <boxGeometry args={[0.56, 0.56, 0.01]} />
           <meshStandardMaterial
-            map={wireframe ? undefined : lrrrTex}
-            color={wireframe ? "#00ffff" : "#ffffff"}
-            metalness={0.7}
+            map={goldKaptonTex}
+            color="#d97706"
+            metalness={0.95}
             roughness={0.15}
             wireframe={wireframe}
           />
         </mesh>
 
-        {/* Leveling bubble vial on corner */}
-        <mesh position={[0.23, 0.23, 0.05]}>
-          <cylinderGeometry args={[0.015, 0.015, 0.04, 12]} />
-          <meshStandardMaterial color="#22c55e" metalness={0.3} roughness={0.2} wireframe={wireframe} />
+        {/* Outer Aluminum Beveled Retaining Rim */}
+        <mesh position={[0, 0, 0.046]} castShadow>
+          <boxGeometry args={[0.54, 0.54, 0.012]} />
+          <meshStandardMaterial color="#e2e8f0" metalness={0.8} roughness={0.2} wireframe={wireframe} />
         </mesh>
 
-        {/* Shadow-pin sun compass gnomon */}
-        <mesh position={[-0.22, 0.22, 0.07]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.005, 0.005, 0.06, 8]} />
-          <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.3} wireframe={wireframe} />
-        </mesh>
+        {/* 100 Individual Recessed Quartz Corner-Cube Prism Cells */}
+        <group position={[0, 0, 0.052]}>
+          {prismCoords.map(([px, py], idx) => (
+            <group key={idx} position={[px, py, 0]}>
+              {/* Recessed cylindrical aluminum reflector cup */}
+              <mesh rotation={[Math.PI / 2, 0, 0]}>
+                <cylinderGeometry args={[0.018, 0.018, 0.014, 12]} />
+                <meshStandardMaterial color="#0f172a" metalness={0.9} roughness={0.2} wireframe={wireframe} />
+              </mesh>
+              {/* Corner-cube fused silica prism with optical facet reflection */}
+              <mesh position={[0, 0, 0.003]} rotation={[0, 0, (idx % 4) * (Math.PI / 2)]}>
+                <cylinderGeometry args={[0.014, 0.008, 0.008, 6]} />
+                <meshStandardMaterial
+                  color="#e0f2fe"
+                  emissive="#0284c7"
+                  emissiveIntensity={0.25}
+                  metalness={0.85}
+                  roughness={0.08}
+                  wireframe={wireframe}
+                />
+              </mesh>
+            </group>
+          ))}
+        </group>
+
+        {/* Yellow/Gold Fiberglass Aiming & Carrying Handle on top edge */}
+        <group position={[0, 0.31, 0.02]} rotation={[0, 0, Math.PI / 2]}>
+          <mesh castShadow>
+            <cylinderGeometry args={[0.012, 0.012, 0.42, 12]} />
+            <meshStandardMaterial color="#eab308" metalness={0.65} roughness={0.35} wireframe={wireframe} />
+          </mesh>
+          <mesh position={[0, 0.2, -0.02]} rotation={[0, 0, 0]}>
+            <boxGeometry args={[0.03, 0.02, 0.05]} />
+            <meshStandardMaterial color="#ca8a04" metalness={0.7} roughness={0.3} wireframe={wireframe} />
+          </mesh>
+          <mesh position={[0, -0.2, -0.02]} rotation={[0, 0, 0]}>
+            <boxGeometry args={[0.03, 0.02, 0.05]} />
+            <meshStandardMaterial color="#ca8a04" metalness={0.7} roughness={0.3} wireframe={wireframe} />
+          </mesh>
+        </group>
+
+        {/* Circular Liquid Spirit Level Vial with Crosshairs */}
+        <group position={[0.24, 0.24, 0.06]}>
+          <mesh>
+            <cylinderGeometry args={[0.022, 0.022, 0.016, 16]} />
+            <meshStandardMaterial color="#94a3b8" metalness={0.92} roughness={0.15} wireframe={wireframe} />
+          </mesh>
+          <mesh position={[0, 0, 0.009]}>
+            <circleGeometry args={[0.016, 16]} />
+            <meshStandardMaterial color="#22c55e" emissive="#16a34a" emissiveIntensity={0.4} roughness={0.1} />
+          </mesh>
+        </group>
+
+        {/* Calibrated Sun Compass Gnomon Shadow Pin */}
+        <group position={[-0.23, 0.23, 0.05]}>
+          <mesh rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderGeometry args={[0.004, 0.004, 0.08, 8]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.9} roughness={0.2} wireframe={wireframe} />
+          </mesh>
+          {/* Degree scale ring */}
+          <mesh position={[0, 0, 0.002]}>
+            <ringGeometry args={[0.01, 0.03, 16]} />
+            <meshStandardMaterial color="#e2e8f0" metalness={0.8} roughness={0.3} wireframe={wireframe} />
+          </mesh>
+        </group>
       </group>
     </group>
   );
@@ -320,6 +427,24 @@ export function PSEPSeismometer3D({ explode = 0, wireframe = false, scale = 1 }:
         <sphereGeometry args={[0.2, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2]} />
         <meshStandardMaterial color="#e5e7eb" metalness={0.85} roughness={0.2} wireframe={wireframe} />
       </mesh>
+      {/* Buzz Aldrin's Leveling Bubble Spirit Vial */}
+      <group position={[0.12, 0.41, 0.08]}>
+        <mesh>
+          <cylinderGeometry args={[0.02, 0.02, 0.015, 12]} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.2} wireframe={wireframe} />
+        </mesh>
+        <mesh position={[0, 0.008, 0]}>
+          <circleGeometry args={[0.015, 12]} />
+          <meshStandardMaterial color="#22c55e" emissive="#16a34a" emissiveIntensity={0.5} roughness={0.1} />
+        </mesh>
+      </group>
+      {/* Carrying / Deployment Handle */}
+      <group position={[-0.14, 0.42, 0]} rotation={[0, 0, -0.2]}>
+        <mesh castShadow>
+          <cylinderGeometry args={[0.008, 0.008, 0.16, 8]} />
+          <meshStandardMaterial color="#ca8a04" metalness={0.8} roughness={0.3} wireframe={wireframe} />
+        </mesh>
+      </group>
       {/* Omni-directional helical antenna mast */}
       <mesh position={[0, 0.65, 0]} castShadow>
         <cylinderGeometry args={[0.01, 0.01, 0.45, 8]} />
@@ -387,81 +512,108 @@ export function SolarWindComp3D({ explode = 0, wireframe = false, scale = 1 }: A
   const poleY = explode * 0.3;
   const foilX = explode * 0.4;
 
+  // Realistic physically-accurate unrolled foil sheet with subtle micro-wrinkles
+  const foilGeo = useMemo(() => {
+    const geo = new THREE.PlaneGeometry(0.38, 1.34, 16, 32);
+    const pos = geo.attributes.position;
+    if (pos) {
+      for (let i = 0; i < pos.count; i++) {
+        const y = pos.getY(i);
+        const x = pos.getX(i);
+        // Vertical ripple folds and authentic unrolling creases
+        const wave =
+          Math.sin(y * 9.0) * 0.012 +
+          Math.cos(x * 16.0) * 0.006 +
+          Math.sin((x + y) * 22.0) * 0.003;
+        pos.setZ(i, wave);
+      }
+      geo.computeVertexNormals();
+    }
+    return geo;
+  }, []);
+
   return (
     <group scale={scale}>
-      {/* Telescopic Staff */}
+      {/* Telescopic Staff planted into lunar regolith */}
       <group position={[0, poleY, 0]}>
-        {/* Main Aluminum Pole */}
+        {/* Ground Spike Collar */}
+        <mesh position={[0, 0.04, 0]}>
+          <cylinderGeometry args={[0.024, 0.012, 0.08, 12]} />
+          <meshStandardMaterial color="#475569" metalness={0.9} roughness={0.3} wireframe={wireframe} />
+        </mesh>
+        {/* Lower Main Aluminum Mast */}
         <mesh position={[0, 0.92, 0]} castShadow>
           <cylinderGeometry args={[0.018, 0.022, 1.84, 16]} />
-          <meshStandardMaterial color="#f1f5f9" metalness={0.65} roughness={0.25} wireframe={wireframe} />
+          <meshStandardMaterial color="#f1f5f9" metalness={0.85} roughness={0.2} wireframe={wireframe} />
         </mesh>
-        {/* Telescoping Joint Collars */}
+        {/* Telescoping Joint Detent Collars */}
         <mesh position={[0, 0.65, 0]}>
-          <cylinderGeometry args={[0.024, 0.024, 0.03, 16]} />
-          <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.2} wireframe={wireframe} />
+          <cylinderGeometry args={[0.024, 0.024, 0.035, 16]} />
+          <meshStandardMaterial color="#64748b" metalness={0.9} roughness={0.2} wireframe={wireframe} />
         </mesh>
         <mesh position={[0, 1.25, 0]}>
-          <cylinderGeometry args={[0.022, 0.022, 0.03, 16]} />
-          <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.2} wireframe={wireframe} />
+          <cylinderGeometry args={[0.022, 0.022, 0.035, 16]} />
+          <meshStandardMaterial color="#64748b" metalness={0.9} roughness={0.2} wireframe={wireframe} />
         </mesh>
-        {/* Top T-Reel Housing */}
-        <mesh position={[0, 1.84, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
-          <cylinderGeometry args={[0.028, 0.028, 0.46, 16]} />
-          <meshStandardMaterial color="#e2e8f0" metalness={0.7} roughness={0.22} wireframe={wireframe} />
+        {/* Top T-Reel Housing Cylinder */}
+        <mesh position={[0.18, 1.84, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+          <cylinderGeometry args={[0.026, 0.026, 0.44, 16]} />
+          <meshStandardMaterial color="#e2e8f0" metalness={0.88} roughness={0.2} wireframe={wireframe} />
         </mesh>
-        {/* Top Mount Cap */}
+        {/* Top Mast Finial Mount Cap */}
         <mesh position={[0, 1.86, 0]}>
           <sphereGeometry args={[0.024, 12, 12]} />
-          <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.3} wireframe={wireframe} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.25} wireframe={wireframe} />
         </mesh>
-        {/* Red Swiss Deployment Pull-Tab */}
-        <mesh position={[0.22, 1.84, 0]}>
-          <boxGeometry args={[0.01, 0.025, 0.02]} />
-          <meshStandardMaterial color="#ef4444" roughness={0.4} wireframe={wireframe} />
-        </mesh>
+        {/* Red Swiss Deployment Pull-Tab with Cross Emblem */}
+        <group position={[0.39, 1.84, 0]}>
+          <mesh>
+            <boxGeometry args={[0.015, 0.04, 0.03]} />
+            <meshStandardMaterial color="#dc2626" roughness={0.3} wireframe={wireframe} />
+          </mesh>
+          <mesh position={[0.009, 0, 0]}>
+            <boxGeometry args={[0.002, 0.025, 0.008]} />
+            <meshStandardMaterial color="#ffffff" roughness={0.2} />
+          </mesh>
+          <mesh position={[0.009, 0, 0]}>
+            <boxGeometry args={[0.002, 0.008, 0.025]} />
+            <meshStandardMaterial color="#ffffff" roughness={0.2} />
+          </mesh>
+        </group>
       </group>
 
       {/* Hanging Swiss Platinum-Aluminum Foil Sheet */}
       <group position={[foilX, poleY, 0]}>
-        {/* Front & Back Gleaming Foil Face */}
-        <mesh position={[0.18, 1.15, 0]} castShadow receiveShadow>
-          <boxGeometry args={[0.36, 1.32, 0.008]} />
+        {/* Gleaming Platinum-Aluminum Foil with physically-accurate wave displacement */}
+        <mesh position={[0.19, 1.15, 0]} geometry={foilGeo} castShadow receiveShadow>
           <meshStandardMaterial
             color="#f8fafc"
-            metalness={0.5}
-            roughness={0.28}
-            emissive="#334155"
+            metalness={0.92}
+            roughness={0.16}
+            emissive="#1e293b"
             emissiveIntensity={0.2}
             side={THREE.DoubleSide}
             wireframe={wireframe}
           />
         </mesh>
-        {/* Subtle Reinforcement Seam Lines for Authentic Wrinkled Foil Sheen */}
-        {[-0.09, 0, 0.09].map((xOffset, idx) => (
-          <mesh key={idx} position={[0.18 + xOffset, 1.15, 0.005]}>
-            <boxGeometry args={[0.004, 1.30, 0.002]} />
-            <meshStandardMaterial color="#e2e8f0" metalness={0.7} roughness={0.2} wireframe={wireframe} />
-          </mesh>
-        ))}
-        {/* Top Attachment Flange */}
-        <mesh position={[0.18, 1.82, 0]}>
-          <boxGeometry args={[0.36, 0.015, 0.012]} />
-          <meshStandardMaterial color="#94a3b8" metalness={0.8} roughness={0.3} wireframe={wireframe} />
+        {/* Top Reel Attachment Clamp Bar */}
+        <mesh position={[0.19, 1.82, 0]}>
+          <boxGeometry args={[0.38, 0.015, 0.014]} />
+          <meshStandardMaterial color="#94a3b8" metalness={0.85} roughness={0.25} wireframe={wireframe} />
         </mesh>
-        {/* Bottom Tension Weight Bar */}
-        <mesh position={[0.18, 0.48, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
-          <cylinderGeometry args={[0.014, 0.014, 0.38, 16]} />
-          <meshStandardMaterial color="#64748b" metalness={0.85} roughness={0.25} wireframe={wireframe} />
+        {/* Bottom Tension Roller Weight Bar */}
+        <mesh position={[0.19, 0.48, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+          <cylinderGeometry args={[0.015, 0.015, 0.42, 16]} />
+          <meshStandardMaterial color="#64748b" metalness={0.9} roughness={0.2} wireframe={wireframe} />
         </mesh>
-        {/* Bottom Knurled End-Plugs */}
-        <mesh position={[-0.01, 0.48, 0]}>
-          <sphereGeometry args={[0.016, 10, 10]} />
-          <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.3} wireframe={wireframe} />
+        {/* Knurled Stainless Steel End Plugs */}
+        <mesh position={[-0.02, 0.48, 0]}>
+          <sphereGeometry args={[0.018, 12, 12]} />
+          <meshStandardMaterial color="#334155" metalness={0.95} roughness={0.2} wireframe={wireframe} />
         </mesh>
-        <mesh position={[0.37, 0.48, 0]}>
-          <sphereGeometry args={[0.016, 10, 10]} />
-          <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.3} wireframe={wireframe} />
+        <mesh position={[0.40, 0.48, 0]}>
+          <sphereGeometry args={[0.018, 12, 12]} />
+          <meshStandardMaterial color="#334155" metalness={0.95} roughness={0.2} wireframe={wireframe} />
         </mesh>
       </group>
     </group>
