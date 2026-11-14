@@ -5,17 +5,21 @@ import * as THREE from "three";
 import { hasDedicated3DModel, HeritageObject3D } from "../heritage3D/Heritage3DDispatcher";
 import type { HologramManifest, ObjectTheme } from "./types";
 
+export type LightingMode = "studio" | "solar" | "deep-space";
+
 /* ─── Studio 3D Model with Blender PBR Finish ─── */
 function HoloModel({
   url,
   explode,
   wireframe,
+  autoRotate = true,
   manifest,
 }: {
   url: string;
   explode: number;
   wireframe?: boolean;
   themeColor?: string;
+  autoRotate?: boolean;
   manifest?: HologramManifest | null;
 }) {
   const { scene } = useGLTF(url);
@@ -79,7 +83,7 @@ function HoloModel({
   }, [clonedScene, manifest, explode]);
 
   useFrame((_, delta) => {
-    if (groupRef.current) {
+    if (autoRotate && groupRef.current) {
       groupRef.current.rotation.y += delta * 0.22;
     }
   });
@@ -111,7 +115,45 @@ function HoloModel({
 }
 
 /* ─── Blender Studio 3-Point Lighting Setup with Aerospace Bounce ─── */
-function StudioLighting({ themeColor = "#38bdf8" }: { themeColor?: string }) {
+function StudioLighting({
+  themeColor = "#38bdf8",
+  mode = "studio",
+}: {
+  themeColor?: string;
+  mode?: LightingMode;
+}) {
+  if (mode === "solar") {
+    // Harsh, raw, unfiltered directional solar radiation in vacuum
+    return (
+      <>
+        <ambientLight intensity={0.4} color="#8899aa" />
+        <directionalLight
+          position={[6, 3, 4]}
+          intensity={4.2}
+          color="#fffaf0"
+          castShadow
+          shadow-mapSize={[1024, 1024]}
+        />
+        <directionalLight position={[-4, -2, -3]} intensity={0.2} color="#112233" />
+        <pointLight position={[0, -1.5, 0]} intensity={0.6} color={themeColor} />
+      </>
+    );
+  }
+
+  if (mode === "deep-space") {
+    // Dramatic low-key rim lighting in dark cosmic void
+    return (
+      <>
+        <ambientLight intensity={0.3} color="#1e1b4b" />
+        <directionalLight position={[0, 6, -5]} intensity={3.5} color="#38bdf8" />
+        <directionalLight position={[-5, 2, 3]} intensity={2.0} color="#f43f5e" />
+        <directionalLight position={[5, 1, 3]} intensity={1.5} color="#e0f2fe" />
+        <pointLight position={[0, -1.8, 1.2]} intensity={2.2} color={themeColor} />
+      </>
+    );
+  }
+
+  // Balanced Museum Studio 3-Point Lighting
   return (
     <>
       <ambientLight intensity={1.6} color="#ffffff" />
@@ -134,38 +176,96 @@ function StudioLighting({ themeColor = "#38bdf8" }: { themeColor?: string }) {
 function ContactShadow({ themeColor = "#38bdf8" }: { themeColor?: string }) {
   return (
     <group position={[0, -0.32, 0]}>
+      {/* Dark core contact shadow */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.0, 48]} />
+        <circleGeometry args={[1.1, 48]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.7} depthWrite={false} />
       </mesh>
+      {/* Outer ambient occlusion falloff */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.35, 48]} />
+        <circleGeometry args={[1.5, 48]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.35} depthWrite={false} />
       </mesh>
+      {/* Inner glowing telemetry ring */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.008, 0]}>
-        <ringGeometry args={[1.05, 1.08, 64]} />
-        <meshBasicMaterial color={themeColor} transparent opacity={0.25} depthWrite={false} />
+        <ringGeometry args={[1.15, 1.18, 64]} />
+        <meshBasicMaterial color={themeColor} transparent opacity={0.3} depthWrite={false} />
       </mesh>
+      {/* Outer primary range ring */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-        <ringGeometry args={[1.2, 1.23, 64]} />
-        <meshBasicMaterial color={themeColor} transparent opacity={0.5} depthWrite={false} />
+        <ringGeometry args={[1.32, 1.35, 64]} />
+        <meshBasicMaterial color={themeColor} transparent opacity={0.55} depthWrite={false} />
       </mesh>
+      {/* Hologram alignment ticks at 90° intervals */}
+      {[0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2].map((angle, idx) => (
+        <mesh
+          key={idx}
+          rotation={[-Math.PI / 2, 0, angle]}
+          position={[Math.cos(angle) * 1.335, -0.009, Math.sin(angle) * 1.335]}
+        >
+          <planeGeometry args={[0.08, 0.015]} />
+          <meshBasicMaterial color={themeColor} transparent opacity={0.8} depthWrite={false} />
+        </mesh>
+      ))}
     </group>
   );
 }
 
+/* ─── Ambient Cosmic Dust Particles (100% Deterministic, No Math.random) ─── */
+function CosmicDust({ count = 36, color = "#93c5fd" }: { count?: number; color?: string }) {
+  const points = useMemo(() => {
+    const coords = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      const s1 = Math.sin(i * 127.1 + 311.7) * 43758.5453;
+      const s2 = Math.sin(i * 269.5 + 183.3) * 43758.5453;
+      const s3 = Math.sin(i * 419.2 + 371.9) * 43758.5453;
+      const r1 = s1 - Math.floor(s1) - 0.5;
+      const r2 = s2 - Math.floor(s2);
+      const r3 = s3 - Math.floor(s3) - 0.5;
+
+      coords[i * 3] = r1 * 4.2;
+      coords[i * 3 + 1] = r2 * 2.2 - 0.2;
+      coords[i * 3 + 2] = r3 * 4.2;
+    }
+    return coords;
+  }, [count]);
+
+  const pointsRef = useRef<THREE.Points>(null);
+
+  useFrame((_, delta) => {
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y += delta * 0.035;
+    }
+  });
+
+  return (
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[points, 3]} />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.022}
+        color={color}
+        transparent
+        opacity={0.35}
+        depthWrite={false}
+      />
+    </points>
+  );
+}
+
 /* ─── Camera auto-fit ─── */
-function AutoCamera() {
+function AutoCamera({ resetTrigger = 0 }: { resetTrigger?: number }) {
   const { camera } = useThree();
   useEffect(() => {
     camera.position.set(2.4, 1.15, 2.4);
     camera.lookAt(0, 0.08, 0);
-  }, [camera]);
+  }, [camera, resetTrigger]);
   return null;
 }
 
 /* ─── Clean object bounding box fit without compounding transform bug ─── */
-function fitObject(pivot: THREE.Group, content: THREE.Group, targetSize = 1.35): boolean {
+function fitObject(pivot: THREE.Group, content: THREE.Group, targetSize = 1.30): boolean {
   pivot.position.set(0, 0, 0);
   pivot.scale.set(1, 1, 1);
   pivot.rotation.set(0, 0, 0);
@@ -192,11 +292,13 @@ function DedicatedHoloModel({
   objectId,
   explode,
   wireframe,
+  autoRotate = true,
 }: {
   missionId: string;
   objectId: string;
   explode: number;
   wireframe?: boolean;
+  autoRotate?: boolean;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const pivotRef = useRef<THREE.Group>(null);
@@ -209,17 +311,18 @@ function DedicatedHoloModel({
 
   useLayoutEffect(() => {
     if (!contentRef.current || !pivotRef.current) return;
-    if (fitObject(pivotRef.current, contentRef.current, 0.60)) {
+    // 1.30 target size provides a majestic hero scale across the full viewport
+    if (fitObject(pivotRef.current, contentRef.current, 1.30)) {
       centeredRef.current = true;
     }
   }, [missionId, objectId, explode]);
 
   useFrame((_, delta) => {
-    if (groupRef.current) {
+    if (autoRotate && groupRef.current) {
       groupRef.current.rotation.y += delta * 0.22;
     }
     if (!centeredRef.current && contentRef.current && pivotRef.current) {
-      if (fitObject(pivotRef.current, contentRef.current, 0.60)) {
+      if (fitObject(pivotRef.current, contentRef.current, 1.30)) {
         centeredRef.current = true;
       }
     }
@@ -250,6 +353,9 @@ export function HoloCanvas({
   explode,
   wireframe,
   theme,
+  autoRotate = true,
+  lightingMode = "studio",
+  resetTrigger = 0,
   manifest,
 }: {
   missionId: string;
@@ -258,6 +364,9 @@ export function HoloCanvas({
   explode: number;
   wireframe?: boolean;
   theme: ObjectTheme;
+  autoRotate?: boolean;
+  lightingMode?: LightingMode;
+  resetTrigger?: number;
   manifest?: HologramManifest | null;
 }) {
   const isDedicated = hasDedicated3DModel(missionId, objectId);
@@ -265,10 +374,10 @@ export function HoloCanvas({
   return (
     <Canvas
       gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
-      camera={{ fov: 36, near: 0.1, far: 100, position: [3.2, 1.45, 3.2] }}
-      style={{ background: "transparent" }}
+      camera={{ fov: 36, near: 0.1, far: 100, position: [2.6, 1.25, 2.6] }}
+      style={{ background: "transparent", width: "100%", height: "100%" }}
     >
-      <StudioLighting themeColor={theme.primary} />
+      <StudioLighting themeColor={theme.primary} mode={lightingMode} />
       <Suspense fallback={null}>
         {isDedicated ? (
           <DedicatedHoloModel
@@ -276,6 +385,7 @@ export function HoloCanvas({
             objectId={objectId}
             explode={explode}
             wireframe={wireframe}
+            autoRotate={autoRotate}
           />
         ) : (
           <HoloModel
@@ -283,22 +393,24 @@ export function HoloCanvas({
             explode={explode}
             wireframe={wireframe}
             themeColor={theme.primary}
+            autoRotate={autoRotate}
             manifest={manifest}
           />
         )}
       </Suspense>
       <ContactShadow themeColor={theme.primary} />
-      <AutoCamera />
+      <CosmicDust count={36} color={theme.primary} />
+      <AutoCamera resetTrigger={resetTrigger} />
       <OrbitControls
         enableZoom={true}
-        minDistance={1.8}
-        maxDistance={6.0}
+        minDistance={1.4}
+        maxDistance={5.5}
         target={[0, 0, 0]}
         enablePan={false}
         enableDamping={true}
-        dampingFactor={0.05}
+        dampingFactor={0.06}
         autoRotate={false}
-        minPolarAngle={Math.PI / 6}
+        minPolarAngle={Math.PI / 8}
         maxPolarAngle={Math.PI / 1.95}
       />
     </Canvas>

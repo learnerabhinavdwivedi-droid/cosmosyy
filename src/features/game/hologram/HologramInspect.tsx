@@ -3,7 +3,7 @@ import { useGameStore } from "@/store/useGameStore";
 import { getMission, type HeritageObject } from "@/lib/missionData";
 import { getHologramModel, type HologramManifest } from "../hologramMapping";
 import { getObjectTheme } from "../objectThemes";
-import { HoloCanvas } from "./HoloCanvas";
+import { HoloCanvas, type LightingMode } from "./HoloCanvas";
 import { AudioTransmissionDeck } from "./AudioTransmissionDeck";
 import { ArtifactInfoPanel } from "./ArtifactInfoPanel";
 import { ExplodeController } from "./ExplodeController";
@@ -25,6 +25,10 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
   const [explode, setExplode] = useState(0);
   const [manifest, setManifest] = useState<HologramManifest | null>(null);
   const [showStory, setShowStory] = useState(false);
+  const [showIntel, setShowIntel] = useState(false);
+  const [autoRotate, setAutoRotate] = useState(true);
+  const [lightingMode, setLightingMode] = useState<LightingMode>("studio");
+  const [resetTrigger, setResetTrigger] = useState(0);
 
   const mission = useMemo(() => getMission(missionId), [missionId]);
 
@@ -78,68 +82,188 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
     setExplode(0);
   };
 
+  const cycleLighting = () => {
+    setLightingMode((prev) => {
+      if (prev === "studio") return "solar";
+      if (prev === "solar") return "deep-space";
+      return "studio";
+    });
+  };
+
   if (!obj) return null;
+
+  const isOperational = obj.status === "operational";
+  const isDormant = obj.status === "dormant";
 
   return (
     <div
-      className={`absolute inset-0 z-20 transition-opacity duration-500 ${
+      className={`fixed inset-0 z-20 overflow-hidden transition-opacity duration-500 select-none ${
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
-      {/* Background dark overlay */}
-      <div className="absolute inset-0 bg-space-950/85 backdrop-blur-md" />
+      {/* Background dark radial vignette overlay */}
+      <div className="absolute inset-0 bg-space-950/90 backdrop-blur-md" />
 
-      {/* Two-panel layout */}
-      <div className="relative z-10 flex h-full flex-col md:flex-row items-stretch gap-3 md:gap-4 p-3 md:p-5 pt-12 md:pt-12 pb-3 md:pb-4 overflow-y-auto md:overflow-hidden">
-        {/* LEFT PANEL — 3D Studio & Audio Transmission Deck */}
-        <div className="flex w-full md:w-[48%] flex-col min-h-[340px] md:min-h-0">
-          <div
-            className="relative flex-1 overflow-hidden rounded-xl border flex flex-col"
-            style={{ borderColor: theme.border, background: "rgba(7,9,13,0.7)" }}
-          >
-            <div className="relative flex-1">
-              <HoloCanvas
-                missionId={missionId}
-                objectId={obj.id}
-                modelUrl={modelEntry ? modelEntry.modelPath : ""}
-                explode={explode}
-                wireframe={wireframe}
-                theme={theme}
-                manifest={manifest}
-              />
-            </div>
+      {/* FULLSCREEN 3D SHOWCASE VIEWPORT */}
+      <div className="absolute inset-0 z-0">
+        <HoloCanvas
+          missionId={missionId}
+          objectId={obj.id}
+          modelUrl={modelEntry ? modelEntry.modelPath : ""}
+          explode={explode}
+          wireframe={wireframe}
+          theme={theme}
+          autoRotate={autoRotate}
+          lightingMode={lightingMode}
+          resetTrigger={resetTrigger}
+          manifest={manifest}
+        />
+      </div>
 
-            {/* Category badge, wireframe toggle & 3D story launcher */}
-            <div className="absolute left-3 top-3 right-3 z-10 flex items-center justify-between pointer-events-auto">
-              <span
-                className="rounded px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]"
-                style={{ background: theme.primaryDim, color: theme.primary }}
-              >
-                {theme.category}
+      {/* FLOATING AEROSPACE HUD OVERLAYS */}
+      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between p-3 sm:p-5">
+        {/* TOP FLOATING HEADER HUD */}
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pointer-events-auto">
+          {/* Left: Mission Location Breadcrumb & Artifact Title */}
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-regolith-400">
+                {mission.name} · {mission.site}
               </span>
-              <div className="flex items-center gap-1.5">
-                {hasStory && storyPacket && (
-                  <button
-                    type="button"
-                    onClick={() => setShowStory(true)}
-                    className="flex items-center gap-1 rounded border border-sky-400/80 bg-sky-500/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-sky-300 transition hover:bg-sky-500/30 cursor-pointer shadow-sm animate-pulse min-h-[28px]"
-                  >
-                    <span>🎬</span>
-                    <span>3D Story</span>
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setWireframe((v) => !v)}
-                  className="rounded border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider transition hover:bg-space-800 cursor-pointer min-h-[28px]"
-                  style={{ borderColor: theme.border, color: theme.primary, background: theme.primaryDim }}
-                >
-                  {wireframe ? "Mode: X-Ray Wireframe" : "Mode: Blender PBR"}
-                </button>
-              </div>
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider border ${
+                  isOperational
+                    ? "bg-emerald-950/70 text-emerald-300 border-emerald-500/40"
+                    : isDormant
+                    ? "bg-amber-950/70 text-amber-300 border-amber-500/40"
+                    : "bg-space-850 text-regolith-400 border-space-700"
+                }`}
+              >
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    isOperational
+                      ? "bg-emerald-400 animate-pulse"
+                      : isDormant
+                      ? "bg-amber-400"
+                      : "bg-regolith-500"
+                  }`}
+                />
+                <span>
+                  {isOperational
+                    ? "Active Telemetry"
+                    : isDormant
+                    ? "Dormant Sensor"
+                    : "Defunct Structure"}
+                </span>
+              </span>
             </div>
+            <div className="flex items-center gap-2">
+              <h1 className="font-display text-lg sm:text-2xl font-bold tracking-tight text-white drop-shadow-md">
+                {obj.name}
+              </h1>
+              <span className="rounded-full border border-signal/40 bg-signal/10 px-2 py-0.5 text-[9px] font-mono font-bold text-signal">
+                +{obj.xp || 50} XP
+              </span>
+            </div>
+          </div>
 
-            {/* Exploded subsystem controls */}
+          {/* Right: Floating Visual & Mode Controls */}
+          <div className="flex flex-wrap items-center gap-1.5 self-end sm:self-auto">
+            {/* 3D Cinematic Story Button */}
+            {hasStory && storyPacket && (
+              <button
+                type="button"
+                onClick={() => setShowStory(true)}
+                className="flex items-center gap-1.5 rounded-lg border border-sky-400/80 bg-sky-500/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-sky-300 transition hover:bg-sky-500/30 cursor-pointer shadow-md animate-pulse min-h-[30px]"
+              >
+                <span>🎬</span>
+                <span>3D Story</span>
+              </button>
+            )}
+
+            {/* PBR Realistic vs X-Ray Wireframe Mode Toggle */}
+            <button
+              type="button"
+              onClick={() => setWireframe((v) => !v)}
+              className="rounded-lg border px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider transition hover:bg-space-800/80 cursor-pointer shadow-md min-h-[30px] backdrop-blur-md"
+              style={{
+                borderColor: theme.border,
+                color: theme.primary,
+                background: theme.primaryDim,
+              }}
+            >
+              {wireframe ? "Mode: X-Ray Wireframe" : "Mode: Blender PBR"}
+            </button>
+
+            {/* 360° Auto-Orbit Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setAutoRotate((v) => !v)}
+              className={`rounded-lg border px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider transition cursor-pointer shadow-md min-h-[30px] backdrop-blur-md ${
+                autoRotate
+                  ? "border-emerald-500/50 bg-emerald-950/40 text-emerald-300"
+                  : "border-space-700 bg-space-900/60 text-regolith-400 hover:text-white"
+              }`}
+            >
+              <span>{autoRotate ? "Orbit: ON" : "Orbit: PAUSED"}</span>
+            </button>
+
+            {/* Studio / Solar / Deep-Space Lighting Switcher */}
+            <button
+              type="button"
+              onClick={cycleLighting}
+              className="rounded-lg border border-space-700 bg-space-900/70 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-regolith-300 transition hover:bg-space-800 hover:text-white cursor-pointer shadow-md min-h-[30px] backdrop-blur-md"
+            >
+              <span>
+                💡 Light:{" "}
+                {lightingMode === "studio"
+                  ? "Studio"
+                  : lightingMode === "solar"
+                  ? "Solar"
+                  : "Deep Space"}
+              </span>
+            </button>
+
+            {/* Reset Camera to Hero View */}
+            <button
+              type="button"
+              onClick={() => setResetTrigger((n) => n + 1)}
+              className="rounded-lg border border-space-700 bg-space-900/70 px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-regolith-300 transition hover:bg-space-800 hover:text-white cursor-pointer shadow-md min-h-[30px] backdrop-blur-md"
+              title="Reset camera framing"
+            >
+              <span>⌖ Reset</span>
+            </button>
+
+            {/* On-Demand Intel & Technical Specs Drawer Toggle */}
+            <button
+              type="button"
+              onClick={() => setShowIntel((v) => !v)}
+              className={`flex items-center gap-1.5 rounded-lg border px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-wider transition cursor-pointer shadow-md min-h-[30px] backdrop-blur-md ${
+                showIntel
+                  ? "border-amber-400 bg-amber-500/20 text-amber-200"
+                  : "border-cyan-500/50 bg-cyan-950/40 text-cyan-300 hover:bg-cyan-900/40"
+              }`}
+            >
+              <span>✦</span>
+              <span>{showIntel ? "Close Intel" : "Intel & Specs"}</span>
+            </button>
+
+            {/* Primary Close Button */}
+            <button
+              type="button"
+              onClick={handleClose}
+              className="flex h-[30px] w-[30px] items-center justify-center rounded-lg border border-space-700 bg-space-900/80 text-regolith-300 backdrop-blur transition hover:border-space-500 hover:text-white active:scale-95 cursor-pointer shadow-md"
+              aria-label="Close telemetry inspection"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        {/* BOTTOM FLOATING DOCK (Audio Transmission, Explode & Artifact Switcher) */}
+        <div className="flex flex-col gap-2.5 pointer-events-auto max-w-5xl w-full mx-auto">
+          {/* Subsystem Explode Controller (Centered Glass Pill) */}
+          <div className="self-center">
             <ExplodeController
               missionId={missionId}
               objectId={obj.id}
@@ -150,32 +274,18 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
             />
           </div>
 
-          {/* Dormant Voice Log & 20-bar Audio Waveform Equalizer */}
-          <AudioTransmissionDeck
-            missionId={missionId}
-            objectId={obj.id}
-            objectName={obj.name}
-            firstPersonLog={obj.firstPerson}
-            theme={theme}
-          />
-        </div>
-
-        {/* RIGHT PANEL — Artifact Info & Mission Compartment Drawer */}
-        <div className="flex w-full md:w-[52%] flex-col min-h-0">
-          <div
-            className="flex-1 flex flex-col overflow-hidden rounded-xl border p-4 backdrop-blur-md"
-            style={{ borderColor: theme.border, background: "rgba(7,9,13,0.85)" }}
-          >
-            {/* Scrollable Information Body */}
-            <ArtifactInfoPanel
-              obj={obj}
+          {/* Lower Bar: In-Helmet Audio Transmission & Mission Artifact Drawer */}
+          <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-2.5">
+            {/* Audio Transmission Deck */}
+            <AudioTransmissionDeck
               missionId={missionId}
-              missionName={mission.name}
-              missionSite={mission.site}
+              objectId={obj.id}
+              objectName={obj.name}
+              firstPersonLog={obj.firstPerson}
               theme={theme}
             />
 
-            {/* Compartmentalized Mission Artifact Drawer */}
+            {/* Mission Artifact Compartment Drawer */}
             <MissionCompartmentDrawer
               missionId={missionId}
               missionName={mission.name}
@@ -189,15 +299,39 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
         </div>
       </div>
 
-      {/* Top right close button */}
-      <button
-        type="button"
-        onClick={handleClose}
-        className="absolute right-4 top-4 z-30 flex h-8 w-8 items-center justify-center rounded-full border border-space-700 bg-space-900/80 text-regolith-300 backdrop-blur transition hover:border-space-500 hover:text-white active:scale-95 cursor-pointer"
-        aria-label="Close telemetry inspection"
-      >
-        ✕
-      </button>
+      {/* SLIDE-OVER INTEL & SPECIFICATIONS DRAWER (Only opens on-demand when requested!) */}
+      {showIntel && (
+        <div className="fixed inset-y-0 right-0 z-30 w-full sm:w-[420px] md:w-[460px] bg-space-950/95 backdrop-blur-2xl border-l border-space-700/80 shadow-2xl p-4 flex flex-col overflow-hidden animate-in slide-in-from-right duration-300">
+          {/* Drawer Header with Title and Close Button */}
+          <div className="flex items-center justify-between pb-3 border-b border-space-800/80 mb-3 shrink-0">
+            <div className="flex items-center gap-2">
+              <span className="text-sm">✦</span>
+              <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-regolith-200">
+                Artifact Telemetry & Specs
+              </h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowIntel(false)}
+              className="flex h-7 w-7 items-center justify-center rounded-lg border border-space-700 bg-space-900/80 text-regolith-400 hover:text-white transition cursor-pointer"
+              aria-label="Close intel drawer"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Structured Information Content */}
+          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+            <ArtifactInfoPanel
+              obj={obj}
+              missionId={missionId}
+              missionName={mission.name}
+              missionSite={mission.site}
+              theme={theme}
+            />
+          </div>
+        </div>
+      )}
 
       {/* 3D Object Story Card Modal */}
       {showStory && storyPacket && (
