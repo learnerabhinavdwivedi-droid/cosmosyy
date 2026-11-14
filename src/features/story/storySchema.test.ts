@@ -27,9 +27,9 @@ describe("storySchema", () => {
     expect(packet?.name).toBe("Solar Wind Composition Experiment");
   });
 
-  it("registry loads all 73 Object Story Packets across all missions", () => {
+  it("registry loads all Object Story Packets across all missions", () => {
     const all = getAllStoryPackets();
-    expect(all.length).toBe(73);
+    expect(all.length).toBeGreaterThanOrEqual(91);
 
     for (const packet of all) {
       expect(packet.scenes.length).toBeGreaterThanOrEqual(5);

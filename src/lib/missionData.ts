@@ -10,6 +10,9 @@ import marsSpirit from "../../content/missions/mars-spirit.json";
 import marsOpportunity from "../../content/missions/mars-opportunity.json";
 import marsCuriosity from "../../content/missions/mars-curiosity.json";
 import marsPerseverance from "../../content/missions/mars-perseverance.json";
+import marsViking2 from "../../content/missions/mars-viking2.json";
+import marsPhoenix from "../../content/missions/mars-phoenix.json";
+import marsInsight from "../../content/missions/mars-insight.json";
 
 export type Planet = "moon" | "mars";
 
@@ -78,6 +81,9 @@ const RAW: Record<string, unknown> = {
   "mars-opportunity": marsOpportunity,
   "mars-curiosity": marsCuriosity,
   "mars-perseverance": marsPerseverance,
+  "mars-viking2": marsViking2,
+  "mars-phoenix": marsPhoenix,
+  "mars-insight": marsInsight,
 };
 
 function parse(raw: unknown): MissionSpec {

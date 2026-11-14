@@ -48,6 +48,24 @@ import {
   VikingFacsimileCameras3D,
   VikingAntenna3D,
   VikingSeismometer3D,
+  Viking2LanderBody3D,
+  Viking2SamplerArm3D,
+  Viking2Seismometer3D,
+  Viking2Meteorology3D,
+  Viking2FacsimileCameras3D,
+  Viking2GCMSInlet3D,
+  PhoenixLanderBody3D,
+  PhoenixRoboticArm3D,
+  PhoenixTEGA3D,
+  PhoenixMECA3D,
+  PhoenixSolarWings3D,
+  PhoenixLidarStation3D,
+  InSightLanderBody3D,
+  InSightSEIS3D,
+  InSightHP3Mole3D,
+  InSightUltraFlexArrays3D,
+  InSightIDCArm3D,
+  InSightTWINS3D,
   PathfinderBaseStation3D,
   MarsDeploymentRamp3D,
   IMPCameraMast3D,
@@ -142,6 +160,30 @@ export function getDedicated3DComponent(
   if (objectId === "v1-cameras") return VikingFacsimileCameras3D;
   if (objectId === "v1-antenna") return VikingAntenna3D;
   if (objectId === "v1-seismometer") return VikingSeismometer3D;
+
+  // Viking 2
+  if (objectId === "v2-lander-body") return Viking2LanderBody3D;
+  if (objectId === "v2-sampler-arm") return Viking2SamplerArm3D;
+  if (objectId === "v2-seismometer") return Viking2Seismometer3D;
+  if (objectId === "v2-meteorology") return Viking2Meteorology3D;
+  if (objectId === "v2-facsimile-camera") return Viking2FacsimileCameras3D;
+  if (objectId === "v2-gcms-inlet") return Viking2GCMSInlet3D;
+
+  // Phoenix
+  if (objectId === "phoenix-lander-body") return PhoenixLanderBody3D;
+  if (objectId === "phoenix-ra-arm") return PhoenixRoboticArm3D;
+  if (objectId === "phoenix-tega") return PhoenixTEGA3D;
+  if (objectId === "phoenix-meca") return PhoenixMECA3D;
+  if (objectId === "phoenix-solar-wings") return PhoenixSolarWings3D;
+  if (objectId === "phoenix-lidar") return PhoenixLidarStation3D;
+
+  // InSight
+  if (objectId === "insight-lander-body") return InSightLanderBody3D;
+  if (objectId === "insight-seis") return InSightSEIS3D;
+  if (objectId === "insight-hp3") return InSightHP3Mole3D;
+  if (objectId === "insight-ultraflex") return InSightUltraFlexArrays3D;
+  if (objectId === "insight-idc-arm") return InSightIDCArm3D;
+  if (objectId === "insight-twins") return InSightTWINS3D;
 
   return null;
 }
@@ -353,6 +395,90 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
   "v1-seismometer": [
     { name: "drum", displayName: "Seismic Vacuum Sensor Cannister", explode: [0, 0, 0] },
     { name: "dome", displayName: "Gold Thermal Protective Dome", explode: [0, 0.3, 0] },
+  ],
+  // Viking 2
+  "v2-lander-body": [
+    { name: "bus", displayName: "Hexagonal Titanium Equipment Bus", explode: [0, 0.1, 0] },
+    { name: "legs", displayName: "3 Inverted Tripod Landing Struts", explode: [0.35, -0.2, 0] },
+    { name: "rtg", displayName: "Dual SNAP-19 RTGs with Wind Shields", explode: [-0.3, 0.2, 0] },
+  ],
+  "v2-sampler-arm": [
+    { name: "boom", displayName: "Telescoping Collector Boom", explode: [0, 0.2, 0] },
+    { name: "scoop", displayName: "Electromechanical Backhoe Scoop", explode: [0, 0.35, 0.2] },
+    { name: "badger", displayName: "Basalt Boulder ('Mr. Badger')", explode: [0.35, 0, 0] },
+  ],
+  "v2-seismometer": [
+    { name: "sensor", displayName: "Unlocked 3-Axis Inertial Sensor", explode: [0, 0, 0] },
+    { name: "cover", displayName: "Anodized Environmental Cover Dome", explode: [0, 0.3, 0] },
+  ],
+  "v2-meteorology": [
+    { name: "mast", displayName: "Vertical Meteorology Mast", explode: [0, 0.25, 0] },
+    { name: "sensor", displayName: "Hot-Film Anemometer & Thermocouple", explode: [0, 0.45, 0] },
+  ],
+  "v2-facsimile-camera": [
+    { name: "head", displayName: "Dual Nodding Mirror Scanner Heads", explode: [0, 0.25, 0] },
+    { name: "pylon", displayName: "White Magnesium Alloy Pylons", explode: [0, 0.1, 0] },
+  ],
+  "v2-gcms-inlet": [
+    { name: "funnel", displayName: "Sample Collection Funnel & Sieve", explode: [0, 0.2, 0] },
+    { name: "oven", displayName: "Miniature Pyrolysis Ovens", explode: [0, -0.1, 0] },
+  ],
+  // Phoenix
+  "phoenix-lander-body": [
+    { name: "bus", displayName: "Octagonal Deck & Hydrazine Thrusters", explode: [0, 0.15, 0] },
+    { name: "legs", displayName: "3 Inverted-Tripod Footpads", explode: [0.35, -0.2, 0] },
+    { name: "ssi", displayName: "Surface Stereo Imager (SSI) Mast", explode: [0, 0.4, 0] },
+  ],
+  "phoenix-ra-arm": [
+    { name: "arm", displayName: "2.35m Articulated Carbon Arm", explode: [0, 0.25, 0] },
+    { name: "rasp", displayName: "Carbide Ice-Cutting Rasp & Scoop", explode: [0.2, 0.3, 0] },
+    { name: "ice", displayName: "Exposed Subsurface Water Ice Sheet", explode: [0, -0.15, 0] },
+  ],
+  "phoenix-tega": [
+    { name: "ovens", displayName: "Bank of 8 Miniature Vacuum Ovens", explode: [0, 0, 0] },
+    { name: "doors", displayName: "Motorized Sample Seal Doors", explode: [0, 0.25, 0] },
+  ],
+  "phoenix-meca": [
+    { name: "box", displayName: "Wet Chemistry Analytical Cell Box", explode: [0, 0, 0] },
+    { name: "beakers", displayName: "4 Solution Beakers & Ion Electrodes", explode: [0, 0.25, 0] },
+  ],
+  "phoenix-solar-wings": [
+    { name: "wing1", displayName: "Port Decagonal Fan-Fold Solar Array", explode: [-0.4, 0.1, 0] },
+    { name: "wing2", displayName: "Starboard Decagonal Fan-Fold Solar Array", explode: [0.4, 0.1, 0] },
+  ],
+  "phoenix-lidar": [
+    { name: "mast", displayName: "Canadian Space Agency Weather Mast", explode: [0, 0.2, 0] },
+    { name: "laser", displayName: "Green Nd:YAG Atmospheric Lidar Beam", explode: [0, 0.5, 0] },
+  ],
+  // InSight
+  "insight-lander-body": [
+    { name: "deck", displayName: "Hexagonal Composite Equipment Deck", explode: [0, 0.1, 0] },
+    { name: "rise", displayName: "Twin RISE Radio Science X-Band Horns", explode: [0, 0.35, 0] },
+    { name: "legs", displayName: "3 Crushable Aluminum Honeycomb Legs", explode: [0.35, -0.15, 0] },
+  ],
+  "insight-seis": [
+    { name: "dome", displayName: "Wind & Thermal Shield (WTS) Gold Dome", explode: [0, 0.35, 0] },
+    { name: "vbb", displayName: "Three-Axis Evacuated Spherical Vacuum Sensor", explode: [0, 0, 0] },
+    { name: "tether", displayName: "Ribbon Umbilical Cable to Lander", explode: [-0.25, 0, 0] },
+  ],
+  "insight-hp3": [
+    { name: "housing", displayName: "Support Structure Assembly (SSA)", explode: [0, 0.15, 0] },
+    { name: "mole", displayName: "Tungsten Self-Hammering Penetrator Mole", explode: [0.2, -0.25, 0] },
+    { name: "tether", displayName: "Instrumented Thermal Sensor Cable", explode: [0, 0.2, 0] },
+  ],
+  "insight-ultraflex": [
+    { name: "array1", displayName: "Port 2.15m Circular UltraFlex Array", explode: [-0.45, 0, 0] },
+    { name: "array2", displayName: "Starboard 2.15m Circular UltraFlex Array", explode: [0.45, 0, 0] },
+    { name: "dust", displayName: "Accumulated Red Regolith Dust Layer", explode: [0, 0.15, 0] },
+  ],
+  "insight-idc-arm": [
+    { name: "arm", displayName: "1.9m Articulated Carbon Composite Boom", explode: [0, 0.25, 0] },
+    { name: "grapple", displayName: "Wax-Actuated Instrument Grapple Claw", explode: [0.25, 0.35, 0] },
+    { name: "camera", displayName: "Instrument Deployment Camera (IDC)", explode: [0.15, 0.15, 0] },
+  ],
+  "insight-twins": [
+    { name: "boom1", displayName: "Port Temperature & Wind Sensor Boom", explode: [-0.3, 0.2, 0] },
+    { name: "boom2", displayName: "Starboard Temperature & Wind Sensor Boom", explode: [0.3, 0.2, 0] },
   ],
   "mp-base-station": [
     { name: "bus", displayName: "Central Equipment Electronics Bus", explode: [0, 0, 0] },
