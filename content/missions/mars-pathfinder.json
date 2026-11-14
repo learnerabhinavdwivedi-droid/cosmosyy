@@ -44,7 +44,8 @@
       "status": "defunct",
       "firstPerson": "I bounced fifteen times across Mars before I finally stopped. Then I opened my petals like a flower, rolled out my ramp, and let little Sojourner drive out onto a new world. For 83 days we worked together — I relayed everything home. Now I sit named after Carl Sagan, a monument to curiosity.",
       "yearDeployed": 1997,
-      "yearLastContact": 1997
+      "yearLastContact": 1997,
+      "nasaImageId": "PIA01551"
     },
     {
       "id": "mp-sojourner",
@@ -58,7 +59,8 @@
       "status": "defunct",
       "firstPerson": "I was the first rover ever to drive on another planet. I was tiny — no bigger than a microwave — but I was brave. For 83 Martian days I nosed up to rocks, tasted them with my spectrometer, and showed the world that a little robot could explore another world. Every Mars rover after me started with my tracks.",
       "yearDeployed": 1997,
-      "yearLastContact": 1997
+      "yearLastContact": 1997,
+      "nasaImageId": "PIA02405"
     },
     {
       "id": "mp-ramp",
@@ -72,7 +74,8 @@
       "status": "defunct",
       "firstPerson": "I was just a ramp — two metal tracks folded against a lander. But on 6 July 1997, little Sojourner rolled down me and touched Martian soil for the first time. That made me the bridge between two worlds. My rear twin was blocked by a stubborn airbag, so I got the honour all to myself.",
       "yearDeployed": 1997,
-      "yearLastContact": 1997
+      "yearLastContact": 1997,
+      "nasaImageId": "PIA01126"
     },
     {
       "id": "mp-imp-camera",
@@ -86,7 +89,8 @@
       "status": "defunct",
       "firstPerson": "From my perch 1.5 metres up, I saw Mars in a way no camera had for twenty years. I snapped 16,500 pictures — sunsets, dust devils, Sojourner posing next to rocks. My panoramas showed the whole world what a Martian afternoon looks like. I had 24 different filters, one for every question scientists wanted to ask.",
       "yearDeployed": 1997,
-      "yearLastContact": 1997
+      "yearLastContact": 1997,
+      "nasaImageId": "PIA01553"
     },
     {
       "id": "mp-barnacle-bill",
@@ -99,7 +103,8 @@
       "legacy": "Barnacle Bill still sits where Sojourner analysed it, an ordinary-looking rock that changed our understanding of Martian geology.",
       "status": "defunct",
       "firstPerson": "I am just a rock, but I was the first rock on Mars that a rover ever touched. When Sojourner pressed her spectrometer against me, scientists gasped — I was not what they expected. I am rich in silicon, like volcanic rocks on Earth. I proved that Mars has a far more complex history than anyone guessed.",
-      "yearDeployed": 1997
+      "yearDeployed": 1997,
+      "nasaImageId": "PIA01552"
     },
     {
       "id": "mp-yogi",
@@ -112,7 +117,8 @@
       "legacy": "Yogi remains at Ares Vallis, its wind-sculpted face slowly being reshaped by Martian dust storms over the decades.",
       "status": "defunct",
       "firstPerson": "I am Yogi, a boulder the size of a bear, and I told a different story from my neighbour Barnacle Bill. Where Bill was silicon-rich, I am plain basalt — proof that Mars mixes its rocks like Earth does. The wind has been sculpting my face for millions of years, and Sojourner was the first to notice.",
-      "yearDeployed": 1997
+      "yearDeployed": 1997,
+      "nasaImageId": "PIA02406"
     }
   ]
 }

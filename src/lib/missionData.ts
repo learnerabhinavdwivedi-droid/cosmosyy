@@ -33,6 +33,7 @@ export interface HeritageObject {
   firstPerson?: string;
   yearDeployed?: number;
   yearLastContact?: number;
+  nasaImageId?: string;
 }
 
 export interface MissionTimeline {
@@ -98,6 +99,7 @@ function parse(raw: unknown): MissionSpec {
     firstPerson: (o.firstPerson as string) ?? undefined,
     yearDeployed: (o.yearDeployed as number) ?? undefined,
     yearLastContact: (o.yearLastContact as number) ?? undefined,
+    nasaImageId: (o.nasaImageId as string) ?? undefined,
   }));
   return {
     id: r.id as string,

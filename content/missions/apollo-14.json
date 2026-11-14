@@ -43,7 +43,8 @@
       "legacy": "Remains at Fra Mauro; its ascent stage was deliberately crashed into the Moon, creating a known-energy seismic source for the ALSEP network.",
       "status": "defunct",
       "firstPerson": "I am Antares, and I almost did not make it. A faulty abort switch nearly ended our mission before we even started the descent. The crew and Mission Control raced to reprogram my computer in flight. When we finally touched down at Fra Mauro — the target Apollo 13 never reached — it felt like the whole world exhaled.",
-      "yearDeployed": 1971
+      "yearDeployed": 1971,
+      "nasaImageId": "as14-66-9277"
     },
     {
       "id": "flag",
@@ -56,7 +57,8 @@
       "legacy": "LROC images from 2011 show the Apollo 14 flag still casts a shadow, indicating it remains standing.",
       "status": "defunct",
       "firstPerson": "I am the flag planted by Alan Shepard, America's first astronaut and the oldest moonwalker at age 47. He had fought his way back from a disabling inner-ear condition just to stand here. When he pushed my pole into Fra Mauro soil, it was a personal triumph as much as a national one.",
-      "yearDeployed": 1971
+      "yearDeployed": 1971,
+      "nasaImageId": "as14-66-9233"
     },
     {
       "id": "alsep",
@@ -70,7 +72,8 @@
       "status": "defunct",
       "firstPerson": "I am the ALSEP station at Fra Mauro, powered by a glowing heart of plutonium. My active seismometer thumped the ground with small explosions to map the layers beneath me. My charged particle detector watched the solar wind slam into the unprotected surface. I reported home faithfully for six years until the day NASA said goodbye.",
       "yearDeployed": 1971,
-      "yearLastContact": 1977
+      "yearLastContact": 1977,
+      "nasaImageId": "as14-67-9374"
     },
     {
       "id": "lrrr",
@@ -83,7 +86,8 @@
       "legacy": "Still fully operational and regularly targeted by laser ranging stations worldwide, more than fifty years after deployment.",
       "status": "operational",
       "firstPerson": "I am the second Laser Ranging Retroreflector placed on the Moon, with 100 precision glass prisms aimed at Earth. Together with my twins at Tranquility Base and Hadley Rille, I form a triangle that lets scientists track how the Moon wobbles, flexes, and slowly spirals away from Earth. After more than fifty years, I still bounce back every laser that finds me.",
-      "yearDeployed": 1971
+      "yearDeployed": 1971,
+      "nasaImageId": "as14-67-9386"
     },
     {
       "id": "met",
@@ -96,7 +100,8 @@
       "legacy": "The only human-pulled wheeled vehicle ever used on the Moon; its design informed requirements for the Lunar Roving Vehicle deployed on Apollo 15, 16, and 17.",
       "status": "defunct",
       "firstPerson": "I am the MET — the Modular Equipment Transporter — but everyone called me the lunar rickshaw. Al and Ed pulled me across Fra Mauro's hilly terrain, carrying tools, cameras, and sample bags. I was not glamorous like the rovers that came after me, but I let them explore farther and bring back more Moon than any mission before.",
-      "yearDeployed": 1971
+      "yearDeployed": 1971,
+      "nasaImageId": "as14-68-9487"
     },
     {
       "id": "golf-balls",
@@ -109,7 +114,8 @@
       "legacy": "The two golf balls remain on the surface at Fra Mauro; the makeshift 6-iron club head is on display at the USGA Golf Museum in Far Hills, New Jersey.",
       "status": "defunct",
       "firstPerson": "We are Shepard's golf balls — two ordinary balls that became the most famous sports equipment off Earth. Alan smuggled a 6-iron head in his suit pocket and clipped it onto a sample tool. His first swing was a shank, but the second sent us sailing in the low gravity. He said we went 'miles and miles' — really about 40 yards. We are still out here.",
-      "yearDeployed": 1971
+      "yearDeployed": 1971,
+      "nasaImageId": "as14-67-9367"
     }
   ],
   "models": {

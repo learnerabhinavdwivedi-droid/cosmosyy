@@ -41,7 +41,8 @@
       "legacy": "Remains at Tranquility Base; its plaque reading 'We came in peace for all mankind' is humanity's first permanent marker on another world.",
       "status": "defunct",
       "firstPerson": "I am Eagle's lower half, the stage that held the engine which slowed us from orbit to touchdown. Neil and Buzz climbed down my ladder to take humanity's first steps on the Moon. My upper half flew away, but I stay here forever, carrying a plaque signed by the crew and President Nixon.",
-      "yearDeployed": 1969
+      "yearDeployed": 1969,
+      "nasaImageId": "as11-40-5927"
     },
     {
       "id": "flag",
@@ -54,7 +55,8 @@
       "legacy": "Buzz Aldrin reported seeing the flag knocked over by the ascent engine exhaust; LROC images from 2009 show no shadow at this location, confirming it likely fell.",
       "status": "defunct",
       "firstPerson": "I was the first flag planted on another world. Buzz and Neil struggled to push my pole into the hard lunar soil. When Eagle's engine fired for liftoff, the blast knocked me over. After more than fifty years of raw sunlight with no atmosphere to protect me, I have faded to white — but I was here first.",
-      "yearDeployed": 1969
+      "yearDeployed": 1969,
+      "nasaImageId": "as11-40-5874"
     },
     {
       "id": "lrrr",
@@ -67,7 +69,8 @@
       "legacy": "Still fully operational — observatories at Apache Point (New Mexico) and Grasse (France) fire lasers at it regularly, achieving millimetre-level Earth-Moon distance measurements.",
       "status": "operational",
       "firstPerson": "I am the Laser Ranging Retroreflector, and I am still working after more than fifty years. Every night, observatories on Earth aim a laser at my 100 glass prisms, and I bounce the light straight back. Scientists use my reflections to measure the Moon's distance down to the millimetre — that is how they discovered I am slowly drifting away from Earth.",
-      "yearDeployed": 1969
+      "yearDeployed": 1969,
+      "nasaImageId": "as11-40-5952"
     },
     {
       "id": "psep",
@@ -81,7 +84,8 @@
       "status": "defunct",
       "firstPerson": "I am the Passive Seismic Experiment, the first seismometer on another world. Buzz placed me gently on the regolith and I listened. I felt the ground shake when Eagle's ascent engine fired, and I caught tiny moonquakes before my solar panels overheated after just 21 days. But those three weeks changed everything we knew about the Moon's interior.",
       "yearDeployed": 1969,
-      "yearLastContact": 1969
+      "yearLastContact": 1969,
+      "nasaImageId": "as11-40-5948"
     },
     {
       "id": "tv-camera",
@@ -94,7 +98,8 @@
       "legacy": "Remains at Tranquility Base on its tripod; the original slow-scan video tapes were accidentally overwritten at NASA, but restored copies survive from broadcast recordings.",
       "status": "defunct",
       "firstPerson": "I am the television camera that showed Earth its first moonwalk. When Neil climbed down the ladder, I was watching from the MESA bay. He moved me to a tripod so I could film both astronauts working. Six hundred million people saw the world through my lens that night — the largest TV audience in history.",
-      "yearDeployed": 1969
+      "yearDeployed": 1969,
+      "nasaImageId": "as11-40-5882"
     },
     {
       "id": "mesa",
@@ -107,7 +112,8 @@
       "legacy": "Remains attached to the descent stage at Tranquility Base; its fold-down design became the standard equipment bay architecture for all subsequent Lunar Modules.",
       "status": "defunct",
       "firstPerson": "I am the Modular Equipment Stowage Assembly, the fold-down shelf on Eagle's side. When Neil pulled my handle, I swung open and a tiny TV camera mounted on me captured his first step. I held the tools, sample bags, and the flag — everything they needed for their two and a half hours outside.",
-      "yearDeployed": 1969
+      "yearDeployed": 1969,
+      "nasaImageId": "as11-40-5928"
     },
     {
       "id": "swc",
@@ -120,7 +126,8 @@
       "legacy": "The foil was rolled up and returned to Earth for laboratory analysis at the University of Bern; the deployment pole remains at Tranquility Base.",
       "status": "defunct",
       "firstPerson": "I am the Solar Wind Composition experiment — a sheet of aluminium foil on a pole, facing the Sun. For 77 minutes I stood there catching tiny particles streaming from the Sun that Earth's magnetic field normally deflects. Then Buzz rolled me up and carried me home so scientists could read what the Sun had written on my surface.",
-      "yearDeployed": 1969
+      "yearDeployed": 1969,
+      "nasaImageId": "as11-40-5872"
     }
   ],
   "models": {

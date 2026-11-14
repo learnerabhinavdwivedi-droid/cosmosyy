@@ -44,7 +44,8 @@
       "status": "defunct",
       "firstPerson": "I was the first to touch Mars and survive. For six years I tasted its soil, photographed its rust-coloured deserts, and radioed home every discovery. Now I sit quietly at Chryse Planitia, the oldest human-made object on Mars, waiting for the day someone visits me again.",
       "yearDeployed": 1976,
-      "yearLastContact": 1982
+      "yearLastContact": 1982,
+      "nasaImageId": "PIA00393"
     },
     {
       "id": "v1-sampler-arm",
@@ -58,7 +59,8 @@
       "status": "defunct",
       "firstPerson": "I reached out and touched Mars for the very first time. My metal fingers scooped the red soil and fed it to experiments searching for life. The answer I found was puzzling — something was happening in that soil, but we still aren't sure what. Maybe one day humans will come back and finish what I started.",
       "yearDeployed": 1976,
-      "yearLastContact": 1982
+      "yearLastContact": 1982,
+      "nasaImageId": "PIA00381"
     },
     {
       "id": "v1-meteorology",
@@ -72,7 +74,8 @@
       "status": "defunct",
       "firstPerson": "Every morning I felt the Martian wind brush past my sensors. I was the world's loneliest weather station, reporting forecasts no one could use — but scientists on Earth hung on every reading. I showed them that Mars has weather, seasons, and dust storms just like home.",
       "yearDeployed": 1976,
-      "yearLastContact": 1982
+      "yearLastContact": 1982,
+      "nasaImageId": "PIA00382"
     },
     {
       "id": "v1-cameras",
@@ -86,7 +89,8 @@
       "status": "defunct",
       "firstPerson": "I showed people what Mars actually looks like — not through a telescope, but standing right there. Line by line I built up the picture: red rocks, pink sky, a desert that stretches to the horizon. When my first photo reached Earth, the whole world saw a new frontier for the first time.",
       "yearDeployed": 1976,
-      "yearLastContact": 1982
+      "yearLastContact": 1982,
+      "nasaImageId": "PIA00380"
     },
     {
       "id": "v1-antenna",
@@ -100,7 +104,8 @@
       "status": "defunct",
       "firstPerson": "I was the voice of Mars. Every photograph, every weather reading, every soil experiment result — they all passed through me on their way to Earth. At 16 kilobits per second I was slow by today's standards, but I was the first to whisper Mars's secrets across 225 million kilometres of space.",
       "yearDeployed": 1976,
-      "yearLastContact": 1982
+      "yearLastContact": 1982,
+      "nasaImageId": "PIA00384"
     },
     {
       "id": "v1-seismometer",
@@ -114,7 +119,8 @@
       "status": "defunct",
       "firstPerson": "I tried to listen to the heartbeat of Mars, but the wind kept drowning it out. Mounted on top of the lander, every gust shook me. I could not confirm a single marsquake. But my struggle was not wasted — forty years later, InSight learned from my mistakes and heard Mars rumble for the first time.",
       "yearDeployed": 1976,
-      "yearLastContact": 1982
+      "yearLastContact": 1982,
+      "nasaImageId": "PIA00383"
     }
   ]
 }

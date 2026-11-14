@@ -43,7 +43,8 @@
       "legacy": "Remains in the Ocean of Storms; its ascent stage was deliberately crashed into the Moon to calibrate the Apollo 12 seismometer.",
       "status": "defunct",
       "firstPerson": "I am the descent stage of Intrepid. Pete Conrad flew me to a pinpoint landing just 163 metres from Surveyor 3 — exactly where we planned. When my upper half launched away, NASA deliberately crashed it into the Moon so the seismometer could feel the impact. I still stand here, proof that humans could land on a dime.",
-      "yearDeployed": 1969
+      "yearDeployed": 1969,
+      "nasaImageId": "as12-46-6737"
     },
     {
       "id": "flag",
@@ -56,7 +57,8 @@
       "legacy": "LROC images suggest the flag may have been knocked over by the ascent engine exhaust during departure from the surface.",
       "status": "defunct",
       "firstPerson": "I am the second American flag on the Moon. Pete and Al planted me near Intrepid during their first moonwalk. Like my sister flag at Tranquility Base, I have been baking in unfiltered sunlight for over fifty years. I may have fallen when Intrepid's ascent engine blasted off — no one has visited to check.",
-      "yearDeployed": 1969
+      "yearDeployed": 1969,
+      "nasaImageId": "as12-46-6729"
     },
     {
       "id": "alsep",
@@ -70,7 +72,8 @@
       "status": "defunct",
       "firstPerson": "I am the ALSEP — a whole science station powered by the heat of plutonium-238. My seismometer felt the crash of Intrepid's upper half and the Moon rang like a bell for almost an hour. I whispered data back to Earth every day for eight years until NASA turned me off in 1977 to save money.",
       "yearDeployed": 1969,
-      "yearLastContact": 1977
+      "yearLastContact": 1977,
+      "nasaImageId": "as12-46-6813"
     },
     {
       "id": "surveyor-3",
@@ -84,7 +87,8 @@
       "status": "defunct",
       "firstPerson": "I am Surveyor 3, and I was here first. I soft-landed in April 1967 and scooped lunar soil to prove the Moon could support a heavy spacecraft. Two and a half years later, Pete and Al walked over and cut off my TV camera to bring home. The rest of me still stands in this crater — the oldest piece of equipment the Apollo astronauts ever visited on the Moon.",
       "yearDeployed": 1967,
-      "yearLastContact": 1967
+      "yearLastContact": 1967,
+      "nasaImageId": "as12-48-7133"
     },
     {
       "id": "s-band-antenna",
@@ -97,7 +101,8 @@
       "legacy": "Remains near the Intrepid landing site; its erectable parabolic design was carried on all subsequent Apollo missions for reliable deep-space communication.",
       "status": "defunct",
       "firstPerson": "I am the S-band erectable antenna. When the astronauts set me up, I gave Mission Control a much stronger signal than the small antenna on Intrepid. I beamed back television pictures and science data across 384,000 kilometres of empty space — though Al Bean accidentally pointed the TV camera at the Sun and burned it out early in the mission.",
-      "yearDeployed": 1969
+      "yearDeployed": 1969,
+      "nasaImageId": "as12-47-6988"
     },
     {
       "id": "hand-tool-carrier",
@@ -110,7 +115,8 @@
       "legacy": "Left on the surface to save weight for the lunar samples; the tools it carried are archived at the Lunar Sample Laboratory in Houston.",
       "status": "defunct",
       "firstPerson": "I am the hand tool carrier — a simple rack holding tongs, scoops, core tubes, and sample bags. Pete and Al carried me on both moonwalks as they collected rocks and soil from six different spots. When it was time to go home, they left me behind — I weighed too much compared to the 34 kilograms of Moon they were bringing back.",
-      "yearDeployed": 1969
+      "yearDeployed": 1969,
+      "nasaImageId": "as12-49-7278"
     }
   ],
   "models": {

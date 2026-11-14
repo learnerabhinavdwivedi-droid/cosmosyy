@@ -22,6 +22,7 @@ import { EarthAtmosphere } from "./EarthAtmosphere";
 import { getSunPosition, getEarthPosition } from "./sunPosition";
 import { TouchControls } from "./TouchControls";
 import { HologramInspect } from "./HologramInspect";
+import { getThemeColor3 } from "./objectThemes";
 import * as THREE from "three";
 
 const SCAN_RANGE = 8;
@@ -80,21 +81,29 @@ function HoloParticles({ color, speed }: { color: string; speed: number }) {
 const NAME_VISIBLE_RANGE = 40;
 const PROXIMITY_RANGE = 15;
 
-function FloatingArrow({ isFound }: { isFound: boolean }) {
+function FloatingArrow({ isFound, themeColor, distance }: { isFound: boolean; themeColor: string; distance: number }) {
   const groupRef = useRef<THREE.Group>(null);
+  const glowRef = useRef<THREE.PointLight>(null);
 
   useFrame(() => {
     if (!groupRef.current) return;
     const t = Date.now() * 0.001;
     groupRef.current.position.y = 5 + Math.sin(t * 2) * 0.4;
+    if (glowRef.current) {
+      const glowStrength = Math.min(distance / 40, 1);
+      glowRef.current.intensity = isFound ? 0.3 : 1.5 + glowStrength * 3 + Math.sin(t * 3) * 0.5;
+    }
   });
+
+  const color = isFound ? "#66ff99" : themeColor;
 
   return (
     <group ref={groupRef} position={[0, 5, 0]}>
+      <pointLight ref={glowRef} color={color} intensity={1.5} distance={12} decay={2} />
       <mesh rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[0.35, 0.8, 6]} />
         <meshBasicMaterial
-          color={isFound ? "#66ff99" : "#00ff66"}
+          color={color}
           transparent
           opacity={isFound ? 0.4 : 0.85}
         />
@@ -102,7 +111,7 @@ function FloatingArrow({ isFound }: { isFound: boolean }) {
       <mesh position={[0, 0.7, 0]}>
         <cylinderGeometry args={[0.1, 0.1, 0.6, 6]} />
         <meshBasicMaterial
-          color={isFound ? "#66ff99" : "#00ff66"}
+          color={color}
           transparent
           opacity={isFound ? 0.3 : 0.7}
         />
@@ -153,14 +162,13 @@ function HeritageMarker({
 
   if (obj.id === "descent-stage" || obj.hidden) return null;
 
-  const baseColor = isFound ? "#66ff99" : isNear
-    ? (isMars ? "#ff9944" : "#00d4ff")
-    : (isMars ? "#e8a050" : "#ffd36e");
+  const themeColor = getThemeColor3(obj.id);
+  const baseColor = isFound ? "#66ff99" : isNear ? themeColor : (isMars ? "#e8a050" : "#ffd36e");
   const showName = distance < NAME_VISIBLE_RANGE;
 
   return (
     <group position={obj.position}>
-      <FloatingArrow isFound={isFound} />
+      <FloatingArrow isFound={isFound} themeColor={themeColor} distance={distance} />
 
       <mesh
         ref={outerRingRef}

@@ -12,21 +12,19 @@ import {
   getDisplayComponents,
   type HologramManifest,
 } from "./hologramMapping";
+import { getObjectTheme, type ObjectTheme } from "./objectThemes";
 import * as THREE from "three";
 
-const HOLO_CYAN = "#00D4FF";
-const HOLO_CYAN_DIM = "rgba(0,212,255,0.15)";
-const HOLO_BORDER = "rgba(0,212,255,0.35)";
-
-/* ─── Holographic 3D model with auto-rotate + explode ─── */
+/* ─── Holographic 3D model ─── */
 function HoloModel({
   url,
-  explode: _explode,
   wireframe,
+  themeColor,
 }: {
   url: string;
   explode: number;
   wireframe?: boolean;
+  themeColor: string;
 }) {
   const { scene } = useGLTF(url);
   const groupRef = useRef<THREE.Group>(null);
@@ -37,8 +35,8 @@ function HoloModel({
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
         mesh.material = new THREE.MeshStandardMaterial({
-          color: new THREE.Color(HOLO_CYAN),
-          emissive: new THREE.Color(HOLO_CYAN),
+          color: new THREE.Color(themeColor),
+          emissive: new THREE.Color(themeColor),
           emissiveIntensity: wireframe ? 0.6 : 0.3,
           transparent: true,
           opacity: wireframe ? 0.35 : 0.7,
@@ -47,7 +45,7 @@ function HoloModel({
         });
       }
     });
-  }, [clonedScene, wireframe]);
+  }, [clonedScene, wireframe, themeColor]);
 
   useFrame((_, delta) => {
     if (groupRef.current) {
@@ -81,7 +79,7 @@ function HoloModel({
 }
 
 /* ─── Holographic ground rings ─── */
-function HoloRings() {
+function HoloRings({ color }: { color: string }) {
   const ringsRef = useRef<THREE.Group>(null);
 
   useFrame((state) => {
@@ -95,7 +93,7 @@ function HoloRings() {
         <mesh key={i}>
           <ringGeometry args={[r - 0.02, r, 64]} />
           <meshBasicMaterial
-            color={HOLO_CYAN}
+            color={color}
             transparent
             opacity={0.25 - i * 0.05}
             side={THREE.DoubleSide}
@@ -104,14 +102,14 @@ function HoloRings() {
       ))}
       <mesh>
         <circleGeometry args={[0.8, 64]} />
-        <meshBasicMaterial color={HOLO_CYAN} transparent opacity={0.08} />
+        <meshBasicMaterial color={color} transparent opacity={0.08} />
       </mesh>
     </group>
   );
 }
 
 /* ─── Scan line sweep ─── */
-function ScanLine() {
+function ScanLine({ color }: { color: string }) {
   const ref = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
@@ -120,9 +118,9 @@ function ScanLine() {
   });
 
   return (
-    <mesh ref={ref} rotation={[0, 0, 0]}>
+    <mesh ref={ref}>
       <planeGeometry args={[4, 0.02]} />
-      <meshBasicMaterial color={HOLO_CYAN} transparent opacity={0.4} side={THREE.DoubleSide} />
+      <meshBasicMaterial color={color} transparent opacity={0.4} side={THREE.DoubleSide} />
     </mesh>
   );
 }
@@ -137,15 +135,15 @@ function AutoCamera() {
   return null;
 }
 
-/* ─── 3D Viewer canvas (used for both exploded + assembled) ─── */
+/* ─── 3D Viewer canvas ─── */
 function HoloCanvas({
   modelUrl,
   wireframe,
-  children,
+  theme,
 }: {
   modelUrl: string;
   wireframe?: boolean;
-  children?: React.ReactNode;
+  theme: ObjectTheme;
 }) {
   return (
     <Canvas
@@ -154,13 +152,13 @@ function HoloCanvas({
       style={{ background: "transparent" }}
     >
       <ambientLight intensity={0.3} />
-      <directionalLight position={[5, 5, 5]} intensity={0.6} color={HOLO_CYAN} />
-      <pointLight position={[0, -2, 0]} intensity={0.4} color={HOLO_CYAN} />
+      <directionalLight position={[5, 5, 5]} intensity={0.6} color={theme.primary} />
+      <pointLight position={[0, -2, 0]} intensity={0.4} color={theme.primary} />
       <Suspense fallback={null}>
-        <HoloModel url={modelUrl} explode={0} wireframe={wireframe} />
+        <HoloModel url={modelUrl} explode={0} wireframe={wireframe} themeColor={theme.primary} />
       </Suspense>
-      <HoloRings />
-      <ScanLine />
+      <HoloRings color={theme.primary} />
+      <ScanLine color={theme.primary} />
       <AutoCamera />
       <OrbitControls
         enableZoom={false}
@@ -169,35 +167,197 @@ function HoloCanvas({
         minPolarAngle={Math.PI / 4}
         maxPolarAngle={Math.PI / 2.2}
       />
-      {children}
     </Canvas>
   );
 }
 
-/* ─── Component label list (left panel) ─── */
-function ComponentLabels({ manifest }: { manifest: HologramManifest }) {
+/* ─── Category SVG icon (for objects without 3D model) ─── */
+function CategoryIcon({ type, color }: { type: string; color: string }) {
+  const sw = 1.5;
+  const common = { fill: "none", stroke: color, strokeWidth: sw, opacity: 0.5 };
+
+  switch (type) {
+    case "spacecraft":
+      return (
+        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
+          <polygon points="35,25 65,25 72,55 28,55" />
+          <line x1="28" y1="55" x2="15" y2="82" />
+          <line x1="72" y1="55" x2="85" y2="82" />
+          <ellipse cx="15" cy="85" rx="8" ry="2.5" />
+          <ellipse cx="85" cy="85" rx="8" ry="2.5" />
+          <line x1="50" y1="25" x2="50" y2="12" />
+          <circle cx="50" cy="8" r="5" />
+          <rect x="38" y="36" width="24" height="12" rx="2" />
+          <line x1="50" y1="55" x2="50" y2="70" />
+          <polygon points="44,70 56,70 58,78 42,78" />
+        </svg>
+      );
+    case "science":
+      return (
+        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
+          <circle cx="50" cy="50" r="35" />
+          <circle cx="50" cy="50" r="22" />
+          <circle cx="50" cy="50" r="8" />
+          <circle cx="50" cy="50" r="2" fill={color} stroke="none" />
+          <line x1="50" y1="15" x2="50" y2="5" />
+          <line x1="50" y1="95" x2="50" y2="85" />
+          <line x1="15" y1="50" x2="5" y2="50" />
+          <line x1="95" y1="50" x2="85" y2="50" />
+          <line x1="26" y1="26" x2="19" y2="19" />
+          <line x1="74" y1="74" x2="81" y2="81" />
+          <line x1="74" y1="26" x2="81" y2="19" />
+          <line x1="26" y1="74" x2="19" y2="81" />
+        </svg>
+      );
+    case "rover":
+      return (
+        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
+          <rect x="22" y="35" width="56" height="22" rx="4" />
+          <rect x="26" y="26" width="18" height="11" rx="2" />
+          <line x1="56" y1="35" x2="66" y2="22" />
+          <circle cx="69" cy="19" r="5" />
+          <circle cx="30" cy="70" r="10" />
+          <circle cx="70" cy="70" r="10" />
+          <line x1="30" y1="57" x2="30" y2="60" />
+          <line x1="70" y1="57" x2="70" y2="60" />
+          <rect x="30" y="40" width="6" height="4" rx="1" fill={color} stroke="none" opacity="0.3" />
+          <rect x="40" y="40" width="6" height="4" rx="1" fill={color} stroke="none" opacity="0.3" />
+          <rect x="50" y="40" width="6" height="4" rx="1" fill={color} stroke="none" opacity="0.3" />
+        </svg>
+      );
+    case "memorial":
+      return (
+        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
+          <line x1="28" y1="88" x2="28" y2="18" />
+          <rect x="28" y="18" width="42" height="28" />
+          <line x1="28" y1="32" x2="70" y2="32" />
+          <line x1="28" y1="18" x2="70" y2="18" />
+          <polygon points="48,22 49,25 52,25 50,27 51,30 48,28 45,30 46,27 44,25 47,25" fill={color} stroke="none" opacity="0.6" />
+          <polygon points="58,22 59,25 62,25 60,27 61,30 58,28 55,30 56,27 54,25 57,25" fill={color} stroke="none" opacity="0.6" />
+          <polygon points="48,35 49,38 52,38 50,40 51,43 48,41 45,43 46,40 44,38 47,38" fill={color} stroke="none" opacity="0.4" />
+        </svg>
+      );
+    case "equipment":
+      return (
+        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
+          <circle cx="50" cy="32" r="18" />
+          <circle cx="50" cy="32" r="12" />
+          <circle cx="50" cy="32" r="4" fill={color} stroke="none" opacity="0.3" />
+          <line x1="50" y1="50" x2="50" y2="82" />
+          <line x1="32" y1="82" x2="68" y2="82" />
+          <line x1="50" y1="68" x2="36" y2="82" />
+          <line x1="50" y1="68" x2="64" y2="82" />
+          <rect x="44" y="56" width="12" height="6" rx="1" />
+        </svg>
+      );
+    case "geological":
+      return (
+        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
+          <path d="M10,78 Q25,55 40,62 Q55,69 70,48 Q82,34 92,38" />
+          <path d="M10,68 Q25,48 40,52 Q55,56 70,38 Q82,26 92,28" />
+          <path d="M10,58 Q30,42 50,44 Q65,46 80,22 Q88,16 92,18" />
+          <circle cx="38" cy="52" r="3" fill={color} stroke="none" opacity="0.4" />
+          <circle cx="58" cy="40" r="2.5" fill={color} stroke="none" opacity="0.3" />
+          <circle cx="75" cy="32" r="2" fill={color} stroke="none" opacity="0.35" />
+          <circle cx="28" cy="65" r="1.8" fill={color} stroke="none" opacity="0.25" />
+          <path d="M15,85 L30,70 L50,75 L70,60 L90,65" strokeDasharray="3 2" />
+        </svg>
+      );
+    case "helicopter":
+      return (
+        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
+          <rect x="40" y="42" width="20" height="26" rx="5" />
+          <line x1="50" y1="42" x2="50" y2="32" />
+          <line x1="18" y1="32" x2="82" y2="32" />
+          <ellipse cx="18" cy="32" rx="3" ry="1" />
+          <ellipse cx="82" cy="32" rx="3" ry="1" />
+          <line x1="50" y1="68" x2="50" y2="78" />
+          <line x1="36" y1="78" x2="64" y2="78" />
+          <line x1="40" y1="52" x2="28" y2="62" />
+          <line x1="60" y1="52" x2="72" y2="62" />
+          <circle cx="50" cy="55" r="3" fill={color} stroke="none" opacity="0.3" />
+        </svg>
+      );
+    default:
+      return (
+        <svg viewBox="0 0 100 100" className="h-full w-full" {...common}>
+          <circle cx="50" cy="50" r="30" />
+          <circle cx="50" cy="50" r="15" />
+          <circle cx="50" cy="50" r="3" fill={color} stroke="none" />
+        </svg>
+      );
+  }
+}
+
+/* ─── Blueprint view (left panel for non-GLB objects) ─── */
+function BlueprintView({ obj, theme }: { obj: HeritageObject; theme: ObjectTheme }) {
+  return (
+    <div
+      className="relative flex h-full flex-col overflow-hidden rounded-xl border"
+      style={{ borderColor: theme.border, background: "rgba(7,9,13,0.85)" }}
+    >
+      {/* Grid background */}
+      <div
+        className="absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage: `linear-gradient(${theme.primary} 1px, transparent 1px), linear-gradient(90deg, ${theme.primary} 1px, transparent 1px)`,
+          backgroundSize: "32px 32px",
+        }}
+      />
+      {/* Corner brackets */}
+      <div className="absolute left-3 top-3 h-6 w-6 border-l-2 border-t-2" style={{ borderColor: theme.primary }} />
+      <div className="absolute right-3 top-3 h-6 w-6 border-r-2 border-t-2" style={{ borderColor: theme.primary }} />
+      <div className="absolute bottom-3 left-3 h-6 w-6 border-b-2 border-l-2" style={{ borderColor: theme.primary }} />
+      <div className="absolute bottom-3 right-3 h-6 w-6 border-b-2 border-r-2" style={{ borderColor: theme.primary }} />
+      {/* Category icon */}
+      <div className="absolute inset-0 flex items-center justify-center p-12">
+        <CategoryIcon type={theme.iconType} color={theme.primary} />
+      </div>
+      {/* Scan line animation */}
+      <div
+        className="absolute left-0 right-0 h-px animate-pulse"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${theme.primary}, transparent)`,
+          top: "50%",
+        }}
+      />
+      {/* Bottom label */}
+      <div className="mt-auto relative z-10 p-4">
+        <span
+          className="inline-block rounded px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]"
+          style={{ background: theme.primaryDim, color: theme.primary }}
+        >
+          {theme.category}
+        </span>
+        <p className="mt-1.5 text-sm font-bold text-regolith-100">{obj.name}</p>
+        {obj.yearDeployed && (
+          <p className="mt-0.5 text-[10px] text-regolith-400">Deployed {obj.yearDeployed}</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Component label list (left panel with GLB) ─── */
+function ComponentLabels({ manifest, theme }: { manifest: HologramManifest; theme: ObjectTheme }) {
   const parts = useMemo(() => getDisplayComponents(manifest), [manifest]);
 
   return (
-    <div className="flex flex-col gap-2.5 py-2">
+    <div className="flex flex-col gap-2 py-2">
       {parts.map((p) => (
-        <div key={p.name} className="flex items-center gap-2.5 group">
-          {/* Icon */}
+        <div key={p.name} className="flex items-center gap-2">
           <div
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border"
-            style={{ borderColor: HOLO_BORDER, background: HOLO_CYAN_DIM }}
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border"
+            style={{ borderColor: theme.border, background: theme.primaryDim }}
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={HOLO_CYAN} strokeWidth="2">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={theme.primary} strokeWidth="2">
               <circle cx="12" cy="12" r="3" />
               <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
             </svg>
           </div>
-          {/* Label */}
-          <div>
-            <p className="text-xs font-bold text-[#00D4FF] leading-tight">
-              {p.displayName}
-            </p>
-          </div>
+          <p className="text-[11px] font-bold leading-tight" style={{ color: theme.primary }}>
+            {p.displayName}
+          </p>
         </div>
       ))}
     </div>
@@ -208,14 +368,14 @@ function ComponentLabels({ manifest }: { manifest: HologramManifest }) {
 function StatusBadge({ status }: { status?: "operational" | "dormant" | "defunct" }) {
   if (!status) return null;
   const cfg = {
-    operational: { bg: "rgba(63,176,122,0.15)", text: "#3FB07A", dot: "#3FB07A", label: "Still Operational" },
+    operational: { bg: "rgba(63,176,122,0.15)", text: "#3FB07A", dot: "#3FB07A", label: "Operational" },
     dormant: { bg: "rgba(251,191,36,0.15)", text: "#FBBF24", dot: "#FBBF24", label: "Dormant" },
     defunct: { bg: "rgba(154,150,140,0.15)", text: "#9A968C", dot: "#9A968C", label: "Defunct" },
   }[status];
 
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider"
+      className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider"
       style={{ background: cfg.bg, color: cfg.text }}
     >
       <span
@@ -235,6 +395,7 @@ function InfoPanel({
   missionDate,
   crew,
   isMars,
+  theme,
 }: {
   obj: HeritageObject;
   missionName: string;
@@ -242,91 +403,100 @@ function InfoPanel({
   missionDate: string;
   crew: { commander: string; lmp: string; cmp: string };
   isMars: boolean;
+  theme: ObjectTheme;
 }) {
+  const [imgError, setImgError] = useState(false);
+  const nasaUrl = obj.nasaImageId
+    ? `https://images-assets.nasa.gov/image/${obj.nasaImageId}/${obj.nasaImageId}~medium.jpg`
+    : null;
+
   return (
     <div
-      className="h-full overflow-y-auto rounded-xl border p-5 backdrop-blur-xl"
-      style={{
-        borderColor: HOLO_BORDER,
-        background: "rgba(7,9,13,0.92)",
-      }}
+      className="flex h-full flex-col overflow-y-auto rounded-xl border p-5 backdrop-blur-xl"
+      style={{ borderColor: theme.border, background: "rgba(7,9,13,0.92)" }}
     >
-      {/* Mission header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="font-display text-xl font-bold" style={{ color: HOLO_CYAN }}>
-            {missionName}
-          </h2>
-          <div className="mt-1 flex items-center gap-1.5 text-xs text-regolith-400">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-            {missionSite}
-          </div>
-        </div>
+      {/* Category + status */}
+      <div className="flex items-center justify-between">
+        <span
+          className="rounded px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]"
+          style={{ background: theme.primaryDim, color: theme.primary }}
+        >
+          {theme.category}
+        </span>
         <StatusBadge status={obj.status} />
       </div>
 
-      {/* Tagline */}
-      {obj.firstPerson && (
-        <p className="mt-3 text-xs italic leading-relaxed text-regolith-300/80">
-          &ldquo;{obj.firstPerson.split(".")[0]}.&rdquo;
+      {/* Object name */}
+      <h2 className="mt-3 font-display text-xl font-bold" style={{ color: theme.primary }}>
+        {obj.name}
+      </h2>
+
+      {/* Mission + Site */}
+      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-regolith-400">
+        <span className="flex items-center gap-1">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={theme.primary} strokeWidth="2" className="shrink-0">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+          </svg>
+          {missionName}
+        </span>
+        <span className="flex items-center gap-1">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+          {missionSite}
+        </span>
+        <span>{missionDate}</span>
+      </div>
+
+      {/* Crew (Moon only) */}
+      {!isMars && (
+        <p className="mt-1 text-[10px] text-regolith-500">
+          {crew.commander} · {crew.lmp} · {crew.cmp}
         </p>
       )}
 
-      {/* Date + Crew */}
-      <div className="mt-4 space-y-2">
-        <div className="flex items-center gap-2 text-xs text-regolith-300">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={HOLO_CYAN} strokeWidth="2" className="shrink-0">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-            <line x1="16" y1="2" x2="16" y2="6" />
-            <line x1="8" y1="2" x2="8" y2="6" />
-            <line x1="3" y1="10" x2="21" y2="10" />
-          </svg>
-          {missionDate}
-        </div>
-        {!isMars && (
-          <div className="flex items-center gap-2 text-xs text-regolith-300">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={HOLO_CYAN} strokeWidth="2" className="shrink-0">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-            {crew.commander}, {crew.lmp}, {crew.cmp}
-          </div>
-        )}
-      </div>
-
       {/* Divider */}
-      <div className="my-4 h-px" style={{ background: HOLO_BORDER }} />
+      <div className="my-3 h-px" style={{ background: theme.border }} />
 
-      {/* Object name + description */}
-      <div className="flex items-center gap-2">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={HOLO_CYAN} strokeWidth="2" className="shrink-0">
-          <circle cx="12" cy="12" r="10" />
-          <circle cx="12" cy="12" r="3" />
-          <line x1="12" y1="2" x2="12" y2="6" />
-          <line x1="12" y1="18" x2="12" y2="22" />
-          <line x1="2" y1="12" x2="6" y2="12" />
-          <line x1="18" y1="12" x2="22" y2="12" />
-        </svg>
-        <h3 className="font-display text-base font-bold text-regolith-100">
-          {obj.name}
-        </h3>
-      </div>
-      <p className="mt-2 text-xs leading-relaxed text-regolith-300">
-        {obj.description}
-      </p>
+      {/* NASA Image */}
+      {nasaUrl && !imgError && (
+        <div className="relative mb-3 overflow-hidden rounded-lg border" style={{ borderColor: theme.border }}>
+          <img
+            src={nasaUrl}
+            alt={obj.name}
+            className="h-36 w-full object-cover"
+            onError={() => setImgError(true)}
+          />
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-2 py-1">
+            <p className="text-[8px] text-regolith-400">NASA / {obj.nasaImageId}</p>
+          </div>
+        </div>
+      )}
+
+      {/* First person narration */}
+      {obj.firstPerson && (
+        <div
+          className="mb-3 rounded-lg border px-3 py-2"
+          style={{ borderColor: theme.border, background: theme.primaryDim }}
+        >
+          <p className="text-[10px] italic leading-relaxed text-regolith-200">
+            &ldquo;{obj.firstPerson.split(".").slice(0, 2).join(".")}.&rdquo;
+          </p>
+        </div>
+      )}
+
+      {/* Description */}
+      <p className="text-xs leading-relaxed text-regolith-300">{obj.description}</p>
 
       {/* Science discovery */}
       {obj.scienceDiscovery && (
-        <div className="mt-3 rounded-lg border px-3 py-2" style={{ borderColor: HOLO_BORDER, background: HOLO_CYAN_DIM }}>
-          <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: HOLO_CYAN }}>
+        <div className="mt-3 rounded-lg border px-3 py-2" style={{ borderColor: theme.border, background: theme.primaryDim }}>
+          <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: theme.primary }}>
             Science Discovery
           </p>
-          <p className="mt-1 text-xs leading-relaxed text-regolith-200">
+          <p className="mt-1 text-[11px] leading-relaxed text-regolith-200">
             {obj.scienceDiscovery}
           </p>
         </div>
@@ -335,12 +505,8 @@ function InfoPanel({
       {/* Legacy */}
       {obj.legacy && (
         <div className="mt-2 rounded-lg border border-space-700/30 bg-space-800/40 px-3 py-2">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-regolith-400/60">
-            Legacy
-          </p>
-          <p className="mt-1 text-xs leading-relaxed text-regolith-300">
-            {obj.legacy}
-          </p>
+          <p className="text-[9px] font-bold uppercase tracking-wider text-regolith-400/60">Legacy</p>
+          <p className="mt-1 text-[11px] leading-relaxed text-regolith-300">{obj.legacy}</p>
         </div>
       )}
 
@@ -352,8 +518,11 @@ function InfoPanel({
         </div>
       )}
 
-      {/* XP badge */}
-      <div className="mt-3">
+      {/* Bottom spacer to push XP down */}
+      <div className="mt-auto" />
+
+      {/* XP badge + Source */}
+      <div className="mt-3 flex items-center justify-between">
         <span
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold"
           style={{ background: "rgba(255,107,44,0.15)", color: "#FF6B2C" }}
@@ -363,52 +532,55 @@ function InfoPanel({
           </svg>
           +{obj.xp} XP
         </span>
-      </div>
-
-      {/* Source */}
-      {obj.source && (
-        <div className="mt-3 rounded-lg border border-space-700/20 bg-space-800/30 px-3 py-2">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-regolith-400/50">
-            Source
-          </p>
-          <p className="mt-0.5 text-[10px] leading-relaxed text-regolith-400">
+        {obj.source && (
+          <span className="max-w-[50%] truncate text-[9px] text-regolith-500" title={obj.source}>
             {obj.source}
-          </p>
-        </div>
-      )}
+          </span>
+        )}
+      </div>
     </div>
   );
 }
 
 /* ─── EVA status bar ─── */
-function EvaBar({ found, total }: { found: number; total: number }) {
+function EvaBar({ found, total, theme }: { found: number; total: number; theme: ObjectTheme }) {
+  const pct = total > 0 ? (found / total) * 100 : 0;
   return (
     <div
-      className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3 rounded-lg border px-5 py-2.5"
-      style={{ borderColor: HOLO_BORDER, background: "rgba(7,9,13,0.85)" }}
+      className="absolute bottom-4 left-1/2 z-30 flex -translate-x-1/2 items-center gap-3 rounded-lg border px-5 py-2"
+      style={{ borderColor: theme.border, background: "rgba(7,9,13,0.85)" }}
     >
       <span
-        className="rounded px-2 py-0.5 text-xs font-black uppercase tracking-wider"
-        style={{ background: HOLO_CYAN, color: "#07090D" }}
+        className="rounded px-2 py-0.5 text-[10px] font-black uppercase tracking-wider"
+        style={{ background: theme.primary, color: "#07090D" }}
       >
         EVA
       </span>
-      <span className="text-sm text-regolith-200">
-        {found} of {total} objects scanned. {found < total ? "Keep searching..." : "All found!"}
-      </span>
+      <div className="flex items-center gap-2">
+        <div className="h-1.5 w-20 overflow-hidden rounded-full bg-space-800">
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{ width: `${pct}%`, background: theme.primary }}
+          />
+        </div>
+        <span className="text-xs text-regolith-200">
+          {found}/{total}
+        </span>
+      </div>
     </div>
   );
 }
 
-/* ─── Object counter (top center) ─── */
-function ObjectCounter({ found, total }: { found: number; total: number }) {
+/* ─── Object counter (top) ─── */
+function ObjectCounter({ found, total, theme }: { found: number; total: number; theme: ObjectTheme }) {
   return (
     <div
-      className="absolute top-4 left-1/2 -translate-x-1/2 z-30 rounded-lg border px-4 py-1.5"
-      style={{ borderColor: HOLO_BORDER, background: "rgba(7,9,13,0.85)" }}
+      className="absolute left-1/2 top-4 z-30 -translate-x-1/2 rounded-lg border px-4 py-1.5"
+      style={{ borderColor: theme.border, background: "rgba(7,9,13,0.85)" }}
     >
       <span className="text-sm font-bold text-regolith-200">
-        Objects: <span className="font-mono">{found} / {total}</span>
+        Objects: <span className="font-mono" style={{ color: theme.primary }}>{found}</span>
+        <span className="text-regolith-500"> / {total}</span>
       </span>
     </div>
   );
@@ -435,12 +607,16 @@ export function HologramInspect({
   const [manifest, setManifest] = useState<HologramManifest | null>(null);
   const howlRef = useRef<Howl | null>(null);
 
+  const theme = useMemo(
+    () => (objectId ? getObjectTheme(objectId) : getObjectTheme("")),
+    [objectId],
+  );
+
   const modelEntry = useMemo(
     () => (objectId ? getHologramModel(missionId, objectId) : null),
     [missionId, objectId],
   );
 
-  // Load manifest
   useEffect(() => {
     if (!modelEntry) { setManifest(null); return; }
     fetch(modelEntry.manifestPath)
@@ -449,7 +625,6 @@ export function HologramInspect({
       .catch(() => setManifest(null));
   }, [modelEntry]);
 
-  // ESC handler + animation
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") send("EXIT_INSPECT");
@@ -463,7 +638,6 @@ export function HologramInspect({
     };
   }, [send]);
 
-  // Heritage narration audio
   useEffect(() => {
     if (!objectId) return;
     stopNarration();
@@ -496,76 +670,61 @@ export function HologramInspect({
       <div className="absolute inset-0 bg-space-950/80 backdrop-blur-sm" />
 
       {/* Object counter */}
-      <ObjectCounter found={found.length} total={objects.length} />
+      <ObjectCounter found={found.length} total={objects.length} theme={theme} />
 
-      {/* Three-panel layout */}
-      <div className="relative z-10 flex h-full items-stretch gap-3 p-4 pt-14 pb-16">
-        {has3D ? (
-          <>
-            {/* LEFT — Exploded view + component labels */}
-            <div className="flex w-[38%] flex-col gap-3">
-              <div
-                className="relative flex-1 overflow-hidden rounded-xl border"
-                style={{ borderColor: HOLO_BORDER, background: "rgba(7,9,13,0.7)" }}
-              >
-                <HoloCanvas modelUrl={modelEntry!.modelPath} wireframe />
-                {/* Component labels overlay */}
-                {manifest && (
-                  <div className="absolute left-3 top-3 bottom-3 flex items-center">
-                    <ComponentLabels manifest={manifest} />
-                  </div>
-                )}
+      {/* Two-panel layout */}
+      <div className="relative z-10 flex h-full items-stretch gap-4 p-4 pt-14 pb-16">
+        {/* LEFT — 3D wireframe OR category blueprint */}
+        <div className="flex w-[42%] flex-col">
+          {has3D ? (
+            <div
+              className="relative flex-1 overflow-hidden rounded-xl border"
+              style={{ borderColor: theme.border, background: "rgba(7,9,13,0.7)" }}
+            >
+              <HoloCanvas modelUrl={modelEntry!.modelPath} wireframe theme={theme} />
+              {manifest && (
+                <div className="absolute bottom-3 left-3 right-3 z-10">
+                  <ComponentLabels manifest={manifest} theme={theme} />
+                </div>
+              )}
+              {/* Category + name overlay */}
+              <div className="absolute left-3 top-3 z-10">
+                <span
+                  className="rounded px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]"
+                  style={{ background: theme.primaryDim, color: theme.primary }}
+                >
+                  {theme.category}
+                </span>
               </div>
             </div>
+          ) : (
+            <BlueprintView obj={obj} theme={theme} />
+          )}
+        </div>
 
-            {/* CENTER — Assembled model with holo base */}
-            <div className="flex w-[28%] flex-col gap-3">
-              <div
-                className="relative flex-1 overflow-hidden rounded-xl border"
-                style={{ borderColor: HOLO_BORDER, background: "rgba(7,9,13,0.5)" }}
-              >
-                <HoloCanvas modelUrl={modelEntry!.modelPath} />
-              </div>
-            </div>
-
-            {/* RIGHT — Info card */}
-            <div className="flex w-[34%] flex-col">
-              <InfoPanel
-                obj={obj}
-                missionName={mission.name}
-                missionSite={mission.site}
-                missionDate={mission.date}
-                crew={mission.crew}
-                isMars={!!isMars}
-              />
-            </div>
-          </>
-        ) : (
-          <>
-            {/* No 3D model — wider info panel centered */}
-            <div className="flex w-full max-w-lg mx-auto flex-col">
-              <InfoPanel
-                obj={obj}
-                missionName={mission.name}
-                missionSite={mission.site}
-                missionDate={mission.date}
-                crew={mission.crew}
-                isMars={!!isMars}
-              />
-            </div>
-          </>
-        )}
+        {/* RIGHT — Info card */}
+        <div className="flex w-[58%] flex-col">
+          <InfoPanel
+            obj={obj}
+            missionName={mission.name}
+            missionSite={mission.site}
+            missionDate={mission.date}
+            crew={mission.crew}
+            isMars={!!isMars}
+            theme={theme}
+          />
+        </div>
       </div>
 
       {/* EVA status bar */}
-      <EvaBar found={found.length} total={objects.length} />
+      <EvaBar found={found.length} total={objects.length} theme={theme} />
 
       {/* Close button */}
-      <div className="absolute top-4 right-4 z-30">
+      <div className="absolute right-4 top-4 z-30">
         <button
           onClick={() => send("EXIT_INSPECT")}
           className="flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-bold text-regolith-200 transition hover:bg-space-800"
-          style={{ borderColor: HOLO_BORDER, background: "rgba(7,9,13,0.85)" }}
+          style={{ borderColor: theme.border, background: "rgba(7,9,13,0.85)" }}
         >
           {isTouchDevice() ? "CLOSE" : "[ESC]"}
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
