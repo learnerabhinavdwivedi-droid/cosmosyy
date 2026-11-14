@@ -93,6 +93,9 @@ function GameAudioController() {
       }
 
       if (SURFACE_PHASES.has(phase) && !SURFACE_PHASES.has(prev)) {
+        gameAudio.stopEngine();
+        gameAudio.stopSpaceDrone();
+        stopNarration();
         if (!isRobotic) gameAudio.startBreathing();
         if (missionSpec?.planet === "mars") {
           gameAudio.startMarsWind();
@@ -245,15 +248,7 @@ export default function GameShell() {
   useEffect(() => {
     if (isDemo && phase === "flight" && !demoSkipped.current) {
       demoSkipped.current = true;
-      const steps: Array<Parameters<typeof send>[0]> = [
-        "START_COAST", "REACH_ORBIT", "LOCK_TARGET",
-        "BEGIN_DESCENT", "TOUCH_DOWN", "OPEN_HATCH", "STEP_OUT",
-      ];
-      let delay = 0;
-      for (const step of steps) {
-        delay += 100;
-        setTimeout(() => send(step), delay);
-      }
+      send("SKIP_TO_SURFACE");
     }
   }, [isDemo, phase, send]);
 

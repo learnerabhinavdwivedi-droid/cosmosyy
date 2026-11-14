@@ -10,6 +10,7 @@ const ALL_EVENTS: GameEvent[] = [
   "TOUCH_DOWN",
   "OPEN_HATCH",
   "STEP_OUT",
+  "SKIP_TO_SURFACE",
   "START_INSPECT",
   "EXIT_INSPECT",
   "ALL_FOUND",

@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo, useState, Suspense, type RefObject } from "react";
+import { useRef, useEffect, useMemo, useState, useCallback, Suspense, type RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Stars, useGLTF, Preload } from "@react-three/drei";
@@ -1489,7 +1489,7 @@ function FlightContent({ cutVeilRef }: { cutVeilRef: RefObject<HTMLDivElement | 
 
 /* ---- HUD ---- */
 
-function FlightHUD() {
+function FlightHUD({ onSkip }: { onSkip: () => void }) {
   const { t } = useTranslation();
   const phase = useGameStore((s) => s.phase);
   const missionId = useGameStore((s) => s.missionId);
@@ -1542,20 +1542,32 @@ function FlightHUD() {
             {label}
           </p>
         </div>
-        <div className="text-right">
-          <p className="text-[10px] sm:text-xs text-regolith-400">
-            {t("flight.commander", { name: playerName })}
-          </p>
-          {phase === "descent" && (
-            <p className="font-mono text-base sm:text-lg font-bold text-signal">
-              {t("flight.alt", { alt: alt.toLocaleString() })}
+        <div className="flex items-center gap-2.5 sm:gap-4">
+          <div className="text-right">
+            <p className="text-[10px] sm:text-xs text-regolith-400">
+              {t("flight.commander", { name: playerName })}
             </p>
-          )}
-          {phase === "touchdown" && (
-            <p className="font-mono text-base sm:text-lg font-bold text-signal">
-              {t("flight.altContact")}
-            </p>
-          )}
+            {phase === "descent" && (
+              <p className="font-mono text-base sm:text-lg font-bold text-signal">
+                {t("flight.alt", { alt: alt.toLocaleString() })}
+              </p>
+            )}
+            {phase === "touchdown" && (
+              <p className="font-mono text-base sm:text-lg font-bold text-signal">
+                {t("flight.altContact")}
+              </p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={onSkip}
+            className="pointer-events-auto flex items-center gap-1.5 rounded-lg border border-signal/50 bg-space-950/80 hover:bg-space-850 px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-signal backdrop-blur transition hover:border-signal active:scale-95 touch-manipulation shadow-lg"
+            aria-label="Skip to surface landing"
+            title="Skip to surface (or press S)"
+          >
+            <span>{t("flight.skip")}</span>
+            <span className="text-[10px]">⏩</span>
+          </button>
         </div>
       </div>
 
@@ -1609,6 +1621,20 @@ export function FlightScene() {
   const { t } = useTranslation();
   const phase = useGameStore((s) => s.phase);
   const send = useGameStore((s) => s.send);
+
+  const handleSkip = useCallback(() => {
+    send("SKIP_TO_SURFACE");
+  }, [send]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "s" || e.key === "S") {
+        send("SKIP_TO_SURFACE");
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [send]);
   const missionId = useGameStore((s) => s.missionId);
   const mission = useMemo(() => getMissionOrNull(missionId), [missionId]);
   const gates = useMemo(() => getGates(mission?.planet ?? "moon", mission?.missionType), [mission]);
@@ -1686,7 +1712,7 @@ export function FlightScene() {
           backgroundColor: isMars ? "#160a04" : "#000000",
         }}
       />
-      <FlightHUD />
+      <FlightHUD onSkip={handleSkip} />
       {gate && (
         <div className="absolute inset-x-0 bottom-20 sm:bottom-24 z-20 flex justify-center px-4">
           <button

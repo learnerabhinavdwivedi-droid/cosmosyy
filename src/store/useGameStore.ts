@@ -25,6 +25,7 @@ export type GameEvent =
   | "TOUCH_DOWN"
   | "OPEN_HATCH"
   | "STEP_OUT"
+  | "SKIP_TO_SURFACE"
   | "START_INSPECT"
   | "EXIT_INSPECT"
   | "ALL_FOUND"
@@ -35,13 +36,13 @@ export type GameEvent =
 
 const TRANSITIONS: Record<GamePhase, Partial<Record<GameEvent, GamePhase>>> = {
   select: { LAUNCH_MISSION: "flight" },
-  flight: { START_COAST: "coast" },
-  coast: { REACH_ORBIT: "orbit" },
-  orbit: { LOCK_TARGET: "targetLocked" },
-  targetLocked: { BEGIN_DESCENT: "descent" },
-  descent: { TOUCH_DOWN: "touchdown" },
-  touchdown: { OPEN_HATCH: "stepOut" },
-  stepOut: { STEP_OUT: "explore" },
+  flight: { START_COAST: "coast", SKIP_TO_SURFACE: "explore" },
+  coast: { REACH_ORBIT: "orbit", SKIP_TO_SURFACE: "explore" },
+  orbit: { LOCK_TARGET: "targetLocked", SKIP_TO_SURFACE: "explore" },
+  targetLocked: { BEGIN_DESCENT: "descent", SKIP_TO_SURFACE: "explore" },
+  descent: { TOUCH_DOWN: "touchdown", SKIP_TO_SURFACE: "explore" },
+  touchdown: { OPEN_HATCH: "stepOut", SKIP_TO_SURFACE: "explore" },
+  stepOut: { STEP_OUT: "explore", SKIP_TO_SURFACE: "explore" },
   explore: { START_INSPECT: "inspect", ALL_FOUND: "flagReady" },
   inspect: { EXIT_INSPECT: "explore" },
   flagReady: { START_INSPECT: "inspect", PLANT_FLAG: "flagPlanted" },
