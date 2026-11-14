@@ -1301,8 +1301,8 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
             {isScanning
               ? t("surface.scanning")
               : found.includes(nearObj.id)
-              ? `[Hold E] Listen to Transmission / Re-Inspect ${nearObj.name}`
-              : `[Hold E] ${t("surface.inspectPrompt")} ${nearObj.name}`}
+                ? `[Hold E] Listen to Transmission / Re-Inspect ${nearObj.name}`
+                : `[Hold E] ${t("surface.inspectPrompt")} ${nearObj.name}`}
           </p>
           <p className="mt-1 text-xs text-regolith-400">
             {found.includes(nearObj.id)

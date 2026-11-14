@@ -21,6 +21,19 @@ import {
 } from "./MoonArtifacts";
 
 import {
+  CuriosityRover3D,
+  OpportunityRover3D,
+  PerseveranceRover3D,
+  SpiritRover3D,
+  YellowknifeBayFeature3D,
+  MountSharpFeature3D,
+  EagleCraterFeature3D,
+  MarathonValleyFeature3D,
+  PerseveranceValleyFeature3D,
+  JezeroDeltaFeature3D,
+  ColumbiaHillsFeature3D,
+  HomePlateFeature3D,
+  BonnevilleCraterFeature3D,
   MarsHeatShield3D,
   IngenuityHelicopter3D,
   MarsSampleTubes3D,
@@ -43,7 +56,6 @@ import {
   SuperCamLaserMarks3D,
   BackshellParachute3D,
   RoverWheelTracks3D,
-  MarsLandscapeFeature3D,
 } from "./MarsArtifacts";
 
 export interface Heritage3DProps {
@@ -84,18 +96,20 @@ export function getDedicated3DComponent(
 
   // ── Mars Missions ──
   // Curiosity
+  if (objectId === "cu-rover") return CuriosityRover3D;
   if (objectId === "cu-drill-holes") return MarsDrillHoles3D;
   if (objectId === "cu-calibration-target") return MarsCalibrationTarget3D;
   if (objectId === "cu-sky-crane") return SkyCraneDescentStage3D;
-  if (objectId === "cu-yellowknife") return (p) => <MarsLandscapeFeature3D name="Yellowknife Bay" {...p} />;
-  if (objectId === "cu-mount-sharp") return (p) => <MarsLandscapeFeature3D name="Mount Sharp" {...p} />;
+  if (objectId === "cu-yellowknife") return YellowknifeBayFeature3D;
+  if (objectId === "cu-mount-sharp") return MountSharpFeature3D;
 
   // Opportunity
+  if (objectId === "op-rover") return OpportunityRover3D;
   if (objectId === "op-blueberries") return MarsBlueberries3D;
   if (objectId === "op-heat-shield") return MarsHeatShield3D;
-  if (objectId === "op-eagle-crater") return (p) => <MarsLandscapeFeature3D name="Eagle Crater" {...p} />;
-  if (objectId === "op-marathon-valley") return (p) => <MarsLandscapeFeature3D name="Marathon Valley" {...p} />;
-  if (objectId === "op-perseverance-valley") return (p) => <MarsLandscapeFeature3D name="Perseverance Valley" {...p} />;
+  if (objectId === "op-eagle-crater") return EagleCraterFeature3D;
+  if (objectId === "op-marathon-valley") return MarathonValleyFeature3D;
+  if (objectId === "op-perseverance-valley") return PerseveranceValleyFeature3D;
 
   // Pathfinder
   if (objectId === "mp-sojourner") return SojournerRover3D;
@@ -106,18 +120,20 @@ export function getDedicated3DComponent(
   if (objectId === "mp-yogi") return YogiRock3D;
 
   // Perseverance
+  if (objectId === "pe-rover") return PerseveranceRover3D;
   if (objectId === "pe-ingenuity") return IngenuityHelicopter3D;
   if (objectId === "pe-sample-tubes") return MarsSampleTubes3D;
   if (objectId === "pe-supercam") return SuperCamLaserMarks3D;
   if (objectId === "pe-sky-crane") return SkyCraneDescentStage3D;
-  if (objectId === "pe-delta") return (p) => <MarsLandscapeFeature3D name="Jezero Delta" {...p} />;
+  if (objectId === "pe-delta") return JezeroDeltaFeature3D;
 
   // Spirit
+  if (objectId === "sp-rover") return SpiritRover3D;
   if (objectId === "sp-wheel-tracks") return RoverWheelTracks3D;
   if (objectId === "sp-heat-shield") return BackshellParachute3D;
-  if (objectId === "sp-columbia-hills") return (p) => <MarsLandscapeFeature3D name="Columbia Hills" {...p} />;
-  if (objectId === "sp-home-plate") return (p) => <MarsLandscapeFeature3D name="Home Plate" {...p} />;
-  if (objectId === "sp-bonneville") return (p) => <MarsLandscapeFeature3D name="Bonneville Crater" {...p} />;
+  if (objectId === "sp-columbia-hills") return ColumbiaHillsFeature3D;
+  if (objectId === "sp-home-plate") return HomePlateFeature3D;
+  if (objectId === "sp-bonneville") return BonnevilleCraterFeature3D;
 
   // Viking 1
   if (objectId === "v1-lander-body") return VikingLanderBody3D;
@@ -126,10 +142,6 @@ export function getDedicated3DComponent(
   if (objectId === "v1-cameras") return VikingFacsimileCameras3D;
   if (objectId === "v1-antenna") return VikingAntenna3D;
   if (objectId === "v1-seismometer") return VikingSeismometer3D;
-
-  // Rover Fallback models
-  if (objectId === "cu-rover" || objectId === "pe-rover") return null; // Uses dedicated GLB rover
-  if (objectId === "op-rover" || objectId === "sp-rover") return null; // Uses dedicated GLB rover
 
   return null;
 }
@@ -374,5 +386,84 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
   "sp-heat-shield": [
     { name: "backshell", displayName: "Crumpled Conical Backshell", explode: [-0.3, 0.2, 0] },
     { name: "parachute", displayName: "Striped Nylon Supersonic Chute", explode: [0.3, 0.1, 0] },
+  ],
+  "cu-rover": [
+    { name: "chassis", displayName: "Warm Electronics Box Chassis", explode: [0, 0, 0] },
+    { name: "mast", displayName: "ChemCam & Mastcam Remote Sensing Mast", explode: [0, 0.45, 0] },
+    { name: "arm", displayName: "5-DOF Robotic Arm with Coring Drill", explode: [0.4, -0.2, 0] },
+    { name: "rtg", displayName: "Multi-Mission Radioisotope Generator (MMRTG)", explode: [-0.4, 0.2, 0] },
+    { name: "wheels", displayName: "6 Cleated Machined Aluminum Wheels", explode: [0.3, 0, 0] },
+    { name: "hga", displayName: "Steerable Hexagonal High-Gain Antenna", explode: [-0.2, 0.35, 0] },
+  ],
+  "pe-rover": [
+    { name: "chassis", displayName: "Mars 2020 Chassis & MOXIE Vent", explode: [0, 0, 0] },
+    { name: "supercam", displayName: "SuperCam Laser & Mastcam-Z Zoom Mast", explode: [0, 0.45, 0] },
+    { name: "arm", displayName: "Heavy Robotic Arm with SHERLOC/PIXL Turret", explode: [0.4, -0.2, 0] },
+    { name: "rtg", displayName: "Nuclear MMRTG & 8 Radiator Fins", explode: [-0.4, 0.2, 0] },
+    { name: "wheels", displayName: "6 Upgraded Curved-Cleat Wheels", explode: [0.3, 0, 0] },
+    { name: "meda", displayName: "MEDA Environmental Wind Sensor Booms", explode: [0.2, 0.3, 0] },
+  ],
+  "op-rover": [
+    { name: "chassis", displayName: "Warm Electronics Box & Aerogel", explode: [0, 0, 0] },
+    { name: "solar", displayName: "Triangular Solar Panel Wings", explode: [0, 0.3, 0] },
+    { name: "mast", displayName: "Stereo Pancam & Navcam Camera Mast", explode: [0, 0.45, 0] },
+    { name: "idd", displayName: "Instrument Deployment Device (RAT & Mössbauer)", explode: [0.35, -0.15, 0] },
+    { name: "wheels", displayName: "6 Rocker-Bogie Aluminum Wheels", explode: [0.25, 0, 0] },
+    { name: "hga", displayName: "High-Gain Parabolic Dish Antenna", explode: [-0.25, 0.3, 0] },
+  ],
+  "sp-rover": [
+    { name: "chassis", displayName: "Warm Electronics Box Body", explode: [0, 0, 0] },
+    { name: "solar", displayName: "Dust-Coated Gusev Solar Arrays", explode: [0, 0.3, 0] },
+    { name: "mast", displayName: "Pancam Mast Assembly", explode: [0, 0.45, 0] },
+    { name: "jammed_wheel", displayName: "Famous Jammed Right-Front Drag Wheel", explode: [0.3, 0, -0.3] },
+    { name: "trench", displayName: "Pure Opaline White Silica Drag Trench", explode: [0.3, -0.2, -0.3] },
+    { name: "hga", displayName: "High-Gain Parabolic Dish Antenna", explode: [-0.25, 0.3, 0] },
+  ],
+  "cu-yellowknife": [
+    { name: "mudstone", displayName: "Sheepbed Lakebed Mudstone Slab", explode: [0, 0, 0] },
+    { name: "veins", displayName: "White Calcium Sulfate Mineral Veins", explode: [0, 0.2, 0] },
+    { name: "drill", displayName: "John Klein Drill Hole & Grey Tailings", explode: [0.2, 0.25, 0] },
+  ],
+  "cu-mount-sharp": [
+    { name: "summit", displayName: "Upper Sulfate Canyons & Yardang Peak", explode: [0, 0.35, 0] },
+    { name: "hematite", displayName: "Vera Rubin Ridge Hematite Layer", explode: [0, 0.2, 0] },
+    { name: "murray", displayName: "Murray Formation Stratified Mudstone", explode: [0, 0.1, 0] },
+    { name: "floor", displayName: "Gale Crater Basaltic Dune Floor", explode: [0, -0.1, 0] },
+  ],
+  "op-eagle-crater": [
+    { name: "outcrop", displayName: "Opportunity Ledge Sulfate Bedrock", explode: [0, 0.2, 0] },
+    { name: "blueberries", displayName: "Embedded Hematite Spherule Concretions", explode: [0, 0.35, 0] },
+    { name: "rim", displayName: "Sandy Impact Crater Slopes", explode: [0, -0.1, 0] },
+  ],
+  "op-marathon-valley": [
+    { name: "walls", displayName: "Endeavour Crater Rim Breccia Walls", explode: [0.3, 0.15, 0] },
+    { name: "clay", displayName: "Blue-Grey Smectite Clay Fracture Veins", explode: [0, 0.25, 0] },
+    { name: "mound", displayName: "Spirit Mound Promontory", explode: [0, 0.35, 0] },
+  ],
+  "op-perseverance-valley": [
+    { name: "slope", displayName: "Inner Crater Wall Slope", explode: [0, 0.1, 0] },
+    { name: "gully", displayName: "Carved Fluvial Channel Gully", explode: [0, 0.25, 0] },
+    { name: "stripes", displayName: "Sorted Stone Stripes & Basalt Cobbles", explode: [0.2, 0.3, 0] },
+  ],
+  "pe-delta": [
+    { name: "kodiak", displayName: "Kodiak Butte Layered Sandstone Promontory", explode: [0, 0.35, 0] },
+    { name: "scarp", displayName: "Ancient Jezero River Delta Scarp", explode: [0, 0.2, 0] },
+    { name: "channel", displayName: "Neretva Vallis Inflow Channel Cut", explode: [0.25, 0.1, 0] },
+    { name: "boulders", displayName: "River-Transported Rounded Cobbles", explode: [-0.2, 0.4, 0] },
+  ],
+  "sp-columbia-hills": [
+    { name: "summit", displayName: "Husband Hill Rocky Summit Massif", explode: [0, 0.25, 0] },
+    { name: "outcrop", displayName: "Layered Olivine-Rich Volcanic Slabs", explode: [0, 0.4, 0] },
+    { name: "ventifacts", displayName: "Wind-Sculpted Basalt Ventifacts", explode: [0.25, 0.35, 0] },
+  ],
+  "sp-home-plate": [
+    { name: "tuff", displayName: "Plateau of Layered Volcanic Ash Tuff", explode: [0, 0.15, 0] },
+    { name: "bomb_sag", displayName: "Volcanic Bomb Sag Impact Depression", explode: [-0.25, 0.3, 0] },
+    { name: "silica", displayName: "Knobby Opaline Silica Hot-Spring Mounds", explode: [0.3, 0.35, 0] },
+  ],
+  "sp-bonneville": [
+    { name: "ejecta", displayName: "Sharp Basalt Ejecta Blocks", explode: [0, 0.35, 0] },
+    { name: "rim", displayName: "200m Impact Crater Ejecta Berm", explode: [0, 0.15, 0] },
+    { name: "tracks", displayName: "Spirit Dual Rover Tracks on Rim Crest", explode: [0, 0.25, 0] },
   ],
 };
