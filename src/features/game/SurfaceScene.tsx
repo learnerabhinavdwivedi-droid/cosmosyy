@@ -1134,14 +1134,21 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
   }, [found.length, scannableCount, playerName, t, isMars, isRobotic]);
 
   const completeScan = useCallback(() => {
-    if (!nearObjectId || found.includes(nearObjectId) || !missionId) return;
-    const obj = objects.find((o) => o.id === nearObjectId);
-    addFoundObject(nearObjectId);
-    findObject(missionId, nearObjectId);
+    if (!nearObjectId || !missionId) return;
+    const isNew = !found.includes(nearObjectId);
+    if (isNew) {
+      addFoundObject(nearObjectId);
+      findObject(missionId, nearObjectId);
+    }
     send("START_INSPECT", { objectId: nearObjectId });
     gameAudio.playScanComplete();
 
-    setToast(t("xp.object", { amount: obj?.xp ?? 50, name: obj?.name ?? nearObjectId }));
+    const obj = objects.find((o) => o.id === nearObjectId);
+    if (isNew) {
+      setToast(t("xp.object", { amount: obj?.xp ?? 50, name: obj?.name ?? nearObjectId }));
+    } else {
+      setToast(`Transmission Linked: ${obj?.name ?? nearObjectId}`);
+    }
     if (toastTimer.current) clearTimeout(toastTimer.current);
     toastTimer.current = setTimeout(() => setToast(null), 2500);
   }, [nearObjectId, found, missionId, addFoundObject, findObject, send, t, objects]);
@@ -1184,7 +1191,7 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
 
     const onKeyDown = (e: KeyboardEvent) => {
       if ((e.key === "e" || e.key === "E") && !e.repeat) {
-        if (nearObjectId && !found.includes(nearObjectId) && missionId && phase !== "inspect") {
+        if (nearObjectId && missionId && phase !== "inspect") {
           scanStartTime.current = Date.now();
           lastTickTime.current = 0;
           scanAnimFrame.current = requestAnimationFrame(animateScan);
@@ -1274,12 +1281,20 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
       )}
 
       {/* Interaction prompt */}
-      {nearObj && !found.includes(nearObj.id) && phase !== "inspect" && !isTouchDevice() && (
+      {nearObj && phase !== "inspect" && !isTouchDevice() && (
         <div className="mx-auto mt-auto mb-32 rounded-xl bg-space-950/90 px-8 py-4 text-center backdrop-blur-md border border-space-700/50">
           <p className="font-display text-lg text-signal">
-            {isScanning ? t("surface.scanning") : `[Hold E] ${t("surface.inspectPrompt")} ${nearObj.name}`}
+            {isScanning
+              ? t("surface.scanning")
+              : found.includes(nearObj.id)
+              ? `[Hold E] Listen to Transmission / Re-Inspect ${nearObj.name}`
+              : `[Hold E] ${t("surface.inspectPrompt")} ${nearObj.name}`}
           </p>
-          <p className="mt-1 text-xs text-regolith-400">{t("surface.scanHint")}</p>
+          <p className="mt-1 text-xs text-regolith-400">
+            {found.includes(nearObj.id)
+              ? "Re-open the monument's voice log & NASA telemetry"
+              : t("surface.scanHint")}
+          </p>
         </div>
       )}
 
@@ -1343,9 +1358,12 @@ export function SurfaceScene() {
   }, []);
 
   const touchScan = useCallback(() => {
-    if (!nearObjectId || found.includes(nearObjectId) || !missionId) return;
-    addFoundObject(nearObjectId);
-    findObject(missionId, nearObjectId);
+    if (!nearObjectId || !missionId) return;
+    const isNew = !found.includes(nearObjectId);
+    if (isNew) {
+      addFoundObject(nearObjectId);
+      findObject(missionId, nearObjectId);
+    }
     send("START_INSPECT", { objectId: nearObjectId });
     gameAudio.playScanComplete();
   }, [nearObjectId, found, missionId, addFoundObject, findObject, send]);
@@ -1361,7 +1379,7 @@ export function SurfaceScene() {
     send("LAUNCH_HOME");
   }, [send]);
 
-  const canScan = !!nearObjectId && !found.includes(nearObjectId);
+  const canScan = !!nearObjectId && phase !== "inspect";
 
   return (
     <div className="relative h-screen w-full">

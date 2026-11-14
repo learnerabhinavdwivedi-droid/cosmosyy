@@ -29,3 +29,17 @@ code, kbd, pre, .font-mono {
 *::after {
   border-color: var(--border);
 }
+
+@keyframes wavePulse {
+  0% {
+    transform: scaleY(0.22);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+.animate-wave-bar {
+  transform-origin: bottom;
+  animation: wavePulse 0.9s ease-in-out infinite alternate;
+}

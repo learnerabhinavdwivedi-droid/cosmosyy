@@ -1,4 +1,4 @@
-import { useRef, useEffect, useLayoutEffect, useState, useMemo, Suspense } from "react";
+import { useRef, useEffect, useLayoutEffect, useState, useMemo, useCallback, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, OrbitControls } from "@react-three/drei";
 import { useGameStore } from "@/store/useGameStore";
@@ -7,6 +7,7 @@ import { isTouchDevice } from "@/lib/useMobile";
 import { Howl } from "howler";
 import { gameAudio } from "@/lib/gameAudio";
 import { stopNarration } from "@/lib/narration";
+import { getNssdcCatalog } from "@/lib/nssdcaCatalog";
 import {
   getHologramModel,
   getDisplayComponents,
@@ -361,25 +362,192 @@ function StatusBadge({ status }: { status?: "operational" | "dormant" | "defunct
   );
 }
 
-/* ─── Right info panel ─── */
+
+function formatSeconds(sec: number): string {
+  if (!sec || isNaN(sec)) return "00:00";
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+}
+
+/* ─── Audio Transmission Visualizer & Controller ─── */
+function AudioTransmissionDeck({
+  isPlaying,
+  currentTime,
+  duration,
+  progress,
+  onTogglePlay,
+  onRestart,
+  onSeek,
+  theme,
+}: {
+  isPlaying: boolean;
+  currentTime: number;
+  duration: number;
+  progress: number;
+  onTogglePlay: () => void;
+  onRestart: () => void;
+  onSeek: (pct: number) => void;
+  theme: ObjectTheme;
+}) {
+  const barHeights = [28, 65, 42, 88, 55, 96, 72, 38, 82, 58, 92, 48, 70, 34, 84, 46];
+
+  return (
+    <div
+      className="mb-4 rounded-xl border p-3 backdrop-blur-md transition-all duration-300"
+      style={{
+        borderColor: isPlaying ? theme.primary : theme.border,
+        background: "rgba(10, 14, 22, 0.88)",
+        boxShadow: isPlaying ? `0 0 24px ${theme.primaryDim}` : "none",
+      }}
+    >
+      {/* Top telemetry bar */}
+      <div className="flex items-center justify-between text-[10px] font-mono">
+        <div className="flex items-center gap-2">
+          <span
+            className={`inline-block h-2 w-2 rounded-full ${
+              isPlaying ? "animate-pulse" : ""
+            }`}
+            style={{ background: isPlaying ? theme.primary : "#71717a" }}
+          />
+          <span className="font-bold tracking-wider uppercase" style={{ color: theme.primary }}>
+            {isPlaying ? "Transmitting Machine Voice" : "Deep Space Voice Log Ready"}
+          </span>
+        </div>
+        <span className="text-regolith-400 font-mono">
+          {formatSeconds(currentTime)} / {formatSeconds(duration)}
+        </span>
+      </div>
+
+      {/* Waveform Equalizer Display */}
+      <div className="my-2.5 flex h-7 items-end justify-between gap-1 px-1">
+        {barHeights.map((h, i) => (
+          <div
+            key={i}
+            className={`w-full rounded-t-sm transition-all duration-150 ${
+              isPlaying ? "animate-wave-bar" : ""
+            }`}
+            style={{
+              height: isPlaying ? `${h}%` : "16%",
+              background: isPlaying ? theme.primary : "rgba(255,255,255,0.18)",
+              animationDelay: `${(i % 6) * 0.12}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Scrubber track */}
+      <div
+        className="relative mb-2.5 h-1.5 w-full cursor-pointer rounded-full bg-space-800 overflow-hidden"
+        onClick={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const clickX = e.clientX - rect.left;
+          const pct = Math.max(0, Math.min(1, clickX / rect.width));
+          onSeek(pct);
+        }}
+      >
+        <div
+          className="h-full rounded-full transition-all duration-100"
+          style={{ width: `${progress * 100}%`, background: theme.primary }}
+        />
+      </div>
+
+      {/* Play/Pause & Restart controls */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onTogglePlay}
+            className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-bold transition hover:brightness-125 active:scale-95"
+            style={{
+              borderColor: theme.primary,
+              background: theme.primaryDim,
+              color: theme.primary,
+            }}
+          >
+            {isPlaying ? (
+              <>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="6" y="4" width="4" height="16" />
+                  <rect x="14" y="4" width="4" height="16" />
+                </svg>
+                <span>Pause Voice</span>
+              </>
+            ) : (
+              <>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+                <span>Play Machine Voice</span>
+              </>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={onRestart}
+            className="flex items-center gap-1 rounded-lg border border-space-700 bg-space-800/80 px-2.5 py-1.5 text-xs text-regolith-300 transition hover:bg-space-700 active:scale-95"
+            title="Restart transmission from beginning"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+            <span>Restart</span>
+          </button>
+        </div>
+
+        <span className="text-[9px] font-mono tracking-wider text-regolith-400 uppercase">
+          128 KBPS DSN LINK
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Right info panel with Living Fable Mode & NASA Telemetry ─── */
 function InfoPanel({
   obj,
+  missionId,
   missionName,
   missionSite,
   missionDate,
   crew,
   isMars,
   theme,
+  isPlaying,
+  duration,
+  currentTime,
+  progress,
+  onTogglePlay,
+  onRestartAudio,
+  onSeekAudio,
 }: {
   obj: HeritageObject;
+  missionId: string;
   missionName: string;
   missionSite: string;
   missionDate: string;
   crew: { commander: string; lmp: string; cmp: string };
   isMars: boolean;
   theme: ObjectTheme;
+  isPlaying: boolean;
+  duration: number;
+  currentTime: number;
+  progress: number;
+  onTogglePlay: () => void;
+  onRestartAudio: () => void;
+  onSeekAudio: (pct: number) => void;
 }) {
+  const [tab, setTab] = useState<"fable" | "telemetry">("fable");
   const [imgError, setImgError] = useState(false);
+  const nssdcEntry = useMemo(() => getNssdcCatalog(missionId, obj.id), [missionId, obj.id]);
+
+  useEffect(() => {
+    setTab("fable");
+    setImgError(false);
+  }, [obj.id]);
+
   const nasaUrl = obj.nasaImageId
     ? `https://images-assets.nasa.gov/image/${obj.nasaImageId}/${obj.nasaImageId}~medium.jpg`
     : null;
@@ -387,27 +555,45 @@ function InfoPanel({
   return (
     <div
       className="flex h-full flex-col overflow-y-auto rounded-xl border p-5 backdrop-blur-xl"
-      style={{ borderColor: theme.border, background: "rgba(7,9,13,0.92)" }}
+      style={{ borderColor: theme.border, background: "rgba(7,9,13,0.94)" }}
     >
-      {/* Category + status */}
-      <div className="flex items-center justify-between">
-        <span
-          className="rounded px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]"
-          style={{ background: theme.primaryDim, color: theme.primary }}
+      {/* Category + status + NSSDCA quick pill */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span
+            className="rounded px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.2em]"
+            style={{ background: theme.primaryDim, color: theme.primary }}
+          >
+            {theme.category}
+          </span>
+          <StatusBadge status={obj.status} />
+        </div>
+
+        <a
+          href={nssdcEntry.catalogUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[9px] font-mono font-bold text-cyan-300 transition hover:bg-cyan-950/60"
+          style={{ borderColor: "rgba(6,182,212,0.4)", background: "rgba(6,182,212,0.12)" }}
+          title="Open official record in NASA Space Science Data Coordinated Archive"
         >
-          {theme.category}
-        </span>
-        <StatusBadge status={obj.status} />
+          <span>NASA NSSDCA: {nssdcEntry.nssdcaId}</span>
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+        </a>
       </div>
 
       {/* Object name */}
-      <h2 className="mt-3 font-display text-xl font-bold" style={{ color: theme.primary }}>
+      <h2 className="mt-3 font-display text-2xl font-bold tracking-tight" style={{ color: theme.primary }}>
         {obj.name}
       </h2>
 
-      {/* Mission + Site */}
-      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-regolith-400">
-        <span className="flex items-center gap-1">
+      {/* Mission + Site + Date */}
+      <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-regolith-400">
+        <span className="flex items-center gap-1 font-medium">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={theme.primary} strokeWidth="2" className="shrink-0">
             <circle cx="12" cy="12" r="10" />
             <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -424,79 +610,239 @@ function InfoPanel({
         <span>{missionDate}</span>
       </div>
 
-      {/* Crew (Moon only) */}
-      {!isMars && (
-        <p className="mt-1 text-[10px] text-regolith-500">
-          {crew.commander} · {crew.lmp} · {crew.cmp}
-        </p>
-      )}
+      {/* Mode Switcher Tabs */}
+      <div className="mt-4 grid grid-cols-2 gap-2 shrink-0">
+        <button
+          type="button"
+          onClick={() => setTab("fable")}
+          className={`flex items-center justify-center gap-2 rounded-lg py-2 px-3 text-xs font-bold transition ${
+            tab === "fable"
+              ? "bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-[0_0_16px_rgba(245,158,11,0.25)]"
+              : "bg-space-900/60 text-regolith-400 border border-space-800 hover:text-regolith-200 hover:bg-space-800/80"
+          }`}
+        >
+          <span className="text-sm">📡</span>
+          <span>Dormant Voice Log</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("telemetry")}
+          className={`flex items-center justify-center gap-2 rounded-lg py-2 px-3 text-xs font-bold transition ${
+            tab === "telemetry"
+              ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 shadow-[0_0_16px_rgba(6,182,212,0.25)]"
+              : "bg-space-900/60 text-regolith-400 border border-space-800 hover:text-regolith-200 hover:bg-space-800/80"
+          }`}
+        >
+          <span className="text-sm">🔬</span>
+          <span>NASA Technical Specs</span>
+        </button>
+      </div>
 
       {/* Divider */}
-      <div className="my-3 h-px" style={{ background: theme.border }} />
+      <div className="my-3.5 h-px" style={{ background: theme.border }} />
 
-      {/* NASA Image */}
-      {nasaUrl && !imgError && (
-        <div className="relative mb-3 overflow-hidden rounded-lg border" style={{ borderColor: theme.border }}>
-          <img
-            src={nasaUrl}
-            alt={obj.name}
-            className="h-36 w-full object-cover"
-            onError={() => setImgError(true)}
+      {/* TAB 1: THE DORMANT VOICE LOG (THE FABLE) */}
+      {tab === "fable" && (
+        <div className="flex flex-col">
+          {/* Deep Space Audio Transmission Deck */}
+          <AudioTransmissionDeck
+            isPlaying={isPlaying}
+            currentTime={currentTime}
+            duration={duration}
+            progress={progress}
+            onTogglePlay={onTogglePlay}
+            onRestart={onRestartAudio}
+            onSeek={onSeekAudio}
+            theme={theme}
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-2 py-1">
-            <p className="text-[8px] text-regolith-400">NASA / {obj.nasaImageId}</p>
+
+          {/* The Machine's Personal Monologue */}
+          {obj.firstPerson ? (
+            <div
+              className="relative mb-4 overflow-hidden rounded-xl border p-4 backdrop-blur-md"
+              style={{
+                borderColor: theme.border,
+                background: "linear-gradient(145deg, rgba(16,22,34,0.95), rgba(7,9,13,0.98))",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
+              }}
+            >
+              <div className="mb-2 flex items-center justify-between border-b border-space-800/80 pb-2">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-sm">📻</span>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-regolith-300">
+                    Decoded Transmission // The Explorer's Words
+                  </span>
+                </div>
+                <span
+                  className="rounded px-1.5 py-0.5 text-[8px] font-mono uppercase tracking-wider"
+                  style={{ background: theme.primaryDim, color: theme.primary }}
+                >
+                  Authentic Log
+                </span>
+              </div>
+
+              <blockquote className="relative mt-2.5 pl-3 border-l-2" style={{ borderColor: theme.primary }}>
+                <p className="font-sans text-[13px] md:text-sm italic leading-relaxed text-regolith-100 font-medium">
+                  &ldquo;{obj.firstPerson}&rdquo;
+                </p>
+              </blockquote>
+            </div>
+          ) : null}
+
+          {/* Explorer's Story in 3 Chapters */}
+          <div className="mb-4 flex flex-col gap-2.5">
+            <div className="flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-regolith-300">
+              <span>🧭</span>
+              <span>The Journey in 3 Chapters</span>
+            </div>
+
+            {/* Chapter 1: Why Earth Built Me */}
+            <div className="rounded-lg border border-space-800/80 bg-space-900/50 p-3">
+              <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-400">
+                <span>🚀</span>
+                <span>Chapter 1: Why Earth Built Me</span>
+              </div>
+              <p className="mt-1 text-xs leading-relaxed text-regolith-300">
+                {obj.description}
+              </p>
+            </div>
+
+            {/* Chapter 2: The Groundbreaking Discovery */}
+            {obj.scienceDiscovery && (
+              <div className="rounded-lg border border-space-800/80 bg-space-900/50 p-3">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-cyan-400">
+                  <span>💡</span>
+                  <span>Chapter 2: The Breakthrough Discovery</span>
+                </div>
+                <p className="mt-1 text-xs leading-relaxed text-regolith-200 font-medium">
+                  {obj.scienceDiscovery}
+                </p>
+              </div>
+            )}
+
+            {/* Chapter 3: My Eternal Vigil */}
+            {obj.legacy && (
+              <div className="rounded-lg border border-space-800/80 bg-space-900/50 p-3">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                  <span>🪐</span>
+                  <span>Chapter 3: My Eternal Monument</span>
+                </div>
+                <p className="mt-1 text-xs leading-relaxed text-regolith-300">
+                  {obj.legacy}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Did You Know? Field Note */}
+          <div
+            className="mb-4 rounded-xl border p-3.5 backdrop-blur-sm"
+            style={{
+              borderColor: "rgba(251, 191, 36, 0.35)",
+              background: "linear-gradient(135deg, rgba(251,191,36,0.08), rgba(15,20,30,0.9))",
+            }}
+          >
+            <div className="flex items-center gap-1.5">
+              <span className="text-base">✨</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                Did You Know? // Explorer Field Note
+              </span>
+            </div>
+            <p className="mt-1.5 text-xs leading-relaxed text-amber-100/95 font-medium">
+              {nssdcEntry.funFactKid}
+            </p>
           </div>
         </div>
       )}
 
-      {/* First person narration */}
-      {obj.firstPerson && (
-        <div
-          className="mb-3 rounded-lg border px-3 py-2"
-          style={{ borderColor: theme.border, background: theme.primaryDim }}
-        >
-          <p className="text-[10px] italic leading-relaxed text-regolith-200">
-            &ldquo;{obj.firstPerson.split(".").slice(0, 2).join(".")}.&rdquo;
-          </p>
-        </div>
-      )}
+      {/* TAB 2: TECHNICAL TELEMETRY & NASA ARCHIVE */}
+      {tab === "telemetry" && (
+        <div className="flex flex-col">
+          {/* Official Designation Banner */}
+          <div className="mb-3 rounded-lg border border-cyan-800/40 bg-cyan-950/20 p-3">
+            <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-cyan-400">
+              NASA Master Catalog Designation
+            </p>
+            <p className="mt-1 text-xs font-bold text-cyan-100">
+              {nssdcEntry.officialDesignation}
+            </p>
+            <p className="mt-0.5 text-[10px] text-regolith-400">
+              Archetype: {nssdcEntry.archetype} · Catalog ID: {nssdcEntry.nssdcaId}
+            </p>
+          </div>
 
-      {/* Description */}
-      <p className="text-xs leading-relaxed text-regolith-300">{obj.description}</p>
+          {/* NASA Image */}
+          {nasaUrl && !imgError && (
+            <div className="relative mb-3 overflow-hidden rounded-lg border" style={{ borderColor: theme.border }}>
+              <img
+                src={nasaUrl}
+                alt={obj.name}
+                className="h-44 w-full object-cover"
+                onError={() => setImgError(true)}
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/85 to-transparent px-2.5 py-1.5">
+                <p className="text-[9px] font-mono text-regolith-300">NASA Image Archive // ID: {obj.nasaImageId}</p>
+              </div>
+            </div>
+          )}
 
-      {/* Science discovery */}
-      {obj.scienceDiscovery && (
-        <div className="mt-3 rounded-lg border px-3 py-2" style={{ borderColor: theme.border, background: theme.primaryDim }}>
-          <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: theme.primary }}>
-            Science Discovery
-          </p>
-          <p className="mt-1 text-[11px] leading-relaxed text-regolith-200">
-            {obj.scienceDiscovery}
-          </p>
-        </div>
-      )}
+          {/* Description */}
+          <div className="mb-3">
+            <p className="text-[9px] font-bold uppercase tracking-wider text-regolith-400">Technical Overview</p>
+            <p className="mt-1 text-xs leading-relaxed text-regolith-200">{obj.description}</p>
+          </div>
 
-      {/* Legacy */}
-      {obj.legacy && (
-        <div className="mt-2 rounded-lg border border-space-700/30 bg-space-800/40 px-3 py-2">
-          <p className="text-[9px] font-bold uppercase tracking-wider text-regolith-400/60">Legacy</p>
-          <p className="mt-1 text-[11px] leading-relaxed text-regolith-300">{obj.legacy}</p>
-        </div>
-      )}
+          {/* Science discovery */}
+          {obj.scienceDiscovery && (
+            <div className="mb-3 rounded-lg border px-3 py-2" style={{ borderColor: theme.border, background: theme.primaryDim }}>
+              <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: theme.primary }}>
+                Science Discovery & Data Yield
+              </p>
+              <p className="mt-1 text-[11px] leading-relaxed text-regolith-200">
+                {obj.scienceDiscovery}
+              </p>
+            </div>
+          )}
 
-      {/* Year info */}
-      {(obj.yearDeployed || obj.yearLastContact) && (
-        <div className="mt-2 flex gap-3 text-[10px] text-regolith-400">
-          {obj.yearDeployed && <span>Deployed {obj.yearDeployed}</span>}
-          {obj.yearLastContact && <span>Last contact {obj.yearLastContact}</span>}
+          {/* Legacy */}
+          {obj.legacy && (
+            <div className="mb-3 rounded-lg border border-space-700/30 bg-space-800/40 px-3 py-2">
+              <p className="text-[9px] font-bold uppercase tracking-wider text-regolith-400/80">Historical Significance</p>
+              <p className="mt-1 text-[11px] leading-relaxed text-regolith-300">{obj.legacy}</p>
+            </div>
+          )}
+
+          {/* Mission Deployment Timestamps */}
+          {(obj.yearDeployed || obj.yearLastContact) && (
+            <div className="mb-3 flex flex-wrap gap-4 rounded-lg bg-space-900/60 p-2.5 text-xs text-regolith-300 border border-space-800">
+              {obj.yearDeployed && (
+                <div>
+                  <span className="text-[9px] block text-regolith-500 uppercase font-mono">Deployed</span>
+                  <span className="font-bold text-regolith-200">{obj.yearDeployed}</span>
+                </div>
+              )}
+              {obj.yearLastContact && (
+                <div>
+                  <span className="text-[9px] block text-regolith-500 uppercase font-mono">Last Contact</span>
+                  <span className="font-bold text-amber-300">{obj.yearLastContact}</span>
+                </div>
+              )}
+              {!isMars && crew && (
+                <div>
+                  <span className="text-[9px] block text-regolith-500 uppercase font-mono">Apollo Crew</span>
+                  <span className="text-[11px] text-regolith-300">{crew.commander} · {crew.lmp}</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
       {/* Bottom spacer to push XP down */}
       <div className="mt-auto" />
 
-      {/* XP badge + Source */}
-      <div className="mt-3 flex items-center justify-between">
+      {/* XP badge + Source + NSSDCA Link */}
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-space-800/80 pt-3">
         <span
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold"
           style={{ background: "rgba(255,107,44,0.15)", color: "#FF6B2C" }}
@@ -506,8 +852,9 @@ function InfoPanel({
           </svg>
           +{obj.xp} XP
         </span>
+
         {obj.source && (
-          <span className="max-w-[50%] truncate text-[9px] text-regolith-500" title={obj.source}>
+          <span className="max-w-[60%] truncate text-[9px] text-regolith-500" title={obj.source}>
             {obj.source}
           </span>
         )}
@@ -615,25 +962,100 @@ export function HologramInspect({
     };
   }, [send]);
 
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [progress, setProgress] = useState(0);
+
   useEffect(() => {
     if (!objectId) return;
     stopNarration();
     const src = `/audio/heritage/${missionId}/${objectId}.mp3`;
-    const howl = new Howl({ src: [src], volume: 0.85 });
+    const howl = new Howl({
+      src: [src],
+      volume: 0.9,
+      onload: () => {
+        setDuration(howl.duration() || 0);
+      },
+      onplay: () => {
+        setIsPlaying(true);
+      },
+      onpause: () => {
+        setIsPlaying(false);
+      },
+      onend: () => {
+        setIsPlaying(false);
+        setCurrentTime(howl.duration() || 0);
+        setProgress(1);
+      },
+      onloaderror: () => {
+        setIsPlaying(false);
+      },
+    });
     howlRef.current = howl;
     if (isMars) {
       gameAudio.playDataScan();
     } else {
       gameAudio.playQuindar();
     }
-    const playTimer = setTimeout(() => howl.play(), 350);
+    const playTimer = setTimeout(() => {
+      howl.play();
+    }, 350);
+
+    const interval = setInterval(() => {
+      if (howl && howl.playing()) {
+        const cur = (howl.seek() as number) || 0;
+        const dur = howl.duration() || 0;
+        setCurrentTime(cur);
+        if (dur > 0) {
+          setProgress(cur / dur);
+        }
+      }
+    }, 100);
+
     return () => {
+      clearInterval(interval);
       clearTimeout(playTimer);
-      howl.fade(howl.volume(), 0, 400);
-      setTimeout(() => howl.unload(), 500);
+      howl.fade(howl.volume(), 0, 300);
+      setTimeout(() => howl.unload(), 400);
       howlRef.current = null;
+      setIsPlaying(false);
+      setProgress(0);
+      setCurrentTime(0);
+      setDuration(0);
     };
   }, [objectId, missionId, isMars]);
+
+  const togglePlay = useCallback(() => {
+    if (!howlRef.current) return;
+    if (howlRef.current.playing()) {
+      howlRef.current.pause();
+    } else {
+      if (progress >= 0.99) {
+        howlRef.current.seek(0);
+      }
+      howlRef.current.play();
+    }
+  }, [progress]);
+
+  const restartAudio = useCallback(() => {
+    if (!howlRef.current) return;
+    howlRef.current.seek(0);
+    setCurrentTime(0);
+    setProgress(0);
+    howlRef.current.play();
+  }, []);
+
+  const seekAudio = useCallback((pct: number) => {
+    if (!howlRef.current) return;
+    const dur = howlRef.current.duration();
+    if (dur > 0) {
+      const target = pct * dur;
+      howlRef.current.seek(target);
+      setCurrentTime(target);
+      setProgress(pct);
+    }
+  }, []);
 
   if (!obj) return null;
 
@@ -754,12 +1176,20 @@ export function HologramInspect({
         <div className="flex w-full md:w-[55%] flex-col min-h-0">
           <InfoPanel
             obj={obj}
+            missionId={missionId}
             missionName={mission.name}
             missionSite={mission.site}
             missionDate={mission.date}
             crew={mission.crew}
             isMars={!!isMars}
             theme={theme}
+            isPlaying={isPlaying}
+            duration={duration}
+            currentTime={currentTime}
+            progress={progress}
+            onTogglePlay={togglePlay}
+            onRestartAudio={restartAudio}
+            onSeekAudio={seekAudio}
           />
         </div>
       </div>
