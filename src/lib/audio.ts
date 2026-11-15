@@ -76,7 +76,12 @@ export function getBus(bus: Bus): number {
 export function duck(on: boolean): void {
   ducking = on;
   for (const [, entry] of sounds) {
-    entry.howl.volume(effectiveVolume(entry.bus));
+    const target = effectiveVolume(entry.bus);
+    if (entry.howl.playing()) {
+      entry.howl.fade(entry.howl.volume(), target, on ? 160 : 360);
+    } else {
+      entry.howl.volume(target);
+    }
   }
 }
 

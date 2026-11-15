@@ -264,6 +264,7 @@ function useSceneTransition(phase: string) {
   const [mounted, setMounted] = useState<SceneGroup>(target);
   const [curtain, setCurtain] = useState(false);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
     if (target === mounted) return;
@@ -271,11 +272,17 @@ function useSceneTransition(phase: string) {
     timersRef.current.forEach(clearTimeout);
     timersRef.current = [];
 
+    if (isInitialMount.current || mounted === "select") {
+      isInitialMount.current = false;
+      setMounted(target);
+      return;
+    }
+
     setCurtain(true);
 
     timersRef.current.push(
-      setTimeout(() => setMounted(target), 60),
-      setTimeout(() => setCurtain(false), 1100),
+      setTimeout(() => setMounted(target), 40),
+      setTimeout(() => setCurtain(false), 240),
     );
 
     return () => {
@@ -391,7 +398,7 @@ export default function GameShell() {
       {mounted === "report" && <ReportScreen />}
       <div
         className={`pointer-events-none fixed inset-0 z-50 bg-black ${
-          curtain ? "opacity-100" : "opacity-0 transition-opacity duration-1000 ease-out"
+          curtain ? "opacity-100" : "opacity-0 transition-opacity duration-300 ease-out"
         }`}
       />
       <GameAudioController />

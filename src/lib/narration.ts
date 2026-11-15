@@ -1,5 +1,6 @@
 import { Howl, Howler } from "howler";
 import type { GamePhase } from "@/store/useGameStore";
+import { useAppStore } from "@/store/useAppStore";
 
 const NARRATED_PHASES: GamePhase[] = [
   "flight",
@@ -14,10 +15,6 @@ const NARRATED_PHASES: GamePhase[] = [
   "flagPlanted",
   "launch",
 ];
-
-function narrationPath(missionId: string, phase: GamePhase): string {
-  return `/audio/narration/${missionId}/${phase}.mp3`;
-}
 
 function planetFallbackPath(missionId: string, phase: GamePhase): string {
   if (missionId.startsWith("mars-")) {
@@ -49,8 +46,17 @@ function notifyComplete(): void {
   for (const cb of cbs) cb();
 }
 
+function isHinglish(): boolean {
+  try {
+    return useAppStore.getState().settings.audioLanguage === "hinglish";
+  } catch {
+    return false;
+  }
+}
+
 function getKey(missionId: string, phase: GamePhase): string {
-  return `${missionId}:${phase}`;
+  const lang = isHinglish() ? "hi" : "en";
+  return `${missionId}:${phase}:${lang}`;
 }
 
 export function preloadNarration(missionId?: string): void {
@@ -61,14 +67,17 @@ export function preloadNarration(missionId?: string): void {
     const key = getKey(id, phase);
     if (howls.has(key)) continue;
 
-    const primary = narrationPath(id, phase);
+    const hinglishPrimary = `/audio/narration/${id}/${phase}_hi.mp3`;
+    const englishPrimary = `/audio/narration/${id}/${phase}.mp3`;
+    const primary = isHinglish() ? hinglishPrimary : englishPrimary;
+    const secondary = isHinglish() ? englishPrimary : hinglishPrimary;
     const planetFb = planetFallbackPath(id, phase);
     const fallback = fallbackPath(phase);
 
     howls.set(
       key,
       new Howl({
-        src: [primary, planetFb, fallback],
+        src: [primary, secondary, planetFb, fallback],
         preload: true,
         volume,
       }),
@@ -99,6 +108,11 @@ export function playNarration(phase: GamePhase, missionId?: string): void {
 
   const key = getKey(id, phase);
   let howl = howls.get(key);
+
+  if (!howl) {
+    preloadNarration(id);
+    howl = howls.get(key);
+  }
 
   if (!howl) {
     const fallbackKey = getKey("apollo-11", phase);
@@ -137,8 +151,9 @@ export function playNarration(phase: GamePhase, missionId?: string): void {
   howl.once("playerror", markDone);
   howl.once("stop", markDone);
 
-  howl.volume(volume);
+  howl.volume(0);
   howl.play();
+  howl.fade(0, volume, 60);
 }
 
 export function onNarrationComplete(cb: () => void, maxWaitMs = 12000): () => void {
@@ -178,9 +193,19 @@ export function stopNarration(immediate = false): void {
     if (prevTimer) clearTimeout(prevTimer);
     if (immediate) {
       try {
-        h.stop();
-      } catch {}
-      stopTimers.delete(h);
+        h.fade(h.volume(), 0, 20);
+        setTimeout(() => {
+          try {
+            h.stop();
+          } catch {}
+          stopTimers.delete(h);
+        }, 25);
+      } catch {
+        try {
+          h.stop();
+        } catch {}
+        stopTimers.delete(h);
+      }
     } else {
       h.fade(h.volume(), 0, 300);
       stopTimers.set(

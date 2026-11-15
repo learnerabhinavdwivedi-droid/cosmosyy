@@ -69,7 +69,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
 
   // Smooth entrance fade
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 50);
+    const t = setTimeout(() => setVisible(true), 16);
     return () => clearTimeout(t);
   }, []);
 
@@ -77,7 +77,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
     setVisible(false);
     setTimeout(() => {
       send("EXIT_INSPECT");
-    }, 400);
+    }, 200);
   }, [send]);
 
   // Global key listener for 'T' (3D Story) and 'Esc'
@@ -143,7 +143,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-50 overflow-hidden transition-opacity duration-500 select-none ${
+      className={`fixed inset-0 z-50 overflow-hidden transition-opacity duration-200 select-none ${
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
@@ -302,7 +302,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
             <button
               type="button"
               onClick={handleClose}
-              className="flex h-[30px] w-[30px] items-center justify-center rounded-lg border border-space-700 bg-space-900/80 text-regolith-300 backdrop-blur transition hover:border-space-500 hover:text-white active:scale-95 cursor-pointer shadow-md"
+              className="flex h-9 w-9 sm:h-9 sm:w-9 min-h-[36px] min-w-[36px] items-center justify-center rounded-lg border border-space-700 bg-space-900/80 text-regolith-300 backdrop-blur transition hover:border-space-500 hover:text-white active:scale-95 cursor-pointer shadow-md text-sm font-bold touch-manipulation"
               aria-label="Close telemetry inspection"
             >
               ✕

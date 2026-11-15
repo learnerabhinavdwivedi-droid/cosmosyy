@@ -158,10 +158,13 @@ export function storyPlayerReducer(
   }
 }
 
-export function createInitialStoryPlayerState(totalScenes: number): StoryPlayerState {
+export function createInitialStoryPlayerState(
+  totalScenes: number,
+  initialStatus: StoryPlayerStatus = "idle",
+): StoryPlayerState {
   const total = Math.max(1, totalScenes);
   return {
-    status: "idle",
+    status: initialStatus,
     sceneIndex: 0,
     currentSceneIndex: 0,
     mode: "kids",
@@ -176,6 +179,6 @@ export function createInitialStoryPlayerState(totalScenes: number): StoryPlayerS
 export const initialStoryState = (totalScenes = 6): StoryPlayerState =>
   createInitialStoryPlayerState(totalScenes);
 
-export function useStoryPlayer(totalScenes: number) {
-  return useReducer(storyPlayerReducer, totalScenes, createInitialStoryPlayerState);
+export function useStoryPlayer(totalScenes: number, initialStatus: StoryPlayerStatus = "idle") {
+  return useReducer(storyPlayerReducer, createInitialStoryPlayerState(totalScenes, initialStatus));
 }
