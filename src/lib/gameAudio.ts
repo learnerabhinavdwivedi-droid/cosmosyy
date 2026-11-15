@@ -39,32 +39,39 @@ export function setVolume(v: number): void {
 
 export function playBeep(freq = 880, duration = 0.12): void {
   const c = getCtx();
+  const t = c.currentTime;
   const osc = c.createOscillator();
   const gain = c.createGain();
   osc.type = "sine";
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(0.15, c.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + duration);
+  osc.frequency.setValueAtTime(freq, t);
+  // Soft anti-pop attack and decay envelope
+  gain.gain.setValueAtTime(0.0001, t);
+  gain.gain.linearRampToValueAtTime(0.12, t + 0.006);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
   osc.connect(gain);
   gain.connect(getMaster());
-  osc.start(c.currentTime);
-  osc.stop(c.currentTime + duration);
+  osc.start(t);
+  osc.stop(t + duration + 0.02);
 }
 
-export function playQuindar(): void {
+export function playQuindar(isOutro = false): void {
   const c = getCtx();
   const t = c.currentTime;
   const osc = c.createOscillator();
   const gain = c.createGain();
   osc.type = "sine";
-  osc.frequency.value = 2525;
-  gain.gain.setValueAtTime(0.12, t);
-  gain.gain.setValueAtTime(0.12, t + 0.25);
-  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+  // Authentic NASA Quindar frequencies: 2525 Hz for intro (PTT key-down), 2475 Hz for outro (PTT key-up)
+  osc.frequency.setValueAtTime(isOutro ? 2475 : 2525, t);
+  const dur = 0.22;
+  // Anti-pop 8ms linear attack, smooth 12ms release envelope, comfortable non-piercing volume
+  gain.gain.setValueAtTime(0.0001, t);
+  gain.gain.linearRampToValueAtTime(0.065, t + 0.008);
+  gain.gain.setValueAtTime(0.065, t + dur - 0.012);
+  gain.gain.linearRampToValueAtTime(0.0001, t + dur);
   osc.connect(gain);
   gain.connect(getMaster());
   osc.start(t);
-  osc.stop(t + 0.3);
+  osc.stop(t + dur + 0.02);
 }
 
 export function playRadioBeep(): void {
@@ -82,8 +89,9 @@ export function playStaging(): void {
   clankBp.frequency.value = 1800;
   clankBp.Q.value = 2;
   const clankEnv = c.createGain();
-  clankEnv.gain.setValueAtTime(0.3, t);
-  clankEnv.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+  clankEnv.gain.setValueAtTime(0.0001, t);
+  clankEnv.gain.linearRampToValueAtTime(0.25, t + 0.006);
+  clankEnv.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
   clank.connect(clankBp);
   clankBp.connect(clankEnv);
   clankEnv.connect(getMaster());
@@ -138,8 +146,10 @@ export function playThud(): void {
   lp.frequency.setValueAtTime(200, t);
   lp.frequency.exponentialRampToValueAtTime(60, t + 0.3);
   const env = c.createGain();
-  env.gain.setValueAtTime(0.7, t);
-  env.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+  // Anti-pop 6ms attack envelope
+  env.gain.setValueAtTime(0.0001, t);
+  env.gain.linearRampToValueAtTime(0.55, t + 0.006);
+  env.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
   src.connect(lp);
   lp.connect(env);
   env.connect(getMaster());
@@ -151,8 +161,9 @@ export function playThud(): void {
   sub.type = "sine";
   sub.frequency.setValueAtTime(50, t);
   sub.frequency.exponentialRampToValueAtTime(25, t + 0.3);
-  subGain.gain.setValueAtTime(0.4, t);
-  subGain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+  subGain.gain.setValueAtTime(0.0001, t);
+  subGain.gain.linearRampToValueAtTime(0.3, t + 0.006);
+  subGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
   sub.connect(subGain);
   subGain.connect(getMaster());
   sub.start(t);
@@ -239,7 +250,13 @@ export function startEngine(): void {
 export function stopEngine(): void {
   if (!engine || !ctx) return;
   const t = ctx.currentTime;
-  engine.gain.gain.linearRampToValueAtTime(0, t + 0.6);
+  try {
+    engine.gain.gain.cancelScheduledValues(t);
+    engine.gain.gain.setValueAtTime(engine.gain.gain.value, t);
+    engine.gain.gain.linearRampToValueAtTime(0, t + 0.5);
+  } catch {
+    /* ok */
+  }
   const e = engine;
   engine = null;
   setTimeout(() => {
@@ -255,7 +272,7 @@ export function stopEngine(): void {
     } catch {
       /* ok */
     }
-  }, 700);
+  }, 600);
 }
 
 // ── breathing ────────────────────────────────────────────────
@@ -306,18 +323,24 @@ export function stopBreathing(): void {
 
 export function playFootstep(): void {
   const c = getCtx();
-  const dur = 0.12;
+  const t = c.currentTime;
+  const dur = 0.14;
   const src = c.createBufferSource();
   src.buffer = makeNoise(c, dur);
   const lp = c.createBiquadFilter();
   lp.type = "lowpass";
-  lp.frequency.value = 800;
+  lp.frequency.setValueAtTime(650, t);
+  lp.frequency.exponentialRampToValueAtTime(220, t + dur);
   const g = c.createGain();
-  g.gain.value = 0.15;
+  // Soft regolith boot-crunch envelope with smooth attack and decay
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.linearRampToValueAtTime(0.12, t + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   src.connect(lp);
   lp.connect(g);
   g.connect(getMaster());
-  src.start();
+  src.start(t);
+  src.stop(t + dur + 0.01);
 }
 
 // ── ambient: space drone (flight phases) ─────────────────────
@@ -393,7 +416,13 @@ export function startSpaceDrone(): void {
 export function stopSpaceDrone(): void {
   if (!drone || !ctx) return;
   const t = ctx.currentTime;
-  drone.gain.gain.linearRampToValueAtTime(0, t + 2);
+  try {
+    drone.gain.gain.cancelScheduledValues(t);
+    drone.gain.gain.setValueAtTime(drone.gain.gain.value, t);
+    drone.gain.gain.linearRampToValueAtTime(0, t + 1.2);
+  } catch {
+    /* ok */
+  }
   const d = drone;
   drone = null;
   setTimeout(() => {
@@ -409,7 +438,7 @@ export function stopSpaceDrone(): void {
     } catch {
       /* ok */
     }
-  }, 2200);
+  }, 1400);
 }
 
 // ── ambient: lunar hum (surface phases) ──────────────────────
@@ -481,7 +510,13 @@ export function startLunarHum(): void {
 export function stopLunarHum(): void {
   if (!lunarHum || !ctx) return;
   const t = ctx.currentTime;
-  lunarHum.gain.gain.linearRampToValueAtTime(0, t + 2);
+  try {
+    lunarHum.gain.gain.cancelScheduledValues(t);
+    lunarHum.gain.gain.setValueAtTime(lunarHum.gain.gain.value, t);
+    lunarHum.gain.gain.linearRampToValueAtTime(0, t + 1.2);
+  } catch {
+    /* ok */
+  }
   const h = lunarHum;
   lunarHum = null;
   setTimeout(() => {
@@ -497,7 +532,7 @@ export function stopLunarHum(): void {
     } catch {
       /* ok */
     }
-  }, 2200);
+  }, 1400);
 }
 
 // ── ambient: mars wind (surface phases) ─────────────────────
@@ -557,7 +592,13 @@ export function startMarsWind(): void {
 export function stopMarsWind(): void {
   if (!marsWind || !ctx) return;
   const t = ctx.currentTime;
-  marsWind.gain.gain.linearRampToValueAtTime(0, t + 2);
+  try {
+    marsWind.gain.gain.cancelScheduledValues(t);
+    marsWind.gain.gain.setValueAtTime(marsWind.gain.gain.value, t);
+    marsWind.gain.gain.linearRampToValueAtTime(0, t + 1.2);
+  } catch {
+    /* ok */
+  }
   const w = marsWind;
   marsWind = null;
   setTimeout(() => {
@@ -573,7 +614,7 @@ export function stopMarsWind(): void {
     } catch {
       /* ok */
     }
-  }, 2200);
+  }, 1400);
 }
 
 export function stopAll(): void {
@@ -592,14 +633,16 @@ export function playDataScan(): void {
   for (let i = 0; i < 4; i++) {
     const osc = c.createOscillator();
     const gain = c.createGain();
+    const startTime = t + i * 0.06;
     osc.type = "square";
-    osc.frequency.value = 1400 + i * 100;
-    gain.gain.setValueAtTime(0.03, t + i * 0.06);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.06 + 0.04);
+    osc.frequency.setValueAtTime(1400 + i * 100, startTime);
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.linearRampToValueAtTime(0.025, startTime + 0.004);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.045);
     osc.connect(gain);
     gain.connect(getMaster());
-    osc.start(t + i * 0.06);
-    osc.stop(t + i * 0.06 + 0.05);
+    osc.start(startTime);
+    osc.stop(startTime + 0.05);
   }
 }
 
@@ -611,12 +654,13 @@ export function playProximityPing(): void {
   osc.type = "sine";
   osc.frequency.setValueAtTime(880, t);
   osc.frequency.exponentialRampToValueAtTime(1320, t + 0.08);
-  gain.gain.setValueAtTime(0.06, t);
-  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+  gain.gain.setValueAtTime(0.0001, t);
+  gain.gain.linearRampToValueAtTime(0.045, t + 0.006);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
   osc.connect(gain);
   gain.connect(getMaster());
   osc.start(t);
-  osc.stop(t + 0.2);
+  osc.stop(t + 0.18);
 }
 
 export function playScanTick(): void {
@@ -625,9 +669,10 @@ export function playScanTick(): void {
   const osc = c.createOscillator();
   const gain = c.createGain();
   osc.type = "triangle";
-  osc.frequency.value = 1200;
-  gain.gain.setValueAtTime(0.04, t);
-  gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+  osc.frequency.setValueAtTime(1200, t);
+  gain.gain.setValueAtTime(0.0001, t);
+  gain.gain.linearRampToValueAtTime(0.035, t + 0.004);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
   osc.connect(gain);
   gain.connect(getMaster());
   osc.start(t);
@@ -640,14 +685,16 @@ export function playScanComplete(): void {
   for (let i = 0; i < 3; i++) {
     const osc = c.createOscillator();
     const gain = c.createGain();
+    const startTime = t + i * 0.08;
     osc.type = "sine";
-    osc.frequency.value = 660 + i * 220;
-    gain.gain.setValueAtTime(0.08, t + i * 0.08);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.08 + 0.15);
+    osc.frequency.setValueAtTime(660 + i * 220, startTime);
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.linearRampToValueAtTime(0.06, startTime + 0.006);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.16);
     osc.connect(gain);
     gain.connect(getMaster());
-    osc.start(t + i * 0.08);
-    osc.stop(t + i * 0.08 + 0.2);
+    osc.start(startTime);
+    osc.stop(startTime + 0.18);
   }
 }
 

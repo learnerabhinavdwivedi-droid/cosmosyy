@@ -148,10 +148,20 @@ export function speakTutorText(options: TutorSpeakOptions): () => void {
 
     utterance.onend = () => {
       cleanup();
-      // Slight pause before completing to ensure the final syllable rings out cleanly
-      setTimeout(() => {
-        options.onEnd?.();
-      }, 180);
+      if (options.withRadioChirp) {
+        try {
+          playQuindar(true);
+        } catch {
+          // ignore
+        }
+        setTimeout(() => {
+          options.onEnd?.();
+        }, 260);
+      } else {
+        setTimeout(() => {
+          options.onEnd?.();
+        }, 120);
+      }
     };
 
     utterance.onerror = (e) => {
@@ -170,7 +180,7 @@ export function speakTutorText(options: TutorSpeakOptions): () => void {
   // If radio chirp is enabled, play it first, then wait 350ms so sound effects NEVER overlap with speech
   if (options.withRadioChirp) {
     try {
-      playQuindar();
+      playQuindar(false);
     } catch {
       // ignore audio context issues
     }

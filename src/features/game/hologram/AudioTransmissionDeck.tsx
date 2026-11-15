@@ -149,7 +149,13 @@ export function AudioTransmissionDeck({
 
     if (isPlaying) {
       if (soundRef.current && soundRef.current.playing()) {
-        soundRef.current.pause();
+        const s = soundRef.current;
+        s.fade(s.volume(), 0, 80);
+        setTimeout(() => {
+          try {
+            s.pause();
+          } catch {}
+        }, 85);
       }
       if (tutorCancelRef.current) {
         tutorCancelRef.current();
@@ -168,7 +174,9 @@ export function AudioTransmissionDeck({
     } else {
       if (soundRef.current && soundRef.current.state() === "loaded") {
         duck(true);
+        soundRef.current.volume(0);
         soundRef.current.play();
+        soundRef.current.fade(0, 0.95, 80);
         setIsPlaying(true);
         animFrameRef.current = requestAnimationFrame(updateProgress);
       } else if (firstPersonLog) {
