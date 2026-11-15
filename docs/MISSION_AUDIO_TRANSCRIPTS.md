@@ -5,9 +5,9 @@ This document contains the complete transcripts of all flight narrations, herita
 ## Summary Statistics
 - **Total Missions**: 20
 - **Total Heritage Artifacts**: 113
-- **Total Heritage Audio Files**: 89
-- **Total Narration Audio Files**: 123
-- **Total Audio Assets in Game**: 212
+- **Total Heritage Audio Files**: 113
+- **Total Narration Audio Files**: 211
+- **Total Audio Assets in Game**: 324
 
 ---
 
@@ -430,7 +430,7 @@ This document contains the complete transcripts of all flight narrations, herita
 #### 📻 Artifact Voice Log Transcripts (Heritage Audios)
 
 ##### 🔹 InSight Hexagonal Lander (`insight-lander-body`)
-- **Audio File**: `public/audio/heritage/mars-insight/insight-lander-body.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-insight/insight-lander-body.mp3` [✅ Present]
 - **Description**: A high-stability hexagonal deck constructed of aluminum honeycomb with carbon composite face sheets, supported by three landing legs. It carried UHF and X-band communications, avionics, and the RISE geodetic rotation antennas.
 > **🎙️ Voice Log Transcript**:
 > *"I touched down in the smooth red sand of Elysium Planitia. My job was not to roam, but to listen. For four Earth years, I sat motionless under the two moons, letting the deep vibrations of Mars tell me the ancient story of its birth."*
@@ -438,7 +438,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: RISE radio science antennas tracked the wobble of Mars's rotational axis to sub-centimetre precision, proving that the planet's core is liquid and molten.
 
 ##### 🔹 SEIS Ultra-Sensitive Seismometer (`insight-seis`)
-- **Audio File**: `public/audio/heritage/mars-insight/insight-seis.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-insight/insight-seis.mp3` [✅ Present]
 - **Description**: France's CNES Seismic Experiment for Interior Structure consists of three very-broad-band sensors sealed in an evacuated spherical vacuum chamber, sheltered under a thermal and aerodynamic Wind and Thermal Shield (WTS) dome placed directly on the soil.
 > **🎙️ Voice Log Transcript**:
 > *"Beneath my golden dome, sealed in a silent vacuum, I felt the ground pulse. I heard deep tectonic rumbles in Cerberus Fossae and felt space rocks smash into the red plains thousands of kilometers away. I felt the heartbeat of Mars."*
@@ -446,7 +446,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Discovered that Mars is seismically active, recording 1,319+ marsquakes, and mapped the thickness of the Martian crust and the depth of the liquid core boundary.
 
 ##### 🔹 HP³ Heat Flow Probe ('The Mole') (`insight-hp3`)
-- **Audio File**: `public/audio/heritage/mars-insight/insight-hp3.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-insight/insight-hp3.mp3` [✅ Present]
 - **Description**: Germany's DLR Heat Flow and Physical Properties Package featured a 40-centimetre self-hammering tungsten penetrator designed to burrow 5 metres underground, trailing an instrumented cable with 14 temperature sensors to measure geothermal heat escape.
 > **🎙️ Voice Log Transcript**:
 > *"I was 'The Mole', built to burrow deeper into another planet than any machine before me. The Martian duricrust was tough as rock, but with my team gently pressing my back with the robotic scoop, I buried myself into the soil and measured the warmth of the planet's interior."*
@@ -454,7 +454,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Discovered that the Martian regolith in Elysium has unexpected cohesive properties, forming a cement-like duricrust that challenged hammering mechanisms.
 
 ##### 🔹 Twin UltraFlex Solar Arrays (`insight-ultraflex`)
-- **Audio File**: `public/audio/heritage/mars-insight/insight-ultraflex.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-insight/insight-ultraflex.mp3` [✅ Present]
 - **Description**: Two 2.15-metre diameter circular fan-fold arrays with ultra-lightweight carbon composite ribs and triple-junction solar cells. They generated 4,600 watt-hours per sol at landing, tapering to 300 watt-hours as dust accumulated.
 > **🎙️ Voice Log Transcript**:
 > *"I opened like twin golden wheels against the pink sky. For four years I caught the morning light, but no cleaning dust devil ever swept my wings. As the red powder thickened, my power faded, but I gave every last drop of current until my lights went out."*
@@ -462,7 +462,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Demonstrated the durability of UltraFlex circular array designs and provided empirical data on wind-driven dust accumulation rates across multi-year missions.
 
 ##### 🔹 Instrument Deployment Arm & Camera (`insight-idc-arm`)
-- **Audio File**: `public/audio/heritage/mars-insight/insight-idc-arm.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-insight/insight-idc-arm.mp3` [✅ Present]
 - **Description**: A 1.9-metre robotic arm with 4 degrees of freedom, an instrument grapple claw, a scoop, and the Instrument Deployment Camera (IDC). It was used to autonomously pick up SEIS, the WTS dome, and HP³ and place them millimeter-accurately onto the regolith.
 > **🎙️ Voice Log Transcript**:
 > *"I was the arm that unpacked our science. With my claw, I gently picked up the seismometer, lowered it to the red dirt, and covered it with its aerodynamic shield like a sleeping child under a blanket. In my final months, I scooped sand over our solar cells to help the wind blow them clean."*
@@ -470,7 +470,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Successfully demonstrated precision placement of delicate science experiments onto an unprepared planetary surface for the first time in space exploration history.
 
 ##### 🔹 TWINS Weather & Pressure Sensors (`insight-twins`)
-- **Audio File**: `public/audio/heritage/mars-insight/insight-twins.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-insight/insight-twins.mp3` [✅ Present]
 - **Description**: Spain's CAB Temperature and Wind Sensors for InSight boom, paired with an ultra-high-resolution atmospheric pressure sensor capable of detecting barometric drops as small as 0.1 Pascal as dust devils passed over the lander.
 > **🎙️ Voice Log Transcript**:
 > *"Every sol at noon, I felt invisible whirlwinds race across the plains of Elysium. As dust devils whipped past my mast, my pressure sensors dipped in fractions of a second. I showed that Mars breathes with turbulent, dancing energy."*
@@ -658,7 +658,7 @@ This document contains the complete transcripts of all flight narrations, herita
 #### 📻 Artifact Voice Log Transcripts (Heritage Audios)
 
 ##### 🔹 Phoenix Polar Lander (`phoenix-lander-body`)
-- **Audio File**: `public/audio/heritage/mars-phoenix/phoenix-lander-body.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-phoenix/phoenix-lander-body.mp3` [✅ Present]
 - **Description**: A three-legged pulsed-thruster lander built from flight-proven hardware from the Mars Surveyor 2001 program. It used soft-pulsed monopropellant hydrazine thrusters rather than airbags to touch down gently without disturbing delicate subsurface ice.
 > **🎙️ Voice Log Transcript**:
 > *"They named me Phoenix because I rose from the ashes of cancelled missions. I flew to the far north of Mars, where the ground cracked in giant stone polygons. When my rockets fell silent, my cameras looked down and saw pure white ice just below my feet."*
@@ -666,7 +666,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Confirmed that the polygon ground patterns observed from orbit are thermal contraction cracks created by deep subsurface permafrost ice expanding and contracting.
 
 ##### 🔹 Robotic Trenching Arm & Rasp (`phoenix-ra-arm`)
-- **Audio File**: `public/audio/heritage/mars-phoenix/phoenix-ra-arm.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-phoenix/phoenix-ra-arm.mp3` [✅ Present]
 - **Description**: A 2.35-metre articulated robotic arm made of titanium and carbon composite, equipped with a backhoe scoop, a tungsten-carbide rasp, and a thermal and electrical conductivity probe (TECP). It dug trenches up to 18 cm deep.
 > **🎙️ Voice Log Transcript**:
 > *"My titanium scoop bit into the frozen arctic soil with a metallic screech. Five centimetres down, my teeth struck hard, glittering white ice. I scraped its shavings and watched them melt in our onboard beakers. I touched Martian water with my own hands."*
@@ -674,7 +674,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Excavated the 'Snow White' and 'Dodo-Goldilocks' trenches, exposing pure white water-ice sheets 5 centimetres below the regolith.
 
 ##### 🔹 TEGA Thermal Gas Analyzer (`phoenix-tega`)
-- **Audio File**: `public/audio/heritage/mars-phoenix/phoenix-tega.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-phoenix/phoenix-tega.mp3` [✅ Present]
 - **Description**: An array of eight single-use miniature vacuum ovens paired with a magnetic-sector mass spectrometer. The ovens heated soil and ice samples up to 1,000°C to measure the vaporized gases released at specific mineral decomposition temperatures.
 > **🎙️ Voice Log Transcript**:
 > *"I was a cluster of eight tiny kilns in the freezing arctic. When the arm poured ice shavings past my motorized doors, I sealed my chamber and cranked my coils to a thousand degrees. Steam puffed into my spectrometer — undeniable, sweet Martian water vapor."*
@@ -682,7 +682,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Detected water vapor liberated at 0°C and carbon dioxide released at 725°C, confirming the presence of calcium carbonate (chalk) formed in liquid water.
 
 ##### 🔹 MECA Wet Chemistry Cell & AFM (`phoenix-meca`)
-- **Audio File**: `public/audio/heritage/mars-phoenix/phoenix-meca.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-phoenix/phoenix-meca.mp3` [✅ Present]
 - **Description**: The Microscopy, Electrochemistry, and Conductivity Analyzer included four single-use wet-chemistry beakers filled with Earth water and reagents, optical and atomic force microscopes, and ion-selective electrodes.
 > **🎙️ Voice Log Transcript**:
 > *"I carried four sealed beakers of Earth water to Mars. When we mixed in the red arctic dirt, my ion electrodes tasted the broth: mildly alkaline, rich in magnesium, potassium, and perchlorate salts. The soil of Mars was chemically alive."*
@@ -690,7 +690,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Discovered perchlorates (ClO4-) at 0.5% concentration in the soil and measured a mildly alkaline pH of 7.7, comparable to terrestrial asparagus-friendly soil.
 
 ##### 🔹 Dual Decagonal Bio-Solar Arrays (`phoenix-solar-wings`)
-- **Audio File**: `public/audio/heritage/mars-phoenix/phoenix-solar-wings.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-phoenix/phoenix-solar-wings.mp3` [✅ Present]
 - **Description**: Twin fan-folding decagonal solar panels spanning 5.52 metres that unfolded like oriental fans after landing. In peak summer they produced 3.5 kWh daily under 24-hour midnight sun.
 > **🎙️ Voice Log Transcript**:
 > *"I fanned open like black silk wings under the arctic sun that never set. Day after day, I drank the midnight sunlight to feed our heaters and pumps. But as winter crept in, the sun slipped below the icy hills, and heavy dry-ice snow folded me forever."*
@@ -698,7 +698,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Demonstrated the power profile of circular fan-fold arrays, paving the way for the UltraFlex arrays deployed on the InSight and Lucy spacecraft.
 
 ##### 🔹 MET Weather Station & Laser Lidar (`phoenix-lidar`)
-- **Audio File**: `public/audio/heritage/mars-phoenix/phoenix-lidar.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-phoenix/phoenix-lidar.mp3` [✅ Present]
 - **Description**: Canadian Space Agency meteorological station with temperature and pressure sensors and a dual-wavelength neodymium-YAG laser lidar that fired green pulses 20 kilometres up into the arctic atmosphere.
 > **🎙️ Voice Log Transcript**:
 > *"I fired emerald laser beams into the purple arctic sky. Night after night, the scattered light told me a magical secret: four kilometers above my deck, water-ice crystals were clumping into snowflakes and drifting downward toward the plain."*
@@ -829,7 +829,7 @@ This document contains the complete transcripts of all flight narrations, herita
 #### 📻 Artifact Voice Log Transcripts (Heritage Audios)
 
 ##### 🔹 Viking 2 Lander (`v2-lander-body`)
-- **Audio File**: `public/audio/heritage/mars-viking2/v2-lander-body.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-viking2/v2-lander-body.mp3` [✅ Present]
 - **Description**: The Viking 2 lander touched down on Utopia Planitia on September 3, 1976. Supported by three titanium inverted-tripod landing legs with crushable honeycomb pads, it housed twin SNAP-19 RTGs, dual biological incubators, and S-band communications antennas.
 > **🎙️ Voice Log Transcript**:
 > *"I touched down in the rocky fields of Utopia Planitia two months after my sister on Chryse. I watched four Martian winters freeze the red plain in delicate white frost, and felt the whisper of wind across my antennas until my batteries grew cold in 1980."*
@@ -837,7 +837,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Provided four years of continuous weather, atmospheric pressure, and surface imaging, confirming seasonal CO2 condensation and water-ice sublimation.
 
 ##### 🔹 Robotic Soil Sampler (`v2-sampler-arm`)
-- **Audio File**: `public/audio/heritage/mars-viking2/v2-sampler-arm.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-viking2/v2-sampler-arm.mp3` [✅ Present]
 - **Description**: A 3-metre telescoping boom tipped with an electromechanical backhoe scoop. It pushed aside surface rocks, dug five trenches up to 15 cm deep, and delivered regolith to onboard biology, GCMS, and X-ray fluorescence funnels.
 > **🎙️ Voice Log Transcript**:
 > *"I was the arm that moved boulders on Mars. In May 1977, my motors strained to nudge a heavy rock named Mr. Badger so I could scoop the sheltered soil beneath. My final scoop still rests securely in my metal jaws."*
@@ -845,7 +845,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Pushed aside a 10 kg boulder nicknamed 'Mr. Badger' to scoop protected subsurface soil that had never been exposed to solar ultraviolet radiation.
 
 ##### 🔹 Viking 2 Seismometer (`v2-seismometer`)
-- **Audio File**: `public/audio/heritage/mars-viking2/v2-seismometer.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-viking2/v2-seismometer.mp3` [✅ Present]
 - **Description**: A three-axis inertial seismometer mounted atop the lander bus. Unlike Viking 1 whose sensor locking pins failed to release, Viking 2's locking mechanism successfully uncaged, allowing it to record planetary ground accelerations.
 > **🎙️ Voice Log Transcript**:
 > *"My sister's pins stuck fast, but mine clicked open with a satisfying snap. High on the lander body, I listened to the shudder of wind against the dish and the deep, silent heartbeat of Mars. On Sol 80, I felt the ground tremble beneath us."*
@@ -853,7 +853,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Recorded background seismic noise caused by Martian atmospheric wind gusts and detected one possible genuine magnitude 2.8 marsquake on Sol 80.
 
 ##### 🔹 Meteorology Sensor Boom (`v2-meteorology`)
-- **Audio File**: `public/audio/heritage/mars-viking2/v2-meteorology.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-viking2/v2-meteorology.mp3` [✅ Present]
 - **Description**: An upright 1.3-metre sensor mast equipped with hot-film anemometers, thermocouple temperature gauges, and a thin-diaphragm pressure transducer positioned to minimize thermal contamination from the lander's RTGs.
 > **🎙️ Voice Log Transcript**:
 > *"Day and night, I felt the thin Martian air slide past my platinum filaments. I watched atmospheric pressure plunge each winter as a quarter of the sky turned to ice at the poles, recording the heartbeat of a living atmosphere."*
@@ -861,7 +861,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Measured the annual atmospheric pressure cycle as the Martian polar ice caps froze out and sublimated, revealing that 25% of Mars's atmosphere condenses each winter.
 
 ##### 🔹 Dual Facsimile Cameras (`v2-facsimile-camera`)
-- **Audio File**: `public/audio/heritage/mars-viking2/v2-facsimile-camera.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-viking2/v2-facsimile-camera.mp3` [✅ Present]
 - **Description**: Twin vertical scanning cameras that used nodding mirrors and silicon photodiode arrays to sweep line-by-line 360-degree high-resolution panoramic images in monochrome, color, and infrared spectrums.
 > **🎙️ Voice Log Transcript**:
 > *"My nodding mirror swept the horizon one vertical strip at a time. Through my filters, Earth saw the red plains of Utopia transform into an icy white landscape under a pale pink sky. I captured humanity's first winter on another planet."*
@@ -869,7 +869,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Captured the famous frost panoramas showing water ice crystallizing on Martian rocks and dust dunes across 100 consecutive sols in the Utopia winter.
 
 ##### 🔹 GCMS Organic Analysis Oven (`v2-gcms-inlet`)
-- **Audio File**: `public/audio/heritage/mars-viking2/v2-gcms-inlet.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/mars-viking2/v2-gcms-inlet.mp3` [✅ Present]
 - **Description**: Surface funnel and motorized soil distribution sieve that transported regolith samples into miniature pyrolysis ovens. The ovens pyrolyzed soil at 50°C, 200°C, 350°C, and 500°C to volatilize compounds for mass spectrometer analysis.
 > **🎙️ Voice Log Transcript**:
 > *"I baked the Martian soil in tiny sealed chambers, sniffing for the carbon building blocks of ancient life. The dirt held water, but its oxidizers destroyed any organic traces. My mystery stood for thirty years until Phoenix found the perchlorates that puzzled me."*
@@ -1052,7 +1052,7 @@ This document contains the complete transcripts of all flight narrations, herita
 #### 📻 Artifact Voice Log Transcripts (Heritage Audios)
 
 ##### 🔹 2.74-Meter High-Gain Antenna (`pioneer-dish`)
-- **Audio File**: `public/audio/heritage/deepspace-pioneer/pioneer-dish.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/deepspace-pioneer/pioneer-dish.mp3` [✅ Present]
 - **Description**: 2.74-meter parabolic aluminum dish reflector with a central tripod feed horn, oriented continuously toward Earth to send faint radio whispers across billions of miles.
 > **🎙️ Voice Log Transcript**:
 > *"I am Pioneer 10. Through my great silver dish, I beamed humanity's first close-up photographs of giant Jupiter back to Earth."*
@@ -1060,7 +1060,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Transmitted science data from beyond 80 AU (12 billion km), maintaining lock with the Deep Space Network for over 30 years.
 
 ##### 🔹 SNAP-19 RTG Power Booms (`pioneer-rtg-booms`)
-- **Audio File**: `public/audio/heritage/deepspace-pioneer/pioneer-rtg-booms.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/deepspace-pioneer/pioneer-rtg-booms.mp3` [✅ Present]
 - **Description**: Twin deployable 3-meter truss booms holding four SNAP-19 radioisotope thermoelectric generators fueled by decaying plutonium-238.
 > **🎙️ Voice Log Transcript**:
 > *"My nuclear hearts kept me warm and powered through decades of cosmic silence, far beyond the reach of solar warmth."*
@@ -1068,7 +1068,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Provided continuous electrical power for over three decades in the deep freeze of outer space where solar panels cannot function.
 
 ##### 🔹 The Pioneer Golden Plaque (`pioneer-plaque`)
-- **Audio File**: `public/audio/heritage/deepspace-pioneer/pioneer-plaque.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/deepspace-pioneer/pioneer-plaque.mp3` [✅ Present]
 - **Description**: 6 x 9 inch gold-anodized aluminum plaque engraved with human figures, the hyperfine transition of neutral hydrogen, and a 14-pulsar galactic coordinate map.
 > **🎙️ Voice Log Transcript**:
 > *"Engraved in gold upon my hull, I carry the faces, hands, and cosmic address of the dreamers who sent me into the stars."*
@@ -1076,7 +1076,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Created humanity's first deliberate physical greeting card addressed to potential extraterrestrial intelligence.
 
 ##### 🔹 Quadraspherical Plasma Analyzer (`pioneer-plasma-analyzer`)
-- **Audio File**: `public/audio/heritage/deepspace-pioneer/pioneer-plasma-analyzer.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/deepspace-pioneer/pioneer-plasma-analyzer.mp3` [✅ Present]
 - **Description**: Electrostatic curved-plate analyzer designed by John Wolfe to count solar wind protons, electrons, and interstellar ions.
 > **🎙️ Voice Log Transcript**:
 > *"I tasted the fiery breath of the Sun as it thinned into the cold interstellar wind of our galaxy."*
@@ -1084,7 +1084,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Discovered that the solar wind slows down and interacts with interstellar hydrogen atoms at the outer fringes of the heliosphere.
 
 ##### 🔹 Helium Vector Magnetometer (HVM) (`pioneer-magnetometer-boom`)
-- **Audio File**: `public/audio/heritage/deepspace-pioneer/pioneer-magnetometer-boom.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/deepspace-pioneer/pioneer-magnetometer-boom.mp3` [✅ Present]
 - **Description**: 6.6-meter lightweight folding fiberglass mast isolating a sensitive helium gas cell magnetometer from spacecraft electrical interference.
 > **🎙️ Voice Log Transcript**:
 > *"At the tip of my long boom, I sensed the titanic magnetic storms of Jupiter and the subtle lines of galactic magnetic fields."*
@@ -1092,7 +1092,7 @@ This document contains the complete transcripts of all flight narrations, herita
 - **Science Discovery**: Discovered the enormous, intense Jovian magnetosphere and its devastating radiation belts.
 
 ##### 🔹 Interstellar Dust & Cosmic Ray Detector (`pioneer-interstellar-dust`)
-- **Audio File**: `public/audio/heritage/deepspace-pioneer/pioneer-interstellar-dust.mp3` [⚡ Fallback: Web Speech Synthesis]
+- **Audio File**: `public/audio/heritage/deepspace-pioneer/pioneer-interstellar-dust.mp3` [✅ Present]
 - **Description**: Solid-state silicon detector telescope measuring high-energy galactic cosmic ray protons and alpha particles entering the Solar System.
 > **🎙️ Voice Log Transcript**:
 > *"I recorded the microscopic debris of dead stars colliding with our spacecraft as we flew outward into the galactic dark."*
@@ -1157,12 +1157,24 @@ This document contains the complete transcripts of all flight narrations, herita
 - `public/audio/heritage/deep-voyager/plasma-wave-antenna.mp3` (155.1 KB)
 - `public/audio/heritage/deep-voyager/rtg-power-boom.mp3` (175.0 KB)
 - `public/audio/heritage/deep-voyager/voyager-probe.mp3` (197.7 KB)
+- `public/audio/heritage/deepspace-pioneer/pioneer-dish.mp3` (56.7 KB)
+- `public/audio/heritage/deepspace-pioneer/pioneer-interstellar-dust.mp3` (45.8 KB)
+- `public/audio/heritage/deepspace-pioneer/pioneer-magnetometer-boom.mp3` (48.9 KB)
+- `public/audio/heritage/deepspace-pioneer/pioneer-plaque.mp3` (50.8 KB)
+- `public/audio/heritage/deepspace-pioneer/pioneer-plasma-analyzer.mp3` (36.6 KB)
+- `public/audio/heritage/deepspace-pioneer/pioneer-rtg-booms.mp3` (45.8 KB)
 - `public/audio/heritage/mars-curiosity/cu-calibration-target.mp3` (147.2 KB)
 - `public/audio/heritage/mars-curiosity/cu-drill-holes.mp3` (161.7 KB)
 - `public/audio/heritage/mars-curiosity/cu-mount-sharp.mp3` (157.2 KB)
 - `public/audio/heritage/mars-curiosity/cu-rover.mp3` (177.2 KB)
 - `public/audio/heritage/mars-curiosity/cu-sky-crane.mp3` (172.2 KB)
 - `public/audio/heritage/mars-curiosity/cu-yellowknife.mp3` (177.4 KB)
+- `public/audio/heritage/mars-insight/insight-hp3.mp3` (99.8 KB)
+- `public/audio/heritage/mars-insight/insight-idc-arm.mp3` (114.2 KB)
+- `public/audio/heritage/mars-insight/insight-lander-body.mp3` (98.9 KB)
+- `public/audio/heritage/mars-insight/insight-seis.mp3` (99.8 KB)
+- `public/audio/heritage/mars-insight/insight-twins.mp3` (99.3 KB)
+- `public/audio/heritage/mars-insight/insight-ultraflex.mp3` (102.0 KB)
 - `public/audio/heritage/mars-opportunity/op-blueberries.mp3` (146.3 KB)
 - `public/audio/heritage/mars-opportunity/op-eagle-crater.mp3` (145.4 KB)
 - `public/audio/heritage/mars-opportunity/op-heat-shield.mp3` (149.3 KB)
@@ -1181,6 +1193,12 @@ This document contains the complete transcripts of all flight narrations, herita
 - `public/audio/heritage/mars-perseverance/pe-sample-tubes.mp3` (158.5 KB)
 - `public/audio/heritage/mars-perseverance/pe-sky-crane.mp3` (148.7 KB)
 - `public/audio/heritage/mars-perseverance/pe-supercam.mp3` (165.0 KB)
+- `public/audio/heritage/mars-phoenix/phoenix-lander-body.mp3` (103.4 KB)
+- `public/audio/heritage/mars-phoenix/phoenix-lidar.mp3` (93.2 KB)
+- `public/audio/heritage/mars-phoenix/phoenix-meca.mp3` (108.6 KB)
+- `public/audio/heritage/mars-phoenix/phoenix-ra-arm.mp3` (111.5 KB)
+- `public/audio/heritage/mars-phoenix/phoenix-solar-wings.mp3` (107.4 KB)
+- `public/audio/heritage/mars-phoenix/phoenix-tega.mp3` (107.6 KB)
 - `public/audio/heritage/mars-spirit/sp-bonneville.mp3` (126.8 KB)
 - `public/audio/heritage/mars-spirit/sp-columbia-hills.mp3` (136.0 KB)
 - `public/audio/heritage/mars-spirit/sp-heat-shield.mp3` (164.1 KB)
@@ -1193,6 +1211,12 @@ This document contains the complete transcripts of all flight narrations, herita
 - `public/audio/heritage/mars-viking1/v1-meteorology.mp3` (172.0 KB)
 - `public/audio/heritage/mars-viking1/v1-sampler-arm.mp3` (151.4 KB)
 - `public/audio/heritage/mars-viking1/v1-seismometer.mp3` (169.5 KB)
+- `public/audio/heritage/mars-viking2/v2-facsimile-camera.mp3` (98.0 KB)
+- `public/audio/heritage/mars-viking2/v2-gcms-inlet.mp3` (105.8 KB)
+- `public/audio/heritage/mars-viking2/v2-lander-body.mp3` (98.3 KB)
+- `public/audio/heritage/mars-viking2/v2-meteorology.mp3` (85.5 KB)
+- `public/audio/heritage/mars-viking2/v2-sampler-arm.mp3` (96.8 KB)
+- `public/audio/heritage/mars-viking2/v2-seismometer.mp3` (102.7 KB)
 
 ### 2. Flight & Phase Narrations (`public/audio/narration/`)
 - `public/audio/narration/apollo-11/coast.mp3` (64.5 KB)
@@ -1262,6 +1286,61 @@ This document contains the complete transcripts of all flight narrations, herita
 - `public/audio/narration/apollo-17/targetLocked.mp3` (78.0 KB)
 - `public/audio/narration/apollo-17/touchdown.mp3` (73.1 KB)
 - `public/audio/narration/coast.mp3` (62.7 KB)
+- `public/audio/narration/deep-dawn/coast.mp3` (54.7 KB)
+- `public/audio/narration/deep-dawn/descent.mp3` (46.7 KB)
+- `public/audio/narration/deep-dawn/explore.mp3` (60.3 KB)
+- `public/audio/narration/deep-dawn/flagPlanted.mp3` (36.1 KB)
+- `public/audio/narration/deep-dawn/flagReady.mp3` (34.6 KB)
+- `public/audio/narration/deep-dawn/flight.mp3` (47.0 KB)
+- `public/audio/narration/deep-dawn/launch.mp3` (27.3 KB)
+- `public/audio/narration/deep-dawn/orbit.mp3` (47.3 KB)
+- `public/audio/narration/deep-dawn/stepOut.mp3` (37.1 KB)
+- `public/audio/narration/deep-dawn/targetLocked.mp3` (49.2 KB)
+- `public/audio/narration/deep-dawn/touchdown.mp3` (46.3 KB)
+- `public/audio/narration/deep-kepler/coast.mp3` (43.9 KB)
+- `public/audio/narration/deep-kepler/descent.mp3` (55.1 KB)
+- `public/audio/narration/deep-kepler/explore.mp3` (51.2 KB)
+- `public/audio/narration/deep-kepler/flagPlanted.mp3` (35.3 KB)
+- `public/audio/narration/deep-kepler/flagReady.mp3` (36.4 KB)
+- `public/audio/narration/deep-kepler/flight.mp3` (48.2 KB)
+- `public/audio/narration/deep-kepler/launch.mp3` (29.4 KB)
+- `public/audio/narration/deep-kepler/orbit.mp3` (60.3 KB)
+- `public/audio/narration/deep-kepler/stepOut.mp3` (49.2 KB)
+- `public/audio/narration/deep-kepler/targetLocked.mp3` (50.8 KB)
+- `public/audio/narration/deep-kepler/touchdown.mp3` (43.6 KB)
+- `public/audio/narration/deep-near/coast.mp3` (40.8 KB)
+- `public/audio/narration/deep-near/descent.mp3` (43.0 KB)
+- `public/audio/narration/deep-near/explore.mp3` (51.3 KB)
+- `public/audio/narration/deep-near/flagPlanted.mp3` (35.2 KB)
+- `public/audio/narration/deep-near/flagReady.mp3` (35.2 KB)
+- `public/audio/narration/deep-near/flight.mp3` (56.0 KB)
+- `public/audio/narration/deep-near/launch.mp3` (33.3 KB)
+- `public/audio/narration/deep-near/orbit.mp3` (58.4 KB)
+- `public/audio/narration/deep-near/stepOut.mp3` (48.9 KB)
+- `public/audio/narration/deep-near/targetLocked.mp3` (47.0 KB)
+- `public/audio/narration/deep-near/touchdown.mp3` (78.9 KB)
+- `public/audio/narration/deep-voyager/coast.mp3` (43.2 KB)
+- `public/audio/narration/deep-voyager/descent.mp3` (51.0 KB)
+- `public/audio/narration/deep-voyager/explore.mp3` (49.2 KB)
+- `public/audio/narration/deep-voyager/flagPlanted.mp3` (28.8 KB)
+- `public/audio/narration/deep-voyager/flagReady.mp3` (38.3 KB)
+- `public/audio/narration/deep-voyager/flight.mp3` (46.8 KB)
+- `public/audio/narration/deep-voyager/launch.mp3` (33.2 KB)
+- `public/audio/narration/deep-voyager/orbit.mp3` (44.2 KB)
+- `public/audio/narration/deep-voyager/stepOut.mp3` (34.9 KB)
+- `public/audio/narration/deep-voyager/targetLocked.mp3` (41.1 KB)
+- `public/audio/narration/deep-voyager/touchdown.mp3` (43.3 KB)
+- `public/audio/narration/deepspace-pioneer/coast.mp3` (45.0 KB)
+- `public/audio/narration/deepspace-pioneer/descent.mp3` (36.7 KB)
+- `public/audio/narration/deepspace-pioneer/explore.mp3` (63.8 KB)
+- `public/audio/narration/deepspace-pioneer/flagPlanted.mp3` (25.7 KB)
+- `public/audio/narration/deepspace-pioneer/flagReady.mp3` (36.3 KB)
+- `public/audio/narration/deepspace-pioneer/flight.mp3` (56.1 KB)
+- `public/audio/narration/deepspace-pioneer/launch.mp3` (30.4 KB)
+- `public/audio/narration/deepspace-pioneer/orbit.mp3` (57.2 KB)
+- `public/audio/narration/deepspace-pioneer/stepOut.mp3` (34.0 KB)
+- `public/audio/narration/deepspace-pioneer/targetLocked.mp3` (60.2 KB)
+- `public/audio/narration/deepspace-pioneer/touchdown.mp3` (48.5 KB)
 - `public/audio/narration/descent.mp3` (63.1 KB)
 - `public/audio/narration/explore.mp3` (42.9 KB)
 - `public/audio/narration/flagPlanted.mp3` (36.4 KB)
@@ -1279,6 +1358,17 @@ This document contains the complete transcripts of all flight narrations, herita
 - `public/audio/narration/mars-curiosity/stepOut.mp3` (92.0 KB)
 - `public/audio/narration/mars-curiosity/targetLocked.mp3` (97.6 KB)
 - `public/audio/narration/mars-curiosity/touchdown.mp3` (98.0 KB)
+- `public/audio/narration/mars-insight/coast.mp3` (52.3 KB)
+- `public/audio/narration/mars-insight/descent.mp3` (59.5 KB)
+- `public/audio/narration/mars-insight/explore.mp3` (57.9 KB)
+- `public/audio/narration/mars-insight/flagPlanted.mp3` (33.2 KB)
+- `public/audio/narration/mars-insight/flagReady.mp3` (40.4 KB)
+- `public/audio/narration/mars-insight/flight.mp3` (52.3 KB)
+- `public/audio/narration/mars-insight/launch.mp3` (36.4 KB)
+- `public/audio/narration/mars-insight/orbit.mp3` (48.8 KB)
+- `public/audio/narration/mars-insight/stepOut.mp3` (52.9 KB)
+- `public/audio/narration/mars-insight/targetLocked.mp3` (59.8 KB)
+- `public/audio/narration/mars-insight/touchdown.mp3` (58.8 KB)
 - `public/audio/narration/mars-opportunity/coast.mp3` (88.6 KB)
 - `public/audio/narration/mars-opportunity/descent.mp3` (91.7 KB)
 - `public/audio/narration/mars-opportunity/flight.mp3` (103.4 KB)
@@ -1300,6 +1390,17 @@ This document contains the complete transcripts of all flight narrations, herita
 - `public/audio/narration/mars-perseverance/stepOut.mp3` (88.7 KB)
 - `public/audio/narration/mars-perseverance/targetLocked.mp3` (90.6 KB)
 - `public/audio/narration/mars-perseverance/touchdown.mp3` (91.5 KB)
+- `public/audio/narration/mars-phoenix/coast.mp3` (53.0 KB)
+- `public/audio/narration/mars-phoenix/descent.mp3` (64.8 KB)
+- `public/audio/narration/mars-phoenix/explore.mp3` (57.0 KB)
+- `public/audio/narration/mars-phoenix/flagPlanted.mp3` (32.2 KB)
+- `public/audio/narration/mars-phoenix/flagReady.mp3` (43.3 KB)
+- `public/audio/narration/mars-phoenix/flight.mp3` (9.1 KB)
+- `public/audio/narration/mars-phoenix/launch.mp3` (37.7 KB)
+- `public/audio/narration/mars-phoenix/orbit.mp3` (47.3 KB)
+- `public/audio/narration/mars-phoenix/stepOut.mp3` (50.9 KB)
+- `public/audio/narration/mars-phoenix/targetLocked.mp3` (56.8 KB)
+- `public/audio/narration/mars-phoenix/touchdown.mp3` (57.4 KB)
 - `public/audio/narration/mars-spirit/coast.mp3` (80.4 KB)
 - `public/audio/narration/mars-spirit/descent.mp3` (93.9 KB)
 - `public/audio/narration/mars-spirit/flight.mp3` (84.4 KB)
@@ -1314,6 +1415,17 @@ This document contains the complete transcripts of all flight narrations, herita
 - `public/audio/narration/mars-viking1/stepOut.mp3` (74.1 KB)
 - `public/audio/narration/mars-viking1/targetLocked.mp3` (76.2 KB)
 - `public/audio/narration/mars-viking1/touchdown.mp3` (101.1 KB)
+- `public/audio/narration/mars-viking2/coast.mp3` (59.2 KB)
+- `public/audio/narration/mars-viking2/descent.mp3` (61.0 KB)
+- `public/audio/narration/mars-viking2/explore.mp3` (52.0 KB)
+- `public/audio/narration/mars-viking2/flagPlanted.mp3` (26.6 KB)
+- `public/audio/narration/mars-viking2/flagReady.mp3` (43.2 KB)
+- `public/audio/narration/mars-viking2/flight.mp3` (57.9 KB)
+- `public/audio/narration/mars-viking2/launch.mp3` (37.4 KB)
+- `public/audio/narration/mars-viking2/orbit.mp3` (56.5 KB)
+- `public/audio/narration/mars-viking2/stepOut.mp3` (55.0 KB)
+- `public/audio/narration/mars-viking2/targetLocked.mp3` (66.2 KB)
+- `public/audio/narration/mars-viking2/touchdown.mp3` (78.0 KB)
 - `public/audio/narration/orbit.mp3` (53.2 KB)
 - `public/audio/narration/stepOut.mp3` (39.1 KB)
 - `public/audio/narration/targetLocked.mp3` (75.0 KB)
