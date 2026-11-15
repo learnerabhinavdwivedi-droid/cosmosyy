@@ -12,6 +12,42 @@ TUTOR_VOICE = "en-US-ChristopherNeural"
 
 # Flight phase narration scripts for missions that don't have them yet
 NARRATION_SCRIPTS = {
+    "mars-curiosity": {
+        "explore": "Explore Gale Crater. Inspect the Curiosity rover, ChemCam mast, robotic sample drill, and radioisotope power generator.",
+        "flagReady": "Martian habitability survey verified. Prepare to set the expedition marker.",
+        "flagPlanted": "Mission marker secured on the slopes of Mount Sharp in Gale Crater.",
+        "launch": "Sample cache logged. Launching data stream to the Mars Reconnaissance Orbiter."
+    },
+    "mars-opportunity": {
+        "explore": "Explore Meridiani Planum. Scan the Opportunity rover, solar wings, panoramic mast, and hematite blueberry fields.",
+        "flagReady": "Marathon driving distance complete. Prepare to place the expedition marker.",
+        "flagPlanted": "Mission marker placed in honor of the longest-lived robotic explorer on Mars.",
+        "launch": "Telemetry finalized. Returning mission data home across the solar system."
+    },
+    "mars-pathfinder": {
+        "explore": "Explore Ares Vallis. Inspect the Pathfinder lander petals, Sojourner micro-rover, and ancient Martian flood stones.",
+        "flagReady": "First rover expedition verified. Prepare to place your mission marker.",
+        "flagPlanted": "Mission marker placed at the Carl Sagan Memorial Station in Ares Vallis.",
+        "launch": "Historic rover mission cataloged. Relaying data packets to Earth."
+    },
+    "mars-perseverance": {
+        "explore": "Explore Jezero Crater. Scan the Perseverance rover, Ingenuity helicopter, MOXIE oxygen extractor, and hermetic sample tubes.",
+        "flagReady": "Astrobiology sample cores sealed. Prepare to place the expedition marker.",
+        "flagPlanted": "Mission marker placed on the ancient river delta of Jezero Crater.",
+        "launch": "Mars sample return telemetry ready. Telemetry uplink confirmed."
+    },
+    "mars-spirit": {
+        "explore": "Explore Gusev Crater. Scan the Spirit rover, solar panels, microscopic imager, and Columbia Hills vista.",
+        "flagReady": "Geological exploration complete. Prepare to place the expedition marker.",
+        "flagPlanted": "Mission marker planted atop the Columbia Hills in memory of brave exploration.",
+        "launch": "Hydrothermal mineral records secured. Uplinking data to Earth."
+    },
+    "mars-viking1": {
+        "explore": "Explore Chryse Planitia. Scan the Viking 1 lander body, high-gain dish, biology experiment unit, and weather boom.",
+        "flagReady": "First successful Mars landing verified. Prepare to place the expedition marker.",
+        "flagPlanted": "Mission marker planted where humanity first touched the surface of Mars in 1976.",
+        "launch": "Atmospheric and surface telemetry secured. Relaying to the Viking 1 Orbiter."
+    },
     "mars-viking2": {
         "flight": "Welcome aboard, Commander. Viking 2 is outbound on a 440-million-mile trajectory toward the northern hemisphere of Mars.",
         "coast": "Interplanetary cruise is stable. Viking 2 follows the path blazed by Viking 1 two months ahead, aiming for Utopia Planitia.",

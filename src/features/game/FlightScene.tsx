@@ -13,6 +13,7 @@ import { onNarrationComplete, stopNarration } from "@/lib/narration";
 import { isTouchDevice } from "@/lib/useMobile";
 import { useFullscreen } from "@/lib/fullscreen";
 import { getSolarPanelTexture, getCharredHeatShieldTexture } from "./heritage3D/textures";
+import { HINGLISH_FLIGHT_NARRATIONS } from "@/lib/hinglishExplanations";
 import * as THREE from "three";
 
 const EARTH = new THREE.Vector3(-28, 0, -20);
@@ -407,6 +408,12 @@ const MISSION_NARRATION: Record<string, (n: string) => NarrationSet> = {
 function getNarration(phase: GamePhase, playerName: string, mission: MissionSpec | null): string {
   if (!mission) return "";
   const n = playerName || "Commander";
+  const isHinglish = useAppStore.getState().settings.audioLanguage === "hinglish";
+  if (isHinglish) {
+    const planetType = mission.planet || "moon";
+    const hinglishText = HINGLISH_FLIGHT_NARRATIONS[phase]?.[planetType];
+    if (hinglishText) return hinglishText;
+  }
   const set = MISSION_NARRATION[mission.id];
   if (set) {
     const text = set(n)[phase];

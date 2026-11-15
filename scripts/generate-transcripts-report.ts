@@ -59,10 +59,15 @@ const allHeritageAudios = getFilesRecursive(audioHeritageDir);
 const allNarrationAudios = getFilesRecursive(audioNarrationDir);
 const allAudioFiles = getFilesRecursive(path.resolve(process.cwd(), "public/audio"));
 
+const englishHeritage = allHeritageAudios.filter((f) => !f.endsWith("_hi.mp3"));
+const hinglishHeritage = allHeritageAudios.filter((f) => f.endsWith("_hi.mp3"));
+const englishNarration = allNarrationAudios.filter((f) => !f.endsWith("_hi.mp3"));
+const hinglishNarration = allNarrationAudios.filter((f) => f.endsWith("_hi.mp3"));
+
 report += `- **Total Heritage Artifacts**: ${totalObjects}\n`;
-report += `- **Total Heritage Audio Files**: ${allHeritageAudios.length}\n`;
-report += `- **Total Narration Audio Files**: ${allNarrationAudios.length}\n`;
-report += `- **Total Audio Assets in Game**: ${allAudioFiles.length}\n\n`;
+report += `- **English Audio Files**: ${englishHeritage.length} Heritage + ${englishNarration.length} Narration = ${englishHeritage.length + englishNarration.length}\n`;
+report += `- **Hinglish Audio Files**: ${hinglishHeritage.length} Heritage + ${hinglishNarration.length} Narration = ${hinglishHeritage.length + hinglishNarration.length}\n`;
+report += `- **Total Physical Audio Assets in Game**: ${allAudioFiles.length} files\n\n`;
 
 report += `---\n\n`;
 
@@ -91,9 +96,12 @@ function renderMissionGroup(title: string, list: MissionFile[]) {
     for (const obj of m.objects) {
       const audioRel = `public/audio/heritage/${m.id}/${obj.id}.mp3`;
       const audioExists = fs.existsSync(path.resolve(process.cwd(), audioRel));
+      const audioHiRel = `public/audio/heritage/${m.id}/${obj.id}_hi.mp3`;
+      const audioHiExists = fs.existsSync(path.resolve(process.cwd(), audioHiRel));
 
       section += `##### 🔹 ${obj.name} (\`${obj.id}\`)\n`;
-      section += `- **Audio File**: \`${audioRel}\` [${audioExists ? "✅ Present" : "⚡ Fallback: Web Speech Synthesis"}]\n`;
+      section += `- **English Audio**: \`${audioRel}\` [${audioExists ? "✅ Present" : "⚡ Fallback"}]\n`;
+      section += `- **Hinglish Audio**: \`${audioHiRel}\` [${audioHiExists ? "✅ Present" : "⚡ Fallback"}]\n`;
       section += `- **Description**: ${obj.description}\n`;
       if (obj.firstPerson) {
         section += `> **🎙️ Voice Log Transcript**:\n`;

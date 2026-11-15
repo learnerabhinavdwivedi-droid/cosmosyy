@@ -1,8 +1,10 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { Howl } from "howler";
 import { stopNarration } from "@/lib/narration";
 import { duck } from "@/lib/audio";
 import { speakTutorText } from "@/lib/tutorVoice";
+import { useAppStore } from "@/store/useAppStore";
+import { getHinglishArtifactExplanation } from "@/lib/hinglishExplanations";
 import type { ObjectTheme } from "./types";
 
 interface AudioTransmissionDeckProps {
@@ -40,6 +42,23 @@ export function AudioTransmissionDeck({
   const idleBars = [35, 55, 72, 45, 82, 60, 92, 50, 78, 65, 88, 48, 70, 42, 65, 80, 52, 74, 40, 60];
   const [liveBars, setLiveBars] = useState(idleBars);
 
+  const audioLang = useAppStore((s) => s.settings.audioLanguage ?? "english");
+  const isHinglish = audioLang === "hinglish";
+
+  const activeExplanation = useMemo(() => {
+    if (isHinglish) {
+      return getHinglishArtifactExplanation(
+        missionId,
+        objectId,
+        _objectName,
+        undefined,
+        undefined,
+        firstPersonLog,
+      );
+    }
+    return firstPersonLog || "";
+  }, [isHinglish, missionId, objectId, _objectName, firstPersonLog]);
+
   // Stop surface narration when hologram audio mounts
   useEffect(() => {
     stopNarration();
@@ -74,10 +93,15 @@ export function AudioTransmissionDeck({
     setCurrentTime(0);
     setDuration(0);
 
-    const audioUrl = `/audio/heritage/${missionId}/${objectId}.mp3`;
+    const primaryUrl = isHinglish
+      ? `/audio/heritage/${missionId}/${objectId}_hi.mp3`
+      : `/audio/heritage/${missionId}/${objectId}.mp3`;
+    const fallbackUrl = isHinglish
+      ? `/audio/heritage/${missionId}/${objectId}.mp3`
+      : `/audio/heritage/${missionId}/${objectId}_hi.mp3`;
 
     const sound = new Howl({
-      src: [audioUrl],
+      src: [primaryUrl, fallbackUrl],
       html5: true,
       volume: 0.95,
       onload: () => {
@@ -85,9 +109,9 @@ export function AudioTransmissionDeck({
         setDuration(sound.duration());
       },
       onloaderror: () => {
-        if (firstPersonLog) {
+        if (activeExplanation) {
           setHasAudio(true);
-          const approxSecs = Math.max(5, Math.round(firstPersonLog.split(/\s+/).length / 2.5));
+          const approxSecs = Math.max(5, Math.round(activeExplanation.split(/\s+/).length / 2.5));
           setDuration(approxSecs);
         } else {
           setHasAudio(false);
@@ -124,7 +148,7 @@ export function AudioTransmissionDeck({
         cancelAnimationFrame(animFrameRef.current);
       }
     };
-  }, [missionId, objectId, firstPersonLog]);
+  }, [missionId, objectId, isHinglish, activeExplanation]);
 
   // Audio progress animation loop
   const updateProgress = useCallback(() => {
@@ -179,11 +203,12 @@ export function AudioTransmissionDeck({
         soundRef.current.fade(0, 0.95, 80);
         setIsPlaying(true);
         animFrameRef.current = requestAnimationFrame(updateProgress);
-      } else if (firstPersonLog) {
-        const totalDur = duration || Math.max(5, Math.round(firstPersonLog.split(/\s+/).length / 2.5));
+      } else if (activeExplanation) {
+        const totalDur = duration || Math.max(5, Math.round(activeExplanation.split(/\s+/).length / 2.5));
         let elapsed = 0;
         tutorCancelRef.current = speakTutorText({
-          text: firstPersonLog,
+          text: activeExplanation,
+          lang: isHinglish ? "hinglish" : "en-US",
           withRadioChirp: true,
           onStart: () => {
             setIsPlaying(true);
@@ -343,9 +368,9 @@ export function AudioTransmissionDeck({
       </div>
 
       {/* Clean, toggleable transcript preview */}
-      {showCaptions && firstPersonLog && (
+      {showCaptions && activeExplanation && (
         <div className="rounded-lg border border-space-800/80 bg-space-950/70 p-2 mt-0.5">
-          <p className="text-[11px] italic leading-snug text-regolith-300">"{firstPersonLog}"</p>
+          <p className="text-[11px] italic leading-snug text-regolith-300">"{activeExplanation}"</p>
         </div>
       )}
     </div>
