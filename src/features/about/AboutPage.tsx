@@ -21,6 +21,10 @@ const NASA_SOURCES = [
     label: "ALSEP — Apollo Lunar Surface Experiments Package",
     url: "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_alsep.html",
   },
+  {
+    label: "NASA NSSDCA Master Catalog",
+    url: "https://nssdc.gsfc.nasa.gov/nmc/",
+  },
 ];
 
 const TECH_STACK = [
@@ -99,6 +103,79 @@ export default function AboutPage() {
           <p className="mt-3 text-sm leading-relaxed text-regolith-300">
             {t("about.whatWeBuiltDesc")}
           </p>
+        </motion.section>
+
+        {/* Why we built it this way (Design Choices) */}
+        <motion.section
+          className="mt-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.35 }}
+        >
+          <h2 className="text-xs font-bold uppercase tracking-widest text-signal/80">
+            {t("about.whyWeBuilt")}
+          </h2>
+          <p className="mt-1 text-xs text-regolith-400">
+            {t("about.whyWeBuiltSubtitle")}
+          </p>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-lg border border-space-700/40 bg-space-900/60 p-4 transition hover:border-signal/30">
+              <div className="flex items-center gap-2">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-signal/15 text-xs font-bold text-signal">
+                  1
+                </span>
+                <h3 className="text-sm font-semibold text-regolith-200">
+                  {t("about.designAgeGroupTitle")}
+                </h3>
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-regolith-300">
+                {t("about.designAgeGroupDesc")}
+              </p>
+            </div>
+
+            <div className="rounded-lg border border-space-700/40 bg-space-900/60 p-4 transition hover:border-signal/30">
+              <div className="flex items-center gap-2">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-signal/15 text-xs font-bold text-signal">
+                  2
+                </span>
+                <h3 className="text-sm font-semibold text-regolith-200">
+                  {t("about.designAccessibilityTitle")}
+                </h3>
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-regolith-300">
+                {t("about.designAccessibilityDesc")}
+              </p>
+            </div>
+
+            <div className="rounded-lg border border-space-700/40 bg-space-900/60 p-4 transition hover:border-signal/30">
+              <div className="flex items-center gap-2">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-signal/15 text-xs font-bold text-signal">
+                  3
+                </span>
+                <h3 className="text-sm font-semibold text-regolith-200">
+                  {t("about.designScopeTitle")}
+                </h3>
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-regolith-300">
+                {t("about.designScopeDesc")}
+              </p>
+            </div>
+
+            <div className="rounded-lg border border-space-700/40 bg-space-900/60 p-4 transition hover:border-signal/30">
+              <div className="flex items-center gap-2">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-signal/15 text-xs font-bold text-signal">
+                  4
+                </span>
+                <h3 className="text-sm font-semibold text-regolith-200">
+                  {t("about.designPerspectiveTitle")}
+                </h3>
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-regolith-300">
+                {t("about.designPerspectiveDesc")}
+              </p>
+            </div>
+          </div>
         </motion.section>
 
         {/* NASA Data Sources */}
