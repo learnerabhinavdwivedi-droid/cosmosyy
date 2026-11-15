@@ -154,7 +154,17 @@ export const useAppStore = create<AppState>()(
 
       setPlayerName: (name) => set((s) => ({ player: { ...s.player, name } })),
 
-      setSetting: (key, value) => set((s) => ({ settings: { ...s.settings, [key]: value } })),
+      setSetting: (key, value) => {
+        set((s) => ({ settings: { ...s.settings, [key]: value } }));
+        if (key === "audioLanguage") {
+          import("@/i18n").then((mod) => {
+            const target = value === "hinglish" ? "hi" : "en";
+            if (mod.default.language !== target) {
+              void mod.default.changeLanguage(target);
+            }
+          });
+        }
+      },
 
       addXp: (missionId, amount) =>
         set((s) => {

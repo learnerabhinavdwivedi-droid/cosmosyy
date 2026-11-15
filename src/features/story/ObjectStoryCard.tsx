@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { StoryScene } from "./StoryScene";
 import { useStoryPlayer } from "./useStoryPlayer";
 import { speakTutorText } from "@/lib/tutorVoice";
+import { useAppStore } from "@/store/useAppStore";
 import type { ObjectStoryPacket } from "./storySchema";
 import {
   Play,
@@ -62,15 +63,17 @@ export function ObjectStoryCard({
   const currentScene = packet.scenes[state.sceneIndex] ?? packet.scenes[0]!;
   const isLastScene = state.sceneIndex === packet.scenes.length - 1;
 
+  const audioLanguage = useAppStore((s) => s.settings.audioLanguage ?? "english");
+  const isHinglishMode = i18n.language.startsWith("hi") || audioLanguage === "hinglish";
+
   // Active caption text based on mode and language
   const captionText = useMemo(() => {
     if (!currentScene) return "";
-    const isHindi = i18n.language.startsWith("hi");
-    if (isHindi && currentScene.hindi) {
+    if (isHinglishMode && currentScene.hindi) {
       return state.mode === "kids" ? currentScene.hindi.kids : currentScene.hindi.explorer;
     }
     return state.mode === "kids" ? currentScene.kids : currentScene.explorer;
-  }, [currentScene, state.mode, i18n.language]);
+  }, [currentScene, state.mode, isHinglishMode]);
 
   // Clean narration audio / Web Speech Synthesis with fallback timer
   const stopNarration = useCallback(() => {
@@ -111,7 +114,7 @@ export function ObjectStoryCard({
     if (state.sound) {
       cancelTutorRef.current = speakTutorText({
         text: captionText,
-        lang: i18n.language.startsWith("hi") ? "hinglish" : "en-US",
+        lang: isHinglishMode ? "hinglish" : "en-US",
         rate: state.mode === "kids" ? 0.90 : 0.94,
         withRadioChirp: false,
         onEnd: () => {
@@ -142,7 +145,7 @@ export function ObjectStoryCard({
     state.mode,
     state.sound,
     captionText,
-    i18n.language,
+    isHinglishMode,
     dispatch,
     triggerAutoAdvance,
     stopNarration,

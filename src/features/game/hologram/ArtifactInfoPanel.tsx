@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getNssdcCatalog } from "@/lib/nssdcaCatalog";
 import { getMissionOrNull } from "@/lib/missionData";
 import type { HeritageObject, ObjectTheme } from "./types";
@@ -19,7 +19,8 @@ export function ArtifactInfoPanel({
   theme,
 }: ArtifactInfoPanelProps) {
   const [activeTab, setActiveTab] = useState<"intel" | "specs">("intel");
-  const [imgError, setImgError] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
+  const [useFallback, setUseFallback] = useState(false);
   const nssdcEntry = getNssdcCatalog(missionId, obj.id);
   const missionData = getMissionOrNull(missionId);
   const landing = missionData?.landing;
@@ -27,7 +28,12 @@ export function ArtifactInfoPanel({
   const fallbackNasaUrl = obj.nasaImageId
     ? `https://images-assets.nasa.gov/image/${obj.nasaImageId}/${obj.nasaImageId}~thumb.jpg`
     : null;
-  const displayImgUrl = !imgError ? localImgUrl : fallbackNasaUrl;
+  const displayImgUrl = !imgFailed ? (useFallback ? fallbackNasaUrl : localImgUrl) : null;
+
+  useEffect(() => {
+    setImgFailed(false);
+    setUseFallback(false);
+  }, [missionId, obj.id]);
 
   const isOperational = obj.status === "operational";
   const isCruising = obj.status === "cruising";
@@ -253,8 +259,10 @@ export function ArtifactInfoPanel({
                   alt={obj.name}
                   className="h-28 w-full object-cover"
                   onError={() => {
-                    if (!imgError) {
-                      setImgError(true);
+                    if (!useFallback && fallbackNasaUrl) {
+                      setUseFallback(true);
+                    } else {
+                      setImgFailed(true);
                     }
                   }}
                 />
