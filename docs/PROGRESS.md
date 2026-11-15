@@ -82,3 +82,4 @@
 
 2026-11-15 | SAWAN-MERGE | done | merged sawan branch into main: audio for 16 missions, graphics/bloom fix, smoke+proximity, deep-space (Voyager/NEAR/Dawn/Kepler renamed), prettier format, test harness; tests 209/209 | next: verify dev server
 2026-11-15 | ALIGN-01 | done | Fix narrative truncation bug with sentence-boundary awareness, regenerate all stories, add truncation unit tests & permanent CI validate-content check; tests 263/263, validate-content 20/20 & 113/113 | next: ALIGN-02 (NSSDCA catalog backfill)
+2026-11-15 | ALIGN-02 | done | Backfill NASA NSSDCA Master Catalog for all 8 newer missions (100% 113/113 objects indexed), wire direct catalog URLs in ArtifactInfoPanel, add 100% coverage unit tests; tests 265/265 | next: ALIGN-03 (LICENCES.md asset backfill)

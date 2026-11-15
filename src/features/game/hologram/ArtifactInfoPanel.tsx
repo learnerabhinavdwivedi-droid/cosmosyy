@@ -303,7 +303,7 @@ export function ArtifactInfoPanel({
             {/* NASA External Archive Button */}
             {nssdcEntry && (
               <a
-                href={`https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=${nssdcEntry.nssdcaId}`}
+                href={nssdcEntry.catalogUrl || `https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=${nssdcEntry.nssdcaId}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-1 flex items-center justify-between rounded-lg border border-space-700 bg-space-850 px-3 py-2 text-xs font-mono font-semibold text-cyan-300 transition hover:bg-space-800 hover:text-cyan-200 cursor-pointer"
