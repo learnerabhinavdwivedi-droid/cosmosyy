@@ -23,7 +23,7 @@
     "note": "Generic moon surface — no site-specific DTM available yet"
   },
   "keyDiscovery": "Collected samples from the Fra Mauro formation — ejecta from the Imbrium impact basin — providing evidence of a massive asteroid impact 3.85 billion years ago that reshaped the Moon's surface.",
-  "missionLegacy": "Completed the geological mission originally planned for Apollo 13, proving NASA's ability to recover from failure and continue ambitious science objectives.",
+  "missionLegacy": "Completed the geological mission originally planned for Apollo 13, proving resilience and deep surface traverses. Paved the way for tomorrow's exploration by pioneering mobile sampling methods that Artemis field astronauts will use across rugged highland terrain.",
   "funFact": "Alan Shepard hit two golf balls on the Moon using a Wilson 6-iron head attached to a sample tool handle, making him the only person to ever play golf on another world.",
   "heritageNote": "The Fra Mauro site preserves the MET (lunar rickshaw) — the only human-pulled wheeled vehicle used on the Moon before the rovers — alongside the ALSEP and Shepard's golf balls. NASA's 2011 heritage guidelines recommend artifact preservation zones.",
   "timeline": {
@@ -63,7 +63,7 @@
       "source": "AS14-66-9232; LROC imagery",
       "scienceDiscovery": "Documented the surface conditions and served as a photographic reference for reconstructing the EVA timeline and crew movements at Fra Mauro.",
       "legacy": "LROC images from 2011 show the Apollo 14 flag still casts a shadow, indicating it remains standing.",
-      "status": "defunct",
+      "status": "preserved",
       "firstPerson": "Bro, look at this flex! Alan Shepard, the very first American in space who rode a Mercury rocket a decade earlier, came all the way to Fra Mauro just to plant me on the Moon! I have been standing here overlooking Cone Crater through boiling lunar days and freezing nights. Radiation stripped my red and blue, but my legacy is pure gold!",
       "yearDeployed": 1971,
       "nasaImageId": "as14-66-9233"
@@ -136,7 +136,7 @@
       "source": "AS14-66-9337; Apollo 14 TV footage transcript",
       "scienceDiscovery": "Provided a memorable demonstration of reduced lunar gravity — a ball hit one-handed in a bulky spacesuit traveled roughly 40 yards in one-sixth gravity, six times farther than the same swing would achieve on Earth.",
       "legacy": "The two golf balls remain on the surface at Fra Mauro; the makeshift 6-iron club head is on display at the USGA Golf Museum in Far Hills, New Jersey.",
-      "status": "defunct",
+      "status": "preserved",
       "firstPerson": "Bro! We are Alan Shepard's iconic lunar golf balls! Right at the end of EVA-2, Al pulled a smuggled 6-iron head out of his spacesuit, clicked it onto a sample handle, and swung with one hand in his bulky suit! The first one hooked into a crater, but the second one? Miles and miles and miles, baby! Pure vacuum, one-sixth gravity, infinite hangtime. Most legendary sports moment outside Earth, no debate!",
       "yearDeployed": 1971,
       "nasaImageId": "as14-67-9367"

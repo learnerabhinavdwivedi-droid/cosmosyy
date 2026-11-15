@@ -4,7 +4,7 @@
   "name": "American Flag",
   "kind": "memorial",
   "environment": "moon-surface",
-  "fate": "left-on-surface",
+  "fate": "preserved-on-surface",
   "year": 1969,
   "nssdcaId": "as12-46-6729",
   "model": {
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Remains preserved in the arid regolith at Ocean of Storms.",
+      "text": "Status: Preserved at Ocean of Storms.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
-      "explorer": "Fate: left on surface. Position recorded at coordinates [-4.5, 6.2].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved on surface. Position recorded at coordinates [-4.5, 6.2].",
       "audio": {
         "kids": null,
         "explorer": null

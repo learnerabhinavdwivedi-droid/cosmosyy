@@ -4,7 +4,7 @@
   "name": "Yellowknife Bay",
   "kind": "science-instrument",
   "environment": "mars-surface",
-  "fate": "left-on-surface",
+  "fate": "preserved-on-surface",
   "year": 2013,
   "nssdcaId": "PIA16803",
   "model": {
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Remains preserved in the arid regolith at Gale Crater.",
+      "text": "Status: Preserved at Gale Crater.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -97,7 +97,7 @@
         "f2"
       ],
       "kids": "Take a look at how I was built. Every part of me had a special purpose.",
-      "explorer": "Yellowknife Bay was the first major science target. Curiosity found mudstone containing clay minerals, sulphate minerals, and the chemical elements needed for life: carbon, hydrogen, nitrogen, oxygen, phosphorus, and sulphur. This discovery fulfilled the mission's primary goal: confirming.",
+      "explorer": "Yellowknife Bay was the first major science target. Curiosity found mudstone containing clay minerals, sulphate minerals, and the chemical elements needed for life: carbon, hydrogen, nitrogen, oxygen, phosphorus, and sulphur. This discovery fulfilled the mission's primary goal: confirming that Mars once had environments habitable for microbes.",
       "audio": {
         "kids": null,
         "explorer": null
@@ -148,7 +148,7 @@
       "factIds": [
         "f4"
       ],
-      "kids": "Contained mudstone with all six elements essential for life (C, H, N, O, P, S) plus clay minerals — fulfilling the mission's goal of confirming ancient.",
+      "kids": "Contained mudstone with all six elements essential for life (C, H, N, O, P, S) plus clay minerals — fulfilling the mission's goal of confirming ancient habitability.",
       "explorer": "Contained mudstone with all six elements essential for life (C, H, N, O, P, S) plus clay minerals — fulfilling the mission's goal of confirming ancient habitability.",
       "audio": {
         "kids": null,
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
-      "explorer": "Fate: left on surface. Position recorded at coordinates [-14, 7].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved on surface. Position recorded at coordinates [-14, 7].",
       "audio": {
         "kids": null,
         "explorer": null

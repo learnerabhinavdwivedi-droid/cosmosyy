@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { z } from "zod";
+import { truncateToSentences } from "../src/lib/truncation.ts";
 
 // Inline schema types (mirrors storySchema.ts without import.meta.glob)
 const FactStatusSchema = z.enum(["verified", "from-repo", "general-science", "unverified"]);
@@ -68,13 +69,6 @@ interface MissionFile {
   objects: MissionObject[];
 }
 
-function truncateWords(text: string, maxWords: number): string {
-  const words = text.replace(/\s+/g, " ").trim().split(" ");
-  if (words.length <= maxWords) return text.trim();
-  let truncated = words.slice(0, maxWords).join(" ");
-  if (!/[.!?]$/.test(truncated)) truncated += ".";
-  return truncated;
-}
 
 function getObjectKind(id: string, name: string): string {
   const lower = (id + " " + name).toLowerCase();
@@ -89,11 +83,12 @@ function getObjectKind(id: string, name: string): string {
   return "science-instrument";
 }
 
-function getObjectFate(status?: string, id?: string): string {
+function getObjectFate(status?: string, id?: string, isDeepSpace?: boolean): string {
   if (id === "swc") return "returned-to-earth";
   if (id?.includes("sky-crane") || id?.includes("heat-shield")) return "impacted-surface";
-  if (status === "operational") return "operational-on-surface";
-  return "left-on-surface";
+  if (status === "operational") return isDeepSpace ? "operational-interstellar" : "operational-on-surface";
+  if (status === "preserved" || status === "intact") return isDeepSpace ? "preserved-interstellar" : "preserved-on-surface";
+  return isDeepSpace ? "drifting-in-deep-space" : "left-on-surface";
 }
 
 function buildStoryPacket(mission: MissionFile, obj: MissionObject): StoryPacket {
@@ -102,7 +97,10 @@ function buildStoryPacket(mission: MissionFile, obj: MissionObject): StoryPacket
   const env = isDeepSpace ? "deep-space" : isMars ? "mars-surface" : "moon-surface";
   const year = obj.yearDeployed || parseInt(mission.date.slice(0, 4), 10) || (isMars ? 2000 : 1969);
   const kind = getObjectKind(obj.id, obj.name);
-  const fate = getObjectFate(obj.status, obj.id);
+  const fate = getObjectFate(obj.status, obj.id, isDeepSpace);
+
+  const envDesc = isDeepSpace ? "deep space" : isMars ? "Mars" : "the Moon";
+  const envAdjective = isDeepSpace ? "deep-space" : isMars ? "Martian" : "lunar";
 
   // Facts
   const f1 = {
@@ -121,7 +119,7 @@ function buildStoryPacket(mission: MissionFile, obj: MissionObject): StoryPacket
 
   const f3 = {
     id: "f3",
-    text: `Engineered specifically to operate in the harsh vacuum and extreme temperatures of the ${isMars ? "Martian" : "lunar"} environment.`,
+    text: `Engineered specifically to operate in the harsh vacuum and extreme temperatures of the ${envAdjective} environment.`,
     source: "NASA Space Mission Data",
     status: "general-science" as const,
   };
@@ -135,79 +133,89 @@ function buildStoryPacket(mission: MissionFile, obj: MissionObject): StoryPacket
 
   const f5 = {
     id: "f5",
-    text: `Status: ${obj.status === "operational" ? "Still operational and communicating" : "Remains preserved in the arid regolith at " + mission.site}.`,
+    text: `Status: ${
+      obj.status === "operational"
+        ? "Still operational and communicating."
+        : obj.status === "preserved" || obj.status === "intact"
+          ? isDeepSpace
+            ? "Preserved as an eternal time capsule drifting into deep space."
+            : `Preserved at ${mission.site}.`
+          : isDeepSpace
+            ? "Silent and dormant in deep space."
+            : `Remains preserved in the arid regolith at ${mission.site}.`
+    }`,
     source: "NASA NSSDCA Master Catalog",
     status: "verified" as const,
   };
 
   const f6 = {
     id: "f6",
-    text: obj.legacy || `A permanent human and robotic monument celebrating space exploration on ${isMars ? "Mars" : "the Moon"}.`,
+    text:
+      obj.legacy ||
+      `A permanent human and robotic monument celebrating space exploration ${isDeepSpace ? "in deep space" : isMars ? "on Mars" : "on the Moon"}.`,
     source: "NASA Mission Heritage Records",
     status: "verified" as const,
   };
 
   // 6 Beat Scenes
-  const s1Kids = truncateWords(
+  const s1Kids = truncateToSentences(
     obj.firstPerson
       ? `I am ${obj.name}. I arrived here at ${mission.site} in ${year}.`
-      : `I am ${obj.name}. I stand proudly on the ${isMars ? "red sands of Mars" : "quiet Moon"}.`,
-    27
+      : `I am ${obj.name}. I stand proudly in ${envDesc}.`,
+    32
   );
-  const s1Exp = truncateWords(
+  const s1Exp = truncateToSentences(
     `${obj.name}, ${mission.name}: deployed at ${mission.site} in ${year}.`,
-    38
+    60
   );
 
-  const s2Kids = truncateWords(
+  const s2Kids = truncateToSentences(
     `Take a look at how I was built. Every part of me had a special purpose.`,
-    26
+    32
   );
-  const s2Exp = truncateWords(
+  const s2Exp = truncateToSentences(
     obj.description,
-    38
+    60
   );
 
-  const s3Kids = truncateWords(
+  const s3Kids = truncateToSentences(
     `Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.`,
-    26
+    32
   );
-  const s3Exp = truncateWords(
+  const s3Exp = truncateToSentences(
     `Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.`,
-    38
+    60
   );
 
-  const s4Kids = truncateWords(
-    obj.scienceDiscovery
-      ? truncateWords(obj.scienceDiscovery, 26)
-      : `My instruments gathered clues to help humans understand this mysterious new world.`,
-    26
+  const s4Kids = truncateToSentences(
+    obj.scienceDiscovery || `My instruments gathered clues to help humans understand this mysterious new world.`,
+    32
   );
-  const s4Exp = truncateWords(
+  const s4Exp = truncateToSentences(
     obj.scienceDiscovery || `Conducted pioneering surface measurements and telemetry transmissions.`,
-    38
+    60
   );
 
-  const s5Kids = truncateWords(
+  const s5Kids = truncateToSentences(
     obj.status === "operational"
       ? `I am still working out here every single day, listening and measuring.`
-      : `My mission finished, but I stay here resting peacefully on the surface.`,
-    26
+      : obj.status === "preserved" || obj.status === "intact"
+        ? `I am preserved as an eternal monument to human curiosity.`
+        : `My mission finished, but I stay here resting peacefully on the surface.`,
+    32
   );
-  const s5Exp = truncateWords(
+  const s5Exp = truncateToSentences(
     `Fate: ${fate.replace(/-/g, " ")}. Position recorded at coordinates [${obj.position[0]}, ${obj.position[2]}].`,
-    38
+    60
   );
 
-  const s6Kids = truncateWords(
-    obj.legacy
-      ? truncateWords(obj.legacy, 26)
-      : `Everything I learned showed humanity how to explore deeper into space.`,
-    26
+  const s6Kids = truncateToSentences(
+    obj.legacy || `Everything I learned showed humanity how to explore deeper into space.`,
+    32
   );
-  const s6Exp = truncateWords(
+  const s6Exp = truncateToSentences(
     obj.legacy || `A milestone in planetary science and permanent historical artifact.`,
-    38
+    60
   );
 
   const scenes = [

@@ -10,7 +10,7 @@ export const HeritageObjectSchema = z.object({
   hidden: z.boolean().optional(),
   scienceDiscovery: z.string().optional(),
   legacy: z.string().optional(),
-  status: z.enum(["operational", "dormant", "defunct", "cruising"]).optional(),
+  status: z.enum(["operational", "dormant", "defunct", "cruising", "preserved", "intact"]).optional(),
   whySent: z.string().optional(),
   ongoingScience: z.string().optional(),
   hardwareType: z.string().optional(),

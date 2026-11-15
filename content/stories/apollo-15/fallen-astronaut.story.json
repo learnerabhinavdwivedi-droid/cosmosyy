@@ -4,7 +4,7 @@
   "name": "Fallen Astronaut Memorial",
   "kind": "memorial",
   "environment": "moon-surface",
-  "fate": "left-on-surface",
+  "fate": "preserved-on-surface",
   "year": 1971,
   "nssdcaId": "as15-88-11894",
   "model": {
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Remains preserved in the arid regolith at Hadley Rille.",
+      "text": "Status: Preserved at Hadley Rille.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -148,7 +148,7 @@
       "factIds": [
         "f4"
       ],
-      "kids": "While not a science instrument, it represents the first deliberate act of artistic and memorial expression on another celestial body, raising important questions about heritage preservation.",
+      "kids": "While not a science instrument, it represents the first deliberate act of artistic and memorial expression on another celestial body, raising important questions about heritage preservation in space.",
       "explorer": "While not a science instrument, it represents the first deliberate act of artistic and memorial expression on another celestial body, raising important questions about heritage preservation in space.",
       "audio": {
         "kids": null,
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
-      "explorer": "Fate: left on surface. Position recorded at coordinates [-58, -108].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved on surface. Position recorded at coordinates [-58, -108].",
       "audio": {
         "kids": null,
         "explorer": null
@@ -200,7 +200,7 @@
       "factIds": [
         "f6"
       ],
-      "kids": "The only known artwork on another world; a replica is in the Smithsonian National Air and Space Museum. Its existence sparked discussion about the ethics of.",
+      "kids": "The only known artwork on another world; a replica is in the Smithsonian National Air and Space Museum. Its existence sparked discussion about the ethics of art and commerce in space.",
       "explorer": "The only known artwork on another world; a replica is in the Smithsonian National Air and Space Museum. Its existence sparked discussion about the ethics of art and commerce in space.",
       "audio": {
         "kids": null,

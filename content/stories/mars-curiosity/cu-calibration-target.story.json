@@ -4,7 +4,7 @@
   "name": "MAHLI Calibration Target",
   "kind": "science-instrument",
   "environment": "mars-surface",
-  "fate": "operational-on-surface",
+  "fate": "preserved-on-surface",
   "year": 2012,
   "nssdcaId": "PIA16120",
   "model": {
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Still operational and communicating.",
+      "text": "Status: Preserved at Gale Crater.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -97,7 +97,7 @@
         "f2"
       ],
       "kids": "Take a look at how I was built. Every part of me had a special purpose.",
-      "explorer": "Mounted on the rover's deck, the MAHLI calibration target includes a 1909 Lincoln penny (chosen for its fine detail), colour chips, a metric bar graphic, and a UV-fluorescent target. It is used to calibrate the Mars Hand Lens.",
+      "explorer": "Mounted on the rover's deck, the MAHLI calibration target includes a 1909 Lincoln penny (chosen for its fine detail), colour chips, a metric bar graphic, and a UV-fluorescent target. It is used to calibrate the Mars Hand Lens Imager. The penny belongs to principal investigator Ken Edgett — it is the only US coin on Mars.",
       "audio": {
         "kids": null,
         "explorer": null
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "I am still working out here every single day, listening and measuring.",
-      "explorer": "Fate: operational on surface. Position recorded at coordinates [-6, -15].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved on surface. Position recorded at coordinates [-6, -15].",
       "audio": {
         "kids": null,
         "explorer": null

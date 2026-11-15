@@ -4,7 +4,7 @@
   "name": "Sample Cache Depot",
   "kind": "science-instrument",
   "environment": "mars-surface",
-  "fate": "operational-on-surface",
+  "fate": "preserved-on-surface",
   "year": 2023,
   "nssdcaId": "PIA25658",
   "model": {
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Still operational and communicating.",
+      "text": "Status: Preserved at Jezero Crater.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -97,7 +97,7 @@
         "f2"
       ],
       "kids": "Take a look at how I was built. Every part of me had a special purpose.",
-      "explorer": "Perseverance has collected and sealed rock core samples in titanium tubes, then deposited backup copies at the Three Forks cache depot in Jezero Crater. Ten tubes rest on the surface in a carefully mapped pattern. A future Mars.",
+      "explorer": "Perseverance has collected and sealed rock core samples in titanium tubes, then deposited backup copies at the Three Forks cache depot in Jezero Crater. Ten tubes rest on the surface in a carefully mapped pattern. A future Mars Sample Return mission aims to bring these tubes to Earth — they would be the first samples returned from another planet.",
       "audio": {
         "kids": null,
         "explorer": null
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "I am still working out here every single day, listening and measuring.",
-      "explorer": "Fate: operational on surface. Position recorded at coordinates [-10, 14].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved on surface. Position recorded at coordinates [-10, 14].",
       "audio": {
         "kids": null,
         "explorer": null

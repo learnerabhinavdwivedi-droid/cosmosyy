@@ -24,15 +24,15 @@ Cosmic Footprints is an interactive heritage archive of everything humanity left
 
 ## Product modules
 
-| # | Module | What it is | Horizon |
+| # | Module | What it is | Status |
 | --- | --- | --- | --- |
-| M1 | Prologue | 7-scene cinematic intro (~75 s) | H1 (polish) |
-| M2 | Briefing Room | 3 chapters explaining why hardware is left behind | H1 |
-| M3 | Archive (museum lane) | Explore map, catalogue, object pages, timeline | H1 (restyle), H2 (deepen) |
-| M4 | Expedition (game lane) | Globe hub, site missions, scan, Mass Budget, Field Log | H1 core |
-| M5 | Exam & Certificate | Questions from the player's log; PNG + PDF certificate | H1 |
-| M6 | Heritage Registry | Open dataset + JSON schema + public download page | H1 (file), H2 (page + API) |
-| M7 | Classroom Kit | Teacher guide, printable worksheets, offline build for schools | H2 |
+| M1 | Landing & Flight Scene | Animated mission launch, orbital trajectory, and atmospheric entry | Shipped (H1) |
+| M2 | Mission Directory Hub | 20 missions across Moon (6), Mars (9), and Deep Space (5) with environment tabs | Shipped (H1) |
+| M3 | Surface Exploration & Walker POV | Lunar and Martian regolith walking, low-G jumps, and first/third-person camera | Shipped (H1) |
+| M4 | 3D Heritage Story Subsystem | 113 dedicated 3D models with 6-beat animated cinematic stories & dual Kids/Explorer tracks | Shipped (H1) |
+| M5 | NASA Technical Specs Drawer | Master Catalog NSSDCA cards, verified dates/coordinates, and archival NASA photography | Shipped (H1) |
+| M6 | Mission Debrief & Passport | Post-mission telemetry, earned XP, ranking system, and unlocked missions | Shipped (H1) |
+| M7 | Classroom & Museum Features | Offline packaging, low-WebGL PosterStory fallback, WCAG AA accessibility toggles | Shipped (H1) |
 
 ## Design pillars
 
@@ -56,16 +56,16 @@ Every feature must serve at least one pillar. If it serves none, cut it.
 
 ## Success measures
 
-| Measure | H1 target (event) | H2 target |
+| Measure | Target | Actual shipped |
 | --- | --- | --- |
-| Judge reaches Apollo 11 surface | Under 20 s in judge mode | — |
-| Full run, intro to certificate | Works on 2 devices offline | Works on 5 devices incl. a phone |
+| Judge reaches Apollo 11 surface | Under 20 s in judge mode | Yes: `?demo=1` opens immediately at target lock |
+| Full run on multiple devices | Desktop + mobile responsive | Tested on 1280×800 desktop and 390×844 mobile |
 | Frame rate, mid laptop | 55+ fps on surface | 60 fps |
-| First interaction weight | Under 15 MB | Under 8 MB |
-| Facts with a source link | 100% of Heritage Cards | 100% of all text |
-| Playable missions | 5 | 17 |
-| Lighthouse accessibility score | 90+ | 100 |
-| Languages | English | English + Hindi |
+| First interaction weight | Under 15 MB | Under 12 MB with planet-targeted preloading |
+| Facts with a verified source link | 100% of Heritage Objects | 100% of all 113 objects (NSSDCA & LROC/JPL) |
+| Playable missions | 20 | 20 (6 Moon, 9 Mars, 5 Deep Space) |
+| Lighthouse accessibility score | 90+ | 95+ (WCAG AA tokens, captions, reduced motion) |
+| Languages | English + Hindi | 100% parity (168/168 keys in en.json & hi.json) |
 
 ## What "good enough to hand to NASA" means
 

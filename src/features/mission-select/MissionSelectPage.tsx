@@ -409,7 +409,8 @@ export default function MissionSelectPage() {
   const startMission = useAppStore((s) => s.startMission);
 
   const [searchParams] = useSearchParams();
-  const isDemo = searchParams.get("demo") === "1";
+  const demoParam = searchParams.get("demo");
+  const isDemo = Boolean(demoParam);
   const [nameInput, setNameInput] = useState(playerName);
   const [launchingId, setLaunchingId] = useState<string | null>(null);
   const [planetTab, setPlanetTab] = useState<PlanetTab>("moon");
@@ -425,11 +426,19 @@ export default function MissionSelectPage() {
     import("@/features/game/GameShell");
     if (isDemo) {
       if (!playerName) setPlayerName("Commander");
-      startMission("apollo-11");
-      navigate("/play/apollo-11?demo=1");
+      const targetMission =
+        demoParam === "mars" || demoParam === "perseverance"
+          ? "mars-perseverance"
+          : demoParam === "curiosity"
+            ? "mars-curiosity"
+            : demoParam === "voyager" || demoParam === "deep" || demoParam === "deepspace"
+              ? "deep-voyager"
+              : "apollo-11";
+      startMission(targetMission);
+      navigate(`/play/${targetMission}?demo=${demoParam}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDemo]);
+  }, [isDemo, demoParam]);
 
   const handleNameSubmit = () => {
     const trimmed = nameInput.trim();
@@ -613,6 +622,51 @@ export default function MissionSelectPage() {
             </span>
           </motion.div>
         )}
+
+        {/* Judge / Quick Demo Fast Jumps */}
+        <motion.div
+          className="mx-auto mt-4 flex flex-wrap items-center justify-center gap-2 rounded-xl border border-space-700/40 bg-space-900/50 px-3.5 py-2 text-xs backdrop-blur-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <span className="font-mono text-[10px] uppercase tracking-wider text-regolith-400">
+            ⚡ Quick Demo Jump:
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              if (!playerName) setPlayerName("Commander");
+              startMission("apollo-11");
+              navigate("/play/apollo-11?demo=1");
+            }}
+            className="rounded-lg border border-signal/40 bg-signal/10 px-2.5 py-1 text-[11px] font-semibold text-signal transition hover:bg-signal/20 active:scale-95 cursor-pointer"
+          >
+            Moon · Apollo 11
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (!playerName) setPlayerName("Commander");
+              startMission("mars-perseverance");
+              navigate("/play/mars-perseverance?demo=mars");
+            }}
+            className="rounded-lg border border-warn/40 bg-warn/10 px-2.5 py-1 text-[11px] font-semibold text-warn transition hover:bg-warn/20 active:scale-95 cursor-pointer"
+          >
+            Mars · Perseverance
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (!playerName) setPlayerName("Commander");
+              startMission("deep-voyager");
+              navigate("/play/deep-voyager?demo=voyager");
+            }}
+            className="rounded-lg border border-cyan-500/40 bg-cyan-950/40 px-2.5 py-1 text-[11px] font-semibold text-cyan-300 transition hover:bg-cyan-900/40 active:scale-95 cursor-pointer"
+          >
+            Deep Space · Voyager 1
+          </button>
+        </motion.div>
 
         {/* Planet tabs */}
         <motion.div

@@ -1,6 +1,6 @@
 # AGENTS.md — Cosmosyy
 
-You are working on **Cosmosyy**: a Moon-mission game where you fly to all six Apollo landing sites, walk in lunar gravity, and discover what was left behind (React 19 + three.js/R3F + Rapier + ecctrl). Game flow: mission select → narrated flight → landing → walk and scan leftovers → launch home → next mission.
+You are working on **Cosmosyy**: an interactive space-heritage game covering 20 historical NASA missions across the Moon, Mars, and deep space, where you fly spacecraft, explore authentic terrain, and discover what humanity left behind (React 19 + three.js/R3F + Rapier + ecctrl). Game flow: mission select → narrated flight → landing/approach → explore and inspect heritage artifacts (6-beat 3D stories) → mission report.
 
 **Stack:** Vite + React + TypeScript strict · Tailwind v4 · shadcn/ui · Three.js + R3F + drei + Rapier + ecctrl · zustand · Theatre.js · Howler.js · Vercel (static + serverless) · Gemini 2.0 Flash (free tier, H2).
 

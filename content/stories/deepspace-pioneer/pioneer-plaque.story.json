@@ -4,7 +4,7 @@
   "name": "The Pioneer Golden Plaque",
   "kind": "science-instrument",
   "environment": "deep-space",
-  "fate": "left-on-surface",
+  "fate": "preserved-interstellar",
   "year": 1972,
   "nssdcaId": "PIA01478",
   "model": {
@@ -27,7 +27,7 @@
     },
     {
       "id": "f3",
-      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the lunar environment.",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the deep-space environment.",
       "source": "NASA Space Mission Data",
       "status": "general-science"
     },
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Remains preserved in the arid regolith at Interstellar Trajectory — Aldebaran & Aquila.",
+      "text": "Status: Preserved as an eternal time capsule drifting into deep space.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
-      "explorer": "Fate: left on surface. Position recorded at coordinates [0.6, 1.1].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved interstellar. Position recorded at coordinates [0.6, 1.1].",
       "audio": {
         "kids": null,
         "explorer": null

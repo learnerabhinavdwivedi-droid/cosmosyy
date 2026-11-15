@@ -4,7 +4,7 @@
   "name": "95-Megapixel CCD Focal Plane",
   "kind": "science-instrument",
   "environment": "deep-space",
-  "fate": "left-on-surface",
+  "fate": "drifting-in-deep-space",
   "year": 2009,
   "nssdcaId": "PIA11831",
   "model": {
@@ -27,7 +27,7 @@
     },
     {
       "id": "f3",
-      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the lunar environment.",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the deep-space environment.",
       "source": "NASA Space Mission Data",
       "status": "general-science"
     },
@@ -39,13 +39,13 @@
     },
     {
       "id": "f5",
-      "text": "Status: Remains preserved in the arid regolith at Earth-Trailing Heliocentric Orbit.",
+      "text": "Status: Silent and dormant in deep space.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
     {
       "id": "f6",
-      "text": "A permanent human and robotic monument celebrating space exploration on the Moon.",
+      "text": "A permanent human and robotic monument celebrating space exploration in deep space.",
       "source": "NASA Mission Heritage Records",
       "status": "verified"
     }
@@ -175,7 +175,7 @@
         "f5"
       ],
       "kids": "My mission finished, but I stay here resting peacefully on the surface.",
-      "explorer": "Fate: left on surface. Position recorded at coordinates [0, 0].",
+      "explorer": "Fate: drifting in deep space. Position recorded at coordinates [0, 0].",
       "audio": {
         "kids": null,
         "explorer": null
