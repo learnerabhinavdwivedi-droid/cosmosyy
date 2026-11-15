@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAppStore, type Quality } from "@/store/useAppStore";
+import { useTranslation } from "react-i18next";
+import { useAppStore, type Quality, type AudioLanguage } from "@/store/useAppStore";
 import { gameAudio } from "@/lib/gameAudio";
 import { setNarrationVolume } from "@/lib/narration";
+import { setBus } from "@/lib/audio";
+import { playTutorPreview } from "@/lib/tutorVoice";
 import { Howler } from "howler";
 import {
   Volume2,
@@ -13,10 +16,19 @@ import {
   RefreshCw,
   Check,
   Sparkles,
+  Radio,
+  Mic,
+  Headphones,
+  Languages,
+  Sliders,
+  Gauge,
+  Play,
+  Square,
 } from "lucide-react";
 
 export default function SettingsPage() {
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
   const settings = useAppStore((s) => s.settings);
   const setSetting = useAppStore((s) => s.setSetting);
   const player = useAppStore((s) => s.player);
@@ -30,11 +42,79 @@ export default function SettingsPage() {
   const [tempName, setTempName] = useState(player.name || "");
   const [nameSaved, setNameSaved] = useState(false);
 
-  const handleVolumeChange = (vol: number) => {
+  const [previewingLang, setPreviewingLang] = useState<AudioLanguage | null>(null);
+  const previewCancelRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewCancelRef.current) {
+        previewCancelRef.current();
+      }
+    };
+  }, []);
+
+  const masterVol = settings.volume ?? 0.8;
+  const narrationVol = settings.narrationVolume ?? 0.9;
+  const sfxVol = settings.sfxVolume ?? 0.8;
+  const musicVol = settings.musicVolume ?? 0.6;
+  const tutorRate = settings.tutorRate ?? 0.95;
+  const audioLang = settings.audioLanguage ?? "english";
+
+  const handleMasterVolumeChange = (vol: number) => {
     setSetting("volume", vol);
-    gameAudio.setVolume(vol);
-    setNarrationVolume(vol);
+    gameAudio.setVolume(vol * sfxVol);
+    setNarrationVolume(vol * narrationVol);
+    setBus("master", vol);
     Howler.volume(vol);
+  };
+
+  const handleNarrationVolumeChange = (vol: number) => {
+    setSetting("narrationVolume", vol);
+    setBus("narration", vol);
+    setNarrationVolume(masterVol * vol);
+  };
+
+  const handleSfxVolumeChange = (vol: number) => {
+    setSetting("sfxVolume", vol);
+    setBus("sfx", vol);
+    gameAudio.setVolume(masterVol * vol);
+  };
+
+  const handleMusicVolumeChange = (vol: number) => {
+    setSetting("musicVolume", vol);
+    setBus("music", vol);
+  };
+
+  const handleTutorRateChange = (rate: number) => {
+    setSetting("tutorRate", rate);
+  };
+
+  const handleLanguageChange = (lang: AudioLanguage) => {
+    setSetting("audioLanguage", lang);
+    if (lang === "hinglish") {
+      void i18n.changeLanguage("hi");
+    } else {
+      void i18n.changeLanguage("en");
+    }
+  };
+
+  const handleTogglePreview = (lang: AudioLanguage) => {
+    if (previewingLang === lang) {
+      if (previewCancelRef.current) {
+        previewCancelRef.current();
+        previewCancelRef.current = null;
+      }
+      setPreviewingLang(null);
+    } else {
+      if (previewCancelRef.current) {
+        previewCancelRef.current();
+      }
+      setPreviewingLang(lang);
+      previewCancelRef.current = playTutorPreview(lang, () => {
+        setPreviewingLang(null);
+        previewCancelRef.current = null;
+      });
+    }
   };
 
   const handleNameSave = (e: React.FormEvent) => {
@@ -155,39 +235,162 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* Section 2: Audio Configuration */}
-        <section className="rounded-xl border border-space-800 bg-space-900/40 backdrop-blur-md p-6">
-          <div className="flex items-center gap-3 border-b border-space-800 pb-3 mb-6">
+        {/* Section 2: Audio & Voice Communications (Full Audio Control) */}
+        <section className="rounded-xl border border-space-800 bg-space-900/40 backdrop-blur-md p-6 space-y-6">
+          <div className="flex items-center gap-3 border-b border-space-800 pb-3">
             <Volume2 className="h-5 w-5 text-amber-400" />
             <div>
-              <h2 className="text-sm font-bold tracking-wider uppercase text-white">
-                Audio & Communications
+              <h2 className="text-sm font-bold tracking-wider uppercase text-white flex items-center gap-2">
+                <span>Audio & Voice Communications</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-400/10 text-amber-300 border border-amber-400/30 uppercase">
+                  Full Control
+                </span>
               </h2>
               <p className="text-xs text-regolith-400">
-                Telemetry beeps, thruster rumble, and mission control narration
+                Voice tutor language, individual volume channels, and transmission controls
               </p>
             </div>
           </div>
 
-          <div className="space-y-6">
-            {/* Master Volume */}
-            <div>
-              <div className="flex justify-between items-center text-xs font-mono mb-2">
-                <span className="uppercase tracking-wider text-regolith-300">
-                  Master Communication Volume
-                </span>
-                <span className="text-amber-400 font-bold">
-                  {Math.round(settings.volume * 100)}%
-                </span>
-              </div>
-              <div className="flex items-center gap-4">
+          {/* Subsection A: Language Selection (English vs Hinglish) */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-mono uppercase tracking-wider text-regolith-300 flex items-center gap-1.5">
+                <Languages className="h-3.5 w-3.5 text-amber-400" />
+                <span>Tutor Voice & Narration Language</span>
+              </label>
+              <span className="text-[10px] font-mono text-regolith-400">
+                Active: {audioLang === "hinglish" ? "🇮🇳 Hinglish" : "🇬🇧 English"}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Option 1: English */}
+              <div
+                onClick={() => handleLanguageChange("english")}
+                className={`cursor-pointer rounded-xl border p-4 transition-all duration-200 flex flex-col justify-between gap-3 ${
+                  audioLang === "english"
+                    ? "border-amber-400/80 bg-amber-500/10 shadow-[0_0_15px_rgba(245,158,11,0.15)]"
+                    : "border-space-800 bg-space-950/40 hover:border-space-700 hover:bg-space-800/40"
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-xl">🇬🇧</span>
+                    <div>
+                      <h3 className="text-sm font-bold text-white">English</h3>
+                      <p className="text-[11px] text-regolith-400">Clear Global Space Tutor</p>
+                    </div>
+                  </div>
+                  <div
+                    className={`h-4 w-4 rounded-full border flex items-center justify-center ${
+                      audioLang === "english"
+                        ? "border-amber-400 bg-amber-400"
+                        : "border-space-600 bg-transparent"
+                    }`}
+                  >
+                    {audioLang === "english" && <Check className="h-2.5 w-2.5 text-space-950 stroke-[3]" />}
+                  </div>
+                </div>
+
                 <button
                   type="button"
-                  onClick={() => handleVolumeChange(settings.volume > 0 ? 0 : 0.8)}
-                  className="p-2 rounded-lg border border-space-700 bg-space-800/80 hover:bg-space-700 text-regolith-300 transition-colors"
-                  title={settings.volume > 0 ? "Mute" : "Unmute"}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleTogglePreview("english");
+                  }}
+                  className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-space-800/80 hover:bg-space-700/80 border border-space-700 text-xs font-mono text-amber-300 transition-colors"
                 >
-                  {settings.volume === 0 ? (
+                  {previewingLang === "english" ? (
+                    <>
+                      <Square className="h-3 w-3 fill-amber-300" />
+                      <span>Stop Sample</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="h-3 w-3 fill-amber-300" />
+                      <span>Test English Voice</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Option 2: Hinglish */}
+              <div
+                onClick={() => handleLanguageChange("hinglish")}
+                className={`cursor-pointer rounded-xl border p-4 transition-all duration-200 flex flex-col justify-between gap-3 ${
+                  audioLang === "hinglish"
+                    ? "border-amber-400/80 bg-amber-500/10 shadow-[0_0_15px_rgba(245,158,11,0.15)]"
+                    : "border-space-800 bg-space-950/40 hover:border-space-700 hover:bg-space-800/40"
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-xl">🇮🇳</span>
+                    <div>
+                      <h3 className="text-sm font-bold text-white">Hinglish</h3>
+                      <p className="text-[11px] text-regolith-400">Warm Desi Space Guide</p>
+                    </div>
+                  </div>
+                  <div
+                    className={`h-4 w-4 rounded-full border flex items-center justify-center ${
+                      audioLang === "hinglish"
+                        ? "border-amber-400 bg-amber-400"
+                        : "border-space-600 bg-transparent"
+                    }`}
+                  >
+                    {audioLang === "hinglish" && <Check className="h-2.5 w-2.5 text-space-950 stroke-[3]" />}
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleTogglePreview("hinglish");
+                  }}
+                  className="w-full flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-space-800/80 hover:bg-space-700/80 border border-space-700 text-xs font-mono text-amber-300 transition-colors"
+                >
+                  {previewingLang === "hinglish" ? (
+                    <>
+                      <Square className="h-3 w-3 fill-amber-300" />
+                      <span>Stop Sample</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="h-3 w-3 fill-amber-300" />
+                      <span>Test Hinglish Voice</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Subsection B: Channel Volume Sliders */}
+          <div className="pt-4 border-t border-space-800/60 space-y-5">
+            <h3 className="text-xs font-mono uppercase tracking-wider text-regolith-300 flex items-center gap-1.5">
+              <Sliders className="h-3.5 w-3.5 text-amber-400" />
+              <span>Independent Channel Mixers</span>
+            </h3>
+
+            {/* 1. Master Volume */}
+            <div>
+              <div className="flex justify-between items-center text-xs font-mono mb-1.5">
+                <span className="text-white flex items-center gap-1.5">
+                  <Headphones className="h-3.5 w-3.5 text-amber-400" />
+                  <span>Master Volume</span>
+                </span>
+                <span className="text-amber-400 font-bold">{Math.round(masterVol * 100)}%</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => handleMasterVolumeChange(masterVol > 0 ? 0 : 0.8)}
+                  className="p-1.5 rounded-lg border border-space-700 bg-space-800/80 hover:bg-space-700 text-regolith-300 transition-colors"
+                  title={masterVol > 0 ? "Mute All" : "Unmute All"}
+                >
+                  {masterVol === 0 ? (
                     <VolumeX className="h-4 w-4 text-red-400" />
                   ) : (
                     <Volume2 className="h-4 w-4" />
@@ -198,37 +401,121 @@ export default function SettingsPage() {
                   min="0"
                   max="1"
                   step="0.05"
-                  value={settings.volume}
-                  onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+                  value={masterVol}
+                  onChange={(e) => handleMasterVolumeChange(parseFloat(e.target.value))}
                   className="flex-1 h-2 bg-space-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
                 />
               </div>
             </div>
 
-            {/* Radio Captions Toggle */}
-            <div className="flex items-center justify-between pt-2 border-t border-space-800/60">
-              <div>
-                <span className="text-sm font-medium text-white block">
-                  Radio Transmission Captions
+            {/* 2. Tutor Voice & Narration */}
+            <div>
+              <div className="flex justify-between items-center text-xs font-mono mb-1.5">
+                <span className="text-regolith-300 flex items-center gap-1.5">
+                  <Mic className="h-3.5 w-3.5 text-cyan-400" />
+                  <span>Tutor Voice & Story Narration</span>
                 </span>
-                <span className="text-xs text-regolith-400">
-                  Display real-time Quindar tone transcripts and mission briefings
-                </span>
+                <span className="text-cyan-400 font-bold">{Math.round(narrationVol * 100)}%</span>
               </div>
-              <button
-                type="button"
-                onClick={() => setSetting("captions", !settings.captions)}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  settings.captions ? "bg-amber-500" : "bg-space-700"
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    settings.captions ? "translate-x-5" : "translate-x-0"
-                  }`}
-                />
-              </button>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={narrationVol}
+                onChange={(e) => handleNarrationVolumeChange(parseFloat(e.target.value))}
+                className="w-full h-2 bg-space-800 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+              />
             </div>
+
+            {/* 3. Sound Effects (SFX) */}
+            <div>
+              <div className="flex justify-between items-center text-xs font-mono mb-1.5">
+                <span className="text-regolith-300 flex items-center gap-1.5">
+                  <Radio className="h-3.5 w-3.5 text-emerald-400" />
+                  <span>Telemetry & Rover Sound Effects (SFX)</span>
+                </span>
+                <span className="text-emerald-400 font-bold">{Math.round(sfxVol * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={sfxVol}
+                onChange={(e) => handleSfxVolumeChange(parseFloat(e.target.value))}
+                className="w-full h-2 bg-space-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+              />
+            </div>
+
+            {/* 4. Atmospheric Music / Drone */}
+            <div>
+              <div className="flex justify-between items-center text-xs font-mono mb-1.5">
+                <span className="text-regolith-300 flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5 text-purple-400" />
+                  <span>Atmospheric Space Ambient / Music</span>
+                </span>
+                <span className="text-purple-400 font-bold">{Math.round(musicVol * 100)}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={musicVol}
+                onChange={(e) => handleMusicVolumeChange(parseFloat(e.target.value))}
+                className="w-full h-2 bg-space-800 rounded-lg appearance-none cursor-pointer accent-purple-500"
+              />
+            </div>
+          </div>
+
+          {/* Subsection C: Tutor Speech Speed / Cadence */}
+          <div className="pt-4 border-t border-space-800/60">
+            <div className="flex justify-between items-center text-xs font-mono mb-1.5">
+              <span className="text-regolith-300 flex items-center gap-1.5">
+                <Gauge className="h-3.5 w-3.5 text-amber-400" />
+                <span>Tutor Speech Speed (Cadence)</span>
+              </span>
+              <span className="text-amber-400 font-bold">{tutorRate.toFixed(2)}x</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-mono text-regolith-500">0.80x (Calm)</span>
+              <input
+                type="range"
+                min="0.80"
+                max="1.20"
+                step="0.05"
+                value={tutorRate}
+                onChange={(e) => handleTutorRateChange(parseFloat(e.target.value))}
+                className="flex-1 h-2 bg-space-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+              />
+              <span className="text-[10px] font-mono text-regolith-500">1.20x (Brisk)</span>
+            </div>
+          </div>
+
+          {/* Subsection D: Subtitles / Captions Toggle */}
+          <div className="flex items-center justify-between pt-4 border-t border-space-800/60">
+            <div>
+              <span className="text-sm font-medium text-white block">
+                Radio Transmission Subtitles & Captions
+              </span>
+              <span className="text-xs text-regolith-400">
+                Display synchronized on-screen text during voice explanations and flight phases
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setSetting("captions", !settings.captions)}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                settings.captions ? "bg-amber-500" : "bg-space-700"
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                  settings.captions ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
           </div>
         </section>
 

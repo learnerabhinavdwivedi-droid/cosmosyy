@@ -1,6 +1,7 @@
 import { playQuindar } from "@/lib/gameAudio";
 import { duck } from "@/lib/audio";
 import { stopNarration } from "@/lib/narration";
+import { useAppStore } from "@/store/useAppStore";
 
 export interface TutorSpeakOptions {
   text: string;
@@ -15,7 +16,7 @@ export interface TutorSpeakOptions {
 
 /**
  * Searches system voices for the warmest, most natural human tutor voice available.
- * Prioritizes modern Natural / Neural / Online voices (Edge, Chrome, Mac) over robotic synthesizers.
+ * Supports both English and Hinglish / Indian English / Hindi voices.
  */
 export function getBestTutorVoice(lang = "en-US"): SpeechSynthesisVoice | null {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return null;
@@ -24,8 +25,31 @@ export function getBestTutorVoice(lang = "en-US"): SpeechSynthesisVoice | null {
   if (!voices || voices.length === 0) return null;
 
   const targetLang = (lang || "en-US").toLowerCase();
-  const langPrefix = targetLang.slice(0, 2);
 
+  // Special handling for Hinglish: Prioritize Indian English (en-IN) or Hindi (hi-IN)
+  if (targetLang === "hinglish" || targetLang.startsWith("hi") || targetLang.includes("in")) {
+    const indianVoices = voices.filter(
+      (v) =>
+        v.lang.toLowerCase().includes("in") ||
+        v.lang.toLowerCase().startsWith("hi") ||
+        /india|hindi|neerja|swara|prabhat|madhur|kalpana|heera/i.test(v.name),
+    );
+
+    if (indianVoices.length > 0) {
+      const naturalIndian = indianVoices.find((v) =>
+        /natural|neural|online|multilingual/i.test(v.name),
+      );
+      if (naturalIndian) return naturalIndian;
+
+      const googleIndian = indianVoices.find((v) => /google/i.test(v.name));
+      if (googleIndian) return googleIndian;
+
+      return indianVoices[0] || null;
+    }
+  }
+
+  // General English tutor voices
+  const langPrefix = targetLang.slice(0, 2);
   const matchedVoices = voices.filter((v) => v.lang.toLowerCase().startsWith(langPrefix));
   const pool = matchedVoices.length > 0 ? matchedVoices : voices;
 
@@ -83,15 +107,27 @@ export function speakTutorText(options: TutorSpeakOptions): () => void {
   const startSpeaking = () => {
     if (isCancelled) return;
 
-    const utterance = new SpeechSynthesisUtterance(options.text);
-    const lang = options.lang || "en-US";
-    utterance.lang = lang;
+    const stateSettings = useAppStore.getState().settings;
+    const isHinglishMode =
+      options.lang === "hinglish" ||
+      (!options.lang && stateSettings.audioLanguage === "hinglish");
 
-    // Gentle, natural tutor cadence: not too fast, clear pauses
-    utterance.rate = options.rate ?? (lang.startsWith("hi") ? 0.95 : 0.92);
+    const utterance = new SpeechSynthesisUtterance(options.text);
+
+    // Language code negotiation
+    if (isHinglishMode) {
+      const hasDevanagari = /[\u0900-\u097F]/.test(options.text);
+      utterance.lang = hasDevanagari ? "hi-IN" : "en-IN";
+    } else {
+      utterance.lang = options.lang || "en-US";
+    }
+
+    // Tutor cadence rate: gentle, clear pacing
+    const userRate = stateSettings.tutorRate ?? 0.95;
+    utterance.rate = options.rate ?? userRate;
     utterance.pitch = options.pitch ?? 1.0;
 
-    const bestVoice = getBestTutorVoice(lang);
+    const bestVoice = getBestTutorVoice(isHinglishMode ? "hinglish" : utterance.lang);
     if (bestVoice) {
       utterance.voice = bestVoice;
     }
@@ -115,7 +151,7 @@ export function speakTutorText(options: TutorSpeakOptions): () => void {
       // Slight pause before completing to ensure the final syllable rings out cleanly
       setTimeout(() => {
         options.onEnd?.();
-      }, 150);
+      }, 180);
     };
 
     utterance.onerror = (e) => {
@@ -151,4 +187,25 @@ export function speakTutorText(options: TutorSpeakOptions): () => void {
       window.speechSynthesis.cancel();
     }
   };
+}
+
+/**
+ * Previews a sample tutor transmission in either English or Hinglish.
+ */
+export function playTutorPreview(
+  lang: "english" | "hinglish",
+  onEnd?: () => void,
+): () => void {
+  const sampleText =
+    lang === "hinglish"
+      ? "Namaste Commander! Space communications bilkul clear hain. Apollo aur Mars ke saare channels perfectly ready hain. Chaliye mission shuru karte hain!"
+      : "Greetings Commander! Space communication system online. All lunar and Martian audio channels are crystal clear. Ready for launch whenever you are!";
+
+  return speakTutorText({
+    text: sampleText,
+    lang: lang,
+    withRadioChirp: true,
+    onEnd,
+    onError: () => onEnd?.(),
+  });
 }

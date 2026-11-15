@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 
 export type Quality = "low" | "medium" | "high";
 export type MissionStatus = "locked" | "available" | "in-progress" | "completed";
+export type AudioLanguage = "english" | "hinglish";
 
 export interface MissionProgress {
   status: MissionStatus;
@@ -15,8 +16,13 @@ interface PlayerState {
   name: string;
 }
 
-interface SettingsState {
+export interface SettingsState {
   volume: number;
+  sfxVolume?: number;
+  musicVolume?: number;
+  narrationVolume?: number;
+  tutorRate?: number;
+  audioLanguage?: AudioLanguage;
   captions: boolean;
   quality: Quality;
   reducedMotion: boolean;
@@ -131,6 +137,11 @@ export const useAppStore = create<AppState>()(
       player: { name: "" },
       settings: {
         volume: 0.8,
+        sfxVolume: 0.8,
+        musicVolume: 0.6,
+        narrationVolume: 0.9,
+        tutorRate: 0.95,
+        audioLanguage: "english",
         captions: true,
         quality: "medium",
         reducedMotion: false,

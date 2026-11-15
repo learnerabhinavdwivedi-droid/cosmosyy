@@ -111,7 +111,7 @@ export function ObjectStoryCard({
     if (state.sound) {
       cancelTutorRef.current = speakTutorText({
         text: captionText,
-        lang: i18n.language.startsWith("hi") ? "hi-IN" : "en-US",
+        lang: i18n.language.startsWith("hi") ? "hinglish" : "en-US",
         rate: state.mode === "kids" ? 0.90 : 0.94,
         withRadioChirp: false,
         onEnd: () => {
