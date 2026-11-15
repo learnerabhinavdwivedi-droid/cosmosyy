@@ -4,7 +4,7 @@
   "name": "Helium Vector Magnetometer (HVM)",
   "kind": "science-instrument",
   "environment": "deep-space",
-  "fate": "left-on-surface",
+  "fate": "drifting-in-deep-space",
   "year": 1972,
   "nssdcaId": "PIA01480",
   "model": {
@@ -27,7 +27,7 @@
     },
     {
       "id": "f3",
-      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the lunar environment.",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the deep-space environment.",
       "source": "NASA Space Mission Data",
       "status": "general-science"
     },
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Remains preserved in the arid regolith at Interstellar Trajectory — Aldebaran & Aquila.",
+      "text": "Status: Silent and dormant in deep space.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -175,7 +175,7 @@
         "f5"
       ],
       "kids": "My mission finished, but I stay here resting peacefully on the surface.",
-      "explorer": "Fate: left on surface. Position recorded at coordinates [3.6, -0.8].",
+      "explorer": "Fate: drifting in deep space. Position recorded at coordinates [3.6, -0.8].",
       "audio": {
         "kids": null,
         "explorer": null

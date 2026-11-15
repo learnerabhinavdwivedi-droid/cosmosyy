@@ -46,7 +46,7 @@ export interface HeritageObject {
     | "passive-reflector"
     | "scientific-package";
   legacy?: string;
-  status?: "operational" | "dormant" | "defunct" | "cruising";
+  status?: "operational" | "dormant" | "defunct" | "cruising" | "preserved" | "intact";
   firstPerson?: string;
   yearDeployed?: number;
   yearLastContact?: number;

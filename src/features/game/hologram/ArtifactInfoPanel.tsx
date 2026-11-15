@@ -28,6 +28,7 @@ export function ArtifactInfoPanel({
 
   const isOperational = obj.status === "operational";
   const isCruising = obj.status === "cruising";
+  const isPreserved = obj.status === "preserved" || obj.status === "intact";
   const isDormant = obj.status === "dormant";
 
   return (
@@ -44,9 +45,11 @@ export function ArtifactInfoPanel({
                 ? "bg-cyan-950/70 text-cyan-300 border-cyan-500/40 shadow-[0_0_8px_rgba(6,182,212,0.3)]"
                 : isOperational
                   ? "bg-emerald-950/70 text-emerald-300 border-emerald-500/40 shadow-[0_0_8px_rgba(16,185,129,0.2)]"
-                  : isDormant
-                    ? "bg-amber-950/70 text-amber-300 border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.2)]"
-                    : "bg-space-850 text-regolith-400 border-space-700"
+                  : isPreserved
+                    ? "bg-purple-950/70 text-purple-300 border-purple-500/40 shadow-[0_0_8px_rgba(168,85,247,0.2)]"
+                    : isDormant
+                      ? "bg-amber-950/70 text-amber-300 border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.2)]"
+                      : "bg-space-850 text-regolith-400 border-space-700"
             }`}
           >
             <span
@@ -55,9 +58,11 @@ export function ArtifactInfoPanel({
                   ? "bg-cyan-400 animate-ping"
                   : isOperational
                     ? "bg-emerald-400 animate-pulse"
-                    : isDormant
-                      ? "bg-amber-400"
-                      : "bg-regolith-500"
+                    : isPreserved
+                      ? "bg-purple-400"
+                      : isDormant
+                        ? "bg-amber-400"
+                        : "bg-regolith-500"
               }`}
             />
             <span>
@@ -65,9 +70,11 @@ export function ArtifactInfoPanel({
                 ? "Cruising Interstellar"
                 : isOperational
                   ? "Active Telemetry"
-                  : isDormant
-                    ? "Dormant Sensor"
-                    : "Defunct Structure"}
+                  : isPreserved
+                    ? "Preserved Memorial"
+                    : isDormant
+                      ? "Dormant Sensor"
+                      : "Defunct Structure"}
             </span>
           </span>
         </div>
@@ -94,7 +101,15 @@ export function ArtifactInfoPanel({
             className="text-xs font-mono font-bold truncate px-1"
             style={{ color: theme.primary }}
           >
-            {isOperational ? "Active" : isDormant ? "Dormant" : "Defunct"}
+            {isCruising
+              ? "Cruising"
+              : isOperational
+                ? "Active"
+                : isPreserved
+                  ? "Preserved"
+                  : isDormant
+                    ? "Dormant"
+                    : "Defunct"}
           </span>
         </div>
         <div className="flex flex-col border-l border-space-800">

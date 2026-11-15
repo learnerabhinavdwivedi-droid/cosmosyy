@@ -4,7 +4,7 @@
   "name": "MHW-RTG Nuclear Power Boom",
   "kind": "science-instrument",
   "environment": "deep-space",
-  "fate": "operational-on-surface",
+  "fate": "operational-interstellar",
   "year": 1977,
   "nssdcaId": "PIA14112",
   "model": {
@@ -27,7 +27,7 @@
     },
     {
       "id": "f3",
-      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the lunar environment.",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the deep-space environment.",
       "source": "NASA Space Mission Data",
       "status": "general-science"
     },
@@ -45,7 +45,7 @@
     },
     {
       "id": "f6",
-      "text": "A permanent human and robotic monument celebrating space exploration on the Moon.",
+      "text": "A permanent human and robotic monument celebrating space exploration in deep space.",
       "source": "NASA Mission Heritage Records",
       "status": "verified"
     }
@@ -175,7 +175,7 @@
         "f5"
       ],
       "kids": "I am still working out here every single day, listening and measuring.",
-      "explorer": "Fate: operational on surface. Position recorded at coordinates [-3.2, -2.4].",
+      "explorer": "Fate: operational interstellar. Position recorded at coordinates [-3.2, -2.4].",
       "audio": {
         "kids": null,
         "explorer": null

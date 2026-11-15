@@ -4,7 +4,7 @@
   "name": "Shepard's Golf Balls",
   "kind": "science-instrument",
   "environment": "moon-surface",
-  "fate": "left-on-surface",
+  "fate": "preserved-on-surface",
   "year": 1971,
   "nssdcaId": "as14-67-9367",
   "model": {
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Remains preserved in the arid regolith at Fra Mauro.",
+      "text": "Status: Preserved at Fra Mauro.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
-      "explorer": "Fate: left on surface. Position recorded at coordinates [8, 12].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved on surface. Position recorded at coordinates [8, 12].",
       "audio": {
         "kids": null,
         "explorer": null

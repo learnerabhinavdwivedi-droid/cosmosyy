@@ -80,7 +80,7 @@
       "source": "NASA/JPL Mars 2020",
       "scienceDiscovery": "Contains sealed rock cores that may hold biosignatures from an ancient lake — they would be the first samples ever returned from another planet.",
       "legacy": "Ten titanium tubes rest on the surface at Three Forks, awaiting a future Mars Sample Return mission to bring them to Earth.",
-      "status": "operational",
+      "status": "preserved",
       "firstPerson": "Ayo, humanity's golden tickets! We are the titanium sample tubes dropped at Three Forks. Percy drilled rock cores from ancient Jezero lakebeds and sealed them inside us with gold-coated seals. We are waiting for the Mars Sample Return mission to pick us up and fly us back to Earth laboratories. The holy grail of astrobiology!",
       "yearDeployed": 2023,
       "nasaImageId": "PIA25658"
@@ -98,7 +98,7 @@
       "source": "NASA/JPL Mars 2020",
       "scienceDiscovery": "Contains sedimentary rocks with organic molecules and water-formed minerals, preserving billions of years of changing lake environments and possible biosignatures.",
       "legacy": "The Jezero delta is one of the most promising places to search for ancient Martian life, and Perseverance's samples from here are the highest-priority targets for Mars Sample Return.",
-      "status": "defunct",
+      "status": "preserved",
       "firstPerson": "Bro, billions of years ago, a raging river dumped into an emerald lake right here! I am the Jezero River Delta. My layered fan of clays and mudstones trapped sediments where ancient microbial life could have flourished. Percy is exploring my cliffs right now, looking for ancient alien fossils. Pure geological treasure chest!",
       "yearDeployed": 2022,
       "nasaImageId": "PIA25331"
@@ -116,7 +116,7 @@
       "source": "NASA/JPL Mars 2020",
       "scienceDiscovery": "Analyses rock chemistry from up to 7 metres away using laser-induced breakdown spectroscopy and Raman spectroscopy, detecting minerals and organic compounds remotely.",
       "legacy": "SuperCam's laser pits on Martian rocks are among the most precise human-made marks on another world; its data guides which rocks Perseverance drills.",
-      "status": "operational",
+      "status": "preserved",
       "firstPerson": "Pew pew, baby! I am SuperCam! From 7 meters away, I blast Martian rocks with an infrared laser at millions of watts per square centimeter, vaporizing a tiny spark of plasma to hear the pop and read the light frequencies! I zap rocks, record alien audio with my microphone, and make science look like Star Wars!",
       "yearDeployed": 2021,
       "nasaImageId": "PIA24684"

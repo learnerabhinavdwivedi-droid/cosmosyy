@@ -88,6 +88,7 @@
     "scienceDiscovery": "वैज्ञानिक खोज",
     "legacy": "ऐतिहासिक विरासत",
     "statusOperational": "अभी भी सक्रिय",
+    "statusPreserved": "संरक्षित स्मारक",
     "statusDormant": "सुप्त (Dormant)",
     "statusDefunct": "निष्क्रिय",
     "deployed": "तैनात वर्ष {{year}}",

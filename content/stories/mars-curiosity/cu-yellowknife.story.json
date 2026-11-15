@@ -4,7 +4,7 @@
   "name": "Yellowknife Bay",
   "kind": "science-instrument",
   "environment": "mars-surface",
-  "fate": "left-on-surface",
+  "fate": "preserved-on-surface",
   "year": 2013,
   "nssdcaId": "PIA16803",
   "model": {
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Remains preserved in the arid regolith at Gale Crater.",
+      "text": "Status: Preserved at Gale Crater.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
-      "explorer": "Fate: left on surface. Position recorded at coordinates [-14, 7].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved on surface. Position recorded at coordinates [-14, 7].",
       "audio": {
         "kids": null,
         "explorer": null

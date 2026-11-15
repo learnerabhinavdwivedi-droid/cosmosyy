@@ -83,11 +83,12 @@ function getObjectKind(id: string, name: string): string {
   return "science-instrument";
 }
 
-function getObjectFate(status?: string, id?: string): string {
+function getObjectFate(status?: string, id?: string, isDeepSpace?: boolean): string {
   if (id === "swc") return "returned-to-earth";
   if (id?.includes("sky-crane") || id?.includes("heat-shield")) return "impacted-surface";
-  if (status === "operational") return "operational-on-surface";
-  return "left-on-surface";
+  if (status === "operational") return isDeepSpace ? "operational-interstellar" : "operational-on-surface";
+  if (status === "preserved" || status === "intact") return isDeepSpace ? "preserved-interstellar" : "preserved-on-surface";
+  return isDeepSpace ? "drifting-in-deep-space" : "left-on-surface";
 }
 
 function buildStoryPacket(mission: MissionFile, obj: MissionObject): StoryPacket {
@@ -96,7 +97,10 @@ function buildStoryPacket(mission: MissionFile, obj: MissionObject): StoryPacket
   const env = isDeepSpace ? "deep-space" : isMars ? "mars-surface" : "moon-surface";
   const year = obj.yearDeployed || parseInt(mission.date.slice(0, 4), 10) || (isMars ? 2000 : 1969);
   const kind = getObjectKind(obj.id, obj.name);
-  const fate = getObjectFate(obj.status, obj.id);
+  const fate = getObjectFate(obj.status, obj.id, isDeepSpace);
+
+  const envDesc = isDeepSpace ? "deep space" : isMars ? "Mars" : "the Moon";
+  const envAdjective = isDeepSpace ? "deep-space" : isMars ? "Martian" : "lunar";
 
   // Facts
   const f1 = {
@@ -115,7 +119,7 @@ function buildStoryPacket(mission: MissionFile, obj: MissionObject): StoryPacket
 
   const f3 = {
     id: "f3",
-    text: `Engineered specifically to operate in the harsh vacuum and extreme temperatures of the ${isMars ? "Martian" : "lunar"} environment.`,
+    text: `Engineered specifically to operate in the harsh vacuum and extreme temperatures of the ${envAdjective} environment.`,
     source: "NASA Space Mission Data",
     status: "general-science" as const,
   };
@@ -129,14 +133,26 @@ function buildStoryPacket(mission: MissionFile, obj: MissionObject): StoryPacket
 
   const f5 = {
     id: "f5",
-    text: `Status: ${obj.status === "operational" ? "Still operational and communicating" : "Remains preserved in the arid regolith at " + mission.site}.`,
+    text: `Status: ${
+      obj.status === "operational"
+        ? "Still operational and communicating."
+        : obj.status === "preserved" || obj.status === "intact"
+          ? isDeepSpace
+            ? "Preserved as an eternal time capsule drifting into deep space."
+            : `Preserved at ${mission.site}.`
+          : isDeepSpace
+            ? "Silent and dormant in deep space."
+            : `Remains preserved in the arid regolith at ${mission.site}.`
+    }`,
     source: "NASA NSSDCA Master Catalog",
     status: "verified" as const,
   };
 
   const f6 = {
     id: "f6",
-    text: obj.legacy || `A permanent human and robotic monument celebrating space exploration on ${isMars ? "Mars" : "the Moon"}.`,
+    text:
+      obj.legacy ||
+      `A permanent human and robotic monument celebrating space exploration ${isDeepSpace ? "in deep space" : isMars ? "on Mars" : "on the Moon"}.`,
     source: "NASA Mission Heritage Records",
     status: "verified" as const,
   };
@@ -145,7 +161,7 @@ function buildStoryPacket(mission: MissionFile, obj: MissionObject): StoryPacket
   const s1Kids = truncateToSentences(
     obj.firstPerson
       ? `I am ${obj.name}. I arrived here at ${mission.site} in ${year}.`
-      : `I am ${obj.name}. I stand proudly on the ${isMars ? "red sands of Mars" : "quiet Moon"}.`,
+      : `I am ${obj.name}. I stand proudly in ${envDesc}.`,
     32
   );
   const s1Exp = truncateToSentences(
@@ -183,7 +199,9 @@ function buildStoryPacket(mission: MissionFile, obj: MissionObject): StoryPacket
   const s5Kids = truncateToSentences(
     obj.status === "operational"
       ? `I am still working out here every single day, listening and measuring.`
-      : `My mission finished, but I stay here resting peacefully on the surface.`,
+      : obj.status === "preserved" || obj.status === "intact"
+        ? `I am preserved as an eternal monument to human curiosity.`
+        : `My mission finished, but I stay here resting peacefully on the surface.`,
     32
   );
   const s5Exp = truncateToSentences(
