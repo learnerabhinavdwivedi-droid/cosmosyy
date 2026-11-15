@@ -292,7 +292,7 @@ export default function GameShell() {
   const { missionId } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const isDemo = searchParams.get("demo") === "1";
+  const isDemo = Boolean(searchParams.get("demo"));
   const phase = useGameStore((s) => s.phase);
   const send = useGameStore((s) => s.send);
   const setMission = useGameStore((s) => s.setMission);

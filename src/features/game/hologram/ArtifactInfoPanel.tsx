@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getNssdcCatalog } from "@/lib/nssdcaCatalog";
+import { getMissionOrNull } from "@/lib/missionData";
 import type { HeritageObject, ObjectTheme } from "./types";
 
 interface ArtifactInfoPanelProps {
@@ -20,6 +21,8 @@ export function ArtifactInfoPanel({
   const [activeTab, setActiveTab] = useState<"intel" | "specs">("intel");
   const [imgError, setImgError] = useState(false);
   const nssdcEntry = getNssdcCatalog(missionId, obj.id);
+  const missionData = getMissionOrNull(missionId);
+  const landing = missionData?.landing;
   const localImgUrl = `/images/heritage/${missionId}/${obj.id}.jpg`;
   const fallbackNasaUrl = obj.nasaImageId
     ? `https://images-assets.nasa.gov/image/${obj.nasaImageId}/${obj.nasaImageId}~thumb.jpg`
@@ -313,6 +316,27 @@ export function ArtifactInfoPanel({
                   </span>
                 </div>
               </div>
+            </div>
+
+            {/* Final Resting Place & Planetary Coordinates */}
+            <div className="rounded-lg border border-space-800 bg-space-900/50 p-3 flex flex-col gap-1.5">
+              <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-regolith-400">
+                Final Resting Place & Coordinates
+              </p>
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="text-regolith-200 font-bold">{missionSite}</span>
+                {landing && (landing.lat !== 0 || landing.lon !== 0) ? (
+                  <span className="text-cyan-300 font-bold">
+                    {landing.lat >= 0 ? `${landing.lat.toFixed(4)}°N` : `${Math.abs(landing.lat).toFixed(4)}°S`},{" "}
+                    {landing.lon >= 0 ? `${landing.lon.toFixed(4)}°E` : `${Math.abs(landing.lon).toFixed(4)}°W`}
+                  </span>
+                ) : (
+                  <span className="text-cyan-300 font-bold">{landing?.label || "Deep Space Trajectory"}</span>
+                )}
+              </div>
+              <p className="text-[10px] font-mono text-regolith-400">
+                Touchdown Datum: {landing?.label || missionSite} · Local offset: [{obj.position[0]}m, {obj.position[2]}m]
+              </p>
             </div>
 
             {/* NASA External Archive Button */}

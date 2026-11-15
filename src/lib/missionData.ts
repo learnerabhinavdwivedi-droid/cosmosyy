@@ -39,12 +39,12 @@ export interface HeritageObject {
   scienceDiscovery?: string;
   ongoingScience?: string;
   hardwareType?:
-    | "surface-lander"
-    | "rover"
-    | "orbiter"
-    | "deep-space-probe"
-    | "passive-reflector"
-    | "scientific-package";
+  | "surface-lander"
+  | "rover"
+  | "orbiter"
+  | "deep-space-probe"
+  | "passive-reflector"
+  | "scientific-package";
   legacy?: string;
   status?: "operational" | "dormant" | "defunct" | "cruising" | "preserved" | "intact";
   firstPerson?: string;
