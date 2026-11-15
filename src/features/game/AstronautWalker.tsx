@@ -1239,19 +1239,26 @@ export default function AstronautWalker({
     ground.receiveShadow = true;
     scene.add(ground);
 
-    // Scattered boulders / lunar rocks
+    // Scattered boulders / lunar rocks (Deterministic, no Math.random)
     const rockMat = new THREE.MeshStandardMaterial({
       color: isMars ? 0x6b4030 : 0x424448,
       roughness: 0.9,
       flatShading: true,
     });
     for (let i = 0; i < 50; i++) {
-      const s = 0.2 + Math.random() * 1.4;
+      const p1 = Math.sin(i * 12.9898 + 78.233) * 43758.5453;
+      const r1 = p1 - Math.floor(p1);
+      const p2 = Math.sin((i + 100) * 12.9898 + 78.233) * 43758.5453;
+      const r2 = p2 - Math.floor(p2);
+      const p3 = Math.sin((i + 200) * 12.9898 + 78.233) * 43758.5453;
+      const r3 = p3 - Math.floor(p3);
+
+      const s = 0.2 + r1 * 1.4;
       const r = new THREE.Mesh(new THREE.IcosahedronGeometry(s, 0), rockMat);
-      const rx = (Math.random() - 0.5) * 80;
-      const rz = (Math.random() - 0.5) * 80;
+      const rx = (r2 - 0.5) * 80;
+      const rz = (r3 - 0.5) * 80;
       r.position.set(rx, sampleHeight(rx, rz) + s * 0.35, rz);
-      r.rotation.set(Math.random(), Math.random(), Math.random());
+      r.rotation.set(r1 * Math.PI, r2 * Math.PI, r3 * Math.PI);
       r.castShadow = true;
       r.receiveShadow = true;
       scene.add(r);

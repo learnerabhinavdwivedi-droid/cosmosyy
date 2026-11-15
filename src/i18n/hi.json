@@ -18,8 +18,10 @@
   "missionSelect": {
     "heading": "अपना मिशन चुनें",
     "marsHeading": "मंगल अन्वेषण मिशन",
+    "deepSpaceHeading": "डीप स्पेस और क्षुद्रग्रह मिशन",
     "moonTab": "चंद्रमा",
     "marsTab": "मंगल ग्रह",
+    "deepSpaceTab": "डीप स्पेस",
     "enterName": "अपना नाम दर्ज करें",
     "namePlaceholder": "कमांडर…",
     "locked": "अवरुद्ध",

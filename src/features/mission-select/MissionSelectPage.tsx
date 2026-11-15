@@ -93,6 +93,15 @@ const MARS_MISSIONS: MissionCardData[] = [
     objectCount: 6,
   },
   {
+    id: "mars-viking2",
+    name: "Viking 2",
+    site: "Utopia Planitia",
+    date: "3 September 1976",
+    crew: "NASA / Langley / JPL",
+    hook: "Frost on red rocks — the first seismic listening station on Mars.",
+    objectCount: 6,
+  },
+  {
     id: "mars-pathfinder",
     name: "Mars Pathfinder",
     site: "Ares Vallis",
@@ -120,12 +129,30 @@ const MARS_MISSIONS: MissionCardData[] = [
     objectCount: 6,
   },
   {
+    id: "mars-phoenix",
+    name: "Phoenix",
+    site: "Vastitas Borealis",
+    date: "25 May 2008",
+    crew: "NASA / Univ of Arizona / JPL",
+    hook: "Touching water ice on Mars — digging into arctic permafrost.",
+    objectCount: 6,
+  },
+  {
     id: "mars-curiosity",
     name: "Curiosity (MSL)",
     site: "Gale Crater",
     date: "6 August 2012",
     crew: "NASA / JPL",
     hook: "Sky crane landing. Nuclear-powered. Climbing Mount Sharp.",
+    objectCount: 6,
+  },
+  {
+    id: "mars-insight",
+    name: "InSight",
+    site: "Elysium Planitia",
+    date: "26 November 2018",
+    crew: "NASA / CNES / DLR / JPL",
+    hook: "Listening to 1,300+ marsquakes and peering into the liquid core.",
     objectCount: 6,
   },
   {
@@ -239,19 +266,17 @@ function MissionCard({
   status,
   objectsFound,
   onLaunch,
-  planetTab,
+  isMars,
 }: {
   mission: MissionCardData;
   status: MissionStatus;
   objectsFound: number;
   onLaunch: () => void;
-  planetTab: PlanetTab;
+  isMars: boolean;
 }) {
   const { t } = useTranslation();
   const isLocked = status === "locked";
   const isCompleted = status === "completed";
-  const isMars = planetTab === "mars";
-  const isDeepSpace = planetTab === "deep-space";
 
   return (
     <motion.div
@@ -260,13 +285,11 @@ function MissionCard({
         isLocked
           ? "border-space-700/20 bg-space-900/30 opacity-40"
           : cn(
-              "border-space-700/50 bg-gradient-to-b from-space-800/80 to-space-900/90 backdrop-blur-sm",
-              isMars
-                ? "hover:border-warn/40 hover:shadow-lg hover:shadow-warn/5"
-                : isDeepSpace
-                  ? "hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/10"
-                  : "hover:border-signal/40 hover:shadow-lg hover:shadow-signal/5",
-            ),
+            "border-space-700/50 bg-gradient-to-b from-space-800/80 to-space-900/90 backdrop-blur-sm",
+            isMars
+              ? "hover:border-warn/40 hover:shadow-lg hover:shadow-warn/5"
+              : "hover:border-signal/40 hover:shadow-lg hover:shadow-signal/5",
+          ),
       )}
       whileHover={isLocked ? undefined : { scale: 1.03, y: -4 }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
@@ -277,9 +300,7 @@ function MissionCard({
             "absolute inset-x-0 top-0 h-[2px] opacity-0 transition-opacity duration-300 group-hover:opacity-100",
             isMars
               ? "bg-gradient-to-r from-transparent via-warn to-transparent"
-              : isDeepSpace
-                ? "bg-gradient-to-r from-transparent via-purple-400 to-transparent"
-                : "bg-gradient-to-r from-transparent via-signal to-transparent",
+              : "bg-gradient-to-r from-transparent via-signal to-transparent",
           )}
         />
       )}
@@ -289,24 +310,16 @@ function MissionCard({
           <h3
             className={cn(
               "font-display text-xl font-bold transition-colors",
-              isLocked
-                ? "text-regolith-400"
-                : cn(
-                    "text-regolith-200",
-                    isMars ? "group-hover:text-warn" : "group-hover:text-signal",
-                  ),
+              isLocked ? "text-regolith-400" : cn(
+                "text-regolith-200",
+                isMars ? "group-hover:text-warn" : "group-hover:text-signal",
+              ),
             )}
           >
             {mission.name}
           </h3>
           <p className="mt-0.5 flex items-center gap-1.5 text-sm text-regolith-400">
-            <svg
-              className="h-3 w-3 shrink-0"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
+            <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
@@ -320,24 +333,13 @@ function MissionCard({
 
       <div className="mt-3 flex items-center gap-3 text-[11px] text-regolith-400/70">
         <span className="font-mono">{mission.date}</span>
-        <span
-          className={cn(
-            "h-3 w-px",
-            isMars ? "bg-warn/20" : isDeepSpace ? "bg-purple-500/20" : "bg-signal/20",
-          )}
-        />
+        <span className={cn("h-3 w-px", isMars ? "bg-warn/20" : "bg-signal/20")} />
         <span className="truncate">{mission.crew}</span>
       </div>
 
       <div className="mt-3 flex items-center gap-3">
         <span className="flex items-center gap-1.5 text-[11px] text-regolith-400/70">
-          <svg
-            className="h-3 w-3"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
+          <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <circle cx="11" cy="11" r="8" />
             <path d="M21 21l-4.35-4.35" />
           </svg>
@@ -358,9 +360,7 @@ function MissionCard({
             "mt-4 w-full font-bold tracking-wide focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-space-900 transition-all",
             isMars
               ? "bg-gradient-to-r from-warn to-[#c1440e] text-space-950 hover:shadow-md hover:shadow-warn/20 focus-visible:ring-warn"
-              : isDeepSpace
-                ? "bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:shadow-md hover:shadow-purple-500/20 focus-visible:ring-purple-400"
-                : "bg-gradient-to-r from-signal to-[#e85d20] text-space-950 hover:shadow-md hover:shadow-signal/20 focus-visible:ring-signal",
+              : "bg-gradient-to-r from-signal to-[#e85d20] text-space-950 hover:shadow-md hover:shadow-signal/20 focus-visible:ring-signal",
           )}
         >
           {t("missionSelect.launch")}
@@ -413,7 +413,7 @@ export default function MissionSelectPage() {
       setPlayerName(nameInput.trim() || "Astronaut");
     }
     if (isTouchDevice()) {
-      requestFullscreen().catch(() => {});
+      requestFullscreen().catch(() => { });
     }
     gameAudio.unlock();
     unlockAudio();
@@ -471,17 +471,13 @@ export default function MissionSelectPage() {
       <div
         className={cn(
           "pointer-events-none fixed top-0 right-0 h-[500px] w-[500px] rounded-full blur-[120px] transition-all duration-1000",
-          isMars
-            ? "bg-[#c1440e]/8 translate-x-1/3 -translate-y-1/3"
-            : "bg-signal/5 translate-x-1/3 -translate-y-1/3",
+          isMars ? "bg-[#c1440e]/8 translate-x-1/3 -translate-y-1/3" : "bg-signal/5 translate-x-1/3 -translate-y-1/3",
         )}
       />
       <div
         className={cn(
           "pointer-events-none fixed bottom-0 left-0 h-[400px] w-[400px] rounded-full blur-[100px] transition-all duration-1000",
-          isMars
-            ? "bg-warn/5 -translate-x-1/3 translate-y-1/3"
-            : "bg-[#38BDF8]/4 -translate-x-1/3 translate-y-1/3",
+          isMars ? "bg-warn/5 -translate-x-1/3 translate-y-1/3" : "bg-[#38BDF8]/4 -translate-x-1/3 translate-y-1/3",
         )}
       />
 
@@ -493,13 +489,7 @@ export default function MissionSelectPage() {
             to="/"
             className="inline-flex items-center gap-1.5 rounded-xl border border-space-700/60 bg-space-900/60 px-3.5 py-1.5 text-xs font-semibold text-regolith-300 backdrop-blur-md transition hover:border-signal/50 hover:text-signal hover:bg-space-800/80"
           >
-            <svg
-              className="h-3.5 w-3.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-            >
+            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
             Home
@@ -530,7 +520,9 @@ export default function MissionSelectPage() {
           <h1 className="font-display text-5xl font-black tracking-tight sm:text-6xl md:text-7xl">
             <span className="text-regolith-200">{t("app.title")}</span>
           </h1>
-          <p className="mt-3 text-base text-regolith-400 sm:text-lg">{t("app.tagline")}</p>
+          <p className="mt-3 text-base text-regolith-400 sm:text-lg">
+            {t("app.tagline")}
+          </p>
         </motion.header>
 
         {/* Name input or Welcome bar */}
@@ -579,14 +571,12 @@ export default function MissionSelectPage() {
             <span className="h-4 w-px bg-space-700" />
             <span className="font-mono text-sm text-signal">{totalXp} XP</span>
             <span className="h-4 w-px bg-space-700" />
-            <span
-              className={cn(
-                "font-bold text-sm",
-                getRank() === "Cadet" && "text-regolith-400",
-                getRank() === "Pilot" && "text-warn",
-                getRank() === "Commander" && "text-signal",
-              )}
-            >
+            <span className={cn(
+              "font-bold text-sm",
+              getRank() === "Cadet" && "text-regolith-400",
+              getRank() === "Pilot" && "text-warn",
+              getRank() === "Commander" && "text-signal",
+            )}>
               {getRank()}
             </span>
           </motion.div>
@@ -594,7 +584,7 @@ export default function MissionSelectPage() {
 
         {/* Planet tabs */}
         <motion.div
-          className="mx-auto mt-10 flex flex-wrap items-center justify-center gap-1.5 rounded-2xl border border-space-700/40 bg-space-900/60 p-1.5 backdrop-blur-md"
+          className="mx-auto mt-10 flex items-center gap-1 rounded-2xl border border-space-700/40 bg-space-900/60 p-1.5 backdrop-blur-md"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.25 }}
@@ -602,38 +592,38 @@ export default function MissionSelectPage() {
           <button
             onClick={() => setPlanetTab("moon")}
             className={cn(
-              "flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all duration-300 cursor-pointer",
+              "flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300",
               planetTab === "moon"
                 ? "bg-gradient-to-r from-signal to-[#e85d20] text-space-950 shadow-md shadow-signal/20"
                 : "text-regolith-400 hover:text-regolith-200 hover:bg-space-800/50",
             )}
           >
-            <span className="text-base">🌔</span>
-            {t("missionSelect.moonTab")} ({MOON_MISSIONS.length})
+            <span className="text-base">&#127765;</span>
+            {t("missionSelect.moonTab")}
           </button>
           <button
             onClick={() => setPlanetTab("mars")}
             className={cn(
-              "flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all duration-300 cursor-pointer",
+              "flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300",
               planetTab === "mars"
                 ? "bg-gradient-to-r from-warn to-[#c1440e] text-space-950 shadow-md shadow-warn/20"
                 : "text-regolith-400 hover:text-regolith-200 hover:bg-space-800/50",
             )}
           >
-            <span className="text-base">🔴</span>
-            {t("missionSelect.marsTab")} ({MARS_MISSIONS.length})
+            <span className="text-base">&#127756;</span>
+            {t("missionSelect.marsTab")}
           </button>
           <button
             onClick={() => setPlanetTab("deep-space")}
             className={cn(
-              "flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all duration-300 cursor-pointer",
+              "flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300",
               planetTab === "deep-space"
-                ? "bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-md shadow-purple-500/20"
+                ? "bg-gradient-to-r from-cyan-400 to-sky-500 text-space-950 shadow-md shadow-cyan-400/20"
                 : "text-regolith-400 hover:text-regolith-200 hover:bg-space-800/50",
             )}
           >
-            <span className="text-base">🌌</span>
-            Deep Space & Asteroids ({DEEP_SPACE_MISSIONS.length})
+            <span className="text-base">✨</span>
+            {t("missionSelect.deepSpaceTab", { defaultValue: "Deep Space" })}
           </button>
         </motion.div>
 
@@ -647,21 +637,19 @@ export default function MissionSelectPage() {
           {planetTab === "mars"
             ? t("missionSelect.marsHeading")
             : planetTab === "deep-space"
-              ? "Deep Space Probes & Asteroids"
+              ? t("missionSelect.deepSpaceHeading", { defaultValue: "Deep Space & Asteroid Missions" })
               : t("missionSelect.heading")}
         </motion.h2>
         <p className="mx-auto mt-2 max-w-lg text-center text-sm text-regolith-400/80">
-          {planetTab === "mars"
+          {isMars
             ? "Deploy robotic explorers to the red planet. Scan landers, rovers and instruments left on Martian soil."
-            : planetTab === "deep-space"
-              ? "Track silent voyagers and asteroid touchdowns. Discover probes still traveling away from Earth and telescopes in solar orbit."
-              : "Fly Saturn V rockets to the Moon. Walk the landing sites and scan what the astronauts left behind."}
+            : "Fly Saturn V rockets to the Moon. Walk the landing sites and scan what the astronauts left behind."}
         </p>
 
         {/* Mission grid */}
         <AnimatePresence mode="wait">
           <motion.div
-            key={planetTab}
+            key={isMars ? "mars-grid" : "moon-grid"}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
@@ -684,7 +672,7 @@ export default function MissionSelectPage() {
                     status={status}
                     objectsFound={objectsFound}
                     onLaunch={() => handleLaunch(mission.id)}
-                    planetTab={planetTab}
+                    isMars={isMars}
                   />
                 </motion.div>
               );
@@ -694,7 +682,9 @@ export default function MissionSelectPage() {
 
         {/* Footer */}
         <footer className="mt-auto pt-16 pb-6 text-center">
-          <p className="text-xs text-regolith-400/50">NASA Space Apps Challenge 2026</p>
+          <p className="text-xs text-regolith-400/50">
+            NASA Space Apps Challenge 2026
+          </p>
         </footer>
       </div>
     </div>

@@ -634,12 +634,18 @@ export function getNssdcCatalog(missionId: string, objectId: string): NssdcCatal
   if (direct) return direct;
 
   const isMars = missionId.startsWith("mars");
+  const isDeep = missionId.startsWith("deep-") || missionId.startsWith("deepspace-");
   return {
-    nssdcaId: isMars ? "2020-052A" : "1969-059C",
+    nssdcaId: isMars ? "2020-052A" : isDeep ? "1977-084A" : "1969-059C",
     catalogUrl: "https://nssdc.gsfc.nasa.gov/",
     officialDesignation: `${missionId.toUpperCase()} Heritage Artifact`,
-    archetype: isMars ? "Martian Surface Relic" : "Lunar Surface Relic",
-    funFactKid:
-      "This scientific artifact remains permanently stationed on the alien surface, preserved under vacuum and cosmic rays for future generations.",
+    archetype: isMars
+      ? "Martian Surface Relic"
+      : isDeep
+        ? "Deep Space Interstellar Artifact"
+        : "Lunar Surface Relic",
+    funFactKid: isDeep
+      ? "This spacecraft or probe is preserved in deep space or on a distant asteroid, voyaging eternally through the solar system."
+      : "This scientific artifact remains permanently stationed on the alien surface, preserved under vacuum and cosmic rays for future generations.",
   };
 }

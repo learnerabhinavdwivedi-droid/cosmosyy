@@ -116,6 +116,8 @@ function GameAudioController() {
         if (!isRobotic) gameAudio.startBreathing();
         if (missionSpec?.planet === "mars") {
           gameAudio.startMarsWind();
+        } else if (missionSpec?.planet === "deep-space") {
+          gameAudio.startSpaceDrone();
         } else {
           gameAudio.startLunarHum();
         }
@@ -124,6 +126,7 @@ function GameAudioController() {
         if (!isRobotic) gameAudio.stopBreathing();
         gameAudio.stopLunarHum();
         gameAudio.stopMarsWind();
+        gameAudio.stopSpaceDrone();
       }
 
       if (phase === "explore") {

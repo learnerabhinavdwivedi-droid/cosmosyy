@@ -20,8 +20,13 @@ function narrationPath(missionId: string, phase: GamePhase): string {
 }
 
 function planetFallbackPath(missionId: string, phase: GamePhase): string {
-  const planet = missionId.startsWith("mars-") ? "mars" : "moon";
-  return `/audio/narration/${planet}/${phase}.mp3`;
+  if (missionId.startsWith("mars-")) {
+    return `/audio/narration/mars/${phase}.mp3`;
+  }
+  if (missionId.startsWith("deep-") || missionId.startsWith("deepspace-")) {
+    return `/audio/narration/${phase}.mp3`;
+  }
+  return `/audio/narration/moon/${phase}.mp3`;
 }
 
 function fallbackPath(phase: GamePhase): string {

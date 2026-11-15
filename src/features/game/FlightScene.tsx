@@ -419,6 +419,9 @@ function getTouchdownLabel(mission: MissionSpec | null): string {
   if (mission?.planet === "mars") {
     return mission.name + " Has Landed";
   }
+  if (mission?.planet === "deep-space") {
+    return mission.name + " Trajectory Acquired";
+  }
   const lm = mission?.lm || "LM";
   return lm + " Has Landed";
 }
@@ -441,9 +444,19 @@ const MARS_PHASE_LABELS: Record<string, string> = {
   stepOut: "Deploying Instruments",
 };
 
+const DEEP_SPACE_PHASE_LABELS: Record<string, string> = {
+  flight: "Escape Velocity Launch",
+  coast: "Interplanetary Cruise",
+  orbit: "Proximity Encounter",
+  targetLocked: "Target Trajectory Locked",
+  descent: "Terminal Approach",
+  stepOut: "Deploying Science Instruments",
+};
+
 function getPhaseLabel(phase: string, planet: Planet): string {
-  const labels = planet === "mars" ? MARS_PHASE_LABELS : MOON_PHASE_LABELS;
-  return labels[phase] ?? "";
+  if (planet === "mars") return MARS_PHASE_LABELS[phase] ?? "";
+  if (planet === "deep-space") return DEEP_SPACE_PHASE_LABELS[phase] ?? "";
+  return MOON_PHASE_LABELS[phase] ?? "";
 }
 
 /* ---- 3D ---- */

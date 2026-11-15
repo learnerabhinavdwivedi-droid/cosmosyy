@@ -64,23 +64,23 @@ function StoryCameraRig({
   return null;
 }
 
-/* ─── Lunar & Martian Terrain & Atmosphere (100% Deterministic) ─── */
-function StoryEnvironment({ isMars = false }: { isMars?: boolean }) {
+/* ─── Lunar, Martian & Deep Space Environment (100% Deterministic) ─── */
+function StoryEnvironment({ isMars = false, isDeepSpace = false }: { isMars?: boolean; isDeepSpace?: boolean }) {
   const starsGeo = useMemo(() => {
     const geo = new THREE.BufferGeometry();
-    const count = 600;
+    const count = isDeepSpace ? 900 : 600;
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
       const r = 40 + ((i * 7) % 20);
       const theta = (i * 137.5 * Math.PI) / 180;
       const phi = Math.acos(1 - (2 * (i + 0.5)) / count);
       pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = Math.abs(r * Math.cos(phi)) + 2;
+      pos[i * 3 + 1] = isDeepSpace ? r * Math.cos(phi) : Math.abs(r * Math.cos(phi)) + 2;
       pos[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
     }
     geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     return geo;
-  }, []);
+  }, [isDeepSpace]);
 
   const groundGeo = useMemo(() => {
     const geo = new THREE.PlaneGeometry(28, 28, 48, 48);
@@ -110,26 +110,28 @@ function StoryEnvironment({ isMars = false }: { isMars?: boolean }) {
       {/* Starfield */}
       <points geometry={starsGeo}>
         <pointsMaterial
-          size={0.12}
-          color={isMars ? "#ffedd5" : "#ffffff"}
+          size={isDeepSpace ? 0.16 : 0.12}
+          color={isMars ? "#ffedd5" : isDeepSpace ? "#7dd3fc" : "#ffffff"}
           transparent
-          opacity={isMars ? 0.45 : 0.75}
+          opacity={isMars ? 0.45 : isDeepSpace ? 0.9 : 0.75}
         />
       </points>
 
-      {/* Ground Surface: Red Regolith for Mars, Slate Grey for Moon */}
-      <mesh
-        geometry={groundGeo}
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -0.05, 0]}
-        receiveShadow
-      >
-        <meshStandardMaterial
-          color={isMars ? "#883311" : "#475569"}
-          roughness={0.96}
-          metalness={0.0}
-        />
-      </mesh>
+      {/* Ground Surface: Red Regolith for Mars, Slate Grey for Moon, Void for Deep Space */}
+      {!isDeepSpace && (
+        <mesh
+          geometry={groundGeo}
+          rotation={[-Math.PI / 2, 0, 0]}
+          position={[0, -0.05, 0]}
+          receiveShadow
+        >
+          <meshStandardMaterial
+            color={isMars ? "#883311" : "#475569"}
+            roughness={0.96}
+            metalness={0.0}
+          />
+        </mesh>
+      )}
     </>
   );
 }
@@ -145,13 +147,20 @@ function SolarWindStream({ active }: { active: boolean }) {
     const vels = new Float32Array(count * 3);
 
     for (let i = 0; i < count; i++) {
-      positions[i * 3] = -4 + Math.random() * 8;
-      positions[i * 3 + 1] = 0.5 + Math.random() * 2.0;
-      positions[i * 3 + 2] = 3.5 + Math.random() * 4.0;
+      const s1 = (Math.sin(i * 12.9898 + 78.233) * 43758.5453) % 1;
+      const s2 = (Math.sin((i + 50) * 12.9898 + 78.233) * 43758.5453) % 1;
+      const s3 = (Math.sin((i + 100) * 12.9898 + 78.233) * 43758.5453) % 1;
+      const r1 = Math.abs(s1);
+      const r2 = Math.abs(s2);
+      const r3 = Math.abs(s3);
 
-      vels[i * 3] = (Math.random() - 0.5) * 0.2;
-      vels[i * 3 + 1] = -0.2 - Math.random() * 0.2;
-      vels[i * 3 + 2] = -2.5 - Math.random() * 1.5;
+      positions[i * 3] = -4 + r1 * 8;
+      positions[i * 3 + 1] = 0.5 + r2 * 2.0;
+      positions[i * 3 + 2] = 3.5 + r3 * 4.0;
+
+      vels[i * 3] = (r1 - 0.5) * 0.2;
+      vels[i * 3 + 1] = -0.2 - r2 * 0.2;
+      vels[i * 3 + 2] = -2.5 - r3 * 1.5;
     }
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     return { geo: geometry, velocities: vels };
@@ -174,9 +183,12 @@ function SolarWindStream({ active }: { active: boolean }) {
       let x = pos.getX(i) + (velocities[i * 3] ?? 0) * delta;
 
       if (z < -0.5) {
-        z = 5.0 + Math.random() * 2.0;
-        x = -2.5 + Math.random() * 5.0;
-        y = 0.8 + Math.random() * 1.5;
+        const resetS1 = Math.abs((Math.sin((i + z) * 12.9898 + 78.233) * 43758.5453) % 1);
+        const resetS2 = Math.abs((Math.sin((i + x) * 12.9898 + 78.233) * 43758.5453) % 1);
+        const resetS3 = Math.abs((Math.sin((i + y) * 12.9898 + 78.233) * 43758.5453) % 1);
+        z = 5.0 + resetS1 * 2.0;
+        x = -2.5 + resetS2 * 5.0;
+        y = 0.8 + resetS3 * 1.5;
       }
 
       pos.setXYZ(i, x, y, z);
@@ -205,9 +217,12 @@ function EmbeddedIons({ visible }: { visible: boolean }) {
     const geometry = new THREE.BufferGeometry();
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 0.32;
-      pos[i * 3 + 1] = 0.55 + Math.random() * 1.25;
-      pos[i * 3 + 2] = 0.015 + (Math.random() - 0.5) * 0.01;
+      const p1 = Math.abs((Math.sin(i * 12.9898 + 78.233) * 43758.5453) % 1);
+      const p2 = Math.abs((Math.sin((i + 70) * 12.9898 + 78.233) * 43758.5453) % 1);
+      const p3 = Math.abs((Math.sin((i + 140) * 12.9898 + 78.233) * 43758.5453) % 1);
+      pos[i * 3] = (p1 - 0.5) * 0.32;
+      pos[i * 3 + 1] = 0.55 + p2 * 1.25;
+      pos[i * 3 + 2] = 0.015 + (p3 - 0.5) * 0.01;
     }
     geometry.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     return geometry;
@@ -382,33 +397,51 @@ export function StoryScene({
 }: StorySceneProps) {
   const isMars =
     packet?.environment === "mars-surface" || packet?.missionId.startsWith("mars") || false;
+  const isDeepSpace =
+    packet?.environment === "deep-space" ||
+    packet?.missionId.startsWith("deep-") ||
+    packet?.missionId.startsWith("deepspace-") ||
+    false;
   const isSWC = packet?.id === "swc";
 
   return (
     <Canvas
       gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping }}
       camera={{ fov: 40, near: 0.1, far: 100, position: cameraKeyframe.pos }}
-      style={{ background: isMars ? "#160604" : "#020408" }}
+      style={{
+        background: isMars
+          ? "#160604"
+          : isDeepSpace
+            ? "#010206"
+            : "#020408",
+      }}
     >
       {/* Dynamic Aerospace Lighting */}
-      <ambientLight intensity={isMars ? 0.6 : 0.35} color={isMars ? "#fed7aa" : "#e2e8f0"} />
+      <ambientLight
+        intensity={isMars ? 0.6 : isDeepSpace ? 0.5 : 0.35}
+        color={isMars ? "#fed7aa" : isDeepSpace ? "#bae6fd" : "#e2e8f0"}
+      />
       <directionalLight
         position={[-12, 8, 12]}
         intensity={2.8}
-        color={isMars ? "#ffedd5" : "#fffbeb"}
+        color={isMars ? "#ffedd5" : isDeepSpace ? "#e0f2fe" : "#fffbeb"}
         castShadow
         shadow-mapSize={[1024, 1024]}
       />
       <directionalLight
         position={[10, 4, -8]}
         intensity={0.6}
-        color={isMars ? "#ea580c" : "#60a5fa"}
+        color={isMars ? "#ea580c" : isDeepSpace ? "#38bdf8" : "#60a5fa"}
       />
       <hemisphereLight
-        args={[isMars ? "#f97316" : "#93c5fd", isMars ? "#431407" : "#1e293b", 0.4]}
+        args={[
+          isMars ? "#f97316" : isDeepSpace ? "#38bdf8" : "#93c5fd",
+          isMars ? "#431407" : isDeepSpace ? "#030712" : "#1e293b",
+          0.4,
+        ]}
       />
 
-      <StoryEnvironment isMars={isMars} />
+      <StoryEnvironment isMars={isMars} isDeepSpace={isDeepSpace} />
 
       <Suspense fallback={null}>
         {isSWC ? (
