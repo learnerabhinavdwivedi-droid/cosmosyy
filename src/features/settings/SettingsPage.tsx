@@ -222,7 +222,7 @@ export default function SettingsPage() {
                 </span>
                 <p className="font-display text-lg font-bold text-amber-400 flex items-center gap-2">
                   <Sparkles className="h-4 w-4" />
-                  {rank}
+                  {rank.icon} {rank.name}
                 </p>
               </div>
               <div className="text-right">

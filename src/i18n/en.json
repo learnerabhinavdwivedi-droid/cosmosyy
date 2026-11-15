@@ -132,7 +132,45 @@
   "ranks": {
     "cadet": "Cadet",
     "pilot": "Pilot",
-    "commander": "Commander"
+    "captain": "Captain",
+    "commander": "Commander",
+    "flightDirector": "Flight Director",
+    "missionSpecialist": "Mission Specialist",
+    "chiefScientist": "Chief Scientist",
+    "flightLegend": "Flight Legend",
+    "spacePioneer": "Space Pioneer",
+    "cosmosMaster": "Cosmos Master"
+  },
+  "achievements": {
+    "unlocked": "Achievement Unlocked!",
+    "first_steps": "First Steps",
+    "moon_walker": "Moon Walker",
+    "mars_pioneer": "Mars Pioneer",
+    "mars_conqueror": "Mars Conqueror",
+    "deep_voyager": "Deep Voyager",
+    "full_sweep": "Full Sweep",
+    "relic_hunter": "Relic Hunter",
+    "master_collector": "Master Collector",
+    "completionist": "Completionist",
+    "perfectionist": "Perfectionist",
+    "speed_demon": "Speed Demon",
+    "xp_500": "Rising Star",
+    "xp_2000": "Space Legend",
+    "xp_5000": "Cosmic Master",
+    "combo_king": "Combo King",
+    "flag_bearer": "Flag Bearer"
+  },
+  "gamification": {
+    "rankUp": "Rank Up!",
+    "newRank": "You are now {{rank}}",
+    "combo": "{{count}}x Combo!",
+    "missionTime": "Mission Time",
+    "personalBest": "Personal Best",
+    "gforce": "G-FORCE",
+    "stars": "{{count}} Star(s)",
+    "star1": "Mission Complete",
+    "star2": "All Objects Found",
+    "star3": "Perfect Mission"
   },
   "xp": {
     "land": "+{{amount}} XP — Landed!",

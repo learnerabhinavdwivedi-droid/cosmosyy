@@ -21,8 +21,17 @@ beforeEach(() => {
         },
       },
       totalXp: 0,
+      achievements: [],
+      totalObjectsFound: 0,
     },
-    session: { demoMode: false },
+    session: {
+      demoMode: false,
+      missionStartTime: 0,
+      comboCount: 0,
+      lastScanTime: 0,
+      pendingAchievements: [],
+      pendingRankUp: null,
+    },
   });
 });
 
@@ -120,13 +129,16 @@ describe("useAppStore", () => {
   });
 
   it("computes rank from totalXp", () => {
-    expect(useAppStore.getState().getRank()).toBe("Cadet");
+    expect(useAppStore.getState().getRank().name).toBe("Cadet");
 
     useAppStore.getState().addXp("apollo-11", 100);
-    expect(useAppStore.getState().getRank()).toBe("Pilot");
+    expect(useAppStore.getState().getRank().name).toBe("Pilot");
 
     useAppStore.getState().addXp("apollo-11", 200);
-    expect(useAppStore.getState().getRank()).toBe("Commander");
+    expect(useAppStore.getState().getRank().name).toBe("Captain");
+
+    useAppStore.getState().addXp("apollo-11", 300);
+    expect(useAppStore.getState().getRank().name).toBe("Commander");
   });
 
   it("sets demo mode without persisting", () => {

@@ -7,8 +7,8 @@ import { useAppStore } from "../../../store/useAppStore";
 export function LandingControls() {
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const totalXp = useAppStore((s) => s.progress.totalXp);
-  const getRank = useAppStore((s) => s.getRank);
-  const currentRank = getRank();
+  const rankDef = useAppStore((s) => s.getRank());
+  const currentRank = rankDef.name;
 
   const controls = [
     { key: "W A S D", label: "Walk / Drive", desc: "Move across the surface", freq: 440 },

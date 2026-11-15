@@ -164,33 +164,6 @@ const MARS_MISSIONS: MissionCardData[] = [
     hook: "Searching for ancient life. First Mars helicopter. Sample return.",
     objectCount: 6,
   },
-  {
-    id: "mars-viking2",
-    name: "Viking 2",
-    site: "Utopia Planitia",
-    date: "3 September 1976",
-    crew: "NASA / JPL",
-    hook: "Twin lander that measured Martian weather and detected Utopia frost.",
-    objectCount: 6,
-  },
-  {
-    id: "mars-phoenix",
-    name: "Phoenix",
-    site: "Vastitas Borealis",
-    date: "25 May 2008",
-    crew: "NASA / JPL / Univ. of Arizona",
-    hook: "Touched and vaporized pure water ice beneath the Martian arctic soil.",
-    objectCount: 6,
-  },
-  {
-    id: "mars-insight",
-    name: "InSight",
-    site: "Elysium Planitia",
-    date: "26 November 2018",
-    crew: "NASA / CNES / DLR",
-    hook: "Listened to the heartbeat of Mars — mapped crust, mantle, and molten core.",
-    objectCount: 6,
-  },
 ];
 
 const DEEP_SPACE_MISSIONS: MissionCardData[] = [
@@ -261,10 +234,26 @@ function StatusBadge({ status }: { status: MissionStatus }) {
   );
 }
 
+function StarDisplay({ count, max = 3 }: { count: number; max?: number }) {
+  return (
+    <span className="flex gap-0.5">
+      {Array.from({ length: max }, (_, i) => (
+        <svg key={i} width="14" height="14" viewBox="0 0 24 24" className={i < count ? "text-amber-400" : "text-space-700/60"}>
+          <path
+            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+            fill="currentColor"
+          />
+        </svg>
+      ))}
+    </span>
+  );
+}
+
 function MissionCard({
   mission,
   status,
   objectsFound,
+  stars,
   onLaunch,
   isMars,
   isLaunching = false,
@@ -273,6 +262,7 @@ function MissionCard({
   mission: MissionCardData;
   status: MissionStatus;
   objectsFound: number;
+  stars: number;
   onLaunch: () => void;
   isMars: boolean;
   isLaunching?: boolean;
@@ -342,7 +332,10 @@ function MissionCard({
             {mission.site}
           </p>
         </div>
-        <StatusBadge status={status} />
+        <div className="flex items-center gap-2">
+          {isCompleted && stars > 0 && <StarDisplay count={stars} />}
+          <StatusBadge status={status} />
+        </div>
       </div>
 
       <p className="mt-3 text-xs leading-relaxed text-regolith-400/90">{mission.hook}</p>
@@ -407,6 +400,10 @@ export default function MissionSelectPage() {
   const totalXp = useAppStore((s) => s.progress.totalXp);
   const getRank = useAppStore((s) => s.getRank);
   const startMission = useAppStore((s) => s.startMission);
+  const getOverallStats = useAppStore((s) => s.getOverallStats);
+  const getRankProgress = useAppStore((s) => s.getRankProgress);
+  const getMissionStars = useAppStore((s) => s.getMissionStars);
+  const achievements = useAppStore((s) => s.progress.achievements);
 
   const [searchParams] = useSearchParams();
   const demoParam = searchParams.get("demo");
@@ -614,12 +611,93 @@ export default function MissionSelectPage() {
             <span className="h-4 w-px bg-space-700" />
             <span className={cn(
               "font-bold text-sm",
-              getRank() === "Cadet" && "text-regolith-400",
-              getRank() === "Pilot" && "text-warn",
-              getRank() === "Commander" && "text-signal",
+              getRank().minXp < 100 && "text-regolith-400",
+              getRank().minXp >= 100 && getRank().minXp < 600 && "text-warn",
+              getRank().minXp >= 600 && "text-signal",
             )}>
-              {getRank()}
+              {getRank().icon} {getRank().name}
             </span>
+          </motion.div>
+        )}
+
+        {/* Progress Dashboard */}
+        {playerName && (
+          <motion.div
+            className="mx-auto mt-6 w-full max-w-3xl"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <div className="rounded-2xl border border-space-700/40 bg-space-900/60 p-5 backdrop-blur-md">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {/* Completion Ring */}
+                <div className="flex flex-col items-center gap-1">
+                  <div className="relative h-16 w-16">
+                    <svg viewBox="0 0 36 36" className="h-16 w-16 -rotate-90">
+                      <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--space-700)" strokeWidth="2.5" />
+                      <circle
+                        cx="18" cy="18" r="15.5" fill="none"
+                        stroke="var(--signal-500)"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeDasharray={`${getOverallStats().completionPct * 0.974} 97.4`}
+                        className="transition-all duration-1000"
+                      />
+                    </svg>
+                    <span className="absolute inset-0 flex items-center justify-center font-mono text-sm font-bold text-signal">
+                      {getOverallStats().completionPct}%
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-regolith-400">Complete</span>
+                </div>
+
+                {/* Missions */}
+                <div className="flex flex-col items-center justify-center gap-1">
+                  <p className="font-mono text-2xl font-bold text-regolith-200">
+                    {getOverallStats().missionsCompleted}<span className="text-regolith-400/60 text-base">/{getOverallStats().totalMissions}</span>
+                  </p>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-regolith-400">Missions</span>
+                </div>
+
+                {/* Objects Found */}
+                <div className="flex flex-col items-center justify-center gap-1">
+                  <p className="font-mono text-2xl font-bold text-regolith-200">
+                    {getOverallStats().objectsFound}<span className="text-regolith-400/60 text-base">/{getOverallStats().totalObjects}</span>
+                  </p>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-regolith-400">Relics Found</span>
+                </div>
+
+                {/* Achievements */}
+                <div className="flex flex-col items-center justify-center gap-1">
+                  <p className="font-mono text-2xl font-bold text-amber-400">
+                    {achievements.length}<span className="text-regolith-400/60 text-base">/16</span>
+                  </p>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-regolith-400">Badges</span>
+                </div>
+              </div>
+
+              {/* Rank progress bar */}
+              <div className="mt-4 pt-3 border-t border-space-700/30">
+                <div className="flex items-center justify-between text-[11px] mb-1.5">
+                  <span className="font-bold text-regolith-200">
+                    {getRankProgress().current.icon} {getRankProgress().current.name}
+                  </span>
+                  {getRankProgress().next && (
+                    <span className="text-regolith-400">
+                      Next: {getRankProgress().next!.icon} {getRankProgress().next!.name} ({getRankProgress().next!.minXp} XP)
+                    </span>
+                  )}
+                </div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-space-800">
+                  <motion.div
+                    className="h-full bg-gradient-to-r from-signal via-warn to-amber-400"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.max(4, getRankProgress().progressPct * 100)}%` }}
+                    transition={{ duration: 1.2, ease: "easeOut" }}
+                  />
+                </div>
+              </div>
+            </div>
           </motion.div>
         )}
 
@@ -746,6 +824,7 @@ export default function MissionSelectPage() {
               const progress = missions[mission.id];
               const status: MissionStatus = progress?.status ?? "available";
               const objectsFound = progress?.objectsFound?.length ?? 0;
+              const stars = getMissionStars(mission.id, mission.objectCount);
               return (
                 <motion.div
                   key={mission.id}
@@ -757,6 +836,7 @@ export default function MissionSelectPage() {
                     mission={mission}
                     status={status}
                     objectsFound={objectsFound}
+                    stars={stars}
                     onLaunch={() => handleLaunch(mission.id)}
                     isMars={isMars}
                     isLaunching={launchingId === mission.id}

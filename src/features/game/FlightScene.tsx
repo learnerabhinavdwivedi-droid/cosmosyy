@@ -1,4 +1,5 @@
 import { useRef, useEffect, useMemo, useState, useCallback, Suspense, type RefObject } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { Stars, useGLTF, Preload } from "@react-three/drei";
@@ -1739,6 +1740,71 @@ function FlightContent({ cutVeilRef }: { cutVeilRef: RefObject<HTMLDivElement | 
   );
 }
 
+/* ---- G-Force Gauge ---- */
+
+const GFORCE_BY_PHASE: Record<string, { g: number; jitter: number }> = {
+  flight: { g: 3.2, jitter: 0.3 },
+  coast: { g: 0.0, jitter: 0.01 },
+  orbit: { g: 0.05, jitter: 0.02 },
+  targetLocked: { g: 0.8, jitter: 0.1 },
+  descent: { g: 1.6, jitter: 0.4 },
+  touchdown: { g: 2.8, jitter: 0.8 },
+  stepOut: { g: 0.16, jitter: 0.01 },
+};
+
+function GForceGauge({ phase, planet }: { phase: string; planet: string }) {
+  const [displayG, setDisplayG] = useState(0);
+  const targetRef = useRef(0);
+
+  useEffect(() => {
+    const cfg = GFORCE_BY_PHASE[phase] ?? { g: 1.0, jitter: 0.1 };
+    let surfaceG = planet === "mars" ? 0.38 : planet === "moon" ? 0.16 : 1.0;
+    if (phase === "stepOut") surfaceG = planet === "mars" ? 0.38 : 0.16;
+    targetRef.current = phase === "stepOut" ? surfaceG : cfg.g;
+    const jitter = cfg.jitter;
+
+    let raf: number;
+    let prev = performance.now();
+    const tick = (now: number) => {
+      const dt = Math.min((now - prev) / 1000, 0.1);
+      prev = now;
+      setDisplayG((cur) => {
+        const target = targetRef.current + (Math.sin(now * 0.005) * jitter);
+        const lerped = cur + (target - cur) * Math.min(dt * 3, 1);
+        return Math.max(0, Math.round(lerped * 100) / 100);
+      });
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [phase, planet]);
+
+  const barPct = Math.min((displayG / 4) * 100, 100);
+  const color =
+    displayG < 0.5 ? "text-cyan-400" : displayG < 2 ? "text-signal" : displayG < 3 ? "text-amber-400" : "text-red-400";
+  const barColor =
+    displayG < 0.5 ? "bg-cyan-400" : displayG < 2 ? "bg-signal" : displayG < 3 ? "bg-amber-400" : "bg-red-400";
+
+  return (
+    <div className="absolute bottom-20 left-3 sm:left-4 flex items-end gap-2">
+      <div className="flex flex-col items-center gap-1">
+        <div className="h-16 w-2 rounded-full bg-space-800/80 overflow-hidden flex flex-col-reverse">
+          <div
+            className={`w-full rounded-full transition-all duration-300 ${barColor}`}
+            style={{ height: `${barPct}%` }}
+          />
+        </div>
+        <span className={`font-mono text-[10px] font-bold ${color}`}>
+          {displayG.toFixed(1)}G
+        </span>
+      </div>
+      <span className="text-[8px] sm:text-[9px] font-mono text-regolith-500 tracking-wider mb-0.5">
+        G-FORCE
+      </span>
+    </div>
+  );
+}
+
 /* ---- HUD ---- */
 
 function FlightHUD({ onSkip }: { onSkip: () => void }) {
@@ -1903,6 +1969,9 @@ function FlightHUD({ onSkip }: { onSkip: () => void }) {
         </div>
       </div>
 
+      {/* G-force indicator */}
+      <GForceGauge phase={phase} planet={planet} />
+
       {/* Narration subtitle */}
       <div className="mt-auto px-3 sm:px-4 pb-4 sm:pb-6">
         <div className="mx-auto max-w-2xl rounded-lg bg-space-950/85 px-4 py-3 sm:px-6 sm:py-4 backdrop-blur">
@@ -1936,6 +2005,84 @@ function getGates(
       labelKey: isRobotic ? "flight.deployInstruments" : "flight.openHatch",
     },
   };
+}
+
+function CountdownOverlay() {
+  const phase = useGameStore((s) => s.phase);
+  const [count, setCount] = useState<number | string | null>(null);
+
+  useEffect(() => {
+    if (phase !== "flight") return;
+    setCount(3);
+    const t2 = setTimeout(() => setCount(2), 800);
+    const t1 = setTimeout(() => setCount(1), 1600);
+    const tLaunch = setTimeout(() => setCount("LAUNCH"), 2400);
+    const tHide = setTimeout(() => setCount(null), 3400);
+    return () => {
+      clearTimeout(t2);
+      clearTimeout(t1);
+      clearTimeout(tLaunch);
+      clearTimeout(tHide);
+    };
+  }, [phase]);
+
+  if (count === null) return null;
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={String(count)}
+          initial={{ opacity: 0, scale: 2.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+          className={`font-display font-black tracking-wider ${
+            typeof count === "number"
+              ? "text-7xl sm:text-9xl text-regolith-200 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+              : "text-5xl sm:text-7xl text-signal drop-shadow-[0_0_40px_rgba(255,107,44,0.5)]"
+          }`}
+        >
+          {count}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function ScreenShake() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const phase = useGameStore((s) => s.phase);
+  const [shaking, setShaking] = useState(false);
+
+  useEffect(() => {
+    if (phase === "flight" || phase === "touchdown") {
+      setShaking(true);
+      const dur = phase === "flight" ? 3000 : 1500;
+      const timer = setTimeout(() => setShaking(false), dur);
+      return () => clearTimeout(timer);
+    }
+    setShaking(false);
+  }, [phase]);
+
+  useEffect(() => {
+    if (!shaking || !containerRef.current) return;
+    let raf: number;
+    const el = containerRef.current;
+    const tick = () => {
+      const x = (Math.sin(Date.now() * 0.04) * 2 + Math.cos(Date.now() * 0.07) * 1.5).toFixed(1);
+      const y = (Math.cos(Date.now() * 0.05) * 1.5 + Math.sin(Date.now() * 0.09) * 1).toFixed(1);
+      el.style.transform = `translate(${x}px, ${y}px)`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      el.style.transform = "";
+    };
+  }, [shaking]);
+
+  return <div ref={containerRef} className="absolute inset-0" />;
 }
 
 export function FlightScene() {
@@ -2038,6 +2185,8 @@ export function FlightScene() {
           backgroundColor: isMars ? "#160a04" : "#000000",
         }}
       />
+      <ScreenShake />
+      <CountdownOverlay />
       <FlightHUD onSkip={handleSkip} />
       {gate && (
         <div className="absolute inset-x-0 bottom-20 sm:bottom-24 z-20 flex justify-center px-4">

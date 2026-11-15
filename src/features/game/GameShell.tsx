@@ -248,6 +248,7 @@ function LandscapeNudge() {
 }
 
 import { preloadGameAssets } from "@/lib/assetPreload";
+import { GameToasts } from "@/components/GameToasts";
 
 type SceneGroup = "select" | "flight" | "surface" | "launch" | "report";
 
@@ -402,6 +403,7 @@ export default function GameShell() {
         }`}
       />
       <GameAudioController />
+      <GameToasts />
       <LandscapeNudge />
       {isDemo && (
         <div className="pointer-events-none fixed left-4 bottom-40 sm:bottom-4 z-[60] rounded-full bg-warn/20 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-warn backdrop-blur">
