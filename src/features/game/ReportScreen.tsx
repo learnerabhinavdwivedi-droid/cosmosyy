@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
@@ -7,7 +7,6 @@ import {
   useAppStore,
   getNextMissionId,
   ACHIEVEMENT_DEFS,
-  type RankDef,
 } from "@/store/useAppStore";
 import { Button } from "@/components/ui/button";
 import { getMission } from "@/lib/missionData";
