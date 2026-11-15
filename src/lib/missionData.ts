@@ -13,8 +13,12 @@ import marsPerseverance from "../../content/missions/mars-perseverance.json";
 import marsViking2 from "../../content/missions/mars-viking2.json";
 import marsPhoenix from "../../content/missions/mars-phoenix.json";
 import marsInsight from "../../content/missions/mars-insight.json";
+import deepspaceNearShoemaker from "../../content/missions/deepspace-near-shoemaker.json";
+import deepspaceDawn from "../../content/missions/deepspace-dawn.json";
+import deepspacePioneer from "../../content/missions/deepspace-pioneer.json";
+import deepspaceKepler from "../../content/missions/deepspace-kepler.json";
 
-export type Planet = "moon" | "mars";
+export type Planet = "moon" | "mars" | "deep-space";
 
 export interface MissionCrew {
   commander: string;
@@ -84,6 +88,10 @@ const RAW: Record<string, unknown> = {
   "mars-viking2": marsViking2,
   "mars-phoenix": marsPhoenix,
   "mars-insight": marsInsight,
+  "deepspace-near-shoemaker": deepspaceNearShoemaker,
+  "deepspace-dawn": deepspaceDawn,
+  "deepspace-pioneer": deepspacePioneer,
+  "deepspace-kepler": deepspaceKepler,
 };
 
 function parse(raw: unknown): MissionSpec {

@@ -76,6 +76,33 @@ import {
   RoverWheelTracks3D,
 } from "./MarsArtifacts";
 
+import {
+  NearBus3D,
+  NearSolarArray3D,
+  NearMsiCamera3D,
+  NearXgrs3D,
+  NearLaserAltimeter3D,
+  NearErosRegolith3D,
+  DawnBus3D,
+  DawnIonEngine3D,
+  DawnSolarWings3D,
+  DawnFramingCamera3D,
+  DawnVirSpectrometer3D,
+  DawnCeresBrightSpots3D,
+  PioneerDish3D,
+  PioneerRtgBooms3D,
+  PioneerPlaque3D,
+  PioneerPlasmaAnalyzer3D,
+  PioneerMagnetometerBoom3D,
+  PioneerInterstellarDust3D,
+  KeplerPhotometer3D,
+  KeplerSolarHood3D,
+  KeplerReactionWheels3D,
+  KeplerSolarArray3D,
+  KeplerLgaDish3D,
+  KeplerGoldFoilBody3D,
+} from "./missions/deepSpace";
+
 export interface Heritage3DProps {
   missionId: string;
   objectId: string;
@@ -184,6 +211,38 @@ export function getDedicated3DComponent(
   if (objectId === "insight-ultraflex") return InSightUltraFlexArrays3D;
   if (objectId === "insight-idc-arm") return InSightIDCArm3D;
   if (objectId === "insight-twins") return InSightTWINS3D;
+
+  // NEAR Shoemaker
+  if (objectId === "near-bus") return NearBus3D;
+  if (objectId === "near-solar-array") return NearSolarArray3D;
+  if (objectId === "near-msi-camera") return NearMsiCamera3D;
+  if (objectId === "near-xgrs") return NearXgrs3D;
+  if (objectId === "near-laser-altimeter") return NearLaserAltimeter3D;
+  if (objectId === "near-eros-regolith") return NearErosRegolith3D;
+
+  // Dawn
+  if (objectId === "dawn-bus") return DawnBus3D;
+  if (objectId === "dawn-ion-engine") return DawnIonEngine3D;
+  if (objectId === "dawn-solar-wings") return DawnSolarWings3D;
+  if (objectId === "dawn-framing-camera") return DawnFramingCamera3D;
+  if (objectId === "dawn-vir-spectrometer") return DawnVirSpectrometer3D;
+  if (objectId === "dawn-ceres-bright-spots") return DawnCeresBrightSpots3D;
+
+  // Pioneer 10 & 11
+  if (objectId === "pioneer-dish") return PioneerDish3D;
+  if (objectId === "pioneer-rtg-booms") return PioneerRtgBooms3D;
+  if (objectId === "pioneer-plaque") return PioneerPlaque3D;
+  if (objectId === "pioneer-plasma-analyzer") return PioneerPlasmaAnalyzer3D;
+  if (objectId === "pioneer-magnetometer-boom") return PioneerMagnetometerBoom3D;
+  if (objectId === "pioneer-interstellar-dust") return PioneerInterstellarDust3D;
+
+  // Kepler Space Telescope
+  if (objectId === "kepler-photometer") return KeplerPhotometer3D;
+  if (objectId === "kepler-solar-hood") return KeplerSolarHood3D;
+  if (objectId === "kepler-reaction-wheels") return KeplerReactionWheels3D;
+  if (objectId === "kepler-solar-array") return KeplerSolarArray3D;
+  if (objectId === "kepler-lga-dish") return KeplerLgaDish3D;
+  if (objectId === "kepler-gold-foil-body") return KeplerGoldFoilBody3D;
 
   return null;
 }

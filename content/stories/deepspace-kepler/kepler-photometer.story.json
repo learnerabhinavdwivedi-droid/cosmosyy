@@ -1,0 +1,211 @@
+{
+  "id": "kepler-photometer",
+  "missionId": "deepspace-kepler",
+  "name": "0.95-Meter Schmidt Photometer",
+  "kind": "memorial",
+  "environment": "deep-space",
+  "fate": "left-on-surface",
+  "year": 2009,
+  "nssdcaId": "PIA11800",
+  "model": {
+    "glb": null,
+    "procedural": "kepler-photometer",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "0.95-Meter Schmidt Photometer was deployed at Earth-Trailing Heliocentric Orbit during Kepler Space Telescope in 2009.",
+      "source": "NASA Ames Research Center / Ball Aerospace",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "0.95-meter aperture Schmidt telescope with a 1.4-meter primary mirror focusing light onto a curved focal plane array of 42 CCDs totaling 95 megapixels.",
+      "source": "NASA Ames Research Center / Ball Aerospace",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the lunar environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "Measured the ultra-tiny dip in starlight (down to 10 parts per million) caused by an exoplanet transiting in front of its host star.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Remains preserved in the arid regolith at Earth-Trailing Heliocentric Orbit.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "The most prolific planet-finding instrument ever constructed in human history.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am 0.95-Meter Schmidt Photometer. I arrived here at Earth-Trailing Heliocentric Orbit in 2009.",
+      "explorer": "0.95-Meter Schmidt Photometer, Kepler Space Telescope: deployed at Earth-Trailing Heliocentric Orbit in 2009.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "0.95-meter aperture Schmidt telescope with a 1.4-meter primary mirror focusing light onto a curved focal plane array of 42 CCDs totaling 95 megapixels.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "Measured the ultra-tiny dip in starlight (down to 10 parts per million) caused by an exoplanet transiting in front of its host star.",
+      "explorer": "Measured the ultra-tiny dip in starlight (down to 10 parts per million) caused by an exoplanet transiting in front of its host star.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
+      "explorer": "Fate: left on surface. Position recorded at coordinates [0, 0].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "The most prolific planet-finding instrument ever constructed in human history.",
+      "explorer": "The most prolific planet-finding instrument ever constructed in human history.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}

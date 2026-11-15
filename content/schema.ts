@@ -35,7 +35,7 @@ export type MissionTimeline = z.infer<typeof MissionTimelineSchema>;
 
 export const MissionSpecSchema = z.object({
   id: z.string().min(1),
-  planet: z.enum(["moon", "mars"]).optional(),
+  planet: z.enum(["moon", "mars", "deep-space"]).optional(),
   name: z.string().min(1),
   site: z.string().min(1),
   date: z.string().min(1),

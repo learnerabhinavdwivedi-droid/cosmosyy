@@ -29,7 +29,7 @@ describe("storySchema", () => {
 
   it("registry loads all Object Story Packets across all missions", () => {
     const all = getAllStoryPackets();
-    expect(all.length).toBeGreaterThanOrEqual(91);
+    expect(all.length).toBeGreaterThanOrEqual(115);
 
     for (const packet of all) {
       expect(packet.scenes.length).toBeGreaterThanOrEqual(5);

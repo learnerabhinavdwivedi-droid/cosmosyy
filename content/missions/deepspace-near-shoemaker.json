@@ -1,0 +1,122 @@
+{
+  "id": "deepspace-near-shoemaker",
+  "planet": "deep-space",
+  "name": "NEAR Shoemaker",
+  "site": "433 Eros — Himeros Region",
+  "date": "12 February 2001",
+  "evaSunTime": "2001-02-12T20:01:52Z",
+  "crew": {
+    "commander": "Robert Farquhar (Flight Director)",
+    "lmp": "Joseph Veverka (Lead Scientist)",
+    "cmp": "JHU / APL Flight Operations"
+  },
+  "missionType": "robotic",
+  "operator": "NASA / JHU APL",
+  "lm": "NEAR Shoemaker Spacecraft",
+  "cm": "Delta II 7925-8",
+  "landing": {
+    "lat": -35.4,
+    "lon": 279.9,
+    "label": "Himeros Depression, 433 Eros"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null,
+    "metersPerUnit": 1.0,
+    "note": "Microgravity undulating asteroid surface with boulder scree and electrostatic dust ponds"
+  },
+  "keyDiscovery": "First spacecraft to orbit and softly touch down upon an asteroid, returning 160,000 images and discovering micro-impact regolith sorting.",
+  "missionLegacy": "Proved that low-cost robotic craft could navigate and soft-land in irregular microgravity, founding modern asteroid deflection and planetary defense.",
+  "objects": [
+    {
+      "id": "near-bus",
+      "name": "NEAR Spacecraft Bus",
+      "position": [0, 0, 0],
+      "description": "Octagonal aluminum and honeycomb composite bus containing hydrazine propellant tanks and 450 N LEROS bipropellant apogee thruster.",
+      "xp": 80,
+      "source": "NASA NSSDC Master Catalog / JHU APL",
+      "scienceDiscovery": "Executed a flawless 1.9 m/s controlled descent touchdown onto an uncharted asteroid surface without specialized landing legs.",
+      "legacy": "Humanity's first robotic footprint resting permanently upon an asteroid.",
+      "status": "dormant",
+      "firstPerson": "I am NEAR Shoemaker. After mapping 433 Eros for a year, I descended gently at walking speed to rest upon this primordial space rock.",
+      "yearDeployed": 2001,
+      "yearLastContact": 2001,
+      "nasaImageId": "PIA03175"
+    },
+    {
+      "id": "near-solar-array",
+      "name": "GaAs Solar Array Wings",
+      "position": [-3.2, 0.4, 1.8],
+      "description": "Four 1.8 x 1.2 m fixed gallium arsenide solar panel wings producing 1,800 W at 1.0 AU, canted to capture oblique solar rays.",
+      "xp": 60,
+      "source": "NASA JHU APL Technical Report",
+      "scienceDiscovery": "Maintained continuous electrical bus voltage during surface contact despite extreme low Sun elevation angles.",
+      "legacy": "Pioneered durable gallium arsenide photovoltaic cells for deep-space missions beyond Earth orbit.",
+      "status": "dormant",
+      "firstPerson": "My four solar wings kept me alive millions of kilometers from Earth, soaking in the sunlight of the asteroid belt.",
+      "yearDeployed": 2001,
+      "yearLastContact": 2001,
+      "nasaImageId": "PIA03176"
+    },
+    {
+      "id": "near-msi-camera",
+      "name": "Multispectral Imager (MSI)",
+      "position": [2.4, 0.3, -2.1],
+      "description": "Seven-color framing CCD camera with refractive telephoto optics capable of resolving surface features down to millimeters during descent.",
+      "xp": 70,
+      "source": "NASA Planetary Data System (PDS)",
+      "scienceDiscovery": "Returned the highest-resolution images ever taken of an asteroid, showing shattered rock fragments and smooth dust ponds.",
+      "legacy": "Provided ground-truth optical characterization of an S-type near-Earth asteroid.",
+      "status": "dormant",
+      "firstPerson": "My eyes captured 160,000 photographs of Eros, snapping my final close-up just 120 meters above the boulders.",
+      "yearDeployed": 2001,
+      "yearLastContact": 2001,
+      "nasaImageId": "PIA03177"
+    },
+    {
+      "id": "near-xgrs",
+      "name": "X-Ray / Gamma-Ray Spectrometer (XGRS)",
+      "position": [1.9, 0.5, 3.1],
+      "description": "NaI(Tl) scintillation detector and gas proportional counters measuring cosmic-ray-induced fluorescent elemental emissions.",
+      "xp": 75,
+      "source": "NASA Science Mission Directorate",
+      "scienceDiscovery": "Confirmed Eros is an undifferentiated primitive ordinary chondrite, fundamentally identical to meteorites found on Earth.",
+      "legacy": "Settled the decades-long scientific dispute connecting S-type asteroids to ordinary chondritic meteorites.",
+      "status": "dormant",
+      "firstPerson": "While resting directly on the ground, my gamma-ray sensors sniffed out magnesium, silicon, and iron in the pristine asteroid soil.",
+      "yearDeployed": 2001,
+      "yearLastContact": 2001,
+      "nasaImageId": "PIA03178"
+    },
+    {
+      "id": "near-laser-altimeter",
+      "name": "NEAR Laser Rangefinder (NLR)",
+      "position": [-2.1, 0.2, -2.8],
+      "description": "Diode-pumped Nd:YAG pulsed laser transmitter firing 1,064 nm beams at 8 Hz with a 3.5-inch gold-coated receiver telescope.",
+      "xp": 65,
+      "source": "NASA Goddard Space Flight Center",
+      "scienceDiscovery": "Mapped over 11 million laser ranging points to create the first complete 3D global topography model of an asteroid.",
+      "legacy": "Set the precedent for all future asteroid shape modeling, including OSIRIS-REx and Hayabusa2.",
+      "status": "dormant",
+      "firstPerson": "I pulsed green-infrared laser light across canyons and craters to chart every hill and valley on Eros.",
+      "yearDeployed": 2001,
+      "yearLastContact": 2001,
+      "nasaImageId": "PIA03179"
+    },
+    {
+      "id": "near-eros-regolith",
+      "name": "Eros Regolith Boulder Field",
+      "position": [-0.8, -0.2, 4.2],
+      "description": "Pristine rubble-strewn asteroid terrain composed of ancient chondritic breccia, shattered ejecta blocks, and smooth flat dust ponds.",
+      "xp": 50,
+      "source": "Cornell University Planetary Imaging Group",
+      "scienceDiscovery": "Revealed electrostatic levitation of ultra-fine dust grains into low depressions without atmosphere or liquid flow.",
+      "legacy": "Uncovered electrostatic dust transport mechanisms now observed across airless worlds.",
+      "status": "defunct",
+      "firstPerson": "We are the primordial boulders of Eros, undisturbed since the formation of the Solar System 4.5 billion years ago.",
+      "yearDeployed": 2001,
+      "yearLastContact": 2001,
+      "nasaImageId": "PIA03180"
+    }
+  ]
+}

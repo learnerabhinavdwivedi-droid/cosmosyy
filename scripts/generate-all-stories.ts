@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { StoryPacketSchema, type StoryPacket } from "../src/features/story/storySchema";
+import { StoryPacketSchema, type StoryPacket } from "../src/features/story/storyTypes";
 
 interface MissionObject {
   id: string;
@@ -21,7 +21,7 @@ interface MissionFile {
   name: string;
   site: string;
   date: string;
-  planet?: "moon" | "mars";
+  planet?: "moon" | "mars" | "deep-space";
   objects: MissionObject[];
 }
 
@@ -54,8 +54,9 @@ function getObjectFate(status?: string, id?: string): string {
 }
 
 function buildStoryPacket(mission: MissionFile, obj: MissionObject): StoryPacket {
+  const isDeepSpace = mission.planet === "deep-space" || mission.id.startsWith("deepspace");
   const isMars = mission.planet === "mars" || mission.id.startsWith("mars");
-  const env = isMars ? "mars-surface" : "moon-surface";
+  const env = isDeepSpace ? "deep-space" : isMars ? "mars-surface" : "moon-surface";
   const year = obj.yearDeployed || parseInt(mission.date.slice(0, 4), 10) || (isMars ? 2000 : 1969);
   const kind = getObjectKind(obj.id, obj.name);
   const fate = getObjectFate(obj.status, obj.id);

@@ -13,7 +13,7 @@ import { isTouchDevice } from "@/lib/useMobile";
 import { requestFullscreen } from "@/lib/fullscreen";
 import type { MissionStatus } from "@/store/useAppStore";
 
-type PlanetTab = "moon" | "mars";
+type PlanetTab = "moon" | "mars" | "deep-space";
 
 interface MissionCardData {
   id: string;
@@ -166,6 +166,45 @@ const MARS_MISSIONS: MissionCardData[] = [
   },
 ];
 
+const DEEPSPACE_MISSIONS: MissionCardData[] = [
+  {
+    id: "deepspace-near-shoemaker",
+    name: "NEAR Shoemaker",
+    site: "433 Eros — Himeros Region",
+    date: "12 February 2001",
+    crew: "NASA / JHU APL",
+    hook: "First spacecraft to orbit and softly land upon an asteroid.",
+    objectCount: 6,
+  },
+  {
+    id: "deepspace-dawn",
+    name: "Dawn",
+    site: "Ceres & Vesta",
+    date: "27 September 2007",
+    crew: "NASA / JPL",
+    hook: "Ion propulsion pioneer. In perpetual quarantine orbit around dwarf planet Ceres.",
+    objectCount: 6,
+  },
+  {
+    id: "deepspace-pioneer",
+    name: "Pioneer 10 & 11",
+    site: "Interstellar Trajectory",
+    date: "2 March 1972",
+    crew: "NASA Ames",
+    hook: "Carrying the Carl Sagan Golden Plaques out of the Solar System into the stars.",
+    objectCount: 6,
+  },
+  {
+    id: "deepspace-kepler",
+    name: "Kepler Space Telescope",
+    site: "Earth-Trailing Orbit",
+    date: "7 March 2009",
+    crew: "NASA Ames / Ball Aerospace",
+    hook: "Revolutionary observatory that discovered 2,600+ alien exoplanets.",
+    objectCount: 6,
+  },
+];
+
 function StatusBadge({ status }: { status: MissionStatus }) {
   const { t } = useTranslation();
   return (
@@ -191,17 +230,19 @@ function MissionCard({
   status,
   objectsFound,
   onLaunch,
-  isMars,
+  planetTab,
 }: {
   mission: MissionCardData;
   status: MissionStatus;
   objectsFound: number;
   onLaunch: () => void;
-  isMars: boolean;
+  planetTab: PlanetTab;
 }) {
   const { t } = useTranslation();
   const isLocked = status === "locked";
   const isCompleted = status === "completed";
+  const isMars = planetTab === "mars";
+  const isDeepSpace = planetTab === "deep-space";
 
   return (
     <motion.div
@@ -211,9 +252,11 @@ function MissionCard({
           ? "border-space-700/20 bg-space-900/30 opacity-40"
           : cn(
               "border-space-700/50 bg-gradient-to-b from-space-800/80 to-space-900/90 backdrop-blur-sm",
-              isMars
-                ? "hover:border-warn/40 hover:shadow-lg hover:shadow-warn/5"
-                : "hover:border-signal/40 hover:shadow-lg hover:shadow-signal/5",
+              isDeepSpace
+                ? "hover:border-cyan-400/40 hover:shadow-lg hover:shadow-cyan-400/10"
+                : isMars
+                  ? "hover:border-warn/40 hover:shadow-lg hover:shadow-warn/5"
+                  : "hover:border-signal/40 hover:shadow-lg hover:shadow-signal/5",
             ),
       )}
       whileHover={isLocked ? undefined : { scale: 1.03, y: -4 }}
@@ -223,9 +266,11 @@ function MissionCard({
         <div
           className={cn(
             "absolute inset-x-0 top-0 h-[2px] opacity-0 transition-opacity duration-300 group-hover:opacity-100",
-            isMars
-              ? "bg-gradient-to-r from-transparent via-warn to-transparent"
-              : "bg-gradient-to-r from-transparent via-signal to-transparent",
+            isDeepSpace
+              ? "bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+              : isMars
+                ? "bg-gradient-to-r from-transparent via-warn to-transparent"
+                : "bg-gradient-to-r from-transparent via-signal to-transparent",
           )}
         />
       )}
@@ -235,10 +280,16 @@ function MissionCard({
           <h3
             className={cn(
               "font-display text-xl font-bold transition-colors",
-              isLocked ? "text-regolith-400" : cn(
-                "text-regolith-200",
-                isMars ? "group-hover:text-warn" : "group-hover:text-signal",
-              ),
+              isLocked
+                ? "text-regolith-400"
+                : cn(
+                    "text-regolith-200",
+                    isDeepSpace
+                      ? "group-hover:text-cyan-300"
+                      : isMars
+                        ? "group-hover:text-warn"
+                        : "group-hover:text-signal",
+                  ),
             )}
           >
             {mission.name}
@@ -258,7 +309,12 @@ function MissionCard({
 
       <div className="mt-3 flex items-center gap-3 text-[11px] text-regolith-400/70">
         <span className="font-mono">{mission.date}</span>
-        <span className={cn("h-3 w-px", isMars ? "bg-warn/20" : "bg-signal/20")} />
+        <span
+          className={cn(
+            "h-3 w-px",
+            isDeepSpace ? "bg-cyan-400/20" : isMars ? "bg-warn/20" : "bg-signal/20",
+          )}
+        />
         <span className="truncate">{mission.crew}</span>
       </div>
 
@@ -283,9 +339,11 @@ function MissionCard({
           aria-label={`Launch ${mission.name} mission to ${mission.site}`}
           className={cn(
             "mt-4 w-full font-bold tracking-wide focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-space-900 transition-all",
-            isMars
-              ? "bg-gradient-to-r from-warn to-[#c1440e] text-space-950 hover:shadow-md hover:shadow-warn/20 focus-visible:ring-warn"
-              : "bg-gradient-to-r from-signal to-[#e85d20] text-space-950 hover:shadow-md hover:shadow-signal/20 focus-visible:ring-signal",
+            isDeepSpace
+              ? "bg-gradient-to-r from-cyan-400 to-blue-600 text-space-950 hover:shadow-md hover:shadow-cyan-400/20 focus-visible:ring-cyan-400"
+              : isMars
+                ? "bg-gradient-to-r from-warn to-[#c1440e] text-space-950 hover:shadow-md hover:shadow-warn/20 focus-visible:ring-warn"
+                : "bg-gradient-to-r from-signal to-[#e85d20] text-space-950 hover:shadow-md hover:shadow-signal/20 focus-visible:ring-signal",
           )}
         >
           {t("missionSelect.launch")}
@@ -309,7 +367,12 @@ export default function MissionSelectPage() {
   const isDemo = searchParams.get("demo") === "1";
   const [nameInput, setNameInput] = useState(playerName);
   const [planetTab, setPlanetTab] = useState<PlanetTab>("moon");
-  const activeMissions = planetTab === "mars" ? MARS_MISSIONS : MOON_MISSIONS;
+  const activeMissions =
+    planetTab === "deep-space"
+      ? DEEPSPACE_MISSIONS
+      : planetTab === "mars"
+        ? MARS_MISSIONS
+        : MOON_MISSIONS;
 
   useEffect(() => {
     preloadGameAssets();
@@ -504,7 +567,7 @@ export default function MissionSelectPage() {
 
         {/* Planet tabs */}
         <motion.div
-          className="mx-auto mt-10 flex items-center gap-1 rounded-2xl border border-space-700/40 bg-space-900/60 p-1.5 backdrop-blur-md"
+          className="mx-auto mt-10 flex flex-wrap justify-center items-center gap-1 rounded-2xl border border-space-700/40 bg-space-900/60 p-1.5 backdrop-blur-md"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.25 }}
@@ -512,7 +575,7 @@ export default function MissionSelectPage() {
           <button
             onClick={() => setPlanetTab("moon")}
             className={cn(
-              "flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300",
+              "flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all duration-300",
               planetTab === "moon"
                 ? "bg-gradient-to-r from-signal to-[#e85d20] text-space-950 shadow-md shadow-signal/20"
                 : "text-regolith-400 hover:text-regolith-200 hover:bg-space-800/50",
@@ -524,7 +587,7 @@ export default function MissionSelectPage() {
           <button
             onClick={() => setPlanetTab("mars")}
             className={cn(
-              "flex items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300",
+              "flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all duration-300",
               planetTab === "mars"
                 ? "bg-gradient-to-r from-warn to-[#c1440e] text-space-950 shadow-md shadow-warn/20"
                 : "text-regolith-400 hover:text-regolith-200 hover:bg-space-800/50",
@@ -532,6 +595,18 @@ export default function MissionSelectPage() {
           >
             <span className="text-base">&#127756;</span>
             {t("missionSelect.marsTab")}
+          </button>
+          <button
+            onClick={() => setPlanetTab("deep-space")}
+            className={cn(
+              "flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all duration-300",
+              planetTab === "deep-space"
+                ? "bg-gradient-to-r from-cyan-400 to-blue-600 text-space-950 shadow-md shadow-cyan-400/20"
+                : "text-regolith-400 hover:text-regolith-200 hover:bg-space-800/50",
+            )}
+          >
+            <span className="text-base">&#10024;</span>
+            Deep Space & Asteroids
           </button>
         </motion.div>
 
@@ -542,18 +617,24 @@ export default function MissionSelectPage() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.3 }}
         >
-          {planetTab === "mars" ? t("missionSelect.marsHeading") : t("missionSelect.heading")}
+          {planetTab === "deep-space"
+            ? "Deep Space & Asteroid Relics"
+            : planetTab === "mars"
+              ? t("missionSelect.marsHeading")
+              : t("missionSelect.heading")}
         </motion.h2>
         <p className="mx-auto mt-2 max-w-lg text-center text-sm text-regolith-400/80">
-          {isMars
-            ? "Deploy robotic explorers to the red planet. Scan landers, rovers and instruments left on Martian soil."
-            : "Fly Saturn V rockets to the Moon. Walk the landing sites and scan what the astronauts left behind."}
+          {planetTab === "deep-space"
+            ? "Journey into the deep cosmic void. Explore pioneering probes, asteroid soft-landers, and interstellar messengers."
+            : isMars
+              ? "Deploy robotic explorers to the red planet. Scan landers, rovers and instruments left on Martian soil."
+              : "Fly Saturn V rockets to the Moon. Walk the landing sites and scan what the astronauts left behind."}
         </p>
 
         {/* Mission grid */}
         <AnimatePresence mode="wait">
           <motion.div
-            key={isMars ? "mars-grid" : "moon-grid"}
+            key={`${planetTab}-grid`}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
@@ -576,7 +657,7 @@ export default function MissionSelectPage() {
                     status={status}
                     objectsFound={objectsFound}
                     onLaunch={() => handleLaunch(mission.id)}
-                    isMars={isMars}
+                    planetTab={planetTab}
                   />
                 </motion.div>
               );
