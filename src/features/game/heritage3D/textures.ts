@@ -354,6 +354,11 @@ export function getSolarPanelTexture(): THREE.CanvasTexture {
   return tex;
 }
 
+function deterministicRand(seed: number): number {
+  const x = Math.sin(seed * 9999.123) * 10000;
+  return x - Math.floor(x);
+}
+
 /**
  * Crinkled Gold Kapton Multi-Layer Insulation (MLI) Foil Texture
  */
@@ -363,24 +368,29 @@ export function getGoldKaptonTexture(): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
   canvas.width = 512;
   canvas.height = 512;
-  const ctx = canvas.getContext("2d")!;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
 
-  // Base amber-gold tone
-  ctx.fillStyle = "#d49b28";
+  // Base warm amber-gold tone with subtle gradient
+  const baseGrad = ctx.createLinearGradient(0, 0, 512, 512);
+  baseGrad.addColorStop(0, "#d97706");
+  baseGrad.addColorStop(0.5, "#b45309");
+  baseGrad.addColorStop(1, "#f59e0b");
+  ctx.fillStyle = baseGrad;
   ctx.fillRect(0, 0, 512, 512);
 
-  // Micro-crease specular highlights and wrinkles
-  for (let i = 0; i < 400; i++) {
-    const x = Math.random() * 512;
-    const y = Math.random() * 512;
-    const len = 10 + Math.random() * 35;
-    const angle = Math.random() * Math.PI * 2;
-    const bright = Math.random() > 0.45;
+  // Deterministic micro-crease specular highlights and wrinkles
+  for (let i = 0; i < 450; i++) {
+    const x = deterministicRand(i * 3 + 1) * 512;
+    const y = deterministicRand(i * 3 + 2) * 512;
+    const len = 12 + deterministicRand(i * 5 + 3) * 40;
+    const angle = deterministicRand(i * 7 + 4) * Math.PI * 2;
+    const bright = deterministicRand(i * 11 + 5) > 0.45;
 
     ctx.strokeStyle = bright
-      ? `rgba(255, 235, 150, ${0.15 + Math.random() * 0.25})`
-      : `rgba(130, 80, 10, ${0.2 + Math.random() * 0.3})`;
-    ctx.lineWidth = 1 + Math.random() * 1.5;
+      ? `rgba(254, 240, 138, ${0.2 + deterministicRand(i * 13) * 0.35})`
+      : `rgba(113, 63, 18, ${0.25 + deterministicRand(i * 17) * 0.35})`;
+    ctx.lineWidth = 1 + deterministicRand(i * 19) * 2;
 
     ctx.beginPath();
     ctx.moveTo(x, y);
@@ -389,8 +399,8 @@ export function getGoldKaptonTexture(): THREE.CanvasTexture {
   }
 
   // Thermal tape grid seams (orange-gold Kapton tape with stitch lines)
-  ctx.strokeStyle = "rgba(180, 105, 15, 0.6)";
-  ctx.lineWidth = 4;
+  ctx.strokeStyle = "rgba(180, 83, 9, 0.75)";
+  ctx.lineWidth = 5;
   for (let x = 64; x < 512; x += 128) {
     ctx.beginPath();
     ctx.moveTo(x, 0);
@@ -403,6 +413,24 @@ export function getGoldKaptonTexture(): THREE.CanvasTexture {
     ctx.lineTo(512, y);
     ctx.stroke();
   }
+
+  // Fiberglass reinforcement dashed stitching
+  ctx.strokeStyle = "rgba(254, 249, 195, 0.6)";
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([4, 6]);
+  for (let x = 64; x < 512; x += 128) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, 512);
+    ctx.stroke();
+  }
+  for (let y = 64; y < 512; y += 128) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(512, y);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -421,7 +449,8 @@ export function getSilverMLITexture(): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
   canvas.width = 512;
   canvas.height = 512;
-  const ctx = canvas.getContext("2d")!;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
 
   ctx.fillStyle = "#e2e8f0";
   ctx.fillRect(0, 0, 512, 512);
@@ -435,14 +464,14 @@ export function getSilverMLITexture(): THREE.CanvasTexture {
     }
   }
 
-  // Wrinkle creases
-  for (let i = 0; i < 200; i++) {
-    const x = Math.random() * 512;
-    const y = Math.random() * 512;
-    const len = 15 + Math.random() * 40;
-    const angle = Math.random() * Math.PI * 2;
-    ctx.strokeStyle = `rgba(100, 116, 139, ${0.1 + Math.random() * 0.2})`;
-    ctx.lineWidth = 1;
+  // Wrinkle creases (deterministic)
+  for (let i = 0; i < 250; i++) {
+    const x = deterministicRand(i * 4 + 1) * 512;
+    const y = deterministicRand(i * 4 + 2) * 512;
+    const len = 15 + deterministicRand(i * 6 + 3) * 45;
+    const angle = deterministicRand(i * 8 + 4) * Math.PI * 2;
+    ctx.strokeStyle = `rgba(71, 85, 105, ${0.15 + deterministicRand(i * 12) * 0.25})`;
+    ctx.lineWidth = 1 + deterministicRand(i * 14) * 1.5;
     ctx.beginPath();
     ctx.moveTo(x, y);
     ctx.lineTo(x + Math.cos(angle) * len, y + Math.sin(angle) * len);
@@ -458,6 +487,289 @@ export function getSilverMLITexture(): THREE.CanvasTexture {
 }
 
 /**
+ * Dull Black Inconel Pyromark-coated Heat Shield Thermal Blanket
+ */
+export function getBlackInconelTexture(): THREE.CanvasTexture {
+  if (textureCache.blackInconel) return textureCache.blackInconel;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  // Dark matte charcoal/black base
+  ctx.fillStyle = "#18181b";
+  ctx.fillRect(0, 0, 512, 512);
+
+  // Surface texture / carbon grain
+  for (let i = 0; i < 600; i++) {
+    const x = deterministicRand(i * 3 + 1) * 512;
+    const y = deterministicRand(i * 3 + 2) * 512;
+    const r = 0.5 + deterministicRand(i * 5 + 3) * 1.5;
+    const isLighter = deterministicRand(i * 7 + 4) > 0.6;
+    ctx.fillStyle = isLighter ? "rgba(63, 63, 70, 0.4)" : "rgba(9, 9, 11, 0.5)";
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Quilted thermal blanket seam squares
+  ctx.strokeStyle = "rgba(39, 39, 42, 0.9)";
+  ctx.lineWidth = 3;
+  for (let x = 64; x < 512; x += 64) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, 512);
+    ctx.stroke();
+  }
+  for (let y = 64; y < 512; y += 64) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(512, y);
+    ctx.stroke();
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  textureCache.blackInconel = tex;
+  return tex;
+}
+
+/**
+ * Apollo 11 Lunar Module Ladder Commemorative Plaque Texture
+ * "HERE MEN FROM THE PLANET EARTH FIRST SET FOOT UPON THE MOON JULY 1969, A.D. WE CAME IN PEACE FOR ALL MANKIND"
+ */
+export function getApolloPlaqueTexture(): THREE.CanvasTexture {
+  if (textureCache.apolloPlaque) return textureCache.apolloPlaque;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 768;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  // Brushed stainless steel background
+  const grad = ctx.createLinearGradient(0, 0, 1024, 768);
+  grad.addColorStop(0, "#cbd5e1");
+  grad.addColorStop(0.5, "#f1f5f9");
+  grad.addColorStop(1, "#94a3b8");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1024, 768);
+
+  // Brushed horizontal striations
+  for (let y = 0; y < 768; y += 2) {
+    const noise = deterministicRand(y * 11) * 0.15;
+    ctx.fillStyle = `rgba(100, 116, 139, ${noise})`;
+    ctx.fillRect(0, y, 1024, 1);
+  }
+
+  // Outer border & mounting screw holes
+  ctx.strokeStyle = "#334155";
+  ctx.lineWidth = 12;
+  ctx.strokeRect(24, 24, 976, 720);
+  ctx.lineWidth = 4;
+  ctx.strokeRect(40, 40, 944, 688);
+
+  // Corner screw holes
+  const corners: [number, number][] = [
+    [54, 54],
+    [970, 54],
+    [54, 714],
+    [970, 714],
+  ];
+  corners.forEach(([cx, cy]) => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, 14, 0, Math.PI * 2);
+    ctx.fillStyle = "#1e293b";
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 9, 0, Math.PI * 2);
+    ctx.fillStyle = "#64748b";
+    ctx.fill();
+  });
+
+  // Dual Earth Hemispheres (Western and Eastern)
+  const drawHemisphere = (cx: number, cy: number, r: number, isWest: boolean) => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = "#475569";
+    ctx.fill();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "#1e293b";
+    ctx.stroke();
+
+    // Longitude/Latitude graticule lines
+    ctx.strokeStyle = "rgba(241, 245, 249, 0.4)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - r, cy);
+    ctx.lineTo(cx + r, cy);
+    ctx.moveTo(cx, cy - r);
+    ctx.lineTo(cx, cy + r);
+    ctx.stroke();
+
+    // Simplified continental silhouettes
+    ctx.fillStyle = "#f8fafc";
+    if (isWest) {
+      // Americas silhouette
+      ctx.beginPath();
+      ctx.ellipse(cx - 15, cy - 35, 32, 45, 0.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx + 8, cy + 30, 26, 48, 0.4, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      // Eurasia & Africa silhouette
+      ctx.beginPath();
+      ctx.ellipse(cx - 5, cy - 35, 45, 38, -0.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx - 15, cy + 18, 30, 42, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx + 45, cy + 40, 22, 18, 0.3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  };
+
+  drawHemisphere(330, 250, 110, true);
+  drawHemisphere(694, 250, 110, false);
+
+  // Historic Apollo 11 Plaque Text
+  ctx.fillStyle = "#0f172a";
+  ctx.textAlign = "center";
+
+  ctx.font = "bold 32px sans-serif";
+  ctx.fillText("HERE MEN FROM THE PLANET EARTH", 512, 425);
+  ctx.fillText("FIRST SET FOOT UPON THE MOON", 512, 470);
+  ctx.font = "bold 38px sans-serif";
+  ctx.fillText("JULY 1969, A. D.", 512, 525);
+  ctx.font = "italic bold 32px sans-serif";
+  ctx.fillText("WE CAME IN PEACE FOR ALL MANKIND", 512, 575);
+
+  // Astronaut & President Signatures row
+  ctx.font = "italic 20px serif";
+  ctx.fillText("Neil A. Armstrong", 220, 645);
+  ctx.fillText("Michael Collins", 410, 645);
+  ctx.fillText("Edwin E. Aldrin Jr.", 610, 645);
+  ctx.fillText("Richard Nixon", 820, 645);
+
+  ctx.font = "14px sans-serif";
+  ctx.fillStyle = "#334155";
+  ctx.fillText("ASTRONAUT", 220, 670);
+  ctx.fillText("ASTRONAUT", 410, 670);
+  ctx.fillText("ASTRONAUT", 610, 670);
+  ctx.fillText("PRESIDENT, UNITED STATES OF AMERICA", 820, 670);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  textureCache.apolloPlaque = tex;
+  return tex;
+}
+
+/**
+ * Westinghouse Lunar TV Camera Label & Optics Decal Texture
+ */
+export function getWestinghouseDecalTexture(): THREE.CanvasTexture {
+  if (textureCache.westinghouseDecal) return textureCache.westinghouseDecal;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 256;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  // White anodized faceplate with silver bevel
+  ctx.fillStyle = "#f8fafc";
+  ctx.fillRect(0, 0, 512, 256);
+  ctx.strokeStyle = "#334155";
+  ctx.lineWidth = 6;
+  ctx.strokeRect(10, 10, 492, 236);
+
+  // Westinghouse "W" circle logo
+  ctx.beginPath();
+  ctx.arc(80, 128, 48, 0, Math.PI * 2);
+  ctx.fillStyle = "#1e3a8a";
+  ctx.fill();
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 56px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("W", 80, 148);
+
+  // Technical Text
+  ctx.textAlign = "left";
+  ctx.fillStyle = "#0f172a";
+  ctx.font = "bold 26px sans-serif";
+  ctx.fillText("WESTINGHOUSE ELECTRIC", 150, 85);
+  ctx.font = "bold 22px sans-serif";
+  ctx.fillStyle = "#1e40af";
+  ctx.fillText("LUNAR SURFACE TV CAMERA", 150, 120);
+
+  ctx.font = "16px monospace";
+  ctx.fillStyle = "#475569";
+  ctx.fillText("MODEL: SSTV-10FPS-320L", 150, 155);
+  ctx.fillText("SER. NO. 11-002 • NASA MSC", 150, 185);
+  ctx.fillText("SEC VIDICON • 25MM F/2 LENS", 150, 215);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  textureCache.westinghouseDecal = tex;
+  return tex;
+}
+
+/**
+ * Apollo Sample Return Container (SRC Rock Box) Stencil Decal
+ */
+export function getSRCLabelTexture(): THREE.CanvasTexture {
+  if (textureCache.srcLabel) return textureCache.srcLabel;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 256;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  ctx.fillStyle = "#f1f5f9";
+  ctx.fillRect(0, 0, 512, 256);
+
+  // Stencil Box header
+  ctx.strokeStyle = "#0f172a";
+  ctx.lineWidth = 4;
+  ctx.strokeRect(12, 12, 488, 232);
+
+  // Hazard / Latch Yellow-Black Striped Warning Bar
+  const stripeW = 20;
+  for (let x = 12; x < 500; x += stripeW * 2) {
+    ctx.fillStyle = "#eab308";
+    ctx.fillRect(x, 12, stripeW, 28);
+    ctx.fillStyle = "#18181b";
+    ctx.fillRect(x + stripeW, 12, stripeW, 28);
+  }
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#0f172a";
+  ctx.font = "bold 32px sans-serif";
+  ctx.fillText("LUNAR SAMPLE RETURN", 256, 95);
+  ctx.fillText("CONTAINER - SRC 1", 256, 140);
+
+  ctx.font = "bold 20px monospace";
+  ctx.fillStyle = "#dc2626";
+  ctx.fillText("HIGH VACUUM SEAL • HANDLE WITH CARE", 256, 185);
+
+  ctx.font = "16px monospace";
+  ctx.fillStyle = "#475569";
+  ctx.fillText("NASA MANNED SPACECRAFT CENTER • HOUSTON, TX", 256, 222);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  textureCache.srcLabel = tex;
+  return tex;
+}
+
+/**
  * Weathered Martian Basalt Rock with Iron-Oxide Dust
  */
 export function getMarsRockTexture(): THREE.CanvasTexture {
@@ -466,21 +778,22 @@ export function getMarsRockTexture(): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
   canvas.width = 512;
   canvas.height = 512;
-  const ctx = canvas.getContext("2d")!;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
 
   // Dark volcanic basalt base
   ctx.fillStyle = "#2d1b14";
   ctx.fillRect(0, 0, 512, 512);
 
-  // Mineral specks and iron-oxide weathering
+  // Mineral specks and iron-oxide weathering (deterministic)
   for (let i = 0; i < 2000; i++) {
-    const x = Math.random() * 512;
-    const y = Math.random() * 512;
-    const r = Math.random() * 3 + 0.5;
-    const isDust = Math.random() > 0.4;
+    const x = deterministicRand(i * 3 + 1) * 512;
+    const y = deterministicRand(i * 3 + 2) * 512;
+    const r = deterministicRand(i * 5 + 3) * 3 + 0.5;
+    const isDust = deterministicRand(i * 7 + 4) > 0.4;
     ctx.fillStyle = isDust
-      ? `rgba(196, 95, 45, ${0.25 + Math.random() * 0.45})`
-      : `rgba(60, 45, 40, ${0.3 + Math.random() * 0.5})`;
+      ? `rgba(196, 95, 45, ${0.25 + deterministicRand(i * 11) * 0.45})`
+      : `rgba(60, 45, 40, ${0.3 + deterministicRand(i * 13) * 0.5})`;
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fill();
@@ -501,7 +814,8 @@ export function getCarbonFiberTexture(): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
   canvas.width = 256;
   canvas.height = 256;
-  const ctx = canvas.getContext("2d")!;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
 
   ctx.fillStyle = "#111827";
   ctx.fillRect(0, 0, 256, 256);
@@ -520,5 +834,57 @@ export function getCarbonFiberTexture(): THREE.CanvasTexture {
   tex.wrapS = THREE.RepeatWrapping;
   tex.wrapT = THREE.RepeatWrapping;
   textureCache.carbonFiber = tex;
+  return tex;
+}
+
+/**
+ * Authentic Lunar Regolith Soil Texture with Basalt Micro-Pits & Tread Texture
+ */
+export function getLunarRegolithTexture(): THREE.CanvasTexture {
+  if (textureCache.lunarRegolith) return textureCache.lunarRegolith;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  // Deep basalt charcoal/slate base
+  ctx.fillStyle = "#334155";
+  ctx.fillRect(0, 0, 512, 512);
+
+  // Micro-craters and fine dust grain
+  for (let i = 0; i < 3000; i++) {
+    const x = deterministicRand(i * 3 + 7) * 512;
+    const y = deterministicRand(i * 3 + 13) * 512;
+    const r = deterministicRand(i * 5 + 17) * 2.2 + 0.4;
+    const isDark = deterministicRand(i * 7 + 19) > 0.4;
+
+    ctx.fillStyle = isDark
+      ? `rgba(15, 23, 42, ${0.3 + deterministicRand(i * 11) * 0.4})`
+      : `rgba(148, 163, 184, ${0.2 + deterministicRand(i * 13) * 0.35})`;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Micro-ridge contours and bootprint tread ripples
+  ctx.strokeStyle = "rgba(15, 23, 42, 0.45)";
+  ctx.lineWidth = 2.5;
+  for (let y = 32; y < 512; y += 48) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    for (let x = 0; x <= 512; x += 16) {
+      const dy = Math.sin((x + y) * 0.1) * 3;
+      ctx.lineTo(x, y + dy);
+    }
+    ctx.stroke();
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  textureCache.lunarRegolith = tex;
   return tex;
 }

@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import type { StoryPacket } from "./storySchema";
 import { HeritageObject3D } from "../game/heritage3D/Heritage3DDispatcher";
+import { getLunarRegolithTexture } from "../game/heritage3D/textures";
 
 export interface StorySceneProps {
   packet?: StoryPacket;
@@ -66,6 +67,7 @@ function StoryCameraRig({
 
 /* ─── Lunar, Martian & Deep Space Environment (100% Deterministic) ─── */
 function StoryEnvironment({ isMars = false, isDeepSpace = false }: { isMars?: boolean; isDeepSpace?: boolean }) {
+  const regolithTex = useMemo(() => getLunarRegolithTexture(), []);
   const starsGeo = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     const count = isDeepSpace ? 900 : 600;
@@ -126,9 +128,10 @@ function StoryEnvironment({ isMars = false, isDeepSpace = false }: { isMars?: bo
           receiveShadow
         >
           <meshStandardMaterial
+            map={isMars ? undefined : regolithTex}
             color={isMars ? "#883311" : "#475569"}
             roughness={0.96}
-            metalness={0.0}
+            metalness={0.02}
           />
         </mesh>
       )}
@@ -302,6 +305,28 @@ function SWCExperimentModel({
         <meshStandardMaterial color="#cbd5e1" metalness={0.92} roughness={0.15} />
       </mesh>
 
+      {/* Red Swiss Deployment Pull-Tab with White Cross */}
+      <group position={[0.22, 1.88, 0]}>
+        <mesh>
+          <boxGeometry args={[0.015, 0.042, 0.032]} />
+          <meshStandardMaterial color="#dc2626" roughness={0.25} />
+        </mesh>
+        <mesh position={[0.009, 0, 0]}>
+          <boxGeometry args={[0.002, 0.026, 0.008]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.2} />
+        </mesh>
+        <mesh position={[0.009, 0, 0]}>
+          <boxGeometry args={[0.002, 0.008, 0.026]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.2} />
+        </mesh>
+      </group>
+
+      {/* Bottom Tension Roller Weight Bar */}
+      <mesh position={[0, 0.54, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <cylinderGeometry args={[0.015, 0.015, 0.38, 16]} />
+        <meshStandardMaterial color="#64748b" metalness={0.9} roughness={0.2} />
+      </mesh>
+
       {/* Base Regolith Soil Mound */}
       <mesh position={[0, 0.03, 0]} receiveShadow>
         <coneGeometry args={[0.24, 0.07, 16]} />
@@ -318,9 +343,11 @@ function SWCExperimentModel({
             scale={isRolling ? [0.15, 1.0, 0.15] : [1, 1, 1]}
           >
             <meshStandardMaterial
-              color="#f1f5f9"
-              metalness={0.95}
-              roughness={0.15}
+              color="#ffffff"
+              metalness={0.45}
+              roughness={0.24}
+              emissive="#475569"
+              emissiveIntensity={0.28}
               side={THREE.DoubleSide}
             />
           </mesh>
@@ -416,28 +443,36 @@ export function StoryScene({
             : "#020408",
       }}
     >
-      {/* Dynamic Aerospace Lighting */}
+      {/* Dynamic Aerospace Studio & Lunar Surface Lighting */}
       <ambientLight
-        intensity={isMars ? 0.6 : isDeepSpace ? 0.5 : 0.35}
-        color={isMars ? "#fed7aa" : isDeepSpace ? "#bae6fd" : "#e2e8f0"}
+        intensity={isMars ? 0.6 : isDeepSpace ? 0.5 : 0.42}
+        color={isMars ? "#fed7aa" : isDeepSpace ? "#bae6fd" : "#f1f5f9"}
       />
+      {/* Front-Right Direct Solar Key Light */}
       <directionalLight
-        position={[-12, 8, 12]}
-        intensity={2.8}
-        color={isMars ? "#ffedd5" : isDeepSpace ? "#e0f2fe" : "#fffbeb"}
+        position={[6, 9, 8]}
+        intensity={3.4}
+        color={isMars ? "#ffedd5" : isDeepSpace ? "#e0f2fe" : "#ffffff"}
         castShadow
         shadow-mapSize={[1024, 1024]}
       />
+      {/* Front-Left Earthshine Fill Light */}
       <directionalLight
-        position={[10, 4, -8]}
-        intensity={0.6}
-        color={isMars ? "#ea580c" : isDeepSpace ? "#38bdf8" : "#60a5fa"}
+        position={[-7, 5, 7]}
+        intensity={1.0}
+        color={isMars ? "#ea580c" : isDeepSpace ? "#38bdf8" : "#7dd3fc"}
+      />
+      {/* Ground Horizon Rim Bounce */}
+      <directionalLight
+        position={[0, -2, -5]}
+        intensity={0.4}
+        color={isMars ? "#9a3412" : isDeepSpace ? "#0284c7" : "#94a3b8"}
       />
       <hemisphereLight
         args={[
-          isMars ? "#f97316" : isDeepSpace ? "#38bdf8" : "#93c5fd",
-          isMars ? "#431407" : isDeepSpace ? "#030712" : "#1e293b",
-          0.4,
+          isMars ? "#f97316" : isDeepSpace ? "#38bdf8" : "#e2e8f0",
+          isMars ? "#431407" : isDeepSpace ? "#030712" : "#0f172a",
+          0.35,
         ]}
       />
 
