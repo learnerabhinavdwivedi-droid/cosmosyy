@@ -1471,11 +1471,14 @@ function SurfaceHUD({
   }, [found.length, scannableCount, playerName, t, isMars, isRobotic]);
 
   const completeScan = useCallback(() => {
-    if (!nearObjectId || !missionId) return;
+    if (!nearObjectId || !missionId || phase === "inspect") return;
     const isNew = !found.includes(nearObjectId);
     if (isNew) {
       addFoundObject(nearObjectId);
       findObject(missionId, nearObjectId);
+    }
+    if (document.pointerLockElement) {
+      document.exitPointerLock();
     }
     send("START_INSPECT", { objectId: nearObjectId });
     gameAudio.playScanComplete();
@@ -1488,7 +1491,7 @@ function SurfaceHUD({
     }
     if (toastTimer.current) clearTimeout(toastTimer.current);
     toastTimer.current = setTimeout(() => setToast(null), 2500);
-  }, [nearObjectId, found, missionId, addFoundObject, findObject, send, t, objects]);
+  }, [nearObjectId, found, missionId, addFoundObject, findObject, send, t, objects, phase]);
 
   const handleFlag = useCallback(() => {
     if (!missionId) return;
@@ -1527,30 +1530,19 @@ function SurfaceHUD({
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if ((e.key === "e" || e.key === "E") && !e.repeat) {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if ((e.key === "e" || e.key === "E" || e.code === "KeyE") && !e.repeat) {
         if (nearObjectId && missionId && phase !== "inspect") {
-          scanStartTime.current = Date.now();
-          lastTickTime.current = 0;
-          scanAnimFrame.current = requestAnimationFrame(animateScan);
+          completeScan();
         }
       }
-      if ((e.key === "f" || e.key === "F") && phase === "flagReady") handleFlag();
-      if ((e.key === "l" || e.key === "L") && phase === "flagPlanted") handleLaunch();
-    };
-
-    const onKeyUp = (e: KeyboardEvent) => {
-      if (e.key === "e" || e.key === "E") {
-        scanStartTime.current = null;
-        cancelAnimationFrame(scanAnimFrame.current);
-        setScanProgress(0);
-      }
+      if ((e.key === "f" || e.key === "F" || e.code === "KeyF") && phase === "flagReady") handleFlag();
+      if ((e.key === "l" || e.key === "L" || e.code === "KeyL") && phase === "flagPlanted") handleLaunch();
     };
 
     window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("keyup", onKeyUp);
     return () => {
       window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("keyup", onKeyUp);
       cancelAnimationFrame(scanAnimFrame.current);
     };
   }, [phase, nearObjectId, found, missionId, completeScan, handleFlag, handleLaunch]);
@@ -1630,26 +1622,46 @@ function SurfaceHUD({
         </div>
       )}
 
-      {/* Interaction prompt */}
+      {/* Interaction prompt - single click or E key */}
       {nearObj && phase !== "inspect" && !isTouchDevice() && (
-        <div className="mx-auto mt-auto mb-32 rounded-xl bg-space-950/90 px-8 py-4 text-center backdrop-blur-md border border-space-700/50">
+        <div
+          onClick={completeScan}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              completeScan();
+            }
+          }}
+          className="pointer-events-auto cursor-pointer select-none active:scale-95 transition-all mx-auto mt-auto mb-32 rounded-xl bg-space-950/90 hover:bg-space-900/90 px-8 py-4 text-center backdrop-blur-md border border-space-700/50 hover:border-signal/70 shadow-lg shadow-signal/10"
+        >
           <p className="font-display text-lg text-signal">
-            {isScanning
-              ? t("surface.scanning")
-              : found.includes(nearObj.id)
-                ? `[Hold E] Listen to Transmission / Re-Inspect ${nearObj.name}`
-                : `[Hold E] ${t("surface.inspectPrompt")} ${nearObj.name}`}
+            {found.includes(nearObj.id)
+              ? `[E] Re-Inspect ${nearObj.name}`
+              : `[E] ${t("surface.inspectPrompt")} ${nearObj.name}`}
           </p>
           <p className="mt-1 text-xs text-regolith-400">
             {found.includes(nearObj.id)
-              ? "Re-open the monument's voice log & NASA telemetry"
-              : t("surface.scanHint")}
+              ? "Click or press [E] to re-open telemetry & 3D cinematic story"
+              : "Click or press [E] to inspect artifact"}
           </p>
         </div>
       )}
 
       {phase === "flagReady" && !isTouchDevice() && (
-        <div className="mx-auto mt-auto mb-32 rounded-xl bg-signal/20 px-8 py-4 text-center backdrop-blur-md border border-signal/30">
+        <div
+          onClick={handleFlag}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleFlag();
+            }
+          }}
+          className="pointer-events-auto cursor-pointer select-none active:scale-95 transition-all mx-auto mt-auto mb-32 rounded-xl bg-signal/20 hover:bg-signal/30 px-8 py-4 text-center backdrop-blur-md border border-signal/30 hover:border-signal shadow-lg"
+        >
           <p className="animate-pulse font-display text-lg text-signal">
             [F] {t(isRobotic ? "surface.surveyPrompt" : "surface.flagPrompt")}
           </p>
@@ -1657,7 +1669,18 @@ function SurfaceHUD({
       )}
 
       {phase === "flagPlanted" && !isTouchDevice() && (
-        <div className="mx-auto mt-auto mb-32 rounded-xl bg-ok/20 px-8 py-4 text-center backdrop-blur-md border border-ok/30">
+        <div
+          onClick={handleLaunch}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleLaunch();
+            }
+          }}
+          className="pointer-events-auto cursor-pointer select-none active:scale-95 transition-all mx-auto mt-auto mb-32 rounded-xl bg-ok/20 hover:bg-ok/30 px-8 py-4 text-center backdrop-blur-md border border-ok/30 hover:border-ok shadow-lg"
+        >
           <p className="animate-pulse font-display text-lg text-ok">
             [L] {t(isRobotic ? "surface.endMissionPrompt" : "surface.launchPrompt")}
           </p>
@@ -1723,14 +1746,14 @@ export function SurfaceScene() {
     [nearObjectId, found, missionId, addFoundObject, findObject, send],
   );
 
-  // Global key listener for 'V' (toggle view mode between POV and Walker) & 'E' (inspect nearby object)
+  // Global key listener for 'V' (toggle view mode between POV and Walker) & 'E' (inspect in walker mode)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.code === "KeyV") {
         setViewMode((current) => (current === "pov" ? "walker" : "pov"));
       }
-      if ((e.code === "KeyE" || e.key === "e" || e.key === "E") && !e.repeat) {
+      if (viewMode === "walker" && (e.code === "KeyE" || e.key === "e" || e.key === "E") && !e.repeat) {
         if (nearObjectId && phase !== "inspect") {
           touchScan(nearObjectId);
         }
@@ -1738,7 +1761,7 @@ export function SurfaceScene() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [nearObjectId, phase, touchScan]);
+  }, [nearObjectId, phase, touchScan, viewMode]);
 
   const handleCanvasClick = useCallback(() => {
     if (!isTouchDevice()) {

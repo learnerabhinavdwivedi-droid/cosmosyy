@@ -1947,7 +1947,7 @@ export function FlightScene() {
     const handler = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
       if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
-      if (e.key === "s" || e.key === "S") {
+      if ((e.key === "s" || e.key === "S") && !e.repeat) {
         handleSkip();
       }
     };

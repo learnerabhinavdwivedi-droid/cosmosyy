@@ -267,32 +267,48 @@ function MissionCard({
   objectsFound,
   onLaunch,
   isMars,
+  isLaunching = false,
+  launchDisabled = false,
 }: {
   mission: MissionCardData;
   status: MissionStatus;
   objectsFound: number;
   onLaunch: () => void;
   isMars: boolean;
+  isLaunching?: boolean;
+  launchDisabled?: boolean;
 }) {
   const { t } = useTranslation();
   const isLocked = status === "locked";
   const isCompleted = status === "completed";
+  const canInteract = !isLocked && !launchDisabled;
 
   return (
     <motion.div
+      onClick={canInteract ? onLaunch : undefined}
+      onKeyDown={(e) => {
+        if (canInteract && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          onLaunch();
+        }
+      }}
+      role={canInteract ? "button" : undefined}
+      tabIndex={canInteract ? 0 : undefined}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border p-5 transition-all duration-300",
+        "group relative flex flex-col overflow-hidden rounded-2xl border p-5 transition-all duration-200 select-none",
         isLocked
-          ? "border-space-700/20 bg-space-900/30 opacity-40"
+          ? "border-space-700/20 bg-space-900/30 opacity-40 cursor-not-allowed"
           : cn(
-            "border-space-700/50 bg-gradient-to-b from-space-800/80 to-space-900/90 backdrop-blur-sm",
+            "border-space-700/50 bg-gradient-to-b from-space-800/80 to-space-900/90 backdrop-blur-sm cursor-pointer",
             isMars
-              ? "hover:border-warn/40 hover:shadow-lg hover:shadow-warn/5"
-              : "hover:border-signal/40 hover:shadow-lg hover:shadow-signal/5",
+              ? "hover:border-warn/50 hover:shadow-lg hover:shadow-warn/10 active:border-warn"
+              : "hover:border-signal/50 hover:shadow-lg hover:shadow-signal/10 active:border-signal",
+            isLaunching && "ring-2 ring-signal ring-offset-2 ring-offset-space-950",
           ),
       )}
-      whileHover={isLocked ? undefined : { scale: 1.03, y: -4 }}
-      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      whileHover={canInteract ? { scale: 1.02, y: -3 } : undefined}
+      whileTap={canInteract ? { scale: 0.98 } : undefined}
+      transition={{ type: "spring", stiffness: 350, damping: 25 }}
     >
       {!isLocked && (
         <div
@@ -354,16 +370,28 @@ function MissionCard({
 
       {!isLocked && (
         <Button
-          onClick={onLaunch}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (canInteract) onLaunch();
+          }}
+          disabled={launchDisabled}
           aria-label={`Launch ${mission.name} mission to ${mission.site}`}
           className={cn(
-            "mt-4 w-full font-bold tracking-wide focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-space-900 transition-all",
+            "mt-4 w-full font-bold tracking-wide focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-space-900 transition-all cursor-pointer min-h-[44px]",
             isMars
               ? "bg-gradient-to-r from-warn to-[#c1440e] text-space-950 hover:shadow-md hover:shadow-warn/20 focus-visible:ring-warn"
               : "bg-gradient-to-r from-signal to-[#e85d20] text-space-950 hover:shadow-md hover:shadow-signal/20 focus-visible:ring-signal",
+            isLaunching && "opacity-90 animate-pulse",
           )}
         >
-          {t("missionSelect.launch")}
+          {isLaunching ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-space-950 border-t-transparent" />
+              <span>Launching...</span>
+            </span>
+          ) : (
+            t("missionSelect.launch")
+          )}
         </Button>
       )}
     </motion.div>
@@ -383,6 +411,7 @@ export default function MissionSelectPage() {
   const [searchParams] = useSearchParams();
   const isDemo = searchParams.get("demo") === "1";
   const [nameInput, setNameInput] = useState(playerName);
+  const [launchingId, setLaunchingId] = useState<string | null>(null);
   const [planetTab, setPlanetTab] = useState<PlanetTab>("moon");
   const activeMissions =
     planetTab === "mars"
@@ -393,6 +422,7 @@ export default function MissionSelectPage() {
 
   useEffect(() => {
     preloadGameAssets();
+    import("@/features/game/GameShell");
     if (isDemo) {
       if (!playerName) setPlayerName("Commander");
       startMission("apollo-11");
@@ -409,6 +439,8 @@ export default function MissionSelectPage() {
   };
 
   const handleLaunch = (missionId: string) => {
+    if (launchingId) return;
+    setLaunchingId(missionId);
     if (!playerName) {
       setPlayerName(nameInput.trim() || "Astronaut");
     }
@@ -673,6 +705,8 @@ export default function MissionSelectPage() {
                     objectsFound={objectsFound}
                     onLaunch={() => handleLaunch(mission.id)}
                     isMars={isMars}
+                    isLaunching={launchingId === mission.id}
+                    launchDisabled={Boolean(launchingId)}
                   />
                 </motion.div>
               );

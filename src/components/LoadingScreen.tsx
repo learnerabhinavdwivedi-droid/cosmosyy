@@ -71,7 +71,7 @@ export function LoadingScreen({ progress: explicitProgress }: LoadingScreenProps
       setTimeout(() => {
         setFactIdx((i) => (i + 1) % FACTS.length);
         setFactFade(true);
-      }, 300);
+      }, 150);
     }, 4500);
     return () => clearInterval(interval);
   }, []);
@@ -103,7 +103,7 @@ export function LoadingScreen({ progress: explicitProgress }: LoadingScreenProps
           {t("loading.didYouKnow")}
         </p>
         <p
-          className="text-xs sm:text-sm leading-snug sm:leading-relaxed text-regolith-300 transition-opacity duration-300 line-clamp-2"
+          className="text-xs sm:text-sm leading-snug sm:leading-relaxed text-regolith-300 transition-opacity duration-150 line-clamp-2"
           style={{ opacity: factFade ? 1 : 0 }}
         >
           {FACTS[factIdx]}

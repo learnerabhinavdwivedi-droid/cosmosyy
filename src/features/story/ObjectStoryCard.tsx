@@ -32,7 +32,7 @@ export function ObjectStoryCard({
   autoPlay = true,
 }: ObjectStoryCardProps) {
   const { t, i18n } = useTranslation();
-  const [state, dispatch] = useStoryPlayer(packet.scenes.length);
+  const [state, dispatch] = useStoryPlayer(packet.scenes.length, autoPlay ? "playing" : "idle");
   const containerRef = useRef<HTMLDivElement>(null);
   const audioTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -95,7 +95,7 @@ export function ObjectStoryCard({
     if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
     advanceTimerRef.current = setTimeout(() => {
       dispatch({ type: "NEXT" });
-    }, 1200);
+    }, 500);
   }, [dispatch]);
 
   // Play narration whenever scene or mode changes while active

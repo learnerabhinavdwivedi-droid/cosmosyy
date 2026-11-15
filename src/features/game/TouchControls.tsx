@@ -43,10 +43,6 @@ export function TouchControls({
   });
   const joystickFingerId = useRef<number | null>(null);
 
-  const scanTimerRef = useRef<number>(0);
-  const scanStartRef = useRef<number | null>(null);
-  const [scanProgress, setScanProgress] = useState(0);
-
   // --- Look zone (right side) ---
   const handleLookStart = useCallback((e: React.TouchEvent) => {
     for (let i = 0; i < e.changedTouches.length; i++) {
@@ -159,36 +155,9 @@ export function TouchControls({
     [handleJoystickEnd, handleLookEnd],
   );
 
-  // --- Scan hold button ---
-  const startScan = useCallback(() => {
-    if (!canScan || !nearObjectId) return;
-    scanStartRef.current = Date.now();
-    const animate = () => {
-      if (scanStartRef.current === null) return;
-      const elapsed = (Date.now() - scanStartRef.current) / 1000;
-      const p = Math.min(elapsed / 1.5, 1);
-      setScanProgress(p);
-      if (p >= 1) {
-        scanStartRef.current = null;
-        setScanProgress(0);
-        onScan();
-        return;
-      }
-      scanTimerRef.current = requestAnimationFrame(animate);
-    };
-    scanTimerRef.current = requestAnimationFrame(animate);
-  }, [canScan, nearObjectId, onScan]);
-
-  const cancelScan = useCallback(() => {
-    scanStartRef.current = null;
-    cancelAnimationFrame(scanTimerRef.current);
-    setScanProgress(0);
-  }, []);
-
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      cancelAnimationFrame(scanTimerRef.current);
       useTouchStore.getState().reset();
     };
   }, []);
@@ -262,47 +231,26 @@ export function TouchControls({
           {/* Sprint toggle */}
           <SprintToggle />
 
-          {/* Scan */}
+          {/* Scan - instant one-tap scan */}
           {showScan && (
             <button
-              className="relative flex h-14 w-14 items-center justify-center rounded-full border border-signal/50 bg-signal/15 text-xs font-bold text-signal backdrop-blur active:bg-signal/30"
-              style={{ touchAction: "none" }}
-              onTouchStart={(e) => {
+              type="button"
+              className="relative flex h-14 w-14 items-center justify-center rounded-full border border-signal/60 bg-signal/25 text-xs font-bold text-signal backdrop-blur active:scale-95 active:bg-signal/40 shadow-lg shadow-signal/20 touch-manipulation cursor-pointer"
+              onClick={(e) => {
                 e.stopPropagation();
-                startScan();
+                onScan();
               }}
-              onTouchEnd={(e) => {
-                e.stopPropagation();
-                cancelScan();
-              }}
-              onTouchCancel={cancelScan}
             >
               SCAN
-              {scanProgress > 0 && (
-                <svg className="absolute inset-0 pointer-events-none" viewBox="0 0 56 56">
-                  <circle
-                    cx="28"
-                    cy="28"
-                    r="24"
-                    fill="none"
-                    stroke="#00d4ff"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeDasharray={2 * Math.PI * 24}
-                    strokeDashoffset={2 * Math.PI * 24 * (1 - scanProgress)}
-                    transform="rotate(-90 28 28)"
-                  />
-                </svg>
-              )}
             </button>
           )}
 
           {/* 3D Story Card */}
           {canScan && onOpenStory && (
             <button
-              className="flex h-14 w-14 items-center justify-center rounded-full border border-sky-400/80 bg-sky-500/25 text-[10px] font-black uppercase text-sky-200 backdrop-blur active:bg-sky-500/50 shadow-lg shadow-sky-500/30 font-mono animate-pulse"
-              style={{ touchAction: "none" }}
-              onTouchStart={(e) => {
+              type="button"
+              className="flex h-14 w-14 items-center justify-center rounded-full border border-sky-400/80 bg-sky-500/25 text-[10px] font-black uppercase text-sky-200 backdrop-blur active:scale-95 active:bg-sky-500/50 shadow-lg shadow-sky-500/30 font-mono animate-pulse touch-manipulation cursor-pointer"
+              onClick={(e) => {
                 e.stopPropagation();
                 onOpenStory();
               }}
@@ -314,9 +262,9 @@ export function TouchControls({
           {/* Flag */}
           {showFlag && (
             <button
-              className="flex h-14 w-14 items-center justify-center rounded-full border border-signal/50 bg-signal/15 text-xs font-bold text-signal backdrop-blur animate-pulse active:bg-signal/30"
-              style={{ touchAction: "none" }}
-              onTouchStart={(e) => {
+              type="button"
+              className="flex h-14 w-14 items-center justify-center rounded-full border border-signal/50 bg-signal/25 text-xs font-bold text-signal backdrop-blur animate-pulse active:scale-95 active:bg-signal/40 touch-manipulation cursor-pointer"
+              onClick={(e) => {
                 e.stopPropagation();
                 onFlag();
               }}
@@ -328,9 +276,9 @@ export function TouchControls({
           {/* Launch */}
           {showLaunch && (
             <button
-              className="flex h-14 w-14 items-center justify-center rounded-full border border-ok/50 bg-ok/15 text-xs font-bold text-ok backdrop-blur animate-pulse active:bg-ok/30"
-              style={{ touchAction: "none" }}
-              onTouchStart={(e) => {
+              type="button"
+              className="flex h-14 w-14 items-center justify-center rounded-full border border-ok/50 bg-ok/25 text-xs font-bold text-ok backdrop-blur animate-pulse active:scale-95 active:bg-ok/40 touch-manipulation cursor-pointer"
+              onClick={(e) => {
                 e.stopPropagation();
                 onLaunch();
               }}
