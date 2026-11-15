@@ -1,0 +1,126 @@
+{
+  "id": "mars-viking2",
+  "planet": "mars",
+  "name": "Viking 2",
+  "site": "Utopia Planitia",
+  "date": "1976-09-03",
+  "evaSunTime": "1976-09-03T22:37:50Z",
+  "missionType": "robotic",
+  "operator": "NASA / Langley / JPL",
+  "crew": {
+    "commander": "James S. Martin Jr.",
+    "lmp": "A. Thomas Young",
+    "cmp": "Gerald A. Soffen"
+  },
+  "landing": {
+    "lat": 47.97,
+    "lon": 134.26,
+    "label": "Utopia Planitia Landing Site"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null
+  },
+  "keyDiscovery": "Viking 2 returned over 16,000 images, confirmed widespread volcanic basalt regolith, and photographed thin water-ice frost coating the rocks during the northern Martian winter.",
+  "missionLegacy": "Operated for 1,316 sols until April 1980, operating the only seismometer that successfully deployed during the Viking era to measure planetary vibrations.",
+  "funFact": "In 1979, Viking 2 photographed delicate water-ice frost covering the red rocks of Utopia Planitia for 100 consecutive days — the first time frost was ever photographed on another world.",
+  "heritageNote": "Viking 2 rests undisturbed on the rocky plains of Utopia Planitia, 200 km west of Mie crater; in 2021, China's Zhurong rover landed in the same northern basin.",
+  "timeline": {
+    "launch": "1975-09-09",
+    "landing": "1976-09-03",
+    "lastContact": "1980-04-11",
+    "endOfMission": "1980-04-12"
+  },
+  "objects": [
+    {
+      "id": "v2-lander-body",
+      "name": "Viking 2 Lander",
+      "position": [0, 0, 0],
+      "description": "The Viking 2 lander touched down on Utopia Planitia on September 3, 1976. Supported by three titanium inverted-tripod landing legs with crushable honeycomb pads, it housed twin SNAP-19 RTGs, dual biological incubators, and S-band communications antennas.",
+      "xp": 60,
+      "source": "NASA/JPL Viking Mission Archive",
+      "scienceDiscovery": "Provided four years of continuous weather, atmospheric pressure, and surface imaging, confirming seasonal CO2 condensation and water-ice sublimation.",
+      "legacy": "Remains in pristine condition on the northern plains of Utopia Planitia, surviving four complete Martian seasonal cycles.",
+      "status": "defunct",
+      "firstPerson": "I touched down in the rocky fields of Utopia Planitia two months after my sister on Chryse. I watched four Martian winters freeze the red plain in delicate white frost, and felt the whisper of wind across my antennas until my batteries grew cold in 1980.",
+      "yearDeployed": 1976,
+      "yearLastContact": 1980,
+      "nasaImageId": "PIA00563"
+    },
+    {
+      "id": "v2-sampler-arm",
+      "name": "Robotic Soil Sampler",
+      "position": [3.5, 0, 2.2],
+      "description": "A 3-metre telescoping boom tipped with an electromechanical backhoe scoop. It pushed aside surface rocks, dug five trenches up to 15 cm deep, and delivered regolith to onboard biology, GCMS, and X-ray fluorescence funnels.",
+      "xp": 50,
+      "source": "NASA/JPL Viking Mission Archive",
+      "scienceDiscovery": "Pushed aside a 10 kg boulder nicknamed 'Mr. Badger' to scoop protected subsurface soil that had never been exposed to solar ultraviolet radiation.",
+      "legacy": "Pioneered robotic trenching and physical soil mechanics techniques adopted by Phoenix and Curiosity.",
+      "status": "defunct",
+      "firstPerson": "I was the arm that moved boulders on Mars. In May 1977, my motors strained to nudge a heavy rock named Mr. Badger so I could scoop the sheltered soil beneath. My final scoop still rests securely in my metal jaws.",
+      "yearDeployed": 1976,
+      "yearLastContact": 1980,
+      "nasaImageId": "PIA00570"
+    },
+    {
+      "id": "v2-seismometer",
+      "name": "Viking 2 Seismometer",
+      "position": [-2.8, 0, 1.5],
+      "description": "A three-axis inertial seismometer mounted atop the lander bus. Unlike Viking 1 whose sensor locking pins failed to release, Viking 2's locking mechanism successfully uncaged, allowing it to record planetary ground accelerations.",
+      "xp": 50,
+      "source": "NASA/JPL Viking Mission Archive",
+      "scienceDiscovery": "Recorded background seismic noise caused by Martian atmospheric wind gusts and detected one possible genuine magnitude 2.8 marsquake on Sol 80.",
+      "legacy": "Provided humanity's first direct seismic data from the interior of Mars, setting the technical benchmark for the InSight mission 42 years later.",
+      "status": "defunct",
+      "firstPerson": "My sister's pins stuck fast, but mine clicked open with a satisfying snap. High on the lander body, I listened to the shudder of wind against the dish and the deep, silent heartbeat of Mars. On Sol 80, I felt the ground tremble beneath us.",
+      "yearDeployed": 1976,
+      "yearLastContact": 1980,
+      "nasaImageId": "PIA00572"
+    },
+    {
+      "id": "v2-meteorology",
+      "name": "Meteorology Sensor Boom",
+      "position": [-3.2, 0, -2.8],
+      "description": "An upright 1.3-metre sensor mast equipped with hot-film anemometers, thermocouple temperature gauges, and a thin-diaphragm pressure transducer positioned to minimize thermal contamination from the lander's RTGs.",
+      "xp": 50,
+      "source": "NASA/JPL Viking Mission Archive",
+      "scienceDiscovery": "Measured the annual atmospheric pressure cycle as the Martian polar ice caps froze out and sublimated, revealing that 25% of Mars's atmosphere condenses each winter.",
+      "legacy": "Its 4-year continuous barometric pressure record remains the fundamental baseline for global Martian atmospheric climate models.",
+      "status": "defunct",
+      "firstPerson": "Day and night, I felt the thin Martian air slide past my platinum filaments. I watched atmospheric pressure plunge each winter as a quarter of the sky turned to ice at the poles, recording the heartbeat of a living atmosphere.",
+      "yearDeployed": 1976,
+      "yearLastContact": 1980,
+      "nasaImageId": "PIA00574"
+    },
+    {
+      "id": "v2-facsimile-camera",
+      "name": "Dual Facsimile Cameras",
+      "position": [1.8, 0, -3.2],
+      "description": "Twin vertical scanning cameras that used nodding mirrors and silicon photodiode arrays to sweep line-by-line 360-degree high-resolution panoramic images in monochrome, color, and infrared spectrums.",
+      "xp": 50,
+      "source": "NASA/JPL Viking Mission Archive",
+      "scienceDiscovery": "Captured the famous frost panoramas showing water ice crystallizing on Martian rocks and dust dunes across 100 consecutive sols in the Utopia winter.",
+      "legacy": "Proved that water frost naturally occurs on the surface of Mars, transforming our understanding of Martian volatiles.",
+      "status": "defunct",
+      "firstPerson": "My nodding mirror swept the horizon one vertical strip at a time. Through my filters, Earth saw the red plains of Utopia transform into an icy white landscape under a pale pink sky. I captured humanity's first winter on another planet.",
+      "yearDeployed": 1976,
+      "yearLastContact": 1980,
+      "nasaImageId": "PIA00576"
+    },
+    {
+      "id": "v2-gcms-inlet",
+      "name": "GCMS Organic Analysis Oven",
+      "position": [2.9, 0, -1.1],
+      "description": "Surface funnel and motorized soil distribution sieve that transported regolith samples into miniature pyrolysis ovens. The ovens pyrolyzed soil at 50°C, 200°C, 350°C, and 500°C to volatilize compounds for mass spectrometer analysis.",
+      "xp": 50,
+      "source": "NASA/JPL Viking Mission Archive",
+      "scienceDiscovery": "Detected trace water and carbon dioxide liberated by heating, but found no organic compounds above parts-per-billion levels due to highly reactive soil oxidizers.",
+      "legacy": "Its puzzling negative results spurred decades of research into perchlorates and Martian soil oxidizers, eventually solved by Phoenix and Curiosity.",
+      "status": "defunct",
+      "firstPerson": "I baked the Martian soil in tiny sealed chambers, sniffing for the carbon building blocks of ancient life. The dirt held water, but its oxidizers destroyed any organic traces. My mystery stood for thirty years until Phoenix found the perchlorates that puzzled me.",
+      "yearDeployed": 1976,
+      "yearLastContact": 1980,
+      "nasaImageId": "PIA00578"
+    }
+  ]
+}

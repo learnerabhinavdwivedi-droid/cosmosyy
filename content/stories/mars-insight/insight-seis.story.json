@@ -1,0 +1,211 @@
+{
+  "id": "insight-seis",
+  "missionId": "mars-insight",
+  "name": "SEIS Ultra-Sensitive Seismometer",
+  "kind": "science-instrument",
+  "environment": "mars-surface",
+  "fate": "left-on-surface",
+  "year": 2018,
+  "nssdcaId": "PIA23048",
+  "model": {
+    "glb": null,
+    "procedural": "insight-seis",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "SEIS Ultra-Sensitive Seismometer was deployed at Elysium Planitia during InSight in 2018.",
+      "source": "NASA/JPL InSight Mission Archive",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "France's CNES Seismic Experiment for Interior Structure consists of three very-broad-band sensors sealed in an evacuated spherical vacuum chamber, sheltered under a thermal and aerodynamic Wind and Thermal Shield (WTS) dome placed directly on the soil.",
+      "source": "NASA/JPL InSight Mission Archive",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the Martian environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "Discovered that Mars is seismically active, recording 1,319+ marsquakes, and mapped the thickness of the Martian crust and the depth of the liquid core boundary.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Remains preserved in the arid regolith at Elysium Planitia.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "The most sensitive planetary seismometer ever built, capable of detecting vibrations smaller than the width of a single hydrogen atom.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am SEIS Ultra-Sensitive Seismometer. I arrived here at Elysium Planitia in 2018.",
+      "explorer": "SEIS Ultra-Sensitive Seismometer, InSight: deployed at Elysium Planitia in 2018.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "France's CNES Seismic Experiment for Interior Structure consists of three very-broad-band sensors sealed in an evacuated spherical vacuum chamber, sheltered under a thermal and aerodynamic Wind and Thermal Shield (WTS) dome placed directly on the soil.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "Discovered that Mars is seismically active, recording 1,319+ marsquakes, and mapped the thickness of the Martian crust and the depth of the liquid core boundary.",
+      "explorer": "Discovered that Mars is seismically active, recording 1,319+ marsquakes, and mapped the thickness of the Martian crust and the depth of the liquid core boundary.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
+      "explorer": "Fate: left on surface. Position recorded at coordinates [1.8, 1.6].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "The most sensitive planetary seismometer ever built, capable of detecting vibrations smaller than the width of a single hydrogen atom.",
+      "explorer": "The most sensitive planetary seismometer ever built, capable of detecting vibrations smaller than the width of a single hydrogen atom.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}

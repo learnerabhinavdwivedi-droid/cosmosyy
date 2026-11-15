@@ -137,6 +137,33 @@ const MARS_MISSIONS: MissionCardData[] = [
     hook: "Searching for ancient life. First Mars helicopter. Sample return.",
     objectCount: 6,
   },
+  {
+    id: "mars-viking2",
+    name: "Viking 2",
+    site: "Utopia Planitia",
+    date: "3 September 1976",
+    crew: "NASA / JPL",
+    hook: "Twin lander that measured Martian weather and detected Utopia frost.",
+    objectCount: 6,
+  },
+  {
+    id: "mars-phoenix",
+    name: "Phoenix",
+    site: "Vastitas Borealis",
+    date: "25 May 2008",
+    crew: "NASA / JPL / Univ. of Arizona",
+    hook: "Touched and vaporized pure water ice beneath the Martian arctic soil.",
+    objectCount: 6,
+  },
+  {
+    id: "mars-insight",
+    name: "InSight",
+    site: "Elysium Planitia",
+    date: "26 November 2018",
+    crew: "NASA / CNES / DLR",
+    hook: "Listened to the heartbeat of Mars — mapped crust, mantle, and molten core.",
+    objectCount: 6,
+  },
 ];
 
 const DEEP_SPACE_MISSIONS: MissionCardData[] = [
@@ -157,6 +184,15 @@ const DEEP_SPACE_MISSIONS: MissionCardData[] = [
     crew: "NASA / JHU APL",
     hook: "Humanity's first soft touchdown on an asteroid.",
     objectCount: 4,
+  },
+  {
+    id: "deepspace-pioneer",
+    name: "Pioneer 10 & 11",
+    site: "Interstellar Trajectory",
+    date: "2 March 1972",
+    crew: "NASA Ames",
+    hook: "First across the Asteroid Belt, first to Jupiter & Saturn, carrying Carl Sagan's Golden Plaque.",
+    objectCount: 6,
   },
   {
     id: "deep-voyager",

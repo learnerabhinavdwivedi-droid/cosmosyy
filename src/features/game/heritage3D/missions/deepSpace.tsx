@@ -893,3 +893,201 @@ export function PhotometerSunshield3D({
     </group>
   );
 }
+
+/* =========================================================================
+ * 5. Pioneer 10 & 11 (Interstellar Trajectory — 1972)
+ * ========================================================================= */
+
+/**
+ * Pioneer 10 2.74-Meter High-Gain Antenna Dish
+ */
+export function PioneerDish3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactProps) {
+  const hornOffset = explode * 0.45;
+
+  return (
+    <group scale={scale} dispose={null}>
+      {/* Parabolic reflector dish */}
+      <mesh rotation={[Math.PI, 0, 0]} castShadow receiveShadow>
+        <sphereGeometry args={[1.37, 32, 16, 0, Math.PI * 2, 0, 0.6]} />
+        <meshStandardMaterial
+          color="#cbd5e1"
+          metalness={0.7}
+          roughness={0.25}
+          side={THREE.DoubleSide}
+          wireframe={wireframe}
+        />
+      </mesh>
+      {/* Feed Horn Tripod Struts */}
+      {[0, (Math.PI * 2) / 3, (Math.PI * 4) / 3].map((angle, i) => (
+        <mesh
+          key={i}
+          position={[Math.cos(angle) * 0.5, 0.4 + hornOffset * 0.5, Math.sin(angle) * 0.5]}
+          rotation={[0.3 * Math.sin(angle), -angle, 0.3 * Math.cos(angle)]}
+        >
+          <cylinderGeometry args={[0.015, 0.015, 0.95, 8]} />
+          <meshStandardMaterial color="#475569" metalness={0.85} roughness={0.2} wireframe={wireframe} />
+        </mesh>
+      ))}
+      {/* Sub-reflector apex feed horn */}
+      <mesh position={[0, 0.85 + hornOffset, 0]}>
+        <coneGeometry args={[0.12, 0.25, 16]} />
+        <meshStandardMaterial color="#e2e8f0" metalness={0.8} roughness={0.2} wireframe={wireframe} />
+      </mesh>
+    </group>
+  );
+}
+
+/**
+ * Pioneer SNAP-19 RTG Power Booms
+ */
+export function PioneerRtgBooms3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactProps) {
+  const boomOffset = explode * 0.5;
+
+  return (
+    <group scale={scale} dispose={null}>
+      {/* Twin deployable truss booms */}
+      {[-1, 1].map((dir) => (
+        <group key={dir} position={[dir * (1.6 + boomOffset), 0, 0]}>
+          <mesh rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.04, 0.04, 1.8, 8]} />
+            <meshStandardMaterial color="#64748b" metalness={0.85} roughness={0.2} wireframe={wireframe} />
+          </mesh>
+          {/* Pair of SNAP-19 RTGs per boom */}
+          {[-0.25, 0.25].map((z, j) => (
+            <group key={j} position={[dir * 0.8, 0, z]}>
+              <mesh castShadow>
+                <cylinderGeometry args={[0.18, 0.18, 0.42, 16]} />
+                <meshStandardMaterial color="#1e293b" metalness={0.9} roughness={0.2} wireframe={wireframe} />
+              </mesh>
+              {/* Radiator cooling fins */}
+              {[0, Math.PI / 2, Math.PI, (Math.PI * 3) / 2].map((fAngle, fi) => (
+                <mesh key={fi} rotation={[0, fAngle, 0]}>
+                  <boxGeometry args={[0.48, 0.36, 0.02]} />
+                  <meshStandardMaterial color="#334155" metalness={0.8} roughness={0.3} wireframe={wireframe} />
+                </mesh>
+              ))}
+            </group>
+          ))}
+        </group>
+      ))}
+    </group>
+  );
+}
+
+/**
+ * The Pioneer Golden Plaque
+ */
+export function PioneerPlaque3D({ wireframe = false, scale = 1 }: ArtifactProps) {
+  return (
+    <group scale={scale} dispose={null}>
+      {/* 6x9 inch Gold-anodized aluminum plaque */}
+      <mesh castShadow receiveShadow>
+        <boxGeometry args={[1.5, 1.0, 0.04]} />
+        <meshStandardMaterial
+          color="#f59e0b"
+          metalness={0.95}
+          roughness={0.18}
+          wireframe={wireframe}
+        />
+      </mesh>
+      {/* Engraved pulsar map center radial burst */}
+      <mesh position={[-0.3, 0.05, 0.025]}>
+        <ringGeometry args={[0.02, 0.25, 16]} />
+        <meshBasicMaterial color="#78350f" wireframe={true} />
+      </mesh>
+      {/* Human figures silhouette imprint */}
+      <mesh position={[0.35, 0.05, 0.025]}>
+        <planeGeometry args={[0.35, 0.65]} />
+        <meshBasicMaterial color="#92400e" transparent opacity={0.8} />
+      </mesh>
+      {/* Hyperfine transition of neutral hydrogen symbol */}
+      <mesh position={[-0.3, 0.35, 0.025]}>
+        <ringGeometry args={[0.04, 0.08, 16]} />
+        <meshBasicMaterial color="#78350f" wireframe={true} />
+      </mesh>
+    </group>
+  );
+}
+
+/**
+ * Pioneer Quadraspherical Plasma Analyzer
+ */
+export function PioneerPlasmaAnalyzer3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactProps) {
+  const plateOffset = explode * 0.35;
+
+  return (
+    <group scale={scale} dispose={null}>
+      {/* Curved electrostatic analyzer dome */}
+      <mesh position={[0, 0.1, 0]} castShadow>
+        <sphereGeometry args={[0.38, 24, 16, 0, Math.PI, 0, Math.PI / 2]} />
+        <meshStandardMaterial color="#cbd5e1" metalness={0.85} roughness={0.2} wireframe={wireframe} />
+      </mesh>
+      {/* Curved deflection plates */}
+      <mesh position={[0, 0.1 + plateOffset, 0.15]}>
+        <torusGeometry args={[0.22, 0.04, 8, 16, Math.PI]} />
+        <meshStandardMaterial color="#334155" metalness={0.9} roughness={0.2} wireframe={wireframe} />
+      </mesh>
+      {/* Base flange mount */}
+      <mesh position={[0, -0.05, 0]}>
+        <cylinderGeometry args={[0.42, 0.42, 0.08, 16]} />
+        <meshStandardMaterial color="#64748b" metalness={0.8} roughness={0.3} wireframe={wireframe} />
+      </mesh>
+    </group>
+  );
+}
+
+/**
+ * Pioneer Helium Vector Magnetometer Boom
+ */
+export function PioneerMagnetometerBoom3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactProps) {
+  const sensorOffset = explode * 0.5;
+
+  return (
+    <group scale={scale} dispose={null}>
+      {/* 6.6m folding fiberglass mast */}
+      <mesh position={[0, 0, -1.2]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.03, 0.03, 2.4, 8]} />
+        <meshStandardMaterial color="#fbbf24" metalness={0.3} roughness={0.6} wireframe={wireframe} />
+      </mesh>
+      {/* Spherical Helium Gas Cell Sensor at boom tip */}
+      <mesh position={[0, 0, 0.2 + sensorOffset]} castShadow>
+        <sphereGeometry args={[0.22, 24, 24]} />
+        <meshStandardMaterial color="#e2e8f0" metalness={0.92} roughness={0.15} wireframe={wireframe} />
+      </mesh>
+      {/* Infrared optical pumping lamp housing */}
+      <mesh position={[0, 0.22, 0.2 + sensorOffset]}>
+        <cylinderGeometry args={[0.06, 0.06, 0.18, 12]} />
+        <meshStandardMaterial color="#0f172a" metalness={0.85} roughness={0.25} wireframe={wireframe} />
+      </mesh>
+    </group>
+  );
+}
+
+/**
+ * Pioneer Interstellar Dust & Cosmic Ray Telescope
+ */
+export function PioneerInterstellarDust3D({ explode = 0, wireframe = false, scale = 1 }: ArtifactProps) {
+  const detOffset = explode * 0.35;
+
+  return (
+    <group scale={scale} dispose={null}>
+      {/* Main telescope canister */}
+      <mesh position={[0, 0, 0]} castShadow>
+        <cylinderGeometry args={[0.22, 0.26, 0.55, 20]} />
+        <meshStandardMaterial color="#475569" metalness={0.8} roughness={0.25} wireframe={wireframe} />
+      </mesh>
+      {/* Silicon solid-state detector rings */}
+      {[-0.1, 0.1].map((y, i) => (
+        <mesh key={i} position={[0, y + (i === 1 ? detOffset : 0), 0]}>
+          <cylinderGeometry args={[0.18, 0.18, 0.04, 16]} />
+          <meshStandardMaterial color="#0284c7" metalness={0.9} roughness={0.15} wireframe={wireframe} />
+        </mesh>
+      ))}
+      {/* Front dust impact grid sensor */}
+      <mesh position={[0, 0.3 + detOffset, 0]}>
+        <ringGeometry args={[0.05, 0.2, 16]} />
+        <meshStandardMaterial color="#94a3b8" metalness={0.95} roughness={0.1} wireframe={wireframe} />
+      </mesh>
+    </group>
+  );
+}

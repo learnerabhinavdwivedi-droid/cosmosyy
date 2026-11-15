@@ -1,0 +1,211 @@
+{
+  "id": "photometer-sunshield",
+  "missionId": "deep-kepler",
+  "name": "Solar Array & Thermal Sunshade",
+  "kind": "memorial",
+  "environment": "deep-space",
+  "fate": "left-on-surface",
+  "year": 2009,
+  "nssdcaId": "PIA16610",
+  "model": {
+    "glb": null,
+    "procedural": "photometer-sunshield",
+    "dims": null
+  },
+  "facts": [
+    {
+      "id": "f1",
+      "text": "Solar Array & Thermal Sunshade was deployed at Earth-Trailing Heliocentric Orbit during Kepler Space Telescope in 2009.",
+      "source": "Ball Aerospace System Architecture Report",
+      "status": "verified"
+    },
+    {
+      "id": "f2",
+      "text": "Curved carbon-composite sunshade and Gallium Arsenide solar array generating 1.1 kW of electrical power while thermally isolating the sensitive photometer at -85°C.",
+      "source": "Ball Aerospace System Architecture Report",
+      "status": "verified"
+    },
+    {
+      "id": "f3",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the lunar environment.",
+      "source": "NASA Space Mission Data",
+      "status": "general-science"
+    },
+    {
+      "id": "f4",
+      "text": "Proved that high-aspect carbon-composite baffle structures could maintain sub-millikelvin thermal stability in interplanetary space.",
+      "source": "NASA Science Mission Directorate",
+      "status": "verified"
+    },
+    {
+      "id": "f5",
+      "text": "Status: Remains preserved in the arid regolith at Earth-Trailing Heliocentric Orbit.",
+      "source": "NASA NSSDCA Master Catalog",
+      "status": "verified"
+    },
+    {
+      "id": "f6",
+      "text": "A permanent human and robotic monument celebrating space exploration on the Moon.",
+      "source": "NASA Mission Heritage Records",
+      "status": "verified"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "s1",
+      "beat": "identity",
+      "action": "establish",
+      "camera": {
+        "pos": [
+          3.3,
+          1.45,
+          3.4
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f1"
+      ],
+      "kids": "I am Solar Array & Thermal Sunshade. I arrived here at Earth-Trailing Heliocentric Orbit in 2009.",
+      "explorer": "Solar Array & Thermal Sunshade, Kepler Space Telescope: deployed at Earth-Trailing Heliocentric Orbit in 2009.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s2",
+      "beat": "design",
+      "action": "closeup",
+      "camera": {
+        "pos": [
+          1.8,
+          1.1,
+          1.8
+        ],
+        "look": [
+          0,
+          0.1,
+          0
+        ]
+      },
+      "factIds": [
+        "f2"
+      ],
+      "kids": "Take a look at how I was built. Every part of me had a special purpose.",
+      "explorer": "Curved carbon-composite sunshade and Gallium Arsenide solar array generating 1.1 kW of electrical power while thermally isolating the sensitive photometer at -85°C.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s3",
+      "beat": "how-it-worked",
+      "action": "mechanism",
+      "camera": {
+        "pos": [
+          2.5,
+          0.9,
+          2.3
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f3"
+      ],
+      "kids": "Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.",
+      "explorer": "Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s4",
+      "beat": "evidence",
+      "action": "particles",
+      "camera": {
+        "pos": [
+          1.9,
+          1.25,
+          1.7
+        ],
+        "look": [
+          0,
+          0.05,
+          0
+        ]
+      },
+      "factIds": [
+        "f4"
+      ],
+      "kids": "Proved that high-aspect carbon-composite baffle structures could maintain sub-millikelvin thermal stability in interplanetary space.",
+      "explorer": "Proved that high-aspect carbon-composite baffle structures could maintain sub-millikelvin thermal stability in interplanetary space.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s5",
+      "beat": "fate",
+      "action": "rest",
+      "camera": {
+        "pos": [
+          3.4,
+          1.6,
+          3.1
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f5"
+      ],
+      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
+      "explorer": "Fate: left on surface. Position recorded at coordinates [1.9, -1.8].",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    },
+    {
+      "id": "s6",
+      "beat": "legacy",
+      "action": "legacy",
+      "camera": {
+        "pos": [
+          3.8,
+          1.9,
+          3.6
+        ],
+        "look": [
+          0,
+          0,
+          0
+        ]
+      },
+      "factIds": [
+        "f6"
+      ],
+      "kids": "Everything I learned showed humanity how to explore deeper into space.",
+      "explorer": "A milestone in planetary science and permanent historical artifact.",
+      "audio": {
+        "kids": null,
+        "explorer": null
+      }
+    }
+  ]
+}

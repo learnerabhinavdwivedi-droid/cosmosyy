@@ -48,6 +48,24 @@ import {
   VikingFacsimileCameras3D,
   VikingAntenna3D,
   VikingSeismometer3D,
+  Viking2LanderBody3D,
+  Viking2SamplerArm3D,
+  Viking2Seismometer3D,
+  Viking2Meteorology3D,
+  Viking2FacsimileCameras3D,
+  Viking2GCMSInlet3D,
+  PhoenixLanderBody3D,
+  PhoenixRoboticArm3D,
+  PhoenixTEGA3D,
+  PhoenixMECA3D,
+  PhoenixSolarWings3D,
+  PhoenixLidarStation3D,
+  InSightLanderBody3D,
+  InSightSEIS3D,
+  InSightHP3Mole3D,
+  InSightUltraFlexArrays3D,
+  InSightIDCArm3D,
+  InSightTWINS3D,
   PathfinderBaseStation3D,
   MarsDeploymentRamp3D,
   IMPCameraMast3D,
@@ -74,6 +92,12 @@ import {
   CCDFocalPlane3D,
   ReactionWheelAssembly3D,
   PhotometerSunshield3D,
+  PioneerDish3D,
+  PioneerRtgBooms3D,
+  PioneerPlaque3D,
+  PioneerPlasmaAnalyzer3D,
+  PioneerMagnetometerBoom3D,
+  PioneerInterstellarDust3D,
 } from "./missions/deepSpace";
 
 export interface Heritage3DProps {
@@ -161,6 +185,30 @@ export function getDedicated3DComponent(
   if (objectId === "v1-antenna") return VikingAntenna3D;
   if (objectId === "v1-seismometer") return VikingSeismometer3D;
 
+  // Viking 2
+  if (objectId === "v2-lander-body") return Viking2LanderBody3D;
+  if (objectId === "v2-sampler-arm") return Viking2SamplerArm3D;
+  if (objectId === "v2-seismometer") return Viking2Seismometer3D;
+  if (objectId === "v2-meteorology") return Viking2Meteorology3D;
+  if (objectId === "v2-facsimile-camera") return Viking2FacsimileCameras3D;
+  if (objectId === "v2-gcms-inlet") return Viking2GCMSInlet3D;
+
+  // Phoenix
+  if (objectId === "phoenix-lander-body") return PhoenixLanderBody3D;
+  if (objectId === "phoenix-ra-arm") return PhoenixRoboticArm3D;
+  if (objectId === "phoenix-tega") return PhoenixTEGA3D;
+  if (objectId === "phoenix-meca") return PhoenixMECA3D;
+  if (objectId === "phoenix-solar-wings") return PhoenixSolarWings3D;
+  if (objectId === "phoenix-lidar") return PhoenixLidarStation3D;
+
+  // InSight
+  if (objectId === "insight-lander-body") return InSightLanderBody3D;
+  if (objectId === "insight-seis") return InSightSEIS3D;
+  if (objectId === "insight-hp3") return InSightHP3Mole3D;
+  if (objectId === "insight-ultraflex") return InSightUltraFlexArrays3D;
+  if (objectId === "insight-idc-arm") return InSightIDCArm3D;
+  if (objectId === "insight-twins") return InSightTWINS3D;
+
   // ── Deep Space & Asteroids ──
   // Dawn
   if (objectId === "dawn-spacecraft") return DawnSpacecraft3D;
@@ -185,6 +233,14 @@ export function getDedicated3DComponent(
   if (objectId === "ccd-focal-plane") return CCDFocalPlane3D;
   if (objectId === "reaction-wheel-assembly") return ReactionWheelAssembly3D;
   if (objectId === "photometer-sunshield") return PhotometerSunshield3D;
+
+  // Pioneer 10 & 11
+  if (objectId === "pioneer-dish") return PioneerDish3D;
+  if (objectId === "pioneer-rtg-booms") return PioneerRtgBooms3D;
+  if (objectId === "pioneer-plaque") return PioneerPlaque3D;
+  if (objectId === "pioneer-plasma-analyzer") return PioneerPlasmaAnalyzer3D;
+  if (objectId === "pioneer-magnetometer-boom") return PioneerMagnetometerBoom3D;
+  if (objectId === "pioneer-interstellar-dust") return PioneerInterstellarDust3D;
 
   return null;
 }
@@ -675,5 +731,122 @@ const DEDICATED_COMPONENTS: Record<
     { name: "baffle", displayName: "Light-Absorbing Thermal Baffle", explode: [0, 0.35, 0] },
     { name: "solar", displayName: "Integrated Photovoltaic Panel", explode: [0, 0, -0.25] },
     { name: "blanket", displayName: "Multi-Layer MLI Thermal Blanket", explode: [0, -0.2, 0] },
+  ],
+
+  // Viking 2
+  "v2-lander-body": [
+    { name: "bus", displayName: "Hexagonal Titanium Equipment Bus", explode: [0, 0.1, 0] },
+    { name: "legs", displayName: "3 Inverted Tripod Landing Struts", explode: [0.35, -0.2, 0] },
+    { name: "rtg", displayName: "Dual SNAP-19 RTGs with Wind Shields", explode: [-0.3, 0.2, 0] },
+  ],
+  "v2-sampler-arm": [
+    { name: "boom", displayName: "Telescoping Collector Boom", explode: [0, 0.2, 0] },
+    { name: "scoop", displayName: "Electromechanical Backhoe Scoop", explode: [0, 0.35, 0.2] },
+    { name: "badger", displayName: "Basalt Boulder ('Mr. Badger')", explode: [0.35, 0, 0] },
+  ],
+  "v2-seismometer": [
+    { name: "sensor", displayName: "Unlocked 3-Axis Inertial Sensor", explode: [0, 0, 0] },
+    { name: "cover", displayName: "Anodized Environmental Cover Dome", explode: [0, 0.3, 0] },
+  ],
+  "v2-meteorology": [
+    { name: "mast", displayName: "Vertical Meteorology Mast", explode: [0, 0.25, 0] },
+    { name: "sensor", displayName: "Hot-Film Anemometer & Thermocouple", explode: [0, 0.45, 0] },
+  ],
+  "v2-facsimile-camera": [
+    { name: "head", displayName: "Dual Nodding Mirror Scanner Heads", explode: [0, 0.25, 0] },
+    { name: "pylon", displayName: "White Magnesium Alloy Pylons", explode: [0, 0.1, 0] },
+  ],
+  "v2-gcms-inlet": [
+    { name: "funnel", displayName: "Sample Collection Funnel & Sieve", explode: [0, 0.2, 0] },
+    { name: "oven", displayName: "Miniature Pyrolysis Ovens", explode: [0, -0.1, 0] },
+  ],
+
+  // Phoenix
+  "phoenix-lander-body": [
+    { name: "bus", displayName: "Octagonal Deck & Hydrazine Thrusters", explode: [0, 0.15, 0] },
+    { name: "legs", displayName: "3 Inverted-Tripod Footpads", explode: [0.35, -0.2, 0] },
+    { name: "ssi", displayName: "Surface Stereo Imager (SSI) Mast", explode: [0, 0.4, 0] },
+  ],
+  "phoenix-ra-arm": [
+    { name: "arm", displayName: "2.35m Articulated Carbon Arm", explode: [0, 0.25, 0] },
+    { name: "rasp", displayName: "Carbide Ice-Cutting Rasp & Scoop", explode: [0.2, 0.3, 0] },
+    { name: "ice", displayName: "Exposed Subsurface Water Ice Sheet", explode: [0, -0.15, 0] },
+  ],
+  "phoenix-tega": [
+    { name: "ovens", displayName: "Bank of 8 Miniature Vacuum Ovens", explode: [0, 0, 0] },
+    { name: "doors", displayName: "Motorized Sample Seal Doors", explode: [0, 0.25, 0] },
+  ],
+  "phoenix-meca": [
+    { name: "box", displayName: "Wet Chemistry Analytical Cell Box", explode: [0, 0, 0] },
+    { name: "beakers", displayName: "4 Solution Beakers & Ion Electrodes", explode: [0, 0.25, 0] },
+  ],
+  "phoenix-solar-wings": [
+    { name: "wing1", displayName: "Port Decagonal Fan-Fold Solar Array", explode: [-0.4, 0.1, 0] },
+    { name: "wing2", displayName: "Starboard Decagonal Fan-Fold Solar Array", explode: [0.4, 0.1, 0] },
+  ],
+  "phoenix-lidar": [
+    { name: "mast", displayName: "Canadian Space Agency Weather Mast", explode: [0, 0.2, 0] },
+    { name: "laser", displayName: "Green Nd:YAG Atmospheric Lidar Beam", explode: [0, 0.5, 0] },
+  ],
+
+  // InSight
+  "insight-lander-body": [
+    { name: "deck", displayName: "Hexagonal Composite Equipment Deck", explode: [0, 0.1, 0] },
+    { name: "rise", displayName: "Twin RISE Radio Science X-Band Horns", explode: [0, 0.35, 0] },
+    { name: "legs", displayName: "3 Crushable Aluminum Honeycomb Legs", explode: [0.35, -0.15, 0] },
+  ],
+  "insight-seis": [
+    { name: "dome", displayName: "Wind & Thermal Shield (WTS) Gold Dome", explode: [0, 0.35, 0] },
+    { name: "vbb", displayName: "Three-Axis Evacuated Spherical Vacuum Sensor", explode: [0, 0, 0] },
+    { name: "tether", displayName: "Ribbon Umbilical Cable to Lander", explode: [-0.25, 0, 0] },
+  ],
+  "insight-hp3": [
+    { name: "housing", displayName: "Support Structure Assembly (SSA)", explode: [0, 0.15, 0] },
+    { name: "mole", displayName: "Tungsten Self-Hammering Penetrator Mole", explode: [0.2, -0.25, 0] },
+    { name: "tether", displayName: "Instrumented Thermal Sensor Cable", explode: [0, 0.2, 0] },
+  ],
+  "insight-ultraflex": [
+    { name: "array1", displayName: "Port 2.15m Circular UltraFlex Array", explode: [-0.45, 0, 0] },
+    { name: "array2", displayName: "Starboard 2.15m Circular UltraFlex Array", explode: [0.45, 0, 0] },
+    { name: "dust", displayName: "Accumulated Red Regolith Dust Layer", explode: [0, 0.15, 0] },
+  ],
+  "insight-idc-arm": [
+    { name: "arm", displayName: "1.9m Articulated Carbon Composite Boom", explode: [0, 0.25, 0] },
+    { name: "grapple", displayName: "Wax-Actuated Instrument Grapple Claw", explode: [0.25, 0.35, 0] },
+    { name: "camera", displayName: "Instrument Deployment Camera (IDC)", explode: [0.15, 0.15, 0] },
+  ],
+  "insight-twins": [
+    { name: "boom1", displayName: "Port Temperature & Wind Sensor Boom", explode: [-0.3, 0.2, 0] },
+    { name: "boom2", displayName: "Starboard Atmospheric Boom", explode: [0.3, 0.2, 0] },
+  ],
+
+  // Pioneer 10 & 11
+  "pioneer-dish": [
+    { name: "dish", displayName: "2.74m Parabolic Aluminum Reflector", explode: [0, 0.3, 0] },
+    { name: "horn", displayName: "Apex Sub-Reflector Feed Horn", explode: [0, 0.5, 0] },
+    { name: "struts", displayName: "Tubular Feed Horn Tripod Struts", explode: [0.2, 0.2, 0] },
+  ],
+  "pioneer-rtg-booms": [
+    { name: "boom-port", displayName: "Port Deployable Truss Boom", explode: [-0.4, 0, 0] },
+    { name: "boom-stbd", displayName: "Starboard Deployable Truss Boom", explode: [0.4, 0, 0] },
+    { name: "rtg", displayName: "SNAP-19 Plutonium-238 RTG Generators", explode: [0, 0.25, 0] },
+  ],
+  "pioneer-plaque": [
+    { name: "plaque", displayName: "Gold-Anodized Aluminum Plaque (6x9 in)", explode: [0, 0, 0] },
+    { name: "map", displayName: "Engraved 14-Pulsar Center Map", explode: [-0.2, 0.1, 0] },
+    { name: "figures", displayName: "Human Silhouette & Hydrogen Transition", explode: [0.2, 0.1, 0] },
+  ],
+  "pioneer-plasma-analyzer": [
+    { name: "dome", displayName: "Curved Electrostatic Analyzer Dome", explode: [0, 0.25, 0] },
+    { name: "plates", displayName: "Concentric Voltage Deflection Plates", explode: [0, 0.4, 0] },
+  ],
+  "pioneer-magnetometer-boom": [
+    { name: "mast", displayName: "6.6m Deployable Fiberglass Mast", explode: [0, 0, -0.3] },
+    { name: "sensor", displayName: "Helium Gas Cell Vector Sensor", explode: [0, 0.3, 0.3] },
+  ],
+  "pioneer-interstellar-dust": [
+    { name: "canister", displayName: "Main Telescope Detector Canister", explode: [0, 0, 0] },
+    { name: "detectors", displayName: "Silicon Solid-State Ring Sensors", explode: [0, 0.3, 0] },
+    { name: "grid", displayName: "Dust Particle Impact Acoustic Grid", explode: [0, 0.5, 0] },
   ],
 };

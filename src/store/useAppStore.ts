@@ -57,11 +57,19 @@ const DEFAULT_MISSIONS: Record<string, MissionProgress> = {
   "apollo-16": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
   "apollo-17": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
   "mars-viking1": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "mars-viking2": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
   "mars-pathfinder": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
   "mars-spirit": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
   "mars-opportunity": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
   "mars-curiosity": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
   "mars-perseverance": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "mars-phoenix": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "mars-insight": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "deep-dawn": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "deep-near": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "deep-voyager": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "deep-kepler": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
+  "deepspace-pioneer": { status: "available", xp: 0, flagPlanted: false, objectsFound: [] },
 };
 
 export const XP_LAND = 50;
@@ -80,18 +88,38 @@ export const MOON_MISSION_ORDER = [
 
 export const MARS_MISSION_ORDER = [
   "mars-viking1",
+  "mars-viking2",
   "mars-pathfinder",
   "mars-spirit",
   "mars-opportunity",
   "mars-curiosity",
   "mars-perseverance",
+  "mars-phoenix",
+  "mars-insight",
 ];
 
-export const MISSION_ORDER = [...MOON_MISSION_ORDER, ...MARS_MISSION_ORDER];
+export const DEEPSPACE_MISSION_ORDER = [
+  "deep-near",
+  "deep-dawn",
+  "deepspace-pioneer",
+  "deep-kepler",
+  "deep-voyager",
+];
+
+export const MISSION_ORDER = [
+  ...MOON_MISSION_ORDER,
+  ...MARS_MISSION_ORDER,
+  ...DEEPSPACE_MISSION_ORDER,
+];
 
 export function getNextMissionId(currentId: string): string | null {
   const isMars = currentId.startsWith("mars-");
-  const order = isMars ? MARS_MISSION_ORDER : MOON_MISSION_ORDER;
+  const isDeep = currentId.startsWith("deep-") || currentId.startsWith("deepspace-");
+  const order = isMars
+    ? MARS_MISSION_ORDER
+    : isDeep
+    ? DEEPSPACE_MISSION_ORDER
+    : MOON_MISSION_ORDER;
   const idx = order.indexOf(currentId);
   if (idx >= 0 && idx < order.length - 1) return order[idx + 1] ?? null;
   return null;
