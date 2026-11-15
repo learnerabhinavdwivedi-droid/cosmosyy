@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { z } from "zod";
+import { truncateToSentences } from "../src/lib/truncation.ts";
 
 // Inline schema types (mirrors storySchema.ts without import.meta.glob)
 const FactStatusSchema = z.enum(["verified", "from-repo", "general-science", "unverified"]);
@@ -68,13 +69,6 @@ interface MissionFile {
   objects: MissionObject[];
 }
 
-function truncateWords(text: string, maxWords: number): string {
-  const words = text.replace(/\s+/g, " ").trim().split(" ");
-  if (words.length <= maxWords) return text.trim();
-  let truncated = words.slice(0, maxWords).join(" ");
-  if (!/[.!?]$/.test(truncated)) truncated += ".";
-  return truncated;
-}
 
 function getObjectKind(id: string, name: string): string {
   const lower = (id + " " + name).toLowerCase();
@@ -148,66 +142,62 @@ function buildStoryPacket(mission: MissionFile, obj: MissionObject): StoryPacket
   };
 
   // 6 Beat Scenes
-  const s1Kids = truncateWords(
+  const s1Kids = truncateToSentences(
     obj.firstPerson
       ? `I am ${obj.name}. I arrived here at ${mission.site} in ${year}.`
       : `I am ${obj.name}. I stand proudly on the ${isMars ? "red sands of Mars" : "quiet Moon"}.`,
-    27
+    32
   );
-  const s1Exp = truncateWords(
+  const s1Exp = truncateToSentences(
     `${obj.name}, ${mission.name}: deployed at ${mission.site} in ${year}.`,
-    38
+    60
   );
 
-  const s2Kids = truncateWords(
+  const s2Kids = truncateToSentences(
     `Take a look at how I was built. Every part of me had a special purpose.`,
-    26
+    32
   );
-  const s2Exp = truncateWords(
+  const s2Exp = truncateToSentences(
     obj.description,
-    38
+    60
   );
 
-  const s3Kids = truncateWords(
+  const s3Kids = truncateToSentences(
     `Out here, there is no air or weather like on Earth, so I had to work smoothly in the cold.`,
-    26
+    32
   );
-  const s3Exp = truncateWords(
+  const s3Exp = truncateToSentences(
     `Designed to withstand radiation, cosmic dust, and extreme temperature swings without failing.`,
-    38
+    60
   );
 
-  const s4Kids = truncateWords(
-    obj.scienceDiscovery
-      ? truncateWords(obj.scienceDiscovery, 26)
-      : `My instruments gathered clues to help humans understand this mysterious new world.`,
-    26
+  const s4Kids = truncateToSentences(
+    obj.scienceDiscovery || `My instruments gathered clues to help humans understand this mysterious new world.`,
+    32
   );
-  const s4Exp = truncateWords(
+  const s4Exp = truncateToSentences(
     obj.scienceDiscovery || `Conducted pioneering surface measurements and telemetry transmissions.`,
-    38
+    60
   );
 
-  const s5Kids = truncateWords(
+  const s5Kids = truncateToSentences(
     obj.status === "operational"
       ? `I am still working out here every single day, listening and measuring.`
       : `My mission finished, but I stay here resting peacefully on the surface.`,
-    26
+    32
   );
-  const s5Exp = truncateWords(
+  const s5Exp = truncateToSentences(
     `Fate: ${fate.replace(/-/g, " ")}. Position recorded at coordinates [${obj.position[0]}, ${obj.position[2]}].`,
-    38
+    60
   );
 
-  const s6Kids = truncateWords(
-    obj.legacy
-      ? truncateWords(obj.legacy, 26)
-      : `Everything I learned showed humanity how to explore deeper into space.`,
-    26
+  const s6Kids = truncateToSentences(
+    obj.legacy || `Everything I learned showed humanity how to explore deeper into space.`,
+    32
   );
-  const s6Exp = truncateWords(
+  const s6Exp = truncateToSentences(
     obj.legacy || `A milestone in planetary science and permanent historical artifact.`,
-    38
+    60
   );
 
   const scenes = [

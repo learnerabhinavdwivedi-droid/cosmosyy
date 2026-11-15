@@ -97,7 +97,7 @@
         "f2"
       ],
       "kids": "Take a look at how I was built. Every part of me had a special purpose.",
-      "explorer": "The seismometer on Viking 1 was mounted on top of the lander, which meant it was sensitive to wind vibrations. Unlike its twin on Viking 2, which may have detected a marsquake, Viking 1's seismometer was unable to.",
+      "explorer": "The seismometer on Viking 1 was mounted on top of the lander, which meant it was sensitive to wind vibrations. Unlike its twin on Viking 2, which may have detected a marsquake, Viking 1's seismometer was unable to confirm any seismic events due to wind interference. The lesson informed the design of InSight's seismometer decades later.",
       "audio": {
         "kids": null,
         "explorer": null

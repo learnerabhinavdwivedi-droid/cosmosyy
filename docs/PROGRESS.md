@@ -81,3 +81,4 @@
 | 2026-11-15 | DEEPSPACE-EXPANSION-PHASE2 | done | Added NEAR Shoemaker, Dawn, Pioneer 10 & 11, and Kepler Space Telescope with 24 procedural PBR 3D models, 24 verified 6-beat stories, mission registration, and Deep Space & Asteroids tab in MissionSelectPage; tests 261/261, validate-content 19/19, lint 0, typecheck clean, build pass | next: user review |
 
 2026-11-15 | SAWAN-MERGE | done | merged sawan branch into main: audio for 16 missions, graphics/bloom fix, smoke+proximity, deep-space (Voyager/NEAR/Dawn/Kepler renamed), prettier format, test harness; tests 209/209 | next: verify dev server
+2026-11-15 | ALIGN-01 | done | Fix narrative truncation bug with sentence-boundary awareness, regenerate all stories, add truncation unit tests & permanent CI validate-content check; tests 263/263, validate-content 20/20 & 113/113 | next: ALIGN-02 (NSSDCA catalog backfill)
