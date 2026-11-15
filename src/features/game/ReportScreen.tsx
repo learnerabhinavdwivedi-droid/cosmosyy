@@ -196,16 +196,20 @@ export function ReportScreen() {
                         className={`ml-auto text-xs ${
                           obj.status === "operational"
                             ? "text-ok"
-                            : obj.status === "dormant"
-                              ? "text-amber-400"
-                              : "text-regolith-500"
+                            : obj.status === "preserved" || obj.status === "intact"
+                              ? "text-purple-400"
+                              : obj.status === "dormant"
+                                ? "text-amber-400"
+                                : "text-regolith-500"
                         }`}
                       >
                         {obj.status === "operational"
                           ? "● Active"
-                          : obj.status === "dormant"
-                            ? "○ Silent"
-                            : "✕ Defunct"}
+                          : obj.status === "preserved" || obj.status === "intact"
+                            ? "✦ Preserved"
+                            : obj.status === "dormant"
+                              ? "○ Silent"
+                              : "✕ Defunct"}
                       </span>
                     )}
                   </motion.div>

@@ -4,7 +4,7 @@
   "name": "American Flag",
   "kind": "memorial",
   "environment": "moon-surface",
-  "fate": "left-on-surface",
+  "fate": "preserved-on-surface",
   "year": 1969,
   "nssdcaId": "as11-40-5874",
   "model": {
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Remains preserved in the arid regolith at Sea of Tranquility.",
+      "text": "Status: Preserved at Sea of Tranquility.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
-      "explorer": "Fate: left on surface. Position recorded at coordinates [-7.05, 7.3].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved on surface. Position recorded at coordinates [-7.05, 7.3].",
       "audio": {
         "kids": null,
         "explorer": null
@@ -200,7 +200,7 @@
       "factIds": [
         "f6"
       ],
-      "kids": "Buzz Aldrin reported seeing the flag knocked over by the ascent engine exhaust; LROC images from 2009 show no shadow at this location, confirming it likely.",
+      "kids": "Buzz Aldrin reported seeing the flag knocked over by the ascent engine exhaust; LROC images from 2009 show no shadow at this location, confirming it likely fell.",
       "explorer": "Buzz Aldrin reported seeing the flag knocked over by the ascent engine exhaust; LROC images from 2009 show no shadow at this location, confirming it likely fell.",
       "audio": {
         "kids": null,

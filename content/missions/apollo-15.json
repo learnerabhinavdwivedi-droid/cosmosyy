@@ -23,7 +23,7 @@
     "note": "Generic moon surface — no site-specific DTM available yet"
   },
   "keyDiscovery": "Discovery of the Genesis Rock (sample 15415), a 4.1-billion-year-old anorthosite fragment from the Moon's original crust that confirmed the lunar magma ocean hypothesis.",
-  "missionLegacy": "The first extended scientific expedition (J-mission) with the Lunar Roving Vehicle, tripling the exploration range and setting the template for Apollo 16 and 17.",
+  "missionLegacy": "The first extended scientific expedition (J-mission) with the Lunar Roving Vehicle, tripling exploration range. Paved the way for tomorrow's exploration by setting the operational template for NASA's Artemis Lunar Terrain Vehicle (LTV) surface expeditions.",
   "funFact": "Commander Dave Scott performed Galileo's famous experiment on live TV by dropping a hammer and a falcon feather simultaneously — both hit the ground at the same time, proving Galileo right in the Moon's vacuum.",
   "heritageNote": "The Hadley-Apennine site contains the Fallen Astronaut sculpture — the only artwork on another world — alongside the first lunar rover and the largest retroreflector. NASA's 2011 guidelines recommend preservation zones around the ALSEP, LRV, and memorial.",
   "timeline": {
@@ -63,7 +63,7 @@
       "source": "AS15-88-11863; LROC imagery",
       "scienceDiscovery": "Provided a photographic reference point documenting the dramatic terrain at Hadley-Apennine, the most geologically complex Apollo landing site.",
       "legacy": "LROC images from 2011 confirmed the Apollo 15 flag is still standing, casting a visible shadow on the surface.",
-      "status": "defunct",
+      "status": "preserved",
       "firstPerson": "Bro, look at my backdrop — the Apennine Mountains towering 15,000 feet into the black sky and the giant Hadley Rille canyon right next door! I am the Apollo 15 flag. Dave Scott and Jim Irwin planted me in the most breathtaking mountain range outside of Earth. The view alone gives me infinite aura!",
       "yearDeployed": 1971,
       "nasaImageId": "as15-88-11863"
@@ -136,7 +136,7 @@
       "source": "AS15-88-11894; Apollo 15 EVA-3 transcript",
       "scienceDiscovery": "While not a science instrument, it represents the first deliberate act of artistic and memorial expression on another celestial body, raising important questions about heritage preservation in space.",
       "legacy": "The only known artwork on another world; a replica is in the Smithsonian National Air and Space Museum. Its existence sparked discussion about the ethics of art and commerce in space.",
-      "status": "dormant",
+      "status": "preserved",
       "firstPerson": "Bro, take off your helmet for a second and show respect. I am the Fallen Astronaut — a tiny, three-inch aluminum sculpture accompanied by a plaque listing 14 courageous astronauts and cosmonauts who gave their lives reaching for the stars. Dave Scott placed me quietly in the lunar dust without any publicity stunt. The only memorial art installation on another world. Forever honored.",
       "yearDeployed": 1971,
       "nasaImageId": "as15-88-11894"

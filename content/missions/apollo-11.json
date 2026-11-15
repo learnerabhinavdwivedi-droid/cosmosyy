@@ -21,7 +21,7 @@
     "note": "NASA 3D-Resources Apollo 11 Landing Site relief model; LROC NAC DTM 50cm orthophoto"
   },
   "keyDiscovery": "First human landing on another world proved the Moon's surface could support crewed spacecraft and that humans could work effectively in one-sixth gravity.",
-  "missionLegacy": "Demonstrated that humans could travel to and safely return from another celestial body, inspiring generations of scientists, engineers, and explorers worldwide.",
+  "missionLegacy": "Demonstrated that humans could travel to and safely return from another celestial body, inspiring generations of explorers worldwide. Paved the way for tomorrow's exploration, proving the foundational operational principles NASA's Artemis program builds upon to return humans sustainably to the Moon.",
   "funFact": "Neil Armstrong's first step was watched live on TV by an estimated 600 million people — about one-fifth of the entire world's population at the time.",
   "heritageNote": "Tranquility Base is protected under NASA's 2011 recommendations for lunar historic site preservation; the Artemis Accords (Section 9) formally recognize the need to preserve outer space heritage sites including Apollo landing locations.",
   "timeline": {
@@ -64,7 +64,7 @@
       "source": "LROC shapefile APOLLO_11_EQUIPMENT; AS11-40-5874",
       "scienceDiscovery": "Documented materials behavior in the lunar vacuum and showed the difficulty of planting objects in compacted regolith — the pole only penetrated about 15 centimetres.",
       "legacy": "Buzz Aldrin reported seeing the flag knocked over by the ascent engine exhaust; LROC images from 2009 show no shadow at this location, confirming it likely fell.",
-      "status": "defunct",
+      "status": "preserved",
       "firstPerson": "Bro, look at me — the ultimate cosmic flex! I was the very first flag planted under an alien sky! Neil and Buzz had to literally wrestle the rock-hard lunar ground just to jam my pole into the dirt. But real talk? When Eagle's engine blasted off for Earth, the exhaust cooked me and knocked me flat on my face. Fifty-plus years of raw solar radiation bleached all my colors completely white, but no cap, I staked the claim first. Living rent-free on the Moon forever!",
       "yearDeployed": 1969,
       "nasaImageId": "as11-40-5874"

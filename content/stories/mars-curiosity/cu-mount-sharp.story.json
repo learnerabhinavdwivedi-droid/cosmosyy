@@ -4,7 +4,7 @@
   "name": "Mount Sharp (Aeolis Mons)",
   "kind": "geological-site",
   "environment": "mars-surface",
-  "fate": "operational-on-surface",
+  "fate": "preserved-on-surface",
   "year": 2014,
   "nssdcaId": "PIA19912",
   "model": {
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Still operational and communicating.",
+      "text": "Status: Preserved at Gale Crater.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -97,7 +97,7 @@
         "f2"
       ],
       "kids": "Take a look at how I was built. Every part of me had a special purpose.",
-      "explorer": "Rising 5.5 km above the crater floor, Mount Sharp is a layered mountain of sedimentary rock. Each layer records a chapter of Mars's environmental history. As Curiosity climbs, it reads that history: from clay-rich layers (wet era) through.",
+      "explorer": "Rising 5.5 km above the crater floor, Mount Sharp is a layered mountain of sedimentary rock. Each layer records a chapter of Mars's environmental history. As Curiosity climbs, it reads that history: from clay-rich layers (wet era) through sulphate layers (drying era) to dry oxidised layers at the top. It is a geological time machine.",
       "audio": {
         "kids": null,
         "explorer": null
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "I am still working out here every single day, listening and measuring.",
-      "explorer": "Fate: operational on surface. Position recorded at coordinates [15, 18].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved on surface. Position recorded at coordinates [15, 18].",
       "audio": {
         "kids": null,
         "explorer": null

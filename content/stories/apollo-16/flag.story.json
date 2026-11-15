@@ -4,7 +4,7 @@
   "name": "American Flag",
   "kind": "memorial",
   "environment": "moon-surface",
-  "fate": "left-on-surface",
+  "fate": "preserved-on-surface",
   "year": 1972,
   "nssdcaId": "as16-113-18339",
   "model": {
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Remains preserved in the arid regolith at Descartes Highlands.",
+      "text": "Status: Preserved at Descartes Highlands.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -148,7 +148,7 @@
       "factIds": [
         "f4"
       ],
-      "kids": "The jumping salute photograph became an iconic demonstration of lunar gravity — Young's body position and height off the ground helped scientists calculate the reduced gravitational.",
+      "kids": "The jumping salute photograph became an iconic demonstration of lunar gravity — Young's body position and height off the ground helped scientists calculate the reduced gravitational acceleration at the surface.",
       "explorer": "The jumping salute photograph became an iconic demonstration of lunar gravity — Young's body position and height off the ground helped scientists calculate the reduced gravitational acceleration at the surface.",
       "audio": {
         "kids": null,
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "My mission finished, but I stay here resting peacefully on the surface.",
-      "explorer": "Fate: left on surface. Position recorded at coordinates [-5, 6].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved on surface. Position recorded at coordinates [-5, 6].",
       "audio": {
         "kids": null,
         "explorer": null

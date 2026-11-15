@@ -14,7 +14,7 @@ export interface NssdcCatalogEntry {
   funFactKid: string;
 }
 
-const CATALOG_DATA: Record<string, Record<string, NssdcCatalogEntry>> = {
+export const CATALOG_DATA: Record<string, Record<string, NssdcCatalogEntry>> = {
   "apollo-11": {
     "descent-stage": {
       nssdcaId: "1969-059C",
@@ -621,6 +621,342 @@ const CATALOG_DATA: Record<string, Record<string, NssdcCatalogEntry>> = {
       archetype: "Tethered Descent Stage Crash Site",
       funFactKid:
         "After lowering Percy safely onto its six wheels, the sky crane throttled up to full rocket thrust and flew 700 meters away to crash into the sands.",
+    },
+  },
+  "mars-viking2": {
+    "v2-lander-body": {
+      nssdcaId: "1975-083C",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-083C",
+      officialDesignation: "Viking 2 Lander",
+      archetype: "Titanium Inverted-Tripod Mars Lander",
+      funFactKid:
+        "Touched down on Utopia Planitia in September 1976 and returned the first close-up images of Martian frost on the ground!",
+    },
+    "v2-sampler-arm": {
+      nssdcaId: "1975-083C-01",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-083C",
+      officialDesignation: "Surface Sampler Collector Arm",
+      archetype: "3-Meter Articulated Soil Backhoe",
+      funFactKid:
+        "Pushed aside a rock nicknamed 'Mr. Badger' to scoop protected soil that had never seen sunlight for millions of years!",
+    },
+    "v2-seismometer": {
+      nssdcaId: "1975-083C-02",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-083C",
+      officialDesignation: "Viking 2 Seismometer",
+      archetype: "Three-Axis Subsurface Seismograph",
+      funFactKid:
+        "Unlike Viking 1, its locking pin opened perfectly, recording what scientists believe was the first-ever detected marsquake!",
+    },
+    "v2-meteorology": {
+      nssdcaId: "1975-083C-03",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-083C",
+      officialDesignation: "Meteorology Sensor Boom",
+      archetype: "Atmospheric Weather Telemetry Station",
+      funFactKid:
+        "Recorded subzero temperatures as low as -120°C and proved that the Martian atmospheric pressure changes as polar caps freeze and thaw.",
+    },
+    "v2-facsimile-camera": {
+      nssdcaId: "1975-083C-04",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-083C",
+      officialDesignation: "Dual Facsimile Stereo Camera Pair",
+      archetype: "Vertical Scanning Mirror Stereoscopic Camera",
+      funFactKid:
+        "Built panoramic images strip by strip with oscillating mirrors, revealing a rock-strewn plain covered in winter water-ice frost.",
+    },
+    "v2-gcms-inlet": {
+      nssdcaId: "1975-083C-05",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-083C",
+      officialDesignation: "Gas Chromatograph Mass Spectrometer (GCMS)",
+      archetype: "Organic Pyrolysis & Molecular Analyzer",
+      funFactKid:
+        "Heated soil samples to 500°C to sniff for organic carbon molecules in Utopia Planitia.",
+    },
+  },
+  "mars-phoenix": {
+    "phoenix-lander-body": {
+      nssdcaId: "2007-034A",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2007-034A",
+      officialDesignation: "Phoenix Mars Lander",
+      archetype: "Arctic Tundra Pulsed-Hydrazine Soft Lander",
+      funFactKid:
+        "Landed near the Martian north pole in May 2008 and became the first spacecraft to directly touch and taste water ice on Mars!",
+    },
+    "phoenix-ra-arm": {
+      nssdcaId: "2007-034A-01",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2007-034A",
+      officialDesignation: "Robotic Arm (RA) & Motorized Rasp",
+      archetype: "2.35-Meter Titanium Cryo-Trenching Arm",
+      funFactKid:
+        "Scraped away topsoil in the 'Snow White' trench to expose gleaming white water-ice dice that evaporated over 4 days!",
+    },
+    "phoenix-tega": {
+      nssdcaId: "2007-034A-02",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2007-034A",
+      officialDesignation: "Thermal and Evolved-Gas Analyzer (TEGA)",
+      archetype: "Eight-Cell Miniature High-Temp Pyrolysis Oven",
+      funFactKid:
+        "Baked ice-rich soil to 1,000°C inside eight single-use tiny ovens to identify trapped water vapor and carbon dioxide.",
+    },
+    "phoenix-meca": {
+      nssdcaId: "2007-034A-03",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2007-034A",
+      officialDesignation: "Microscopy, Electrochemistry, and Conductivity Analyzer (MECA)",
+      archetype: "Atomic Force Wet Chemical Laboratory",
+      funFactKid:
+        "Dissolved Martian dirt in Earth water beakers and discovered perchlorate salts, revealing that Martian Arctic soil has a slightly alkaline pH.",
+    },
+    "phoenix-solar-wings": {
+      nssdcaId: "2007-034A-04",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2007-034A",
+      officialDesignation: "Dual Decagonal Bio-Solar Arrays",
+      archetype: "Circular Origami Foldable Solar Wings",
+      funFactKid:
+        "Unfurled like Japanese paper fans into twin 2.1-meter circles to catch low polar sunlight until the deep Martian winter froze them.",
+    },
+    "phoenix-lidar": {
+      nssdcaId: "2007-034A-05",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2007-034A",
+      officialDesignation: "Meteorological Station (MET) Laser LiDAR",
+      archetype: "Atmospheric Laser Remote Sensor",
+      funFactKid:
+        "Shot green laser beams into the Arctic clouds and detected genuine snowflakes falling from Martian clouds 4 km high!",
+    },
+  },
+  "mars-insight": {
+    "insight-lander-body": {
+      nssdcaId: "2018-042A",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2018-042A",
+      officialDesignation: "InSight Lander (Interior Exploration using Seismic Investigations)",
+      archetype: "Geophysical Planetary Core Observatory",
+      funFactKid:
+        "Sat in Elysium Planitia for 4 years acting as Mars's doctor, taking its pulse (seismology), temperature (heat probe), and reflexes.",
+    },
+    "insight-seis": {
+      nssdcaId: "2018-042A-01",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2018-042A",
+      officialDesignation: "Seismic Experiment for Interior Structure (SEIS)",
+      archetype: "Vacuum-Sealed Ultra-Sensitive Seismometer",
+      funFactKid:
+        "Placed directly on the ground under a protective dome, SEIS detected over 1,300 marsquakes and mapped Mars's crust, mantle, and molten core!",
+    },
+    "insight-hp3": {
+      nssdcaId: "2018-042A-02",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2018-042A",
+      officialDesignation: "Heat Flow and Physical Properties Package (HP³ 'The Mole')",
+      archetype: "Self-Hammering Thermal Penetrometer",
+      funFactKid:
+        "A robotic hammering spike that hammered thousands of times to measure the heat escaping from the ancient core of Mars.",
+    },
+    "insight-ultraflex": {
+      nssdcaId: "2018-042A-03",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2018-042A",
+      officialDesignation: "UltraFlex Decagonal Solar Array Pair",
+      archetype: "Dual 2.15-Meter Lightweight Solar Panels",
+      funFactKid:
+        "Generated enough power to run a blender when clean, but thick Martian dust finally blanketed the panels in December 2022 after 4 historic years.",
+    },
+    "insight-idc-arm": {
+      nssdcaId: "2018-042A-04",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2018-042A",
+      officialDesignation: "Instrument Deployment Arm (IDA) & Camera (IDC)",
+      archetype: "Four-Degree-of-Freedom Robotic Grapple Arm",
+      funFactKid:
+        "Gently gripped the SEIS seismometer with its claw and placed it millimeter-accurately on the Martian dirt—the first robotic placement of its kind!",
+    },
+    "insight-twins": {
+      nssdcaId: "2018-042A-05",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2018-042A",
+      officialDesignation: "Temperature and Wind for InSight (TWINS)",
+      archetype: "Environmental Surface Weather Station",
+      funFactKid:
+        "Tracked hundreds of dust devils whirling across Elysium Planitia, measuring sudden air pressure drops as they passed over the lander.",
+    },
+  },
+  "deep-dawn": {
+    "dawn-spacecraft": {
+      nssdcaId: "2007-043A",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2007-043A",
+      officialDesignation: "Dawn Spacecraft",
+      archetype: "Main Asteroid Belt Interplanetary Explorer",
+      funFactKid:
+        "The only spacecraft to orbit two different extraterrestrial bodies: giant asteroid Vesta (2011) and dwarf planet Ceres (2015)!",
+    },
+    "cerealia-facula": {
+      nssdcaId: "2007-043A-01",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2007-043A",
+      officialDesignation: "Cerealia Facula Bright Sodium Carbonate Deposit",
+      archetype: "Occator Crater Hydrothermal Brine Dome",
+      funFactKid:
+        "A luminous bright spot in Occator Crater formed by ancient briny water erupting from a subterranean reservoir and leaving gleaming salt deposits!",
+    },
+    "grand-sensor": {
+      nssdcaId: "2007-043A-02",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2007-043A",
+      officialDesignation: "Gamma Ray and Neutron Detector (GRaND)",
+      archetype: "Cosmic Ray Spectroscopy Instrument",
+      funFactKid:
+        "Discovered that water ice makes up roughly 10% to 30% of Ceres' upper regolith by weight, proving Ceres is a giant ice-rock world rather than a dead asteroid!",
+    },
+    "dawn-ion-engine": {
+      nssdcaId: "2007-043A-03",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2007-043A",
+      officialDesignation: "NSTAR Xenon Ion Propulsion System",
+      archetype: "Electrostatic Xenon Ion Thruster Trio",
+      funFactKid:
+        "Fired a glowing blue xenon plasma beam with thrust equal to the weight of a single piece of paper, firing continuously for over 5 years!",
+    },
+  },
+  "deep-near": {
+    "near-spacecraft": {
+      nssdcaId: "1996-008A",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1996-008A",
+      officialDesignation: "NEAR Shoemaker Spacecraft",
+      archetype: "First Asteroid Orbiter & Soft-Lander",
+      funFactKid:
+        "Orbited asteroid 433 Eros for a year, then on February 12, 2001, gently touched down on its surface at 4 mph—transmitting signals for 16 days after landing!",
+    },
+    "xgrs-spectrometer": {
+      nssdcaId: "1996-008A-01",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1996-008A",
+      officialDesignation: "X-ray / Gamma-Ray Spectrometer (XGRS)",
+      archetype: "Orbital Asteroid Elemental Composition Scanner",
+      funFactKid:
+        "Proved that Eros is an undifferentiated primitive asteroid made of ordinary chondrite material that hasn't changed since the birth of our solar system!",
+    },
+    "near-solar-wings": {
+      nssdcaId: "1996-008A-02",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1996-008A",
+      officialDesignation: "Fixed Gallium Arsenide Solar Arrays",
+      archetype: "Four-Panel Asteroid Orbit Power Array",
+      funFactKid:
+        "Generated 1,800 watts of power in the asteroid belt and survived touching the gravelly boulder-strewn surface of Eros completely intact.",
+    },
+    "eros-ponded-regolith": {
+      nssdcaId: "1996-008A-03",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1996-008A",
+      officialDesignation: "Eros Ponded Regolith Dust Deposits",
+      archetype: "Electrostatic Micro-Dust Settling Feature",
+      funFactKid:
+        "Smooth, flat ponds of fine dust nestled inside craters, likely formed when electrostatic levitation caused tiny particles to drift and settle like liquid!",
+    },
+  },
+  "deep-kepler": {
+    "kepler-telescope": {
+      nssdcaId: "2009-011A",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2009-011A",
+      officialDesignation: "Kepler Space Observatory",
+      archetype: "0.95-Meter Schmidt Exoplanet Photometer",
+      funFactKid:
+        "Stared unblinkingly at 150,000 stars in Cygnus for 9 years and discovered over 2,600 confirmed exoplanets, proving planets outnumber stars in our galaxy!",
+    },
+    "ccd-focal-plane": {
+      nssdcaId: "2009-011A-01",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2009-011A",
+      officialDesignation: "42-CCD 95-Megapixel Curved Focal Plane",
+      archetype: "High-Precision Stellar Photometric Array",
+      funFactKid:
+        "The largest camera ever launched into space at the time, so sensitive it could detect a flea crawling across a car headlight hundreds of miles away!",
+    },
+    "reaction-wheel-assembly": {
+      nssdcaId: "2009-011A-02",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2009-011A",
+      officialDesignation: "Precision Reaction Wheel Gyroscopic Stabilizers",
+      archetype: "High-Momentum Orientation Flywheels",
+      funFactKid:
+        "When two reaction wheels broke, engineers balanced sunlight pressure on the spacecraft's solar body as a virtual third wheel to launch the K2 mission!",
+    },
+    "photometer-sunshield": {
+      nssdcaId: "2009-011A-03",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2009-011A",
+      officialDesignation: "Integrated Solar Array & Thermal Sunshade",
+      archetype: "Light Baffle & Heliocentric Thermal Shield",
+      funFactKid:
+        "Shaded the optical telescope from stray sunlight so its cryogenic photometer stayed cold and stable in its trailing orbit around the Sun.",
+    },
+  },
+  "deepspace-pioneer": {
+    "pioneer-dish": {
+      nssdcaId: "1972-012A",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1972-012A",
+      officialDesignation: "Pioneer 10 & 11 2.74-Meter High-Gain Antenna (Pioneer 10: 1972-012A / Pioneer 11: 1973-019A)",
+      archetype: "Spin-Stabilized Deep Space Parabolic Dish",
+      funFactKid:
+        "Pioneer 10's dish transmitted its last whisper from 12 billion km in 2003; its twin Pioneer 11 last signaled in 1995!",
+    },
+    "pioneer-rtg-booms": {
+      nssdcaId: "1972-012A-01",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1972-012A",
+      officialDesignation: "SNAP-19 Radioisotope Thermoelectric Generators",
+      archetype: "Extended Deployable Nuclear Power Booms",
+      funFactKid:
+        "Extended on 3-meter booms to keep radiation away from scientific instruments, powered by decaying plutonium-238 pellets for over 30 years.",
+    },
+    "pioneer-plaque": {
+      nssdcaId: "1972-012A-02",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1972-012A",
+      officialDesignation: "The Pioneer Golden Plaque (Pioneer 10 & 11)",
+      archetype: "Interstellar Message Plaque to Extraterrestrial Life",
+      funFactKid:
+        "Gold-anodized aluminum plaques designed by Carl Sagan and Frank Drake showing human figures, our solar system, and a map of 14 pulsars locating Earth!",
+    },
+    "pioneer-plasma-analyzer": {
+      nssdcaId: "1972-012A-03",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1972-012A",
+      officialDesignation: "Quadraspherical Solar Wind Plasma Analyzer",
+      archetype: "Charged Particle Electrostatic Deflector",
+      funFactKid:
+        "Made the first direct measurements of the solar wind expanding all the way out past Jupiter and Saturn toward the heliopause.",
+    },
+    "pioneer-magnetometer-boom": {
+      nssdcaId: "1972-012A-04",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1972-012A",
+      officialDesignation: "Helium Vector Magnetometer (HVM)",
+      archetype: "6.6-Meter Lightweight Fiberglass Magnetometer Mast",
+      funFactKid:
+        "Discovered that Jupiter's magnetic field is enormous—millions of times larger than Earth's, enclosing radiation belts thousands of times deadlier!",
+    },
+    "pioneer-interstellar-dust": {
+      nssdcaId: "1972-012A-05",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1972-012A",
+      officialDesignation: "Meteoroid Detector & Cosmic Ray Telescope",
+      archetype: "Pressurized Cell Micrometeorite Impact Sensor",
+      funFactKid:
+        "Proved in 1972 that spacecraft could safely travel straight through the Asteroid Belt without being destroyed by cosmic space debris!",
+    },
+  },
+  "deep-voyager": {
+    "voyager-probe": {
+      nssdcaId: "1977-084A",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1977-084A",
+      officialDesignation: "Voyager 1 Interstellar Spacecraft",
+      archetype: "Interstellar Boundary Explorer & Probe",
+      funFactKid:
+        "The farthest human-made object in history—launched in 1977, entered interstellar space in 2012, and is now over 15 billion miles from Earth!",
+    },
+    "golden-record": {
+      nssdcaId: "1977-084A-01",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1977-084A",
+      officialDesignation: "The Golden Record (Voyager 1 & 2)",
+      archetype: "12-Inch Gold-Plated Copper Phonograph Disc",
+      funFactKid:
+        "Carries 115 pictures, sounds of thunder and birds, greetings in 55 languages, and music by Bach, Beethoven, and Chuck Berry for any alien who finds it!",
+    },
+    "rtg-power-boom": {
+      nssdcaId: "1977-084A-02",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1977-084A",
+      officialDesignation: "MHW-RTG Nuclear Power Boom",
+      archetype: "Three SNAP-19/MHW Nuclear Thermal Generator Boom",
+      funFactKid:
+        "Still produces electrical warmth in the -455°F deep space freeze from glowing pellets of plutonium, powering Voyager's computers for nearly 50 years!",
+    },
+    "plasma-wave-antenna": {
+      nssdcaId: "1977-084A-03",
+      catalogUrl: "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1977-084A",
+      officialDesignation: "Plasma Wave Subsystem (PWS) 10-Meter Dipole",
+      archetype: "V-Shaped Beryllium-Copper Radio Dipole",
+      funFactKid:
+        "Recorded the eerie, whistling sound of interstellar space vibrating when Voyager 1 crossed beyond our Sun's protective heliosphere bubble in 2012!",
     },
   },
 };

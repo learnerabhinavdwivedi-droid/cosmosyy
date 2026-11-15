@@ -27,6 +27,14 @@
   },
   "keyDiscovery": "First spacecraft to cross the Asteroid Belt, first to fly past Jupiter and Saturn, and first human artifact to achieve Solar System escape velocity.",
   "missionLegacy": "Pioneer 10 and 11 carried Carl Sagan's Golden Plaques, serving as humanity's eternal cosmic message in a bottle drifting across the Milky Way.",
+  "funFact": "Though sister probes, Pioneer 10 and 11 have distinct timelines: Pioneer 11 visited Saturn first and ceased communications in November 1995, while Pioneer 10 maintained contact for over three decades until January 23, 2003 from 12 billion kilometers away.",
+  "heritageNote": "Both spacecraft carry identical gold plaques and are drifting outward in opposite directions: Pioneer 10 heading toward Aldebaran in Taurus, and Pioneer 11 heading toward the constellation Aquila.",
+  "timeline": {
+    "launch": "1972-03-03T01:49:00Z",
+    "landing": "1973-12-04T02:26:00Z",
+    "lastContact": "2003-01-23T00:00:00Z",
+    "endOfMission": "2003-01-23T00:00:00Z"
+  },
   "objects": [
     {
       "id": "pioneer-dish",
@@ -67,7 +75,7 @@
       "source": "Carl Sagan, Linda Salzman Sagan, Frank Drake / NASA",
       "scienceDiscovery": "Created humanity's first deliberate physical greeting card addressed to potential extraterrestrial intelligence.",
       "legacy": "The iconic interstellar artifact of human civilization, designed to endure for billions of years intact.",
-      "status": "dormant",
+      "status": "preserved",
       "firstPerson": "Engraved in gold upon my hull, I carry the faces, hands, and cosmic address of the dreamers who sent me into the stars.",
       "yearDeployed": 1972,
       "yearLastContact": 2003,

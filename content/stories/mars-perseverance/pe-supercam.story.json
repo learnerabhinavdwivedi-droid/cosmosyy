@@ -4,7 +4,7 @@
   "name": "SuperCam Laser Marks",
   "kind": "science-instrument",
   "environment": "mars-surface",
-  "fate": "operational-on-surface",
+  "fate": "preserved-on-surface",
   "year": 2021,
   "nssdcaId": "PIA24684",
   "model": {
@@ -39,7 +39,7 @@
     },
     {
       "id": "f5",
-      "text": "Status: Still operational and communicating.",
+      "text": "Status: Preserved at Jezero Crater.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
@@ -97,7 +97,7 @@
         "f2"
       ],
       "kids": "Take a look at how I was built. Every part of me had a special purpose.",
-      "explorer": "SuperCam fires a laser at rocks from up to 7 metres away, vaporising a tiny spot and analysing the flash of light to determine chemical composition. It can also use Raman spectroscopy to identify minerals and organic compounds.",
+      "explorer": "SuperCam fires a laser at rocks from up to 7 metres away, vaporising a tiny spot and analysing the flash of light to determine chemical composition. It can also use Raman spectroscopy to identify minerals and organic compounds. The small pits left by the laser on Martian rocks are among the most precise human-made marks on another world.",
       "audio": {
         "kids": null,
         "explorer": null
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "I am still working out here every single day, listening and measuring.",
-      "explorer": "Fate: operational on surface. Position recorded at coordinates [-14, -7].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved on surface. Position recorded at coordinates [-14, -7].",
       "audio": {
         "kids": null,
         "explorer": null

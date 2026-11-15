@@ -4,7 +4,7 @@
   "name": "The Golden Record",
   "kind": "science-instrument",
   "environment": "deep-space",
-  "fate": "operational-on-surface",
+  "fate": "preserved-interstellar",
   "year": 1977,
   "nssdcaId": "PIA00140",
   "model": {
@@ -27,7 +27,7 @@
     },
     {
       "id": "f3",
-      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the lunar environment.",
+      "text": "Engineered specifically to operate in the harsh vacuum and extreme temperatures of the deep-space environment.",
       "source": "NASA Space Mission Data",
       "status": "general-science"
     },
@@ -39,13 +39,13 @@
     },
     {
       "id": "f5",
-      "text": "Status: Still operational and communicating.",
+      "text": "Status: Preserved as an eternal time capsule drifting into deep space.",
       "source": "NASA NSSDCA Master Catalog",
       "status": "verified"
     },
     {
       "id": "f6",
-      "text": "A permanent human and robotic monument celebrating space exploration on the Moon.",
+      "text": "A permanent human and robotic monument celebrating space exploration in deep space.",
       "source": "NASA Mission Heritage Records",
       "status": "verified"
     }
@@ -174,8 +174,8 @@
       "factIds": [
         "f5"
       ],
-      "kids": "I am still working out here every single day, listening and measuring.",
-      "explorer": "Fate: operational on surface. Position recorded at coordinates [1.4, 1.2].",
+      "kids": "I am preserved as an eternal monument to human curiosity.",
+      "explorer": "Fate: preserved interstellar. Position recorded at coordinates [1.4, 1.2].",
       "audio": {
         "kids": null,
         "explorer": null

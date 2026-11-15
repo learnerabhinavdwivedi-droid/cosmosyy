@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getNssdcCatalog } from "@/lib/nssdcaCatalog";
+import { getMissionOrNull } from "@/lib/missionData";
 import type { HeritageObject, ObjectTheme } from "./types";
 
 interface ArtifactInfoPanelProps {
@@ -20,6 +21,8 @@ export function ArtifactInfoPanel({
   const [activeTab, setActiveTab] = useState<"intel" | "specs">("intel");
   const [imgError, setImgError] = useState(false);
   const nssdcEntry = getNssdcCatalog(missionId, obj.id);
+  const missionData = getMissionOrNull(missionId);
+  const landing = missionData?.landing;
   const localImgUrl = `/images/heritage/${missionId}/${obj.id}.jpg`;
   const fallbackNasaUrl = obj.nasaImageId
     ? `https://images-assets.nasa.gov/image/${obj.nasaImageId}/${obj.nasaImageId}~thumb.jpg`
@@ -28,6 +31,7 @@ export function ArtifactInfoPanel({
 
   const isOperational = obj.status === "operational";
   const isCruising = obj.status === "cruising";
+  const isPreserved = obj.status === "preserved" || obj.status === "intact";
   const isDormant = obj.status === "dormant";
 
   return (
@@ -44,9 +48,11 @@ export function ArtifactInfoPanel({
                 ? "bg-cyan-950/70 text-cyan-300 border-cyan-500/40 shadow-[0_0_8px_rgba(6,182,212,0.3)]"
                 : isOperational
                   ? "bg-emerald-950/70 text-emerald-300 border-emerald-500/40 shadow-[0_0_8px_rgba(16,185,129,0.2)]"
-                  : isDormant
-                    ? "bg-amber-950/70 text-amber-300 border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.2)]"
-                    : "bg-space-850 text-regolith-400 border-space-700"
+                  : isPreserved
+                    ? "bg-purple-950/70 text-purple-300 border-purple-500/40 shadow-[0_0_8px_rgba(168,85,247,0.2)]"
+                    : isDormant
+                      ? "bg-amber-950/70 text-amber-300 border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.2)]"
+                      : "bg-space-850 text-regolith-400 border-space-700"
             }`}
           >
             <span
@@ -55,9 +61,11 @@ export function ArtifactInfoPanel({
                   ? "bg-cyan-400 animate-ping"
                   : isOperational
                     ? "bg-emerald-400 animate-pulse"
-                    : isDormant
-                      ? "bg-amber-400"
-                      : "bg-regolith-500"
+                    : isPreserved
+                      ? "bg-purple-400"
+                      : isDormant
+                        ? "bg-amber-400"
+                        : "bg-regolith-500"
               }`}
             />
             <span>
@@ -65,9 +73,11 @@ export function ArtifactInfoPanel({
                 ? "Cruising Interstellar"
                 : isOperational
                   ? "Active Telemetry"
-                  : isDormant
-                    ? "Dormant Sensor"
-                    : "Defunct Structure"}
+                  : isPreserved
+                    ? "Preserved Memorial"
+                    : isDormant
+                      ? "Dormant Sensor"
+                      : "Defunct Structure"}
             </span>
           </span>
         </div>
@@ -94,7 +104,15 @@ export function ArtifactInfoPanel({
             className="text-xs font-mono font-bold truncate px-1"
             style={{ color: theme.primary }}
           >
-            {isOperational ? "Active" : isDormant ? "Dormant" : "Defunct"}
+            {isCruising
+              ? "Cruising"
+              : isOperational
+                ? "Active"
+                : isPreserved
+                  ? "Preserved"
+                  : isDormant
+                    ? "Dormant"
+                    : "Defunct"}
           </span>
         </div>
         <div className="flex flex-col border-l border-space-800">
@@ -300,10 +318,31 @@ export function ArtifactInfoPanel({
               </div>
             </div>
 
+            {/* Final Resting Place & Planetary Coordinates */}
+            <div className="rounded-lg border border-space-800 bg-space-900/50 p-3 flex flex-col gap-1.5">
+              <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-regolith-400">
+                Final Resting Place & Coordinates
+              </p>
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="text-regolith-200 font-bold">{missionSite}</span>
+                {landing && (landing.lat !== 0 || landing.lon !== 0) ? (
+                  <span className="text-cyan-300 font-bold">
+                    {landing.lat >= 0 ? `${landing.lat.toFixed(4)}°N` : `${Math.abs(landing.lat).toFixed(4)}°S`},{" "}
+                    {landing.lon >= 0 ? `${landing.lon.toFixed(4)}°E` : `${Math.abs(landing.lon).toFixed(4)}°W`}
+                  </span>
+                ) : (
+                  <span className="text-cyan-300 font-bold">{landing?.label || "Deep Space Trajectory"}</span>
+                )}
+              </div>
+              <p className="text-[10px] font-mono text-regolith-400">
+                Touchdown Datum: {landing?.label || missionSite} · Local offset: [{obj.position[0]}m, {obj.position[2]}m]
+              </p>
+            </div>
+
             {/* NASA External Archive Button */}
             {nssdcEntry && (
               <a
-                href={`https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=${nssdcEntry.nssdcaId}`}
+                href={nssdcEntry.catalogUrl || `https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=${nssdcEntry.nssdcaId}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-1 flex items-center justify-between rounded-lg border border-space-700 bg-space-850 px-3 py-2 text-xs font-mono font-semibold text-cyan-300 transition hover:bg-space-800 hover:text-cyan-200 cursor-pointer"
