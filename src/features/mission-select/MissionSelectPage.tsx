@@ -403,7 +403,7 @@ export default function MissionSelectPage() {
   const getOverallStats = useAppStore((s) => s.getOverallStats);
   const getRankProgress = useAppStore((s) => s.getRankProgress);
   const getMissionStars = useAppStore((s) => s.getMissionStars);
-  const achievements = useAppStore((s) => s.progress.achievements);
+  const achievements = useAppStore((s) => s.progress.achievements ?? []);
 
   const [searchParams] = useSearchParams();
   const demoParam = searchParams.get("demo");

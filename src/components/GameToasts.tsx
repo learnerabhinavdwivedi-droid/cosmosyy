@@ -16,7 +16,7 @@ export function GameToasts() {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const popAchievements = useAppStore((s) => s.popPendingAchievements);
   const popRankUp = useAppStore((s) => s.popPendingRankUp);
-  const comboCount = useAppStore((s) => s.session.comboCount);
+  const comboCount = useAppStore((s) => s.session.comboCount ?? 0);
 
   const addToast = useCallback((toast: Omit<ToastItem, "id">) => {
     const id = `toast-${++toastIdCounter}`;

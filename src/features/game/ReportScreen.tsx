@@ -160,7 +160,7 @@ export function ReportScreen() {
   const addXp = useAppStore((s) => s.addXp);
   const startMission = useAppStore((s) => s.startMission);
   const missionStartTime = useAppStore((s) => s.session.missionStartTime);
-  const achievements = useAppStore((s) => s.progress.achievements);
+  const achievements = useAppStore((s) => s.progress.achievements ?? []);
 
   const mission = useMemo(() => getMission(missionId ?? "apollo-11"), [missionId]);
   const isRobotic = mission.missionType === "robotic";

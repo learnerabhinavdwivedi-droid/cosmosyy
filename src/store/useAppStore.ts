@@ -277,13 +277,14 @@ export const useAppStore = create<AppState>()(
         set((s) => {
           const mission = s.progress.missions[missionId];
           if (!mission) return s;
-          if (mission.objectsFound.includes(objectId)) return s;
-          const newFound = [...mission.objectsFound, objectId];
+          const found = mission.objectsFound ?? [];
+          if (found.includes(objectId)) return s;
+          const newFound = [...found, objectId];
           return {
             progress: {
               ...s.progress,
               totalXp: s.progress.totalXp + XP_OBJECT,
-              totalObjectsFound: s.progress.totalObjectsFound + 1,
+              totalObjectsFound: (s.progress.totalObjectsFound ?? 0) + 1,
               missions: {
                 ...s.progress.missions,
                 [missionId]: {
@@ -376,7 +377,7 @@ export const useAppStore = create<AppState>()(
               totalXp: s.progress.totalXp + XP_COMPLETE,
               missions: updatedMissions,
               totalObjectsFound: Object.values(updatedMissions).reduce(
-                (sum, m) => sum + m.objectsFound.length,
+                (sum, m) => sum + (m.objectsFound?.length ?? 0),
                 0,
               ),
             },
@@ -460,7 +461,7 @@ export const useAppStore = create<AppState>()(
         const m = get().progress.missions[missionId];
         if (!m || m.status !== "completed") return 0;
         let stars = 1;
-        if (m.objectsFound.length >= totalObjects) stars = 2;
+        if ((m.objectsFound?.length ?? 0) >= totalObjects) stars = 2;
         if (stars === 2 && m.flagPlanted) stars = 3;
         return stars;
       },
@@ -475,7 +476,7 @@ export const useAppStore = create<AppState>()(
         for (const id of missionIds) {
           const m = missions[id]!;
           if (m.status === "completed") completed++;
-          objectsFound += m.objectsFound.length;
+          objectsFound += m.objectsFound?.length ?? 0;
           if (m.flagPlanted) flagsPlanted++;
           if (m.stars && m.stars >= 3) threeStarCount++;
         }
@@ -519,7 +520,7 @@ export const useAppStore = create<AppState>()(
       },
 
       popPendingAchievements: () => {
-        const pending = get().session.pendingAchievements;
+        const pending = get().session.pendingAchievements ?? [];
         if (pending.length === 0) return [];
         set((s) => ({ session: { ...s.session, pendingAchievements: [] } }));
         return pending;
@@ -538,11 +539,11 @@ export const useAppStore = create<AppState>()(
         set((s) => ({
           progress: {
             ...s.progress,
-            achievements: [...s.progress.achievements, id],
+            achievements: [...(s.progress.achievements ?? []), id],
           },
           session: {
             ...s.session,
-            pendingAchievements: [...s.session.pendingAchievements, id],
+            pendingAchievements: [...(s.session.pendingAchievements ?? []), id],
           },
         }));
       },
@@ -567,7 +568,7 @@ export const useAppStore = create<AppState>()(
           completedIds.includes(id),
         ).length;
         const totalFound = Object.values(missions).reduce(
-          (sum, m) => sum + m.objectsFound.length,
+          (sum, m) => sum + (m.objectsFound?.length ?? 0),
           0,
         );
         const flagCount = Object.values(missions).filter((m) => m.flagPlanted).length;
@@ -597,6 +598,27 @@ export const useAppStore = create<AppState>()(
         settings: state.settings,
         progress: state.progress,
       }),
+      merge: (persisted, current) => {
+        const p = persisted as Partial<Pick<AppState, "player" | "settings" | "progress">> | undefined;
+        if (!p) return current;
+        const pp = p.progress;
+        return {
+          ...current,
+          player: { ...current.player, ...(p.player ?? {}) },
+          settings: { ...current.settings, ...(p.settings ?? {}) },
+          progress: {
+            missions: { ...current.progress.missions, ...(pp?.missions ?? {}) },
+            totalXp: pp?.totalXp ?? current.progress.totalXp,
+            achievements: Array.isArray(pp?.achievements)
+              ? pp.achievements
+              : current.progress.achievements,
+            totalObjectsFound:
+              typeof pp?.totalObjectsFound === "number"
+                ? pp.totalObjectsFound
+                : current.progress.totalObjectsFound,
+          },
+        };
+      },
     },
   ),
 );
