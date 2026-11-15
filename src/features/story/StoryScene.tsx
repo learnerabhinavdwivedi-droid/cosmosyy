@@ -3,7 +3,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import type { StoryPacket } from "./storySchema";
 import { HeritageObject3D } from "../game/heritage3D/Heritage3DDispatcher";
-import { getLunarRegolithTexture } from "../game/heritage3D/textures";
+import { getLunarRegolithTexture, getMartianRegolithTexture } from "../game/heritage3D/textures";
 
 export interface StorySceneProps {
   packet?: StoryPacket;
@@ -68,6 +68,7 @@ function StoryCameraRig({
 /* ─── Lunar, Martian & Deep Space Environment (100% Deterministic) ─── */
 function StoryEnvironment({ isMars = false, isDeepSpace = false }: { isMars?: boolean; isDeepSpace?: boolean }) {
   const regolithTex = useMemo(() => getLunarRegolithTexture(), []);
+  const martianRegolithTex = useMemo(() => getMartianRegolithTexture(), []);
   const starsGeo = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     const count = isDeepSpace ? 900 : 600;
@@ -128,8 +129,8 @@ function StoryEnvironment({ isMars = false, isDeepSpace = false }: { isMars?: bo
           receiveShadow
         >
           <meshStandardMaterial
-            map={isMars ? undefined : regolithTex}
-            color={isMars ? "#883311" : "#475569"}
+            map={isMars ? martianRegolithTex : regolithTex}
+            color={isMars ? "#c2410c" : "#475569"}
             roughness={0.96}
             metalness={0.02}
           />

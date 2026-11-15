@@ -888,3 +888,301 @@ export function getLunarRegolithTexture(): THREE.CanvasTexture {
   textureCache.lunarRegolith = tex;
   return tex;
 }
+
+
+/**
+ * Authentic Martian Regolith Soil Texture with Iron-Oxide Grains, Basalt & Wind Ripples
+ */
+export function getMartianRegolithTexture(): THREE.CanvasTexture {
+  if (textureCache.martianRegolith) return textureCache.martianRegolith;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  // Deep iron-oxide terracotta base
+  ctx.fillStyle = "#9a3412";
+  ctx.fillRect(0, 0, 512, 512);
+
+  // Basalt pebbles, micro-pits, and fine ochre dust
+  for (let i = 0; i < 3500; i++) {
+    const x = deterministicRand(i * 3 + 11) * 512;
+    const y = deterministicRand(i * 3 + 17) * 512;
+    const r = deterministicRand(i * 5 + 23) * 2.4 + 0.5;
+    const type = deterministicRand(i * 7 + 29);
+
+    if (type > 0.65) {
+      // Dark basalt pebble
+      ctx.fillStyle = `rgba(67, 20, 7, ${0.4 + deterministicRand(i * 11) * 0.4})`;
+    } else if (type > 0.3) {
+      // Warm ochre dust grain
+      ctx.fillStyle = `rgba(234, 88, 12, ${0.3 + deterministicRand(i * 13) * 0.4})`;
+    } else {
+      // Bright oxidized silt speckle
+      ctx.fillStyle = `rgba(254, 215, 170, ${0.2 + deterministicRand(i * 19) * 0.35})`;
+    }
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Wind-scoured ripple striations (typical of Chryse Planitia drifts)
+  ctx.strokeStyle = "rgba(67, 20, 7, 0.4)";
+  ctx.lineWidth = 2.2;
+  for (let y = 24; y < 512; y += 40) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    for (let x = 0; x <= 512; x += 16) {
+      const dy = Math.sin((x + y) * 0.08) * 3.5;
+      ctx.lineTo(x, y + dy);
+    }
+    ctx.stroke();
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  textureCache.martianRegolith = tex;
+  return tex;
+}
+
+/**
+ * Viking 1 Lander Deck Identification & Manufacturer Stencil Decal
+ */
+export function getVikingDeckDecalTexture(): THREE.CanvasTexture {
+  if (textureCache.vikingDeckDecal) return textureCache.vikingDeckDecal;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 256;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  // Brushed titanium plate
+  ctx.fillStyle = "#e2e8f0";
+  ctx.fillRect(0, 0, 512, 256);
+
+  // Plate border
+  ctx.strokeStyle = "#475569";
+  ctx.lineWidth = 4;
+  ctx.strokeRect(6, 6, 500, 244);
+
+  // Screws at corners
+  const screws: [number, number][] = [
+    [16, 16],
+    [496, 16],
+    [16, 240],
+    [496, 240],
+    [256, 16],
+    [256, 240],
+  ];
+  ctx.fillStyle = "#1e293b";
+  screws.forEach(([sx, sy]) => {
+    ctx.beginPath();
+    ctx.arc(sx, sy, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // 1976 USA Flag on left
+  const fx = 32;
+  const fy = 36;
+  const fw = 140;
+  const fh = 84;
+  const stripeH = fh / 13;
+  for (let i = 0; i < 13; i++) {
+    ctx.fillStyle = i % 2 === 0 ? "#b91c1c" : "#ffffff";
+    ctx.fillRect(fx, fy + i * stripeH, fw, stripeH);
+  }
+  // Blue canton
+  ctx.fillStyle = "#1e3a8a";
+  ctx.fillRect(fx, fy, fw * 0.45, stripeH * 7);
+
+  // Title text
+  ctx.fillStyle = "#0f172a";
+  ctx.font = "bold 28px monospace";
+  ctx.fillText("VIKING 1", 200, 64);
+
+  ctx.font = "bold 16px monospace";
+  ctx.fillStyle = "#334155";
+  ctx.fillText("SURFACE LANDER — CHRYSE PLANITIA", 200, 92);
+  ctx.fillText("NASA / JPL / MARTIN MARIETTA", 200, 114);
+
+  // Divider
+  ctx.strokeStyle = "#64748b";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(32, 140);
+  ctx.lineTo(480, 140);
+  ctx.stroke();
+
+  // Specs
+  ctx.font = "13px monospace";
+  ctx.fillStyle = "#1e293b";
+  ctx.fillText("LAUNCH: AUG 20, 1975  |  LANDED: JUL 20, 1976", 32, 170);
+  ctx.fillText("LAT: 22.48° N  LON: 49.97° W  |  PBR SERIAL: VL-1-1976", 32, 195);
+  ctx.fillText("POWER: DUAL SNAP-19 RTG  |  COMM: S-BAND DIRECT", 32, 220);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  textureCache.vikingDeckDecal = tex;
+  return tex;
+}
+
+/**
+ * Viking 1 Color & Optical Calibration Target
+ */
+export function getVikingCalibrationTargetTexture(): THREE.CanvasTexture {
+  if (textureCache.vikingCalib) return textureCache.vikingCalib;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  // Off-white ceramic base plate
+  ctx.fillStyle = "#f8fafc";
+  ctx.fillRect(0, 0, 512, 512);
+
+  // Outer border with mounting holes
+  ctx.strokeStyle = "#334155";
+  ctx.lineWidth = 6;
+  ctx.strokeRect(8, 8, 496, 496);
+
+  // 4 Primary color calibration chips (Pure NASA 1976 test colors)
+  const chipSize = 92;
+  const margin = 32;
+
+  // Primary Red
+  ctx.fillStyle = "#dc2626";
+  ctx.fillRect(margin, margin, chipSize, chipSize);
+  ctx.strokeStyle = "#1e293b";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(margin, margin, chipSize, chipSize);
+
+  // Primary Green
+  ctx.fillStyle = "#16a34a";
+  ctx.fillRect(512 - margin - chipSize, margin, chipSize, chipSize);
+  ctx.strokeRect(512 - margin - chipSize, margin, chipSize, chipSize);
+
+  // Primary Blue
+  ctx.fillStyle = "#2563eb";
+  ctx.fillRect(margin, 512 - margin - chipSize, chipSize, chipSize);
+  ctx.strokeRect(margin, 512 - margin - chipSize, chipSize, chipSize);
+
+  // Primary Yellow
+  ctx.fillStyle = "#eab308";
+  ctx.fillRect(512 - margin - chipSize, 512 - margin - chipSize, chipSize, chipSize);
+  ctx.strokeRect(512 - margin - chipSize, 512 - margin - chipSize, chipSize, chipSize);
+
+  // Stepped neutral reflectance gray scale across top/bottom
+  const grays = ["#ffffff", "#d1d5db", "#9ca3af", "#6b7280", "#374151", "#111827"];
+  const stepW = 34;
+  grays.forEach((g, idx) => {
+    ctx.fillStyle = g;
+    ctx.fillRect(155 + idx * stepW, margin, stepW, chipSize);
+    ctx.strokeRect(155 + idx * stepW, margin, stepW, chipSize);
+
+    ctx.fillRect(155 + idx * stepW, 512 - margin - chipSize, stepW, chipSize);
+    ctx.strokeRect(155 + idx * stepW, 512 - margin - chipSize, stepW, chipSize);
+  });
+
+  // Central sundial ring and gnomon alignment crosshair
+  ctx.beginPath();
+  ctx.arc(256, 256, 88, 0, Math.PI * 2);
+  ctx.fillStyle = "#ffffff";
+  ctx.fill();
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = "#0f172a";
+  ctx.stroke();
+
+  // Concentric resolution rings
+  [68, 48, 28].forEach((r) => {
+    ctx.beginPath();
+    ctx.arc(256, 256, r, 0, Math.PI * 2);
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = "#475569";
+    ctx.stroke();
+  });
+
+  // Crosshairs
+  ctx.beginPath();
+  ctx.moveTo(256 - 88, 256);
+  ctx.lineTo(256 + 88, 256);
+  ctx.moveTo(256, 256 - 88);
+  ctx.lineTo(256, 256 + 88);
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = "#0f172a";
+  ctx.stroke();
+
+  // Center gnomon base dot
+  ctx.beginPath();
+  ctx.arc(256, 256, 8, 0, Math.PI * 2);
+  ctx.fillStyle = "#0f172a";
+  ctx.fill();
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  textureCache.vikingCalib = tex;
+  return tex;
+}
+
+/**
+ * Viking 1 Thermal Enamel & Riveted Titanium Panel Texture
+ */
+export function getVikingThermalShieldTexture(): THREE.CanvasTexture {
+  if (textureCache.vikingThermalShield) return textureCache.vikingThermalShield;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  // Off-white silicone heat rejection enamel
+  ctx.fillStyle = "#f1f5f9";
+  ctx.fillRect(0, 0, 512, 512);
+
+  // Subtle metallic texture noise
+  for (let i = 0; i < 2000; i++) {
+    const x = deterministicRand(i * 4 + 5) * 512;
+    const y = deterministicRand(i * 4 + 7) * 512;
+    const alpha = deterministicRand(i * 4 + 9) * 0.08;
+    ctx.fillStyle = `rgba(100, 116, 139, ${alpha})`;
+    ctx.fillRect(x, y, 2, 2);
+  }
+
+  // Panel division seams
+  ctx.strokeStyle = "#94a3b8";
+  ctx.lineWidth = 1.5;
+  for (let y = 64; y < 512; y += 64) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(512, y);
+    ctx.stroke();
+  }
+  for (let x = 64; x < 512; x += 64) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, 512);
+    ctx.stroke();
+  }
+
+  // Flush titanium rivets along seams
+  ctx.fillStyle = "#64748b";
+  for (let y = 64; y < 512; y += 64) {
+    for (let x = 16; x < 512; x += 32) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  textureCache.vikingThermalShield = tex;
+  return tex;
+}
