@@ -1,6 +1,49 @@
 import fs from "fs";
 import path from "path";
-import { StoryPacketSchema, type StoryPacket } from "../src/features/story/storyTypes";
+import { z } from "zod";
+
+// Inline schema types (mirrors storySchema.ts without import.meta.glob)
+const FactStatusSchema = z.enum(["verified", "from-repo", "general-science", "unverified"]);
+const StoryFactSchema = z.object({
+  id: z.string(),
+  text: z.string(),
+  source: z.string().optional(),
+  status: FactStatusSchema,
+});
+const StoryBeatSchema = z.enum(["identity", "design", "how-it-worked", "evidence", "fate", "legacy"]);
+const CameraKeyframeSchema = z.object({
+  pos: z.tuple([z.number(), z.number(), z.number()]),
+  look: z.tuple([z.number(), z.number(), z.number()]),
+});
+const StorySceneSchema = z.object({
+  id: z.string(),
+  beat: StoryBeatSchema,
+  action: z.string(),
+  camera: CameraKeyframeSchema,
+  factIds: z.array(z.string()).min(1),
+  kids: z.string(),
+  explorer: z.string(),
+  audio: z.object({ kids: z.string().nullable().optional(), explorer: z.string().nullable().optional() }),
+  hindi: z.object({ kids: z.string(), explorer: z.string() }).optional(),
+});
+const StoryPacketSchema = z.object({
+  id: z.string(),
+  missionId: z.string(),
+  name: z.string(),
+  kind: z.string(),
+  environment: z.string(),
+  fate: z.string(),
+  year: z.number(),
+  nssdcaId: z.string().optional(),
+  model: z.object({
+    glb: z.string().nullable().optional(),
+    procedural: z.string().nullable().optional(),
+    dims: z.tuple([z.number(), z.number(), z.number()]).nullable().optional(),
+  }),
+  facts: z.array(StoryFactSchema).min(1),
+  scenes: z.array(StorySceneSchema).min(5).max(8),
+});
+type StoryPacket = z.infer<typeof StoryPacketSchema>;
 
 interface MissionObject {
   id: string;

@@ -8,7 +8,13 @@ import { useGameStore, type GamePhase } from "@/store/useGameStore";
 import { useAppStore } from "@/store/useAppStore";
 import { DebugPanel } from "@/components/DebugPanel";
 import { gameAudio } from "@/lib/gameAudio";
-import { preloadNarration, playNarration, stopNarration, unlockAudio, onNarrationComplete } from "@/lib/narration";
+import {
+  preloadNarration,
+  playNarration,
+  stopNarration,
+  unlockAudio,
+  onNarrationComplete,
+} from "@/lib/narration";
 import { isTouchDevice, useIsPortrait } from "@/lib/useMobile";
 import { useFullscreen, requestFullscreen, isFullscreen } from "@/lib/fullscreen";
 import { FlightScene } from "./FlightScene";
@@ -22,7 +28,15 @@ import { Effects } from "./Effects";
 import { MarsCruiseStageContent } from "./FlightScene";
 import * as THREE from "three";
 
-const FLIGHT_PHASES = new Set<string>(["flight", "coast", "orbit", "targetLocked", "descent", "touchdown", "stepOut"]);
+const FLIGHT_PHASES = new Set<string>([
+  "flight",
+  "coast",
+  "orbit",
+  "targetLocked",
+  "descent",
+  "touchdown",
+  "stepOut",
+]);
 const SURFACE_PHASES = new Set<string>(["explore", "inspect", "flagReady", "flagPlanted"]);
 const ENGINE_PHASES = new Set<string>(["flight", "targetLocked", "descent", "launch"]);
 
@@ -146,7 +160,9 @@ function GameAudioController() {
 function useOrientationLock() {
   useEffect(() => {
     if (!isTouchDevice()) return;
-    const so = screen.orientation as (ScreenOrientation & { lock?: (o: string) => Promise<void>; unlock?: () => void }) | undefined;
+    const so = screen.orientation as
+      | (ScreenOrientation & { lock?: (o: string) => Promise<void>; unlock?: () => void })
+      | undefined;
     if (!so?.lock) return;
     so.lock("landscape-primary").catch(() => {});
     return () => {
@@ -183,7 +199,17 @@ function LandscapeNudge() {
   return (
     <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-5 bg-space-950/95 backdrop-blur-xl px-4 text-center">
       <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-signal/40 bg-signal/10 shadow-[0_0_24px_rgba(245,158,11,0.2)] animate-[spin_3s_ease-in-out_infinite_alternate]">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-signal">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-signal"
+        >
           <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
           <path d="M12 18h.01" />
         </svg>
@@ -191,15 +217,22 @@ function LandscapeNudge() {
       <p className="max-w-xs font-display text-xl sm:text-2xl font-bold text-regolith-100">
         Please rotate your phone to landscape mode
       </p>
-      <p className="text-sm text-regolith-400">
-        The mission requires a horizontal view
-      </p>
+      <p className="text-sm text-regolith-400">The mission requires a horizontal view</p>
       <button
         type="button"
         onClick={() => enter()}
         className="mt-2 flex items-center gap-2 rounded-xl border border-signal bg-signal/20 hover:bg-signal/30 active:scale-95 px-5 py-3 text-sm font-bold text-signal shadow-lg shadow-signal/20 backdrop-blur transition touch-manipulation cursor-pointer"
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <polyline points="15 3 21 3 21 9" />
           <polyline points="9 21 3 21 3 15" />
           <line x1="21" y1="3" x2="14" y2="10" />
@@ -322,7 +355,16 @@ export default function GameShell() {
             onClick={() => enter()}
             className="flex items-center gap-1.5 rounded-full border border-signal/60 bg-space-950/90 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-signal shadow-lg shadow-signal/20 backdrop-blur active:scale-95 transition cursor-pointer"
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <polyline points="15 3 21 3 21 9" />
               <polyline points="9 21 3 21 3 15" />
               <line x1="21" y1="3" x2="14" y2="10" />
@@ -484,7 +526,15 @@ function LaunchSceneContent() {
       ) : (
         <>
           <color attach="background" args={["#000000"]} />
-          <Stars radius={300} depth={80} count={8000} factor={5} saturation={0.6} fade speed={0.1} />
+          <Stars
+            radius={300}
+            depth={80}
+            count={8000}
+            factor={5}
+            saturation={0.6}
+            fade
+            speed={0.1}
+          />
           <ambientLight intensity={0.04} color="#333344" />
           <hemisphereLight args={["#667788", "#222228", 0.08]} />
         </>
@@ -495,7 +545,9 @@ function LaunchSceneContent() {
         color={isMars ? "#ffe0b0" : "#fff5e0"}
       />
       {/* Sun Disc */}
-      <group position={[sunData.direction[0] * 3, sunData.direction[1] * 3, sunData.direction[2] * 3]}>
+      <group
+        position={[sunData.direction[0] * 3, sunData.direction[1] * 3, sunData.direction[2] * 3]}
+      >
         <mesh>
           <sphereGeometry args={[14, 32, 32]} />
           <meshBasicMaterial color="#ffffff" />
@@ -506,7 +558,13 @@ function LaunchSceneContent() {
         </mesh>
       </group>
       <Suspense fallback={null}>
-        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} lat={mission.landing.lat} lon={mission.landing.lon} planet={mission.planet} />
+        <Terrain
+          stlPath={mission.terrain.model}
+          orthoPath={mission.terrain.ortho}
+          lat={mission.landing.lat}
+          lon={mission.landing.lon}
+          planet={mission.planet}
+        />
       </Suspense>
       <GroundPlane planet={mission.planet} />
       {!isMars && (
@@ -530,12 +588,15 @@ function LaunchScene() {
   useEffect(() => {
     let cancelWait: (() => void) | null = null;
     let reportTimer: ReturnType<typeof setTimeout> | null = null;
-    const fadeTimer = setTimeout(() => {
-      cancelWait = onNarrationComplete(() => {
-        setFade(true);
-        reportTimer = setTimeout(() => send("SHOW_REPORT"), 1000);
-      }, 10000);
-    }, isRobotic ? 3000 : 4000);
+    const fadeTimer = setTimeout(
+      () => {
+        cancelWait = onNarrationComplete(() => {
+          setFade(true);
+          reportTimer = setTimeout(() => send("SHOW_REPORT"), 1000);
+        }, 10000);
+      },
+      isRobotic ? 3000 : 4000,
+    );
     return () => {
       clearTimeout(fadeTimer);
       if (cancelWait) cancelWait();

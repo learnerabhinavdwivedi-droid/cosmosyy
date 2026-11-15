@@ -42,12 +42,17 @@ export function DebugPanel() {
     <div className="fixed bottom-0 right-0 z-[9999] m-2 max-h-[50vh] w-80 overflow-y-auto rounded-lg border border-space-700 bg-space-950/95 p-3 text-xs text-regolith-200 backdrop-blur font-mono">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-signal font-bold">DEBUG</span>
-        <button onClick={() => setOpen(false)} className="text-regolith-400 hover:text-regolith-200">
+        <button
+          onClick={() => setOpen(false)}
+          className="text-regolith-400 hover:text-regolith-200"
+        >
           [x]
         </button>
       </div>
       <div className="mb-2 space-y-1">
-        <div>Phase: <span className="text-ok font-bold">{phase}</span></div>
+        <div>
+          Phase: <span className="text-ok font-bold">{phase}</span>
+        </div>
         <div>Mission: {missionId ?? "none"}</div>
         <div>Beat: {beat}</div>
         <div>Found: {found.length > 0 ? found.join(", ") : "none"}</div>

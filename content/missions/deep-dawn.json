@@ -1,0 +1,119 @@
+{
+  "id": "deep-dawn",
+  "name": "Dawn at Ceres",
+  "planet": "deep-space",
+  "site": "Occator Crater (Cerealia Facula)",
+  "date": "2015-03-06",
+  "evaSunTime": "2015-03-06T12:00:00Z",
+  "missionType": "robotic",
+  "operator": "NASA / JPL",
+  "crew": {
+    "commander": "Dr. Marc Rayman (Mission Director)",
+    "lmp": "Dr. Carol Raymond (Principal Investigator)",
+    "cmp": "JPL Dawn Flight Operations"
+  },
+  "landing": {
+    "lat": 19.82,
+    "lon": 239.3,
+    "label": "Occator Crater"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null
+  },
+  "keyDiscovery": "Discovered that dwarf planet Ceres harbors extensive sodium carbonate salt deposits inside Occator Crater, revealing a subsurface briny ocean reservoir that erupted through cryovolcanism.",
+  "missionLegacy": "The first spacecraft to orbit two different extraterrestrial destinations (Vesta and Ceres) using high-efficiency xenon ion propulsion; safely placed in an unpowered quarantine graveyard orbit for 50+ years.",
+  "funFact": "Dawn traveled 6.9 billion kilometers powered by just 425 kg of xenon gas — its ion engines operated for over 51,000 hours, equivalent to nearly 6 full years of continuous thrust!",
+  "heritageNote": "Dawn remains parked in an uncontrolled, ultra-stable graveyard orbit around dwarf planet Ceres, protected by planetary protection protocols to avoid contaminating potential cryo-habitats on the surface.",
+  "timeline": {
+    "launch": "2007-09-27T11:34:00Z",
+    "landing": "2015-03-06T12:39:00Z",
+    "lastContact": "2018-11-01T00:00:00Z",
+    "endOfMission": "2018-11-01T00:00:00Z"
+  },
+  "objects": [
+    {
+      "id": "dawn-spacecraft",
+      "name": "Dawn Spacecraft",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "description": "Robotic explorer measuring 19.7 meters wing-to-wing. Carried three xenon ion thrusters, framing cameras, and a visible/infrared mapping spectrometer. Currently orbiting silently around Ceres in a perpetual graveyard orbit.",
+      "xp": 50,
+      "source": "NASA/JPL-Caltech Dawn Mission Archive (NSSDCA #2007-043A)",
+      "whySent": "To explore the two most massive protoplanets in the asteroid belt (Vesta and Ceres) and unlock the early chemical conditions of our infant solar system 4.5 billion years ago.",
+      "scienceDiscovery": "Proved that Ceres is an active, water-rich dwarf planet with an ancient global ocean, subsurface briny reservoirs, and organic molecules on its surface.",
+      "ongoingScience": "Even in graveyard orbit, Dawn's decadal datasets of gravity anomalies and spectral data continue to be re-analyzed by astrobiologists modeling deep extraterrestrial oceans.",
+      "hardwareType": "orbiter",
+      "status": "dormant",
+      "yearDeployed": 2015,
+      "yearLastContact": 2018,
+      "nasaImageId": "PIA21924",
+      "firstPerson": "Listen up, space cadets! I am the Dawn Spacecraft, and I am the only probe in human history to orbit two different extraterrestrial bodies — asteroid Vesta and dwarf planet Ceres! Powered by futuristic ion thrusters, I traveled nearly 7 billion kilometers on a whisper of xenon gas. Ran out of hydrazine in 2018, but I am still orbiting Ceres in eternal silence. Solar system globetrotter, no cap!"
+    },
+    {
+      "id": "cerealia-facula",
+      "name": "Cerealia Facula Salt Dome",
+      "position": [
+        -6.5,
+        0,
+        5.2
+      ],
+      "description": "A dazzling 10-kilometer bright dome of sodium carbonate salts and ammonium chloride in the center of Occator Crater. Formed when subsurface brines erupted through cryovolcanic fractures caused by asteroid impact.",
+      "xp": 50,
+      "source": "Nature Geoscience (De Sanctis et al. 2020) / Dawn VIR Spectrometer",
+      "whySent": "To explain the mysterious brilliant white spots on Ceres that baffled astronomers upon Dawn's initial approach in 2015.",
+      "scienceDiscovery": "Confirmed the highest concentration of carbonate minerals ever detected outside Earth, proving active hydrothermal or cryovolcanic brine processes in dwarf planets.",
+      "ongoingScience": "Comparative planetology researchers use Cerealia Facula chemistry to model Europa and Enceladus ice plume compositions.",
+      "hardwareType": "scientific-package",
+      "status": "dormant",
+      "yearDeployed": 2015,
+      "nasaImageId": "PIA22477",
+      "firstPerson": "Earth telescopes thought I was an alien beacon! I am Cerealia Facula — the gleaming white spot in Occator Crater on Ceres. Dawn flew down to just 35 kilometers to snap my portrait, proving I am made of sodium carbonate salts left behind by ancient cryovolcanic brines erupting from an alien subsurface ocean. I glow like a disco ball on a dwarf planet!"
+    },
+    {
+      "id": "grand-sensor",
+      "name": "GRaND Gamma-Ray Detector",
+      "position": [
+        5.8,
+        0,
+        -4.6
+      ],
+      "description": "Gamma Ray and Neutron Detector mounted on Dawn. Measured elemental concentrations of hydrogen, iron, potassium, and carbon by analyzing cosmic-ray-induced gamma emissions from the top meter of regolith.",
+      "xp": 50,
+      "source": "Prettyman et al. (Science 2016) / NASA PDS",
+      "whySent": "To map global subsurface water-ice distribution and elemental abundance across Ceres' entire crust without touching the surface.",
+      "scienceDiscovery": "Discovered that water ice makes up roughly 10% to 30% of Ceres' upper regolith by weight, proving Ceres is a giant ice-rock world rather than a dead dry asteroid.",
+      "ongoingScience": "Data actively constrains solar system formation models and where water ice condensed in the early solar nebula.",
+      "hardwareType": "scientific-package",
+      "status": "dormant",
+      "yearDeployed": 2015,
+      "yearLastContact": 2018,
+      "nasaImageId": "PIA21078",
+      "firstPerson": "I see through solid alien rock using cosmic rays! I am the Gamma Ray and Neutron Detector, or GRaND, on Dawn. By counting neutrons kicked up by galactic cosmic rays, I mapped the subsurface water-ice hidden across Ceres — ten percent water by weight! I have got x-ray vision for solar system geology, pure superhero vibes!"
+    },
+    {
+      "id": "dawn-ion-engine",
+      "name": "NSTAR Xenon Ion Engine",
+      "position": [
+        0,
+        -1.2,
+        -6.8
+      ],
+      "description": "Triple electrostatic 30-centimeter ion thruster package using xenon propellant ionized by electron bombardment and accelerated through 1,280-volt molybdenum grids.",
+      "xp": 50,
+      "source": "JPL Ion Propulsion Technical Report / Brophy et al.",
+      "whySent": "To demonstrate that high-specific-impulse electric propulsion can enable complex multi-body orbital rendezvous missions that conventional chemical rockets cannot achieve.",
+      "scienceDiscovery": "Validated ion propulsion efficiency in deep space with an Isp of 3,100 seconds — roughly 10 times higher efficiency than standard chemical rocket engines.",
+      "ongoingScience": "Paved the way for modern electric propulsion architectures on missions like NASA's Psyche, DART, and Gateway lunar outpost.",
+      "hardwareType": "deep-space-probe",
+      "status": "defunct",
+      "yearDeployed": 2007,
+      "yearLastContact": 2018,
+      "nasaImageId": "PIA14875",
+      "firstPerson": "Who needs explosive rocket fuel when you have sci-fi blue plasma? I am Dawn's NSTAR Ion Thruster! I shot charged xenon ions out the back at 90,000 kilometers per hour, accelerating non-stop for over two thousand days using less fuel than a family minivan. The ultimate endurance runner of deep space, built completely different!"
+    }
+  ]
+}

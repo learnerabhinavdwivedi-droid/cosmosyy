@@ -281,8 +281,12 @@ export function TouchControls({
               {scanProgress > 0 && (
                 <svg className="absolute inset-0 pointer-events-none" viewBox="0 0 56 56">
                   <circle
-                    cx="28" cy="28" r="24"
-                    fill="none" stroke="#00d4ff" strokeWidth="3"
+                    cx="28"
+                    cy="28"
+                    r="24"
+                    fill="none"
+                    stroke="#00d4ff"
+                    strokeWidth="3"
                     strokeLinecap="round"
                     strokeDasharray={2 * Math.PI * 24}
                     strokeDashoffset={2 * Math.PI * 24 * (1 - scanProgress)}

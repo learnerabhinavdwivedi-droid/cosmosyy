@@ -1,11 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { useAppStore } from "./useAppStore";
-import {
-  XP_LAND,
-  XP_OBJECT,
-  XP_FLAG,
-  XP_COMPLETE,
-} from "./useAppStore";
+import { XP_LAND, XP_OBJECT, XP_FLAG, XP_COMPLETE } from "./useAppStore";
 
 beforeEach(() => {
   useAppStore.setState({
@@ -69,9 +64,7 @@ describe("useAppStore", () => {
     useAppStore.getState().findObject("apollo-11", "lrrr");
     useAppStore.getState().findObject("apollo-11", "lrrr");
     expect(useAppStore.getState().progress.totalXp).toBe(XP_OBJECT);
-    expect(
-      useAppStore.getState().progress.missions["apollo-11"]?.objectsFound,
-    ).toHaveLength(1);
+    expect(useAppStore.getState().progress.missions["apollo-11"]?.objectsFound).toHaveLength(1);
   });
 
   it("plants flag and awards XP_FLAG", () => {
@@ -104,9 +97,7 @@ describe("useAppStore", () => {
 
   it("starts mission (available → in-progress)", () => {
     useAppStore.getState().startMission("apollo-11");
-    expect(useAppStore.getState().progress.missions["apollo-11"]?.status).toBe(
-      "in-progress",
-    );
+    expect(useAppStore.getState().progress.missions["apollo-11"]?.status).toBe("in-progress");
   });
 
   it("does not start a locked mission", () => {
@@ -125,9 +116,7 @@ describe("useAppStore", () => {
       },
     }));
     useAppStore.getState().startMission("apollo-12");
-    expect(useAppStore.getState().progress.missions["apollo-12"]?.status).toBe(
-      "locked",
-    );
+    expect(useAppStore.getState().progress.missions["apollo-12"]?.status).toBe("locked");
   });
 
   it("computes rank from totalXp", () => {
@@ -159,8 +148,7 @@ describe("useAppStore", () => {
     s().plantFlag(a);
     s().completeMission(a);
 
-    const expected =
-      XP_LAND + 5 * XP_OBJECT + XP_FLAG + XP_COMPLETE;
+    const expected = XP_LAND + 5 * XP_OBJECT + XP_FLAG + XP_COMPLETE;
     expect(s().progress.totalXp).toBe(expected);
     expect(s().progress.totalXp).toBe(500);
   });

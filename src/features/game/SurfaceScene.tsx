@@ -1,11 +1,4 @@
-import {
-  useRef,
-  useEffect,
-  useState,
-  useCallback,
-  Suspense,
-  useMemo,
-} from "react";
+import { useRef, useEffect, useState, useCallback, Suspense, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import { Stars, Text, useGLTF, Preload } from "@react-three/drei";
@@ -38,10 +31,33 @@ import { hasDedicated3DModel, HeritageObject3D } from "./heritage3D/Heritage3DDi
 import { AmericanFlag3D } from "./heritage3D/MoonArtifacts";
 import * as THREE from "three";
 
+let _smokeTexture: THREE.CanvasTexture | null = null;
+function getSmokeTexture(): THREE.CanvasTexture {
+  if (_smokeTexture) return _smokeTexture;
+  const canvas = document.createElement("canvas");
+  canvas.width = 128;
+  canvas.height = 128;
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    grad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+    grad.addColorStop(0.25, "rgba(235, 235, 235, 0.65)");
+    grad.addColorStop(0.5, "rgba(195, 195, 195, 0.28)");
+    grad.addColorStop(0.8, "rgba(150, 150, 150, 0.07)");
+    grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 128, 128);
+  }
+  _smokeTexture = new THREE.CanvasTexture(canvas);
+  _smokeTexture.needsUpdate = true;
+  return _smokeTexture;
+}
+
 const SCAN_RANGE = 12;
 
 function HoloParticles({ color, speed }: { color: string; speed: number }) {
   const ref = useRef<THREE.Points>(null);
+  const smokeTex = useMemo(() => getSmokeTexture(), []);
   const count = 14;
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -72,17 +88,14 @@ function HoloParticles({ color, speed }: { color: string; speed: number }) {
   return (
     <points ref={ref}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-          count={count}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} count={count} />
       </bufferGeometry>
       <pointsMaterial
+        map={smokeTex}
         color={color}
-        size={0.08}
+        size={0.24}
         transparent
-        opacity={0.8}
+        opacity={0.85}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
         sizeAttenuation
@@ -94,7 +107,15 @@ function HoloParticles({ color, speed }: { color: string; speed: number }) {
 const NAME_VISIBLE_RANGE = 40;
 const PROXIMITY_RANGE = 15;
 
-function FloatingArrow({ isFound, themeColor, distance }: { isFound: boolean; themeColor: string; distance: number }) {
+function FloatingArrow({
+  isFound,
+  themeColor,
+  distance,
+}: {
+  isFound: boolean;
+  themeColor: string;
+  distance: number;
+}) {
   const groupRef = useRef<THREE.Group>(null);
   const glowRef = useRef<THREE.PointLight>(null);
 
@@ -115,19 +136,11 @@ function FloatingArrow({ isFound, themeColor, distance }: { isFound: boolean; th
       <pointLight ref={glowRef} color={color} intensity={1.5} distance={12} decay={2} />
       <mesh rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[0.35, 0.8, 6]} />
-        <meshBasicMaterial
-          color={color}
-          transparent
-          opacity={isFound ? 0.4 : 0.85}
-        />
+        <meshBasicMaterial color={color} transparent opacity={isFound ? 0.4 : 0.85} />
       </mesh>
       <mesh position={[0, 0.7, 0]}>
         <cylinderGeometry args={[0.1, 0.1, 0.6, 6]} />
-        <meshBasicMaterial
-          color={color}
-          transparent
-          opacity={isFound ? 0.3 : 0.7}
-        />
+        <meshBasicMaterial color={color} transparent opacity={isFound ? 0.3 : 0.7} />
       </mesh>
     </group>
   );
@@ -160,11 +173,7 @@ function GroundObject({ url, baseScale = 1.0 }: { url: string; baseScale?: numbe
   return (
     <group
       scale={[box.scale, box.scale, box.scale]}
-      position={[
-        -box.center.x * box.scale,
-        -box.bottomY * box.scale,
-        -box.center.z * box.scale,
-      ]}
+      position={[-box.center.x * box.scale, -box.bottomY * box.scale, -box.center.z * box.scale]}
     >
       <primitive object={cloned} />
     </group>
@@ -218,15 +227,14 @@ function HeritageMarker({
     if (pulseRef.current) {
       const pulseScale = 1 + Math.sin(t * 2) * 0.3;
       pulseRef.current.scale.set(pulseScale, 1, pulseScale);
-      (pulseRef.current.material as THREE.MeshBasicMaterial).opacity =
-        isNear ? 0.12 : 0.05;
+      (pulseRef.current.material as THREE.MeshBasicMaterial).opacity = isNear ? 0.12 : 0.05;
     }
   });
 
   if (obj.id === "descent-stage" || obj.hidden) return null;
 
   const themeColor = getThemeColor3(obj.id);
-  const baseColor = isFound ? "#66ff99" : isNear ? themeColor : (isMars ? "#e8a050" : "#ffd36e");
+  const baseColor = isFound ? "#66ff99" : isNear ? themeColor : isMars ? "#e8a050" : "#ffd36e";
   const showName = distance < NAME_VISIBLE_RANGE;
 
   const terrainY = getTerrainElevation(
@@ -241,11 +249,7 @@ function HeritageMarker({
     <group position={[obj.position[0], obj.position[1] + terrainY - 0.035, obj.position[2]]}>
       {/* Real 3D physical heritage object with Blender finish */}
       {missionId && isDedicated ? (
-        <HeritageObject3D
-          missionId={missionId}
-          objectId={obj.id}
-          scale={1.0}
-        />
+        <HeritageObject3D missionId={missionId} objectId={obj.id} scale={1.0} />
       ) : modelEntry ? (
         <Suspense fallback={null}>
           <GroundObject url={modelEntry.modelPath} baseScale={1.2} />
@@ -254,11 +258,7 @@ function HeritageMarker({
 
       <FloatingArrow isFound={isFound} themeColor={themeColor} distance={distance} />
 
-      <mesh
-        ref={outerRingRef}
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, 0.1, 0]}
-      >
+      <mesh ref={outerRingRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.1, 0]}>
         <torusGeometry args={[1.2, 0.03, 8, 48]} />
         <meshBasicMaterial
           color={baseColor}
@@ -269,11 +269,7 @@ function HeritageMarker({
         />
       </mesh>
 
-      <mesh
-        ref={innerRingRef}
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, 0.15, 0]}
-      >
+      <mesh ref={innerRingRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.15, 0]}>
         <torusGeometry args={[0.7, 0.02, 8, 32]} />
         <meshBasicMaterial
           color={baseColor}
@@ -284,11 +280,7 @@ function HeritageMarker({
         />
       </mesh>
 
-      <mesh
-        ref={pulseRef}
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, 0.05, 0]}
-      >
+      <mesh ref={pulseRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
         <circleGeometry args={[1.5, 32]} />
         <meshBasicMaterial
           color={baseColor}
@@ -300,9 +292,7 @@ function HeritageMarker({
         />
       </mesh>
 
-      {isNear && !isFound && (
-        <HoloParticles color={baseColor} speed={2} />
-      )}
+      {isNear && !isFound && <HoloParticles color={baseColor} speed={2} />}
 
       {showName && (
         <Text
@@ -331,7 +321,6 @@ function ProximityDetector({
   setObjectDistances: (d: Record<string, number>) => void;
   objects: HeritageObject[];
 }) {
-  const { camera } = useThree();
   const foundRef = useRef(useGameStore.getState().objectsFoundThisRun);
   const prevNearest = useRef<string | null>(null);
   const prevProximity = useRef<Set<string>>(new Set());
@@ -340,7 +329,10 @@ function ProximityDetector({
   const distanceUpdateTimer = useRef(0);
 
   useEffect(
-    () => useGameStore.subscribe((s) => { foundRef.current = s.objectsFoundThisRun; }),
+    () =>
+      useGameStore.subscribe((s) => {
+        foundRef.current = s.objectsFoundThisRun;
+      }),
     [],
   );
 
@@ -350,20 +342,25 @@ function ProximityDetector({
     const found = foundRef.current;
     const nowInProximity = new Set<string>();
 
+    // Use astronaut player position on ground for accurate proximity detection
+    const px = playerState.x;
+    const pz = playerState.z;
+
     for (const obj of objects) {
-      const dx = camera.position.x - obj.position[0];
-      const dz = camera.position.z - obj.position[2];
+      if (obj.hidden) continue;
+      const dx = px - obj.position[0];
+      const dz = pz - obj.position[2];
       const dist = Math.sqrt(dx * dx + dz * dz);
       distancesRef.current[obj.id] = dist;
-
-      if (found.includes(obj.id) || obj.id === "descent-stage" || obj.hidden) continue;
 
       if (dist < PROXIMITY_RANGE) {
         nowInProximity.add(obj.id);
       }
 
-      if (dist < minDist) {
-        minDist = dist;
+      // Prioritize unfound objects, but still allow already found objects to be detected & inspected
+      const effectiveDist = found.includes(obj.id) ? dist + 4 : dist;
+      if (dist < SCAN_RANGE && effectiveDist < minDist) {
+        minDist = effectiveDist;
         nearest = obj.id;
       }
     }
@@ -394,8 +391,8 @@ function ProximityDetector({
   return null;
 }
 
-const MOON_G = 1.0;
-const MARS_G = 2.3;
+const MOON_G = 1.62;
+const MARS_G = 3.72;
 const EYE_HEIGHT = 1.7;
 const GROUND_Y = 0;
 const MOON_JUMP_V0 = 2.6;
@@ -404,10 +401,14 @@ const WALK_SPEED = 2;
 const RUN_SPEED = 4.5;
 
 function getSurfaceGravity(planet: string): number {
-  return planet === "mars" ? MARS_G : MOON_G;
+  if (planet === "mars") return MARS_G;
+  if (planet === "deep-space") return 0.28;
+  return MOON_G;
 }
 function getJumpV0(planet: string): number {
-  return planet === "mars" ? MARS_JUMP_V0 : MOON_JUMP_V0;
+  if (planet === "mars") return MARS_JUMP_V0;
+  if (planet === "deep-space") return 2.2;
+  return MOON_JUMP_V0;
 }
 const BOB_FREQ = 6;
 const BOB_AMP = 0.03;
@@ -434,9 +435,11 @@ const playerState = {
 };
 
 function DustParticles({ planet }: { planet?: string }) {
-  const dustColor = planet === "mars" ? "#c4856a" : "#b8b0a0";
+  const isMars = planet === "mars";
+  const dustColor = isMars ? "#c4856a" : "#cfc9bd";
   const ref = useRef<THREE.Points>(null);
-  const count = 40;
+  const smokeTex = useMemo(() => getSmokeTexture(), []);
+  const count = 70;
   const lifetimes = useRef(new Float32Array(count));
   const velocities = useRef(new Float32Array(count * 3));
 
@@ -450,42 +453,52 @@ function DustParticles({ planet }: { planet?: string }) {
     const vel = velocities.current;
     if (!lt || !vel) return;
 
+    const feetY = playerState.y - EYE_HEIGHT;
+    const isMoving = playerState.isMoving;
+    const isThrusting = playerState.thrusting;
+
     for (let i = 0; i < count; i++) {
       const currentLt = lt[i];
       if (currentLt === undefined) continue;
       const newLt = currentLt - delta;
       lt[i] = newLt;
+
       if (newLt <= 0) {
-        if (playerState.isMoving) {
-          const spread = 0.4;
+        if (isMoving || isThrusting) {
+          const spread = isThrusting ? 0.55 : 0.28;
           posAttr.setXYZ(
             i,
             playerState.x + (Math.sin(i * 7.31) * 2 - 1) * spread,
-            playerState.groundY + 0.05,
+            (isThrusting ? feetY : playerState.groundY) + 0.04,
             playerState.z + (Math.sin(i * 13.7) * 2 - 1) * spread,
           );
-          vel[i * 3] = (Math.sin(i * 3.7) * 2 - 1) * 0.3;
-          vel[i * 3 + 1] = 0.15 + Math.sin(i * 5.1) * 0.1;
-          vel[i * 3 + 2] = (Math.sin(i * 9.2) * 2 - 1) * 0.3;
-          lt[i] = 1.5 + Math.sin(i * 2.3) * 0.5;
+          const spd = isThrusting ? 0.5 : 0.22;
+          vel[i * 3] = (Math.sin(i * 3.7) * 2 - 1) * spd;
+          vel[i * 3 + 1] = (isThrusting ? -0.05 : 0.12) + (i % 5) * 0.03;
+          vel[i * 3 + 2] = (Math.sin(i * 9.2) * 2 - 1) * spd;
+          lt[i] = 1.3 + Math.sin(i * 2.3) * 0.4;
         } else {
-          posAttr.setXYZ(i, 0, -10, 0);
+          posAttr.setXYZ(i, 0, -200, 0);
           lt[i] = 0.1;
         }
       } else {
         const vx = vel[i * 3] ?? 0;
         const vy = vel[i * 3 + 1] ?? 0;
         const vz = vel[i * 3 + 2] ?? 0;
+        // Smoky billowy dissipation
+        vel[i * 3] = vx * (1 - 1.8 * delta);
+        vel[i * 3 + 1] = vy * (1 - 1.0 * delta) + (isMars ? 0.02 : 0.01) * delta;
+        vel[i * 3 + 2] = vz * (1 - 1.8 * delta);
         const x = posAttr.getX(i) + vx * delta;
         const y = posAttr.getY(i) + vy * delta;
         const z = posAttr.getZ(i) + vz * delta;
-        vel[i * 3 + 1] = vy - 0.08 * delta;
-        posAttr.setXYZ(i, x, Math.max(0, y), z);
+        posAttr.setXYZ(i, x, y, z);
       }
     }
     posAttr.needsUpdate = true;
-    (ref.current.material as THREE.PointsMaterial).opacity =
-      playerState.isMoving ? 0.35 : 0;
+    if (ref.current.material instanceof THREE.PointsMaterial) {
+      ref.current.material.opacity = isMoving || isThrusting ? 0.4 : 0;
+    }
   });
 
   return (
@@ -494,11 +507,13 @@ function DustParticles({ planet }: { planet?: string }) {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} count={count} />
       </bufferGeometry>
       <pointsMaterial
+        map={smokeTex}
         color={dustColor}
-        size={0.06}
+        size={0.42}
         transparent
-        opacity={0.35}
+        opacity={0.4}
         depthWrite={false}
+        blending={THREE.NormalBlending}
         sizeAttenuation
       />
     </points>
@@ -508,6 +523,7 @@ function DustParticles({ planet }: { planet?: string }) {
 function AmbientDust({ planet }: { planet?: string }) {
   const dustColor = planet === "mars" ? "#9a7060" : "#a09888";
   const ref = useRef<THREE.Points>(null);
+  const smokeTex = useMemo(() => getSmokeTexture(), []);
   const count = 80;
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -541,10 +557,11 @@ function AmbientDust({ planet }: { planet?: string }) {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} count={count} />
       </bufferGeometry>
       <pointsMaterial
+        map={smokeTex}
         color={dustColor}
-        size={0.02}
+        size={0.16}
         transparent
-        opacity={0.2}
+        opacity={0.25}
         depthWrite={false}
         sizeAttenuation
       />
@@ -608,8 +625,10 @@ function getMarsBaseModel(missionId: string): { url: string; scale: number } {
   if (missionId === "mars-viking-1") return { url: "/models/heritage/viking1.glb", scale: 2.2 };
   if (missionId === "mars-viking-2") return { url: "/models/heritage/viking2.glb", scale: 2.2 };
   if (missionId === "mars-pathfinder") return { url: "/models/heritage/sojourner.glb", scale: 1.8 };
-  if (missionId.startsWith("mars-spirit")) return { url: "/models/heritage/spirit.glb", scale: 2.0 };
-  if (missionId.startsWith("mars-opportunity")) return { url: "/models/heritage/opportunity.glb", scale: 2.0 };
+  if (missionId.startsWith("mars-spirit"))
+    return { url: "/models/heritage/spirit.glb", scale: 2.0 };
+  if (missionId.startsWith("mars-opportunity"))
+    return { url: "/models/heritage/opportunity.glb", scale: 2.0 };
   if (missionId === "mars-curiosity" || missionId === "mars-perseverance") {
     return { url: "/models/heritage/opportunity.glb", scale: 2.8 };
   }
@@ -712,15 +731,15 @@ function PlayerController({
         if (!isPointerLocked.current) return;
         euler.current.y -= e.movementX * 0.002;
         euler.current.x -= e.movementY * 0.002;
-        euler.current.x = Math.max(
-          -Math.PI / 2,
-          Math.min(Math.PI / 2, euler.current.x),
-        );
+        euler.current.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, euler.current.x));
         camera.quaternion.setFromEuler(euler.current);
       } else {
         if (isPointerLocked.current || isMouseDown.current) {
           orbitYaw.current -= e.movementX * 0.003;
-          orbitPitch.current = Math.max(-0.25, Math.min(1.1, orbitPitch.current - e.movementY * 0.003));
+          orbitPitch.current = Math.max(
+            -0.25,
+            Math.min(1.1, orbitPitch.current - e.movementY * 0.003),
+          );
         }
       }
     };
@@ -895,7 +914,11 @@ function PlayerController({
     playerState.isJumping = !wasOnGround.current;
 
     if (viewModeRef.current === "pov") {
-      camera.position.set(playerPos.current.x, physY.current + bobOffset.current, playerPos.current.z);
+      camera.position.set(
+        playerPos.current.x,
+        physY.current + bobOffset.current,
+        playerPos.current.z,
+      );
       camera.quaternion.setFromEuler(euler.current);
     } else {
       const pitch = Math.max(-0.25, Math.min(1.05, orbitPitch.current));
@@ -914,13 +937,7 @@ function PlayerController({
   return null;
 }
 
-function AstronautExosuit({
-  visible,
-  planet,
-}: {
-  visible: boolean;
-  planet?: string;
-}) {
+function AstronautExosuit({ visible, planet }: { visible: boolean; planet?: string }) {
   const groupRef = useRef<THREE.Group>(null);
   const exosuitRef = useRef<Exosuit | null>(null);
   const cfg = planet === "mars" ? DEFAULT_MARS_CFG : DEFAULT_MOON_CFG;
@@ -978,15 +995,16 @@ function InspectCamera({
   const smoothedLook = useRef(new THREE.Vector3());
 
   useEffect(
-    () => useGameStore.subscribe((s) => {
-      const prev = phaseRef.current;
-      phaseRef.current = s.phase;
-      inspectingRef.current = s.inspecting;
-      if (s.phase === "inspect" && prev !== "inspect") {
-        camera.getWorldDirection(smoothedLook.current);
-        smoothedLook.current.multiplyScalar(4).add(camera.position);
-      }
-    }),
+    () =>
+      useGameStore.subscribe((s) => {
+        const prev = phaseRef.current;
+        phaseRef.current = s.phase;
+        inspectingRef.current = s.inspecting;
+        if (s.phase === "inspect" && prev !== "inspect") {
+          camera.getWorldDirection(smoothedLook.current);
+          smoothedLook.current.multiplyScalar(4).add(camera.position);
+        }
+      }),
     [camera],
   );
 
@@ -1011,7 +1029,17 @@ function EarthInSky({ lat, lon }: { lat: number; lon: number }) {
   return <EarthAtmosphere radius={8} position={earthPos} rotationSpeed={0.01} />;
 }
 
-function SunLight({ lat, lon, evaDate, planet }: { lat: number; lon: number; evaDate: string; planet?: string }) {
+function SunLight({
+  lat,
+  lon,
+  evaDate,
+  planet,
+}: {
+  lat: number;
+  lon: number;
+  evaDate: string;
+  planet?: string;
+}) {
   const sunData = useMemo(() => getSunPosition(lat, lon, evaDate), [lat, lon, evaDate]);
   const isMars = planet === "mars";
 
@@ -1040,7 +1068,9 @@ function SunLight({ lat, lon, evaDate, planet }: { lat: number; lon: number; eva
         shadow-camera-bottom={-60}
         shadow-bias={-0.0002}
       />
-      <group position={[sunData.direction[0] * 3, sunData.direction[1] * 3, sunData.direction[2] * 3]}>
+      <group
+        position={[sunData.direction[0] * 3, sunData.direction[1] * 3, sunData.direction[2] * 3]}
+      >
         <mesh>
           <sphereGeometry args={[isMars ? 9 : 14, 32, 32]} />
           <meshBasicMaterial color="#ffffff" />
@@ -1094,38 +1124,65 @@ function SurfaceSceneContent({
         <>
           <color attach="background" args={["#000000"]} />
           <fogExp2 attach="fog" args={["#0a0a0a", 0.004]} />
-          <Stars radius={300} depth={80} count={8000} factor={5} saturation={0.6} fade speed={0.1} />
+          <Stars
+            radius={300}
+            depth={80}
+            count={8000}
+            factor={5}
+            saturation={0.6}
+            fade
+            speed={0.1}
+          />
           <ambientLight intensity={0.04} color="#333344" />
           <hemisphereLight args={["#667788", "#222228", 0.08]} />
         </>
       )}
 
-      <SunLight lat={mission.landing.lat} lon={mission.landing.lon} evaDate={mission.evaSunTime} planet={mission.planet} />
+      <SunLight
+        lat={mission.landing.lat}
+        lon={mission.landing.lon}
+        evaDate={mission.evaSunTime}
+        planet={mission.planet}
+      />
 
-      {!isMars && (
+      {mission.planet === "moon" && (
         <Suspense fallback={null}>
           <EarthInSky lat={mission.landing.lat} lon={mission.landing.lon} />
         </Suspense>
       )}
 
       <Suspense fallback={<GroundPlane planet={mission.planet} />}>
-        <Terrain stlPath={mission.terrain.model} orthoPath={mission.terrain.ortho} lat={mission.landing.lat} lon={mission.landing.lon} planet={mission.planet} />
+        <Terrain
+          stlPath={mission.terrain.model}
+          orthoPath={mission.terrain.ortho}
+          lat={mission.landing.lat}
+          lon={mission.landing.lon}
+          planet={mission.planet}
+        />
       </Suspense>
       <GroundPlane planet={mission.planet} />
 
       {isMars ? (
         <MarsBase
           missionId={missionId}
-          position={[0, getTerrainElevation(0, 0, "mars", mission.landing.lat, mission.landing.lon), 0]}
+          position={[
+            0,
+            getTerrainElevation(0, 0, "mars", mission.landing.lat, mission.landing.lon),
+            0,
+          ]}
         />
-      ) : (
+      ) : mission.planet === "moon" ? (
         <Suspense fallback={null}>
           <LMDescent
-            position={[0, getTerrainElevation(0, 0, "moon", mission.landing.lat, mission.landing.lon) - 0.1, 0]}
+            position={[
+              0,
+              getTerrainElevation(0, 0, "moon", mission.landing.lat, mission.landing.lon) - 0.1,
+              0,
+            ]}
             scale={1}
           />
         </Suspense>
-      )}
+      ) : null}
 
       {objects.map((obj) => (
         <HeritageMarker
@@ -1151,22 +1208,48 @@ function SurfaceSceneContent({
 
       {(phase === "flagPlanted" || hasFlag) && !isMars && (
         <group
-          position={[2, getTerrainElevation(2, 2, "moon", mission.landing.lat, mission.landing.lon), 2]}
+          position={[
+            2,
+            getTerrainElevation(2, 2, "moon", mission.landing.lat, mission.landing.lon),
+            2,
+          ]}
           scale={[0.9, 0.9, 0.9]}
         >
           <AmericanFlag3D scale={1.0} />
         </group>
       )}
 
-      <ProximityDetector setNearObjectId={setNearObjectId} setObjectDistances={setObjectDistances} objects={objects} />
-      <PlayerController planet={mission.planet} lat={mission.landing.lat} lon={mission.landing.lon} viewMode={viewMode} />
+      <ProximityDetector
+        setNearObjectId={setNearObjectId}
+        setObjectDistances={setObjectDistances}
+        objects={objects}
+      />
+      <PlayerController
+        planet={mission.planet}
+        lat={mission.landing.lat}
+        lon={mission.landing.lon}
+        viewMode={viewMode}
+      />
       <AstronautExosuit visible={viewMode === "walker"} planet={mission.planet} />
-      <InspectCamera objects={objects} planet={mission.planet} lat={mission.landing.lat} lon={mission.landing.lon} />
+      <InspectCamera
+        objects={objects}
+        planet={mission.planet}
+        lat={mission.landing.lat}
+        lon={mission.landing.lon}
+      />
     </>
   );
 }
 
-function MiniRadar({ found, objects, isMars }: { found: string[]; objects: HeritageObject[]; isMars?: boolean }) {
+function MiniRadar({
+  found,
+  objects,
+  isMars,
+}: {
+  found: string[];
+  objects: HeritageObject[];
+  isMars?: boolean;
+}) {
   const [tick, setTick] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setTick((n) => n + 1), 500);
@@ -1185,17 +1268,52 @@ function MiniRadar({ found, objects, isMars }: { found: string[]; objects: Herit
 
   return (
     <svg viewBox="0 0 100 100" className="h-24 w-24 opacity-80">
-      <circle cx="50" cy="50" r="48" fill="none" stroke={ringColor} strokeWidth="0.5" strokeOpacity="0.3" />
-      <circle cx="50" cy="50" r="32" fill="none" stroke={ringColor} strokeWidth="0.3" strokeOpacity="0.2" />
-      <circle cx="50" cy="50" r="16" fill="none" stroke={ringColor} strokeWidth="0.3" strokeOpacity="0.15" />
+      <circle
+        cx="50"
+        cy="50"
+        r="48"
+        fill="none"
+        stroke={ringColor}
+        strokeWidth="0.5"
+        strokeOpacity="0.3"
+      />
+      <circle
+        cx="50"
+        cy="50"
+        r="32"
+        fill="none"
+        stroke={ringColor}
+        strokeWidth="0.3"
+        strokeOpacity="0.2"
+      />
+      <circle
+        cx="50"
+        cy="50"
+        r="16"
+        fill="none"
+        stroke={ringColor}
+        strokeWidth="0.3"
+        strokeOpacity="0.15"
+      />
       {/* Sweep line */}
       <line
-        x1="50" y1="50"
+        x1="50"
+        y1="50"
         x2={50 + Math.sin(sweepAngle) * 46}
         y2={50 - Math.cos(sweepAngle) * 46}
-        stroke={accentColor} strokeWidth="1" strokeOpacity="0.25"
+        stroke={accentColor}
+        strokeWidth="1"
+        strokeOpacity="0.25"
       />
-      <line x1="50" y1="2" x2="50" y2="12" stroke={accentColor} strokeWidth="1.5" strokeOpacity="0.6" />
+      <line
+        x1="50"
+        y1="2"
+        x2="50"
+        y2="12"
+        stroke={accentColor}
+        strokeWidth="1.5"
+        strokeOpacity="0.6"
+      />
       {/* LM at origin */}
       {(() => {
         const dx = (0 - px) / radarRange;
@@ -1205,36 +1323,48 @@ function MiniRadar({ found, objects, isMars }: { found: string[]; objects: Herit
         const sx = 50 + rx * 45;
         const sy = 50 - rz * 45;
         if (sx > 5 && sx < 95 && sy > 5 && sy < 95) {
-          return <rect x={sx - 3} y={sy - 3} width="6" height="6" fill={isMars ? "#88cc66" : "#66ff99"} opacity="0.8" />;
+          return (
+            <rect
+              x={sx - 3}
+              y={sy - 3}
+              width="6"
+              height="6"
+              fill={isMars ? "#88cc66" : "#66ff99"}
+              opacity="0.8"
+            />
+          );
         }
         return null;
       })()}
       {/* Directional pings — show direction arc, not exact position */}
-      {objects.filter((o) => o.id !== "descent-stage" && !o.hidden && !found.includes(o.id)).map((obj) => {
-        const dx = (obj.position[0] - px) / radarRange;
-        const dz = (obj.position[2] - pz) / radarRange;
-        const rx = dx * Math.cos(-heading) - dz * Math.sin(-heading);
-        const rz = dx * Math.sin(-heading) + dz * Math.cos(-heading);
-        const dist = Math.sqrt(rx * rx + rz * rz);
-        if (dist < 0.01) return null;
-        const nx = rx / dist;
-        const nz = rz / dist;
-        const pingDist = Math.min(dist, 1) * 40;
-        const pingX = 50 + nx * pingDist;
-        const pingY = 50 - nz * pingDist;
-        const pulsePhase = (tick + obj.id.length) % 4;
-        const pulseR = 2.5 + pulsePhase * 0.5;
-        const pulseOpacity = 0.7 - pulsePhase * 0.12;
-        return (
-          <circle
-            key={obj.id}
-            cx={pingX} cy={pingY}
-            r={pulseR}
-            fill={blipColor}
-            opacity={Math.max(0.2, pulseOpacity)}
-          />
-        );
-      })}
+      {objects
+        .filter((o) => o.id !== "descent-stage" && !o.hidden && !found.includes(o.id))
+        .map((obj) => {
+          const dx = (obj.position[0] - px) / radarRange;
+          const dz = (obj.position[2] - pz) / radarRange;
+          const rx = dx * Math.cos(-heading) - dz * Math.sin(-heading);
+          const rz = dx * Math.sin(-heading) + dz * Math.cos(-heading);
+          const dist = Math.sqrt(rx * rx + rz * rz);
+          if (dist < 0.01) return null;
+          const nx = rx / dist;
+          const nz = rz / dist;
+          const pingDist = Math.min(dist, 1) * 40;
+          const pingX = 50 + nx * pingDist;
+          const pingY = 50 - nz * pingDist;
+          const pulsePhase = (tick + obj.id.length) % 4;
+          const pulseR = 2.5 + pulsePhase * 0.5;
+          const pulseOpacity = 0.7 - pulsePhase * 0.12;
+          return (
+            <circle
+              key={obj.id}
+              cx={pingX}
+              cy={pingY}
+              r={pulseR}
+              fill={blipColor}
+              opacity={Math.max(0.2, pulseOpacity)}
+            />
+          );
+        })}
       <circle cx="50" cy="50" r="2.5" fill={accentColor} />
     </svg>
   );
@@ -1254,14 +1384,11 @@ function ScanMeter({ progress }: { progress: number }) {
       height="56"
       viewBox="0 0 56 56"
     >
+      <circle cx="28" cy="28" r={r} fill="none" stroke="rgba(0, 212, 255, 0.15)" strokeWidth="3" />
       <circle
-        cx="28" cy="28" r={r}
-        fill="none"
-        stroke="rgba(0, 212, 255, 0.15)"
-        strokeWidth="3"
-      />
-      <circle
-        cx="28" cy="28" r={r}
+        cx="28"
+        cy="28"
+        r={r}
         fill="none"
         stroke="#00d4ff"
         strokeWidth="3"
@@ -1275,7 +1402,17 @@ function ScanMeter({ progress }: { progress: number }) {
   );
 }
 
-function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObjectId: string | null; objects: HeritageObject[]; planet?: string; missionType?: string }) {
+function SurfaceHUD({
+  nearObjectId,
+  objects,
+  planet,
+  missionType,
+}: {
+  nearObjectId: string | null;
+  objects: HeritageObject[];
+  planet?: string;
+  missionType?: string;
+}) {
   const isMars = planet === "mars";
   const isRobotic = missionType === "robotic";
   const { t } = useTranslation();
@@ -1328,7 +1465,9 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
     if (found.length > 0) {
       return t("surface.narrationProgress", { found: found.length, total: scannableCount });
     }
-    return t(isMars ? "surface.narrationStartMars" : "surface.narrationStart", { name: playerName || "" });
+    return t(isMars ? "surface.narrationStartMars" : "surface.narrationStart", {
+      name: playerName || "",
+    });
   }, [found.length, scannableCount, playerName, t, isMars, isRobotic]);
 
   const completeScan = useCallback(() => {
@@ -1431,7 +1570,8 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.4) 85%, rgba(0,0,0,0.7) 100%)",
+          background:
+            "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.4) 85%, rgba(0,0,0,0.7) 100%)",
           borderRadius: "8px",
         }}
       />
@@ -1445,7 +1585,8 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
         </div>
         <div className="rounded bg-space-950/70 px-3 py-1.5 backdrop-blur">
           <p className="font-mono text-xs text-regolith-400">
-            {t(isMars ? "surface.distBase" : "surface.distLM")} <span className="text-ok">{distFromLM}m</span>
+            {t(isMars ? "surface.distBase" : "surface.distLM")}{" "}
+            <span className="text-ok">{distFromLM}m</span>
           </p>
         </div>
       </div>
@@ -1530,9 +1671,7 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
             <span className="shrink-0 text-xs font-bold tracking-widest text-signal">
               {t("surface.eva")}
             </span>
-            <p className="text-sm leading-relaxed text-regolith-200">
-              {narration}
-            </p>
+            <p className="text-sm leading-relaxed text-regolith-200">{narration}</p>
           </div>
         </div>
       </div>
@@ -1540,9 +1679,7 @@ function SurfaceHUD({ nearObjectId, objects, planet, missionType }: { nearObject
       {/* Bottom left: controls hint (desktop only) */}
       {!isTouchDevice() && (
         <div className="mb-2 ml-4">
-          <p className="text-xs text-regolith-400/60">
-            {t("surface.controlHints")}
-          </p>
+          <p className="text-xs text-regolith-400/60">{t("surface.controlHints")}</p>
         </div>
       )}
     </div>
@@ -1586,17 +1723,22 @@ export function SurfaceScene() {
     [nearObjectId, found, missionId, addFoundObject, findObject, send],
   );
 
-  // Global key listener for 'V' (toggle view mode between POV and Walker)
+  // Global key listener for 'V' (toggle view mode between POV and Walker) & 'E' (inspect nearby object)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.code === "KeyV") {
         setViewMode((current) => (current === "pov" ? "walker" : "pov"));
       }
+      if ((e.code === "KeyE" || e.key === "e" || e.key === "E") && !e.repeat) {
+        if (nearObjectId && phase !== "inspect") {
+          touchScan(nearObjectId);
+        }
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [nearObjectId, phase, touchScan]);
 
   const handleCanvasClick = useCallback(() => {
     if (!isTouchDevice()) {
@@ -1692,7 +1834,13 @@ export function SurfaceScene() {
             missionId={missionId ?? "apollo-11"}
             viewMode={viewMode}
           />
-          <Effects bloom vignette bloomThreshold={0.55} bloomIntensity={1.0} vignetteDarkness={0.6} />
+          <Effects
+            bloom
+            vignette
+            bloomThreshold={0.82}
+            bloomIntensity={0.65}
+            vignetteDarkness={0.6}
+          />
           <Preload all />
         </Canvas>
       </div>
@@ -1725,7 +1873,7 @@ export function SurfaceScene() {
             thrusting={playerState.thrusting}
             sprint={playerState.sprint}
             footCount={playerState.footCount}
-            planet={mission.planet === "mars" ? "mars" : "moon"}
+            planet={mission.planet ?? "moon"}
             gravity={getSurfaceGravity(mission.planet ?? "moon")}
             onSwitchView={() => setViewMode("pov")}
             nearestObj={

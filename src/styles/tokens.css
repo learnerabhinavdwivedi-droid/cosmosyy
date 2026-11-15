@@ -4,31 +4,31 @@
 
 :root {
   /* Palette — named colours (never used directly in components) */
-  --space-950: #07090D;
-  --space-900: #0B0D12;
+  --space-950: #07090d;
+  --space-900: #0b0d12;
   --space-800: #151922;
   --space-700: #222836;
-  --regolith-400: #9A968C;
-  --regolith-200: #CFCBC2;
-  --paper-50: #F6F2E9;
-  --paper-100: #EDE6D6;
-  --ink-900: #14161A;
-  --ink-600: #4A4F59;
-  --signal-500: #FF6B2C;
-  --ok-500: #3FB07A;
-  --warn-500: #F2B33D;
-  --bad-500: #E5484D;
+  --regolith-400: #9a968c;
+  --regolith-200: #cfcbc2;
+  --paper-50: #f6f2e9;
+  --paper-100: #ede6d6;
+  --ink-900: #14161a;
+  --ink-600: #4a4f59;
+  --signal-500: #ff6b2c;
+  --ok-500: #3fb07a;
+  --warn-500: #f2b33d;
+  --bad-500: #e5484d;
 
   /* Space & Astronomy tokens */
-  --sun: #FFF8E1;
-  --sun-ambient: #8899AA;
+  --sun: #fff8e1;
+  --sun-ambient: #8899aa;
   --lunar-shadow: #222228;
-  --earth-halo: #38BDF8;
-  --flame-core: #BBF0FF;
-  --flame-outer: #FF9933;
-  --beacon-gold: #FFD36E;
-  --scan-blue: #00D4FF;
-  --found-green: #66FF99;
+  --earth-halo: #38bdf8;
+  --flame-core: #bbf0ff;
+  --flame-outer: #ff9933;
+  --beacon-gold: #ffd36e;
+  --scan-blue: #00d4ff;
+  --found-green: #66ff99;
 
   /* Semantic tokens — components use these */
   --bg: var(--space-950);
@@ -63,11 +63,11 @@
   --dur-fast: 120ms;
   --dur: 200ms;
   --dur-page: 320ms;
-  --ease: cubic-bezier(.2, 0, 0, 1);
+  --ease: cubic-bezier(0.2, 0, 0, 1);
 
   /* Shadows */
-  --shadow-1: 0 1px 2px rgb(0 0 0 / .25), 0 4px 12px rgb(0 0 0 / .30);
-  --shadow-2: 0 2px 4px rgb(0 0 0 / .30), 0 8px 24px rgb(0 0 0 / .35);
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.25), 0 4px 12px rgb(0 0 0 / 0.3);
+  --shadow-2: 0 2px 4px rgb(0 0 0 / 0.3), 0 8px 24px rgb(0 0 0 / 0.35);
 
   color-scheme: dark;
 }
@@ -76,28 +76,28 @@
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
     --bg: var(--paper-50);
-    --surface: #FFFFFF;
+    --surface: #ffffff;
     --surface-elevated: var(--paper-100);
     --fg: var(--ink-900);
     --fg-muted: var(--ink-600);
     --border: var(--regolith-200);
     --primary-fg: var(--space-950);
-    --shadow-1: 0 1px 2px rgb(14 22 38 / .06), 0 4px 12px rgb(14 22 38 / .06);
-    --shadow-2: 0 2px 4px rgb(14 22 38 / .08), 0 8px 24px rgb(14 22 38 / .10);
+    --shadow-1: 0 1px 2px rgb(14 22 38 / 0.06), 0 4px 12px rgb(14 22 38 / 0.06);
+    --shadow-2: 0 2px 4px rgb(14 22 38 / 0.08), 0 8px 24px rgb(14 22 38 / 0.1);
     color-scheme: light;
   }
 }
 
 :root[data-theme="light"] {
   --bg: var(--paper-50);
-  --surface: #FFFFFF;
+  --surface: #ffffff;
   --surface-elevated: var(--paper-100);
   --fg: var(--ink-900);
   --fg-muted: var(--ink-600);
   --border: var(--regolith-200);
   --primary-fg: var(--space-950);
-  --shadow-1: 0 1px 2px rgb(14 22 38 / .06), 0 4px 12px rgb(14 22 38 / .06);
-  --shadow-2: 0 2px 4px rgb(14 22 38 / .08), 0 8px 24px rgb(14 22 38 / .10);
+  --shadow-1: 0 1px 2px rgb(14 22 38 / 0.06), 0 4px 12px rgb(14 22 38 / 0.06);
+  --shadow-2: 0 2px 4px rgb(14 22 38 / 0.08), 0 8px 24px rgb(14 22 38 / 0.1);
   color-scheme: light;
 }
 
@@ -129,26 +129,51 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: 0.2; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.2); }
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 }
 
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 8px rgba(255, 107, 44, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(255, 107, 44, 0.7); }
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(255, 107, 44, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 107, 44, 0.7);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }

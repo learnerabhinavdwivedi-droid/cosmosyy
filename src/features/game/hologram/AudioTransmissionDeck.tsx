@@ -106,9 +106,7 @@ export function AudioTransmissionDeck({
       setAudioProgress(seek / dur);
 
       // Organic dynamic bar fluctuation
-      setLiveBars((prev) =>
-        prev.map(() => Math.floor(Math.random() * 75) + 25),
-      );
+      setLiveBars((prev) => prev.map(() => Math.floor(Math.random() * 75) + 25));
     }
 
     animFrameRef.current = requestAnimationFrame(updateProgress);
@@ -157,9 +155,7 @@ export function AudioTransmissionDeck({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span
-            className={`h-2 w-2 rounded-full ${
-              isPlaying ? "animate-pulse" : ""
-            }`}
+            className={`h-2 w-2 rounded-full ${isPlaying ? "animate-pulse" : ""}`}
             style={{ background: theme.primary }}
           />
           <span
@@ -260,9 +256,7 @@ export function AudioTransmissionDeck({
       {/* Clean, toggleable transcript preview */}
       {showCaptions && firstPersonLog && (
         <div className="rounded-lg border border-space-800/80 bg-space-950/70 p-2 mt-0.5">
-          <p className="text-[11px] italic leading-snug text-regolith-300">
-            "{firstPersonLog}"
-          </p>
+          <p className="text-[11px] italic leading-snug text-regolith-300">"{firstPersonLog}"</p>
         </div>
       )}
     </div>

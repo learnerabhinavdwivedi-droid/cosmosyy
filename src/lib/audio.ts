@@ -84,11 +84,7 @@ export function onCaption(cb: (text: string, duration: number) => void): void {
   captionCallback = cb;
 }
 
-export function narrate(
-  cueId: string,
-  caption?: string,
-  durationMs?: number,
-): number | undefined {
+export function narrate(cueId: string, caption?: string, durationMs?: number): number | undefined {
   duck(true);
   const soundId = play(cueId);
   const entry = sounds.get(cueId);

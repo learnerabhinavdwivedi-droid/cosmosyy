@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { type HeritageObject } from "@/lib/missionData";
+import { type HeritageObject, type Planet } from "@/lib/missionData";
 
 // ─────────────────────────────────────────────────────────────────
 // CONFIG (tuned for Moon vs Mars)
@@ -283,14 +283,7 @@ export class Exosuit {
     const pack = G(torso, 0, 0.44, -0.3);
     mesh(pack, rb(0.58, 0.64, 0.26), this.mat.armor2);
     mesh(pack, rb(0.36, 0.05, 0.02), this.mat.glow, 0, 0.18, -0.135, false);
-    mesh(
-      pack,
-      new THREE.CylinderGeometry(0.012, 0.012, 0.5, 6),
-      this.mat.metal,
-      0.22,
-      0.52,
-      -0.05,
-    );
+    mesh(pack, new THREE.CylinderGeometry(0.012, 0.012, 0.5, 6), this.mat.metal, 0.22, 0.52, -0.05);
     this.tip = mesh(
       pack,
       new THREE.SphereGeometry(0.026, 8, 6),
@@ -355,14 +348,7 @@ export class Exosuit {
 
     // Helmet
     const head = (this.head = G(torso, 0, 0.74, 0.02));
-    const shell = mesh(
-      head,
-      new THREE.SphereGeometry(0.245, 28, 20),
-      this.mat.armor,
-      0,
-      0.12,
-      0,
-    );
+    const shell = mesh(head, new THREE.SphereGeometry(0.245, 28, 20), this.mat.armor, 0, 0.12, 0);
     shell.scale.set(1, 1.02, 1.06);
 
     const visor = mesh(
@@ -391,7 +377,7 @@ export class Exosuit {
     lampCyl.rotation.x = Math.PI / 2;
     mesh(head, new THREE.CircleGeometry(0.032, 16), this.mat.lamp, -0.27, 0.2, 0.111, false);
 
-    const lamp = (this.lamp = new THREE.SpotLight(0xffeedd, 1.8, 18, 0.55, 0.7, 1.8));
+    const lamp = (this.lamp = new THREE.SpotLight(0xffeedd, 0.8, 14, 0.6, 0.6, 1.8));
     lamp.position.set(-0.27, 0.2, 0.13);
     lamp.target.position.set(-0.15, -0.9, 6);
     head.add(lamp, lamp.target);
@@ -439,7 +425,11 @@ export class Exosuit {
     }
   }
 
-  animate(dt: number, s: { speed: number; grounded: boolean; thrusting: boolean }, cfg: WalkerConfig) {
+  animate(
+    dt: number,
+    s: { speed: number; grounded: boolean; thrusting: boolean },
+    cfg: WalkerConfig,
+  ) {
     this.t += dt;
     const sp = s.grounded ? s.speed : 0;
     const ev = this.events;
@@ -525,7 +515,7 @@ export class Exosuit {
 
     // Lamp
     this.lampK = damp(this.lampK, this.lampOn ? 1 : 0, 10, dt);
-    this.lamp.intensity = this.lampK * 1.8;
+    this.lamp.intensity = this.lampK * 0.8;
 
     // Tip blink
     if (this.tip && this.tip.material instanceof THREE.MeshStandardMaterial) {
@@ -616,7 +606,10 @@ class Footprints {
     });
     mat.onBeforeCompile = (sh) => {
       sh.vertexShader = sh.vertexShader
-        .replace("#include <common>", "#include <common>\nattribute float aFade; varying float vFade;")
+        .replace(
+          "#include <common>",
+          "#include <common>\nattribute float aFade; varying float vFade;",
+        )
         .replace("#include <begin_vertex>", "#include <begin_vertex>\nvFade = aFade;");
       sh.fragmentShader = sh.fragmentShader
         .replace("#include <common>", "#include <common>\nvarying float vFade;")
@@ -965,7 +958,7 @@ export interface WalkerHUDProps {
   thrusting: boolean;
   sprint: boolean;
   footCount: number;
-  planet: "moon" | "mars";
+  planet: Planet;
   gravity: number;
   onSwitchView?: () => void;
   nearestObj?: { id: string; name: string; dist: number } | null;
@@ -1004,7 +997,8 @@ export function WalkerHUD({
   };
 
   const isMars = planet === "mars";
-  const accentColor = isMars ? "#ff8a55" : "#00d4ff";
+  const isDeepSpace = planet === "deep-space";
+  const accentColor = isMars ? "#ff8a55" : isDeepSpace ? "#c084fc" : "#00d4ff";
 
   return (
     <div className="absolute inset-0 pointer-events-none select-none font-mono">
@@ -1017,9 +1011,16 @@ export function WalkerHUD({
         }}
       >
         <div className="flex items-center gap-2 mb-1.5">
-          <span className="h-2 w-2 rounded-full animate-pulse" style={{ background: accentColor }} />
+          <span
+            className="h-2 w-2 rounded-full animate-pulse"
+            style={{ background: accentColor }}
+          />
           <span className="text-xs font-black tracking-[0.25em] text-white uppercase">
-            {isMars ? "ARES EXOSUIT // MARS" : "APOLLO EXOSUIT // MOON"}
+            {isMars
+              ? "ARES EXOSUIT // MARS"
+              : isDeepSpace
+                ? "VOYAGER EXOSUIT // DEEP SPACE"
+                : "APOLLO EXOSUIT // MOON"}
           </span>
         </div>
         <div className="text-[11px] leading-relaxed text-regolith-300">
@@ -1117,7 +1118,7 @@ export function WalkerHUD({
 export interface AstronautWalkerProps {
   className?: string;
   style?: React.CSSProperties;
-  planet?: "moon" | "mars";
+  planet?: Planet;
   objects?: HeritageObject[];
   onSwitchView?: () => void;
   onInspectObject?: (id: string) => void;
@@ -1212,9 +1213,7 @@ export default function AstronautWalker({
     // Procedural terrain height sampler
     const sampleHeight = (x: number, z: number) => {
       return (
-        Math.sin(x * 0.08) * 0.45 +
-        Math.sin(z * 0.11) * 0.35 +
-        Math.sin(x * 0.3 + z * 0.2) * 0.18
+        Math.sin(x * 0.08) * 0.45 + Math.sin(z * 0.11) * 0.35 + Math.sin(x * 0.3 + z * 0.2) * 0.18
       );
     };
 
@@ -1366,14 +1365,7 @@ export default function AstronautWalker({
         const fx = player.pos.x + Math.sin(player.heading + Math.PI / 2) * side * offset;
         const fz = player.pos.z + Math.cos(player.heading + Math.PI / 2) * side * offset;
         footprints.stamp(fx, fz, player.heading, side, gameT);
-        puffs.emit(
-          new THREE.Vector3(fx, sampleHeight(fx, fz), fz),
-          3,
-          0.5,
-          0.3,
-          0.3,
-          1.0,
-        );
+        puffs.emit(new THREE.Vector3(fx, sampleHeight(fx, fz), fz), 3, 0.5, 0.3, 0.3, 1.0);
         hudRef.current.footCount++;
       }
 

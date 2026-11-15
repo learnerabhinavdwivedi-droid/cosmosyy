@@ -9,7 +9,6 @@ export function LandingGuide() {
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-signal-500/5 blur-3xl" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        
         {/* Section Header */}
         <div className="text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-warn-500/30 bg-warn-500/10 px-3.5 py-1 text-xs font-semibold text-warn-500">
@@ -23,7 +22,8 @@ export function LandingGuide() {
             </span>
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-base text-regolith-300 sm:text-lg">
-            Master the flight controls, leap across craters in low gravity, and recover lost relics in four simple steps!
+            Master the flight controls, leap across craters in low gravity, and recover lost relics
+            in four simple steps!
           </p>
         </div>
 
@@ -50,7 +50,6 @@ export function LandingGuide() {
 
             {/* Interactive Side-by-Side Planet Cards */}
             <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-              
               {/* Moon Card with user cartoon moon */}
               <motion.div
                 whileHover={{ y: -5, scale: 1.02 }}
@@ -74,10 +73,12 @@ export function LandingGuide() {
                     6 Historical Landing Sites
                   </h4>
                   <p className="mt-1 text-xs text-regolith-400">
-                    Sea of Tranquility, Ocean of Storms, Fra Mauro, Hadley Rille, Descartes, Taurus-Littrow.
+                    Sea of Tranquility, Ocean of Storms, Fra Mauro, Hadley Rille, Descartes,
+                    Taurus-Littrow.
                   </p>
                   <p className="mt-3 text-xs font-semibold text-regolith-300">
-                    Gravity: <span className="text-signal-500">1.62 m/s²</span> · Experience high lunar lopes!
+                    Gravity: <span className="text-signal-500">1.62 m/s²</span> · Experience high
+                    lunar lopes!
                   </p>
                 </div>
               </motion.div>
@@ -108,18 +109,17 @@ export function LandingGuide() {
                     Viking 1, Mars Pathfinder, Spirit, Opportunity, Curiosity, Perseverance.
                   </p>
                   <p className="mt-3 text-xs font-semibold text-regolith-300">
-                    Gravity: <span className="text-warn-500">3.72 m/s²</span> · Butterscotch sky & dust wind!
+                    Gravity: <span className="text-warn-500">3.72 m/s²</span> · Butterscotch sky &
+                    dust wind!
                   </p>
                 </div>
               </motion.div>
-
             </div>
           </motion.div>
         </div>
 
         {/* Steps 2, 3, 4 Cards */}
         <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-          
           {/* Step 2 */}
           <motion.div
             initial={{ opacity: 0, y: 25 }}
@@ -138,7 +138,8 @@ export function LandingGuide() {
               Rocket Staging & Spaceflight
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-regolith-300">
-              Watch the massive Saturn V fire into space. Experience real booster staging during coast, interplanetary cruise separation on Mars, and atmospheric entry.
+              Watch the massive Saturn V fire into space. Experience real booster staging during
+              coast, interplanetary cruise separation on Mars, and atmospheric entry.
             </p>
             <div className="mt-auto pt-6">
               <span className="inline-block rounded-lg bg-space-800/80 px-3 py-1.5 font-mono text-xs text-regolith-400">
@@ -165,7 +166,8 @@ export function LandingGuide() {
               Low-G Walking & Bounding
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-regolith-300">
-              The Moon has 1/6th of Earth's gravity and Mars has 38%. Jump meters into the air, kick up real regolith dust clouds, and hear your suit breathing or Martian wind!
+              The Moon has 1/6th of Earth's gravity and Mars has 38%. Jump meters into the air, kick
+              up real regolith dust clouds, and hear your suit breathing or Martian wind!
             </p>
             <div className="mt-auto pt-6">
               <span className="inline-block rounded-lg bg-space-800/80 px-3 py-1.5 font-mono text-xs text-regolith-400">
@@ -192,7 +194,9 @@ export function LandingGuide() {
               Scan Relics & Plant Flag
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-regolith-300">
-              Follow golden radar beacons to abandoned lunar modules, rover tracks, seismometers, and sample caches. Hold [E] to inspect and listen to voice archives, then plant your flag!
+              Follow golden radar beacons to abandoned lunar modules, rover tracks, seismometers,
+              and sample caches. Hold [E] to inspect and listen to voice archives, then plant your
+              flag!
             </p>
             <div className="mt-auto pt-6">
               <span className="inline-block rounded-lg bg-space-800/80 px-3 py-1.5 font-mono text-xs text-regolith-400">
@@ -200,7 +204,6 @@ export function LandingGuide() {
               </span>
             </div>
           </motion.div>
-
         </div>
 
         {/* Big Bottom Action Strip */}
@@ -213,7 +216,6 @@ export function LandingGuide() {
             <ArrowRight className="h-5 w-5" />
           </Link>
         </div>
-
       </div>
     </section>
   );

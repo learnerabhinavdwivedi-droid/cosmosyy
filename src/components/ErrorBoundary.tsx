@@ -38,9 +38,7 @@ export class ErrorBoundary extends Component<Props, State> {
               fontFamily: "var(--font-body, sans-serif)",
             }}
           >
-            <h1 style={{ fontSize: "1.5rem", fontWeight: 600 }}>
-              Something went wrong
-            </h1>
+            <h1 style={{ fontSize: "1.5rem", fontWeight: 600 }}>Something went wrong</h1>
             <p style={{ color: "var(--fg-muted)", maxWidth: "40ch", textAlign: "center" }}>
               {this.state.error.message}
             </p>

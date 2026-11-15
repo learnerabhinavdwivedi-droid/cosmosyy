@@ -10,13 +10,10 @@ import marsSpirit from "../../content/missions/mars-spirit.json";
 import marsOpportunity from "../../content/missions/mars-opportunity.json";
 import marsCuriosity from "../../content/missions/mars-curiosity.json";
 import marsPerseverance from "../../content/missions/mars-perseverance.json";
-import marsViking2 from "../../content/missions/mars-viking2.json";
-import marsPhoenix from "../../content/missions/mars-phoenix.json";
-import marsInsight from "../../content/missions/mars-insight.json";
-import deepspaceNearShoemaker from "../../content/missions/deepspace-near-shoemaker.json";
-import deepspaceDawn from "../../content/missions/deepspace-dawn.json";
-import deepspacePioneer from "../../content/missions/deepspace-pioneer.json";
-import deepspaceKepler from "../../content/missions/deepspace-kepler.json";
+import deepDawn from "../../content/missions/deep-dawn.json";
+import deepNear from "../../content/missions/deep-near.json";
+import deepVoyager from "../../content/missions/deep-voyager.json";
+import deepKepler from "../../content/missions/deep-kepler.json";
 
 export type Planet = "moon" | "mars" | "deep-space";
 
@@ -34,9 +31,18 @@ export interface HeritageObject {
   xp: number;
   source?: string;
   hidden?: boolean;
+  whySent?: string;
   scienceDiscovery?: string;
+  ongoingScience?: string;
+  hardwareType?:
+    | "surface-lander"
+    | "rover"
+    | "orbiter"
+    | "deep-space-probe"
+    | "passive-reflector"
+    | "scientific-package";
   legacy?: string;
-  status?: "operational" | "dormant" | "defunct";
+  status?: "operational" | "dormant" | "defunct" | "cruising";
   firstPerson?: string;
   yearDeployed?: number;
   yearLastContact?: number;
@@ -85,13 +91,10 @@ const RAW: Record<string, unknown> = {
   "mars-opportunity": marsOpportunity,
   "mars-curiosity": marsCuriosity,
   "mars-perseverance": marsPerseverance,
-  "mars-viking2": marsViking2,
-  "mars-phoenix": marsPhoenix,
-  "mars-insight": marsInsight,
-  "deepspace-near-shoemaker": deepspaceNearShoemaker,
-  "deepspace-dawn": deepspaceDawn,
-  "deepspace-pioneer": deepspacePioneer,
-  "deepspace-kepler": deepspaceKepler,
+  "deep-dawn": deepDawn,
+  "deep-near": deepNear,
+  "deep-voyager": deepVoyager,
+  "deep-kepler": deepKepler,
 };
 
 function parse(raw: unknown): MissionSpec {
@@ -107,7 +110,10 @@ function parse(raw: unknown): MissionSpec {
     xp: (o.xp as number) ?? 50,
     source: (o.source as string) ?? undefined,
     hidden: (o.hidden as boolean) ?? undefined,
+    whySent: (o.whySent as string) ?? undefined,
     scienceDiscovery: (o.scienceDiscovery as string) ?? undefined,
+    ongoingScience: (o.ongoingScience as string) ?? undefined,
+    hardwareType: (o.hardwareType as HeritageObject["hardwareType"]) ?? undefined,
     legacy: (o.legacy as string) ?? undefined,
     status: (o.status as HeritageObject["status"]) ?? undefined,
     firstPerson: (o.firstPerson as string) ?? undefined,
@@ -158,5 +164,9 @@ export function getMission(id: string): MissionSpec {
 
 export function getMissionOrNull(id: string | null): MissionSpec | null {
   if (!id) return null;
-  try { return getMission(id); } catch { return null; }
+  try {
+    return getMission(id);
+  } catch {
+    return null;
+  }
 }

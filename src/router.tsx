@@ -3,9 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-function lazyWithRetry<T extends ComponentType<any>>(
-  factory: () => Promise<{ default: T }>,
-) {
+function lazyWithRetry<T extends ComponentType<any>>(factory: () => Promise<{ default: T }>) {
   return lazy(() =>
     factory().catch((err) => {
       // If a dynamic chunk failed to load (e.g. fresh deployment or intermittent mobile signal),

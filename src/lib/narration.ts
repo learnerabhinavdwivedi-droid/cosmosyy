@@ -2,8 +2,17 @@ import { Howl, Howler } from "howler";
 import type { GamePhase } from "@/store/useGameStore";
 
 const NARRATED_PHASES: GamePhase[] = [
-  "flight", "coast", "orbit", "targetLocked", "descent",
-  "touchdown", "stepOut", "explore", "flagReady", "flagPlanted", "launch",
+  "flight",
+  "coast",
+  "orbit",
+  "targetLocked",
+  "descent",
+  "touchdown",
+  "stepOut",
+  "explore",
+  "flagReady",
+  "flagPlanted",
+  "launch",
 ];
 
 function narrationPath(missionId: string, phase: GamePhase): string {
@@ -163,14 +172,18 @@ export function stopNarration(immediate = false): void {
     const prevTimer = stopTimers.get(h);
     if (prevTimer) clearTimeout(prevTimer);
     if (immediate) {
-      try { h.stop(); } catch {}
+      try {
+        h.stop();
+      } catch {}
       stopTimers.delete(h);
     } else {
       h.fade(h.volume(), 0, 300);
       stopTimers.set(
         h,
         setTimeout(() => {
-          try { h.stop(); } catch {}
+          try {
+            h.stop();
+          } catch {}
           stopTimers.delete(h);
         }, 320),
       );

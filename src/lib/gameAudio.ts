@@ -243,8 +243,18 @@ export function stopEngine(): void {
   const e = engine;
   engine = null;
   setTimeout(() => {
-    for (const o of e.oscs) { try { o.stop(); } catch { /* ok */ } }
-    try { e.noiseSrc.stop(); } catch { /* ok */ }
+    for (const o of e.oscs) {
+      try {
+        o.stop();
+      } catch {
+        /* ok */
+      }
+    }
+    try {
+      e.noiseSrc.stop();
+    } catch {
+      /* ok */
+    }
   }, 700);
 }
 
@@ -387,8 +397,18 @@ export function stopSpaceDrone(): void {
   const d = drone;
   drone = null;
   setTimeout(() => {
-    for (const o of d.oscs) { try { o.stop(); } catch { /* ok */ } }
-    try { d.noiseSrc.stop(); } catch { /* ok */ }
+    for (const o of d.oscs) {
+      try {
+        o.stop();
+      } catch {
+        /* ok */
+      }
+    }
+    try {
+      d.noiseSrc.stop();
+    } catch {
+      /* ok */
+    }
   }, 2200);
 }
 
@@ -465,8 +485,18 @@ export function stopLunarHum(): void {
   const h = lunarHum;
   lunarHum = null;
   setTimeout(() => {
-    for (const o of h.oscs) { try { o.stop(); } catch { /* ok */ } }
-    try { h.noiseSrc.stop(); } catch { /* ok */ }
+    for (const o of h.oscs) {
+      try {
+        o.stop();
+      } catch {
+        /* ok */
+      }
+    }
+    try {
+      h.noiseSrc.stop();
+    } catch {
+      /* ok */
+    }
   }, 2200);
 }
 
@@ -531,8 +561,18 @@ export function stopMarsWind(): void {
   const w = marsWind;
   marsWind = null;
   setTimeout(() => {
-    for (const o of w.oscs) { try { o.stop(); } catch { /* ok */ } }
-    try { w.noiseSrc.stop(); } catch { /* ok */ }
+    for (const o of w.oscs) {
+      try {
+        o.stop();
+      } catch {
+        /* ok */
+      }
+    }
+    try {
+      w.noiseSrc.stop();
+    } catch {
+      /* ok */
+    }
   }, 2200);
 }
 

@@ -27,7 +27,8 @@ const SPOTLIGHT_MISSIONS: MissionSpotlight[] = [
     planet: "moon",
     destination: "Sea of Tranquility",
     craft: "Saturn V + LM Eagle",
-    highlight: "One small step for man. Inspect Neil Armstrong's descent stage and plant the first flag.",
+    highlight:
+      "One small step for man. Inspect Neil Armstrong's descent stage and plant the first flag.",
     relicsCount: 5,
     tags: ["Lunar Module Eagle", "EASEP Seismometer", "Historic Flag", "Laser Retroreflector"],
   },
@@ -39,7 +40,8 @@ const SPOTLIGHT_MISSIONS: MissionSpotlight[] = [
     planet: "moon",
     destination: "Hadley Rille",
     craft: "Saturn V + Lunar Roving Vehicle",
-    highlight: "First mission with the Lunar Roving Vehicle (LRV). Explore the deep volcanic canyon of Hadley Rille.",
+    highlight:
+      "First mission with the Lunar Roving Vehicle (LRV). Explore the deep volcanic canyon of Hadley Rille.",
     relicsCount: 6,
     tags: ["Lunar Rover (LRV)", "Hadley Rille Canyon", "Genesis Rock", "ALSEP Central Station"],
   },
@@ -51,7 +53,8 @@ const SPOTLIGHT_MISSIONS: MissionSpotlight[] = [
     planet: "moon",
     destination: "Taurus-Littrow",
     craft: "Saturn V + LM Challenger",
-    highlight: "Geologist Harrison Schmitt discovered orange volcanic soil. Longest rover drives across towering massifs.",
+    highlight:
+      "Geologist Harrison Schmitt discovered orange volcanic soil. Longest rover drives across towering massifs.",
     relicsCount: 7,
     tags: ["Orange Soil Site", "Rover Tracks", "Taurus Massifs", "Cosmic Ray Detector"],
   },
@@ -64,7 +67,8 @@ const SPOTLIGHT_MISSIONS: MissionSpotlight[] = [
     planet: "mars",
     destination: "Chryse Planitia",
     craft: "Titan IIIE + Aeroshell Lander",
-    highlight: "The historic first successful robot to touch down on Mars. Transmitted the first panoramic color photo of the red planet.",
+    highlight:
+      "The historic first successful robot to touch down on Mars. Transmitted the first panoramic color photo of the red planet.",
     relicsCount: 6,
     tags: ["Viking 1 Lander", "Sampling Arm", "Weather Boom", "First Mars Panorama"],
   },
@@ -76,7 +80,8 @@ const SPOTLIGHT_MISSIONS: MissionSpotlight[] = [
     planet: "mars",
     destination: "Gale Crater",
     craft: "Sky Crane Descent Stage",
-    highlight: "Daring Sky Crane landing into Gale Crater. Discover ancient lakebeds that once held drinkable fresh water.",
+    highlight:
+      "Daring Sky Crane landing into Gale Crater. Discover ancient lakebeds that once held drinkable fresh water.",
     relicsCount: 6,
     tags: ["Curiosity Rover", "Mount Sharp", "Sky Crane Impact", "ChemCam Laser"],
   },
@@ -88,7 +93,8 @@ const SPOTLIGHT_MISSIONS: MissionSpotlight[] = [
     planet: "mars",
     destination: "Jezero Crater",
     craft: "Sky Crane + Ingenuity Drone",
-    highlight: "Exploring an ancient river delta in search of fossilized Martian microbial life with the Ingenuity helicopter.",
+    highlight:
+      "Exploring an ancient river delta in search of fossilized Martian microbial life with the Ingenuity helicopter.",
     relicsCount: 6,
     tags: ["Perseverance Rover", "Ingenuity Helicopter", "Delta Scarp", "Sample Return Tubes"],
   },
@@ -105,9 +111,11 @@ export function LandingMissionShowcase() {
   };
 
   return (
-    <section id="missions-directory" className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent">
+    <section
+      id="missions-directory"
+      className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        
         {/* Section Header */}
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row md:items-end">
           <div>
@@ -122,7 +130,8 @@ export function LandingMissionShowcase() {
               </span>
             </h2>
             <p className="mt-2 text-sm text-regolith-300 sm:text-base">
-              Accurate NASA landing sites with authentic equipment coordinates, real audio archives, and topography.
+              Accurate NASA landing sites with authentic equipment coordinates, real audio archives,
+              and topography.
             </p>
           </div>
 
@@ -246,7 +255,6 @@ export function LandingMissionShowcase() {
             <span>Open All 12 Missions in Mission Select Hub</span>
           </Link>
         </div>
-
       </div>
     </section>
   );

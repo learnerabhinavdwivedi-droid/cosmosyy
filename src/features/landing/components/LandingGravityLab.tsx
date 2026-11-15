@@ -88,9 +88,11 @@ export function LandingGravityLab() {
   };
 
   return (
-    <section id="gravity-lab" className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent">
+    <section
+      id="gravity-lab"
+      className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        
         {/* Header */}
         <div className="text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-signal-500/30 bg-signal-500/10 px-3.5 py-1 text-xs font-semibold text-signal-500 backdrop-blur">
@@ -104,7 +106,8 @@ export function LandingGravityLab() {
             </span>
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-base text-regolith-300">
-            See how high our cartoon explorer leaps on each world. Notice how slow and floaty the Moon's 1.62 m/s² feels!
+            See how high our cartoon explorer leaps on each world. Notice how slow and floaty the
+            Moon's 1.62 m/s² feels!
           </p>
         </div>
 
@@ -134,7 +137,6 @@ export function LandingGravityLab() {
         {/* Simulator Stage */}
         <div className="mt-10 overflow-hidden rounded-3xl border border-space-700/80 bg-space-900/80 p-6 shadow-2xl backdrop-blur-xl sm:p-8 md:p-12">
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
-            
             {/* Visual Leaping Canvas Stage */}
             <div
               role="button"
@@ -222,7 +224,11 @@ export function LandingGravityLab() {
             </div>
 
             {/* Live Telemetry Card */}
-            <div className="flex flex-col justify-center lg:col-span-5" aria-live="polite" aria-atomic="true">
+            <div
+              className="flex flex-col justify-center lg:col-span-5"
+              aria-live="polite"
+              aria-atomic="true"
+            >
               <div className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-warn-500" />
                 <h3 className="font-display text-2xl font-bold text-regolith-100">
@@ -245,13 +251,16 @@ export function LandingGravityLab() {
                       <p className="mt-1 font-mono text-xl font-bold text-regolith-100">
                         {current.gravity} <span className="text-xs text-regolith-400">m/s²</span>
                       </p>
-                      <p className="text-[11px] font-medium text-warn-500">{current.gravityRatio} Earth</p>
+                      <p className="text-[11px] font-medium text-warn-500">
+                        {current.gravityRatio} Earth
+                      </p>
                     </div>
 
                     <div className="rounded-xl border border-space-700/80 bg-space-950/60 p-3.5">
                       <p className="text-xs text-regolith-400">Max Leap Height</p>
                       <p className="mt-1 font-mono text-xl font-bold text-signal-500">
-                        {current.jumpHeightMeters} <span className="text-xs text-regolith-400">meters</span>
+                        {current.jumpHeightMeters}{" "}
+                        <span className="text-xs text-regolith-400">meters</span>
                       </p>
                       <p className="text-[11px] font-medium text-regolith-400">
                         {(current.jumpHeightMeters / 0.5).toFixed(1)}x Earth jump
@@ -271,7 +280,9 @@ export function LandingGravityLab() {
                       <p className="mt-1 font-mono text-xl font-bold text-warn-500">
                         {current.weight60kg} <span className="text-xs text-regolith-400">kg</span>
                       </p>
-                      <p className="text-[11px] font-medium text-regolith-400">Feels super light!</p>
+                      <p className="text-[11px] font-medium text-regolith-400">
+                        Feels super light!
+                      </p>
                     </div>
                   </div>
 
@@ -284,10 +295,8 @@ export function LandingGravityLab() {
                 </motion.div>
               </AnimatePresence>
             </div>
-
           </div>
         </div>
-
       </div>
     </section>
   );

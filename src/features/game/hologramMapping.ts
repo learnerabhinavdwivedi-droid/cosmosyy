@@ -21,35 +21,35 @@ interface ModelEntry {
 const MODEL_MAP: Record<string, Record<string, ModelEntry>> = {
   "apollo-11": {
     "descent-stage": m("apollo11_eagle"),
-    "flag": m("apollo11_eagle"),
-    "lrrr": m("apollo11_easep"),
-    "psep": m("apollo11_easep"),
+    flag: m("apollo11_eagle"),
+    lrrr: m("apollo11_easep"),
+    psep: m("apollo11_easep"),
     "tv-camera": m("apollo11_eagle"),
-    "mesa": m("apollo11_eagle"),
-    "swc": m("apollo11_easep"),
+    mesa: m("apollo11_eagle"),
+    swc: m("apollo11_easep"),
   },
   "apollo-12": {
     "descent-stage": m("apollo12_intrepid"),
-    "flag": m("apollo12_intrepid"),
+    flag: m("apollo12_intrepid"),
     "surveyor-3": m("surveyor3"),
-    "alsep": m("alsep_packages"),
+    alsep: m("alsep_packages"),
     "s-band-antenna": m("surveyor3"),
     "hand-tool-carrier": m("apollo12_intrepid"),
   },
   "apollo-14": {
     "descent-stage": m("apollo14_antares_met"),
-    "flag": m("apollo14_antares_met"),
-    "alsep": m("alsep_packages"),
-    "lrrr": m("apollo11_easep"),
-    "met": m("apollo14_antares_met"),
+    flag: m("apollo14_antares_met"),
+    alsep: m("alsep_packages"),
+    lrrr: m("apollo11_easep"),
+    met: m("apollo14_antares_met"),
     "golf-balls": m("apollo14_antares_met"),
   },
   "apollo-15": {
     "descent-stage": m("apollo15_falcon_lrv1"),
-    "flag": m("apollo15_falcon_lrv1"),
-    "lrv": m("apollo15_falcon_lrv1"),
-    "alsep": m("alsep_packages"),
-    "lrrr": m("apollo11_easep"),
+    flag: m("apollo15_falcon_lrv1"),
+    lrv: m("apollo15_falcon_lrv1"),
+    alsep: m("alsep_packages"),
+    lrrr: m("apollo11_easep"),
     "fallen-astronaut": {
       modelPath: "/models/astronaut.glb",
       manifestPath: "/manifests/apollo15_falcon_lrv1.json",
@@ -57,18 +57,18 @@ const MODEL_MAP: Record<string, Record<string, ModelEntry>> = {
   },
   "apollo-16": {
     "descent-stage": m("apollo16_orion_lrv2"),
-    "flag": m("apollo16_orion_lrv2"),
-    "lrv": m("apollo16_orion_lrv2"),
-    "alsep": m("alsep_packages"),
+    flag: m("apollo16_orion_lrv2"),
+    lrv: m("apollo16_orion_lrv2"),
+    alsep: m("alsep_packages"),
     "uv-camera": m("apollo16_orion_lrv2"),
     "family-photo": m("apollo16_orion_lrv2"),
   },
   "apollo-17": {
     "descent-stage": m("apollo17_challenger_lrv3"),
-    "flag": m("apollo17_challenger_lrv3"),
-    "lrv": m("apollo17_challenger_lrv3"),
-    "alsep": m("alsep_packages"),
-    "lrrr": m("apollo11_easep"),
+    flag: m("apollo17_challenger_lrv3"),
+    lrv: m("apollo17_challenger_lrv3"),
+    alsep: m("alsep_packages"),
+    lrrr: m("apollo11_easep"),
     "orange-soil": m("apollo17_challenger_lrv3"),
   },
   "mars-viking1": {
@@ -147,7 +147,9 @@ function formatComponentName(raw: string): string {
     .trim();
 }
 
-export function getDisplayComponents(manifest: HologramManifest): { name: string; displayName: string; explode: [number, number, number] }[] {
+export function getDisplayComponents(
+  manifest: HologramManifest,
+): { name: string; displayName: string; explode: [number, number, number] }[] {
   const seen = new Set<string>();
   return manifest.components
     .filter((c) => {

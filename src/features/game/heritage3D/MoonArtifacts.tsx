@@ -17,18 +17,7 @@ export {
   HandToolCarrier3D,
   ALSEPCentralStation3D,
 } from "./missions/apollo12";
-export {
-  METCart3D,
-  GolfBallsClub3D,
-} from "./missions/apollo14";
-export {
-  LunarRovingVehicle3D,
-  FallenAstronaut3D,
-} from "./missions/apollo15";
-export {
-  UVCamera3D,
-  FamilyPhoto3D,
-} from "./missions/apollo16";
-export {
-  OrangeSoil3D,
-} from "./missions/apollo17";
+export { METCart3D, GolfBallsClub3D } from "./missions/apollo14";
+export { LunarRovingVehicle3D, FallenAstronaut3D } from "./missions/apollo15";
+export { UVCamera3D, FamilyPhoto3D } from "./missions/apollo16";
+export { OrangeSoil3D } from "./missions/apollo17";

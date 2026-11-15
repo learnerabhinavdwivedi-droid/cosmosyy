@@ -35,7 +35,10 @@ function StoryCameraRig({
   const { camera } = useThree();
   const currentLook = useRef(new THREE.Vector3(...cameraKeyframe.look));
   const targetPos = useMemo(() => new THREE.Vector3(...cameraKeyframe.pos), [cameraKeyframe.pos]);
-  const targetLook = useMemo(() => new THREE.Vector3(...cameraKeyframe.look), [cameraKeyframe.look]);
+  const targetLook = useMemo(
+    () => new THREE.Vector3(...cameraKeyframe.look),
+    [cameraKeyframe.look],
+  );
 
   useFrame((state, delta) => {
     if (reduceMotion) {
@@ -69,7 +72,7 @@ function StoryEnvironment({ isMars = false }: { isMars?: boolean }) {
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
       const r = 40 + ((i * 7) % 20);
-      const theta = ((i * 137.5) * Math.PI) / 180;
+      const theta = (i * 137.5 * Math.PI) / 180;
       const phi = Math.acos(1 - (2 * (i + 0.5)) / count);
       pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
       pos[i * 3 + 1] = Math.abs(r * Math.cos(phi)) + 2;
@@ -88,9 +91,7 @@ function StoryEnvironment({ isMars = false }: { isMars?: boolean }) {
       const y = pos.getY(i);
       const crater = -Math.exp(-((x * x + y * y) / 16)) * 0.25;
       const noise =
-        Math.sin(x * 0.8) * 0.06 +
-        Math.cos(y * 0.7) * 0.05 +
-        Math.sin((x + y) * 1.5) * 0.02;
+        Math.sin(x * 0.8) * 0.06 + Math.cos(y * 0.7) * 0.05 + Math.sin((x + y) * 1.5) * 0.02;
       pos.setZ(i, crater + noise);
     }
     geo.computeVertexNormals();
@@ -108,7 +109,12 @@ function StoryEnvironment({ isMars = false }: { isMars?: boolean }) {
     <>
       {/* Starfield */}
       <points geometry={starsGeo}>
-        <pointsMaterial size={0.12} color={isMars ? "#ffedd5" : "#ffffff"} transparent opacity={isMars ? 0.45 : 0.75} />
+        <pointsMaterial
+          size={0.12}
+          color={isMars ? "#ffedd5" : "#ffffff"}
+          transparent
+          opacity={isMars ? 0.45 : 0.75}
+        />
       </points>
 
       {/* Ground Surface: Red Regolith for Mars, Slate Grey for Moon */}
@@ -374,7 +380,8 @@ export function StoryScene({
   reduceMotion = false,
   isPlaying = true,
 }: StorySceneProps) {
-  const isMars = packet?.environment === "mars-surface" || packet?.missionId.startsWith("mars") || false;
+  const isMars =
+    packet?.environment === "mars-surface" || packet?.missionId.startsWith("mars") || false;
   const isSWC = packet?.id === "swc";
 
   return (
@@ -392,18 +399,20 @@ export function StoryScene({
         castShadow
         shadow-mapSize={[1024, 1024]}
       />
-      <directionalLight position={[10, 4, -8]} intensity={0.6} color={isMars ? "#ea580c" : "#60a5fa"} />
-      <hemisphereLight args={[isMars ? "#f97316" : "#93c5fd", isMars ? "#431407" : "#1e293b", 0.4]} />
+      <directionalLight
+        position={[10, 4, -8]}
+        intensity={0.6}
+        color={isMars ? "#ea580c" : "#60a5fa"}
+      />
+      <hemisphereLight
+        args={[isMars ? "#f97316" : "#93c5fd", isMars ? "#431407" : "#1e293b", 0.4]}
+      />
 
       <StoryEnvironment isMars={isMars} />
 
       <Suspense fallback={null}>
         {isSWC ? (
-          <SWCExperimentModel
-            action={action}
-            isPlaying={isPlaying}
-            reduceMotion={reduceMotion}
-          />
+          <SWCExperimentModel action={action} isPlaying={isPlaying} reduceMotion={reduceMotion} />
         ) : packet ? (
           <DedicatedStoryObject
             missionId={packet.missionId}

@@ -4,9 +4,7 @@ export default function ReportPage() {
   const { missionId } = useParams();
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg text-fg">
-      <h1 className="font-display text-3xl font-bold">
-        Mission Report — {missionId}
-      </h1>
+      <h1 className="font-display text-3xl font-bold">Mission Report — {missionId}</h1>
     </div>
   );
 }

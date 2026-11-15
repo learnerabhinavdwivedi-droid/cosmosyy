@@ -65,9 +65,7 @@ export function ObjectStoryCard({
     if (!currentScene) return "";
     const isHindi = i18n.language.startsWith("hi");
     if (isHindi && currentScene.hindi) {
-      return state.mode === "kids"
-        ? currentScene.hindi.kids
-        : currentScene.hindi.explorer;
+      return state.mode === "kids" ? currentScene.hindi.kids : currentScene.hindi.explorer;
     }
     return state.mode === "kids" ? currentScene.kids : currentScene.explorer;
   }, [currentScene, state.mode, i18n.language]);
@@ -160,9 +158,7 @@ export function ObjectStoryCard({
       const target = e.target as HTMLElement | null;
       if (
         target &&
-        (target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
-          target.isContentEditable)
+        (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)
       ) {
         return;
       }

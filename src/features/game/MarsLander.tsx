@@ -1550,4 +1550,3 @@ export default function MarsLander({ className, style, onClose }: MarsLanderProp
     </div>
   );
 }
-

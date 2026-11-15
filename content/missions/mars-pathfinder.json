@@ -35,14 +35,18 @@
     {
       "id": "mp-base-station",
       "name": "Pathfinder Base Station",
-      "position": [2, 0, -2],
+      "position": [
+        2,
+        0,
+        -2
+      ],
       "description": "The Mars Pathfinder base station, later named the Carl Sagan Memorial Station, was a low-cost lander that demonstrated a new airbag landing system. It bounced 15 times on the surface before coming to rest. The station served as a communications relay and carried the IMP camera and atmospheric instruments.",
       "xp": 60,
       "source": "NASA/JPL Mars Pathfinder",
       "scienceDiscovery": "Demonstrated the first airbag landing system on Mars and served as a relay station transmitting 2.3 gigabits of data including 16,500 images.",
       "legacy": "Renamed the Carl Sagan Memorial Station, it sits with petals open at Ares Vallis, undisturbed since losing contact in September 1997.",
       "status": "defunct",
-      "firstPerson": "I bounced fifteen times across Mars before I finally stopped. Then I opened my petals like a flower, rolled out my ramp, and let little Sojourner drive out onto a new world. For 83 days we worked together — I relayed everything home. Now I sit named after Carl Sagan, a monument to curiosity.",
+      "firstPerson": "Ayo, talk about making an entrance! I am the Pathfinder Base Station — officially named the Carl Sagan Memorial Station. I didn't use boring thrusters to land — I wrapped myself in giant bubble-wrap airbags and bounced fifteen times across Ares Vallis like an interplanetary bouncy ball! Then I opened my petal solar panels, phoned home, and deployed the world's first planetary rover. 1997 revolutionized Mars exploration forever!",
       "yearDeployed": 1997,
       "yearLastContact": 1997,
       "nasaImageId": "PIA01551"
@@ -50,14 +54,18 @@
     {
       "id": "mp-sojourner",
       "name": "Sojourner Rover",
-      "position": [12, 0, 8],
+      "position": [
+        12,
+        0,
+        8
+      ],
       "description": "Sojourner was the first rover to operate on another planet. Weighing just 10.6 kg (about the size of a microwave oven), it explored about 100 square metres of the surface over 83 sols. Sojourner carried an Alpha Proton X-ray Spectrometer to analyse rock compositions, finding that some rocks were similar to Earth's andesite.",
       "xp": 60,
       "source": "NASA/JPL Mars Pathfinder",
       "scienceDiscovery": "Performed the first rover-based chemical analysis of Martian rocks, revealing unexpectedly silicon-rich compositions similar to Earth's andesite.",
       "legacy": "Sojourner last communicated on 27 September 1997; it likely sits within a few metres of the base station, its solar panels long covered in dust.",
       "status": "defunct",
-      "firstPerson": "I was the first rover ever to drive on another planet. I was tiny — no bigger than a microwave — but I was brave. For 83 Martian days I nosed up to rocks, tasted them with my spectrometer, and showed the world that a little robot could explore another world. Every Mars rover after me started with my tracks.",
+      "firstPerson": "Yo, small rover, gargantuan legacy! I am Sojourner! I weighed only 10.6 kilos — basically the size of a microwave on six tiny metal wheels. NASA gave me a 7-day lifespan, but I rolled across the red dust for 83 sols, analyzing Martian rocks with my alpha proton x-ray spectrometer. The great grandfather of Curiosity and Perseverance, absolute pioneer!",
       "yearDeployed": 1997,
       "yearLastContact": 1997,
       "nasaImageId": "PIA02405"
@@ -65,14 +73,18 @@
     {
       "id": "mp-ramp",
       "name": "Deployment Ramp",
-      "position": [7, 0, 4],
+      "position": [
+        7,
+        0,
+        4
+      ],
       "description": "After landing and deflating its airbags, Pathfinder opened its petals and deployed two ramps for Sojourner to drive down. The rear ramp was blocked by a partially deflated airbag, so engineers commanded Sojourner to use the front ramp. This was the first time a rover drove onto the surface of another planet.",
       "xp": 50,
       "source": "NASA/JPL Mars Pathfinder",
       "scienceDiscovery": "Enabled the historic moment when Sojourner became the first wheeled vehicle to drive onto the surface of another planet.",
       "legacy": "The ramps remain attached to the open petals of the base station, frozen in the position that launched interplanetary roving.",
       "status": "defunct",
-      "firstPerson": "I was just a ramp — two metal tracks folded against a lander. But on 6 July 1997, little Sojourner rolled down me and touched Martian soil for the first time. That made me the bridge between two worlds. My rear twin was blocked by a stubborn airbag, so I got the honour all to myself.",
+      "firstPerson": "Bro, don't sleep on the highway! I am the deployment ramp. After Pathfinder's airbags deflated, I rolled out my dual titanium tracks so little Sojourner could roll down onto Martian soil without flipping on a sharp rock. One small roll for a mini-rover, one giant leap for robotics!",
       "yearDeployed": 1997,
       "yearLastContact": 1997,
       "nasaImageId": "PIA01126"
@@ -80,14 +92,18 @@
     {
       "id": "mp-imp-camera",
       "name": "IMP Camera Mast",
-      "position": [-8, 0, -10],
+      "position": [
+        -8,
+        0,
+        -10
+      ],
       "description": "The Imager for Mars Pathfinder (IMP) was a stereo camera mounted on a 1.5-metre mast. It captured over 16,500 images of the Martian landscape and provided the first 360-degree colour panoramas from Mars since Viking. The camera had 12 geology filters and 12 atmospheric filters for scientific analysis.",
       "xp": 50,
       "source": "NASA/JPL Mars Pathfinder",
       "scienceDiscovery": "Captured over 16,500 images with 24 spectral filters, producing the first 360-degree colour panoramas of Mars since Viking 21 years earlier.",
       "legacy": "The IMP mast still rises 1.5 metres above the base station, pointing at a Martian horizon it can no longer photograph.",
       "status": "defunct",
-      "firstPerson": "From my perch 1.5 metres up, I saw Mars in a way no camera had for twenty years. I snapped 16,500 pictures — sunsets, dust devils, Sojourner posing next to rocks. My panoramas showed the whole world what a Martian afternoon looks like. I had 24 different filters, one for every question scientists wanted to ask.",
+      "firstPerson": "Say cheese, Mars! I am the IMP stereo camera mast. Perched 1.5 meters up like a metallic giraffe, I snapped over 16,000 vivid 3D color photos of the dusty horizon, watched dust devils spin, and captured the iconic blue Martian sunset. Gave humanity front-row seats to another planet in vivid color!",
       "yearDeployed": 1997,
       "yearLastContact": 1997,
       "nasaImageId": "PIA01553"
@@ -95,28 +111,36 @@
     {
       "id": "mp-barnacle-bill",
       "name": "Barnacle Bill Rock",
-      "position": [16, 0, -6],
+      "position": [
+        16,
+        0,
+        -6
+      ],
       "description": "The first rock analysed by Sojourner's APXS instrument was informally named 'Barnacle Bill'. Analysis revealed it was rich in silicon, similar to andesite found on Earth. This was surprising — scientists expected basaltic compositions. It suggested Mars had a more complex geological history than previously thought.",
       "xp": 50,
       "source": "NASA/JPL Mars Pathfinder",
       "scienceDiscovery": "Revealed a silicon-rich andesitic composition that overturned the assumption Mars had only simple basaltic geology, proving a more complex volcanic history.",
       "legacy": "Barnacle Bill still sits where Sojourner analysed it, an ordinary-looking rock that changed our understanding of Martian geology.",
       "status": "defunct",
-      "firstPerson": "I am just a rock, but I was the first rock on Mars that a rover ever touched. When Sojourner pressed her spectrometer against me, scientists gasped — I was not what they expected. I am rich in silicon, like volcanic rocks on Earth. I proved that Mars has a far more complex history than anyone guessed.",
+      "firstPerson": "Bro, I am famous for being a rock! I am Barnacle Bill — the very first rock ever analyzed by a robot on Mars! Sojourner rolled up, pressed her APXS sensor right on my crust, and discovered I am made of andesite volcanic rock, proving ancient Mars had intense volcanic action. Hard rock superstar, zero cap!",
       "yearDeployed": 1997,
       "nasaImageId": "PIA01552"
     },
     {
       "id": "mp-yogi",
       "name": "Yogi Rock",
-      "position": [-13, 0, 12],
+      "position": [
+        -13,
+        0,
+        12
+      ],
       "description": "Yogi was a large rock near the Pathfinder landing site, about one metre tall. Sojourner spent several sols driving to and analysing Yogi. APXS measurements showed it had a basaltic composition, different from Barnacle Bill, indicating variety in the local geology. Wind-sculpted features on its surface showed evidence of aeolian erosion.",
       "xp": 50,
       "source": "NASA/JPL Mars Pathfinder",
       "scienceDiscovery": "Showed a basaltic composition contrasting with nearby Barnacle Bill, proving geological diversity exists within metres on the Martian surface.",
       "legacy": "Yogi remains at Ares Vallis, its wind-sculpted face slowly being reshaped by Martian dust storms over the decades.",
       "status": "defunct",
-      "firstPerson": "I am Yogi, a boulder the size of a bear, and I told a different story from my neighbour Barnacle Bill. Where Bill was silicon-rich, I am plain basalt — proof that Mars mixes its rocks like Earth does. The wind has been sculpting my face for millions of years, and Sojourner was the first to notice.",
+      "firstPerson": "Ayo, move over! I am Yogi Rock — a one-meter boulder shaped just like a friendly grizzly bear! Sojourner spent days nuzzling my volcanic flanks to test how wind storms carved Martian bedrock over billions of years. Most famous geological celebrity on the red planet!",
       "yearDeployed": 1997,
       "nasaImageId": "PIA02406"
     }

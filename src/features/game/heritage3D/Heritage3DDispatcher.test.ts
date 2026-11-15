@@ -1,10 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync } from "fs";
 import { resolve } from "path";
-import {
-  hasDedicated3DModel,
-  getDedicatedComponents,
-} from "./Heritage3DDispatcher";
+import { hasDedicated3DModel, getDedicatedComponents } from "./Heritage3DDispatcher";
 
 describe("Heritage3DDispatcher Coverage", () => {
   const missionsDir = resolve(process.cwd(), "content/missions");

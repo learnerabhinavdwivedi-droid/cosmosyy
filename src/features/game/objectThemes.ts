@@ -4,10 +4,12 @@ export interface ObjectTheme {
   border: string;
   glow: string;
   category: string;
-  iconType: "spacecraft" | "science" | "rover" | "memorial" | "equipment" | "geological" | "helicopter";
+  iconType:
+    "spacecraft" | "science" | "rover" | "memorial" | "equipment" | "geological" | "helicopter";
 }
 
-export type ThemeName = "spacecraft" | "science" | "rover" | "memorial" | "equipment" | "geological" | "helicopter";
+export type ThemeName =
+  "spacecraft" | "science" | "rover" | "memorial" | "equipment" | "geological" | "helicopter";
 
 const T: Record<ThemeName, ObjectTheme> = {
   spacecraft: {

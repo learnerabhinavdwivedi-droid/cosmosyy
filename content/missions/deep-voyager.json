@@ -1,0 +1,115 @@
+{
+  "id": "deep-voyager",
+  "name": "Voyager Interstellar Mission",
+  "planet": "deep-space",
+  "site": "Interstellar Space (Beyond Heliopause)",
+  "date": "1977-09-05",
+  "evaSunTime": "1977-09-05T12:56:00Z",
+  "missionType": "robotic",
+  "operator": "NASA / JPL",
+  "crew": {
+    "commander": "Dr. Edward Stone (Project Scientist 1972-2022)",
+    "lmp": "Suzanne Dodd (Voyager Project Manager)",
+    "cmp": "NASA Deep Space Network"
+  },
+  "landing": {
+    "lat": 0.0,
+    "lon": 0.0,
+    "label": "Interstellar Trajectory (~163 AU)"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null
+  },
+  "keyDiscovery": "The first human-made object to cross the Heliopause (August 25, 2012) and venture into interstellar space, directly sampling the pristine plasma and cosmic rays between the stars.",
+  "missionLegacy": "Humanity's longest-operating space mission (47+ years) and the farthest ambassador of Earth, carrying the iconic Golden Record into the galactic rim.",
+  "funFact": "Voyager 1 is over 24 billion kilometers away! A radio signal traveling at the speed of light takes more than 22.5 hours to travel from Earth to Voyager, and another 22.5 hours to return — a 45-hour round trip time!",
+  "heritageNote": "As 'probes still traveling away from Earth', both Voyager spacecraft and their Golden Records are perpetual cosmic artifacts expected to outlive our solar system itself.",
+  "timeline": {
+    "launch": "1977-09-05T12:56:00Z",
+    "landing": "2012-08-25T00:00:00Z",
+    "lastContact": "2026-11-01T00:00:00Z"
+  },
+  "objects": [
+    {
+      "id": "voyager-probe",
+      "name": "Voyager 1 Interstellar Spacecraft",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "description": "722-kilogram deep-space explorer featuring a 3.7-meter parabolic high-gain antenna dish, tubular truss structure, and 13-meter magnetometer boom. Currently cruising through interstellar space at 17 km/s.",
+      "xp": 50,
+      "source": "NASA/JPL Voyager Mission Archives (NSSDCA #1977-084A)",
+      "whySent": "Originally designed to explore Jupiter and Saturn, their rings and moons, and utilize a rare once-every-176-year geometric planetary alignment for gravitational slingshot into deep space.",
+      "scienceDiscovery": "Discovered active volcanism on Jupiter's moon Io, complex braided structures in Saturn's rings, and became the first probe to enter true interstellar space in 2012.",
+      "ongoingScience": "Still actively transmitting real-time magnetometer and cosmic ray measurements of the pristine local interstellar medium beyond our Sun's protective bubble.",
+      "hardwareType": "deep-space-probe",
+      "status": "operational",
+      "yearDeployed": 1977,
+      "nasaImageId": "PIA17046",
+      "firstPerson": "Over 24 billion kilometers out and still flexing! I am Voyager — humanity's most distant emissary. Launched in 1977, I flew past Jupiter, Saturn, Uranus, and Neptune, and in 2012 I broke through the heliopause into the cold ocean of interstellar space! Forty-seven years running on plutonium batteries, still talking to Earth every single day. Absolute cosmic immortal!"
+    },
+    {
+      "id": "golden-record",
+      "name": "The Golden Record",
+      "position": [
+        1.4,
+        0,
+        1.2
+      ],
+      "description": "A 12-inch gold-plated copper phonograph record enclosed in a protective aluminum jacket with electroplated uranium-238 clocking. Encodes 115 analog images, greetings in 55 languages, 90 minutes of global music, and natural sounds of Earth.",
+      "xp": 50,
+      "source": "NASA Golden Record Project (Sagan, Drake et al. 1977)",
+      "whySent": "To serve as a cultural time capsule and message from civilization on Earth to any intelligent extraterrestrial spacefarers who might intercept the probe in the distant future.",
+      "scienceDiscovery": "Pioneered universal interstellar communication protocols, using the 21-centimeter hydrogen hyperfine spin transition and 14 galactic pulsar frequencies as a cosmic map to locate Earth.",
+      "ongoingScience": "With a degradation lifespan exceeding 1 billion years in deep vacuum, the Golden Record is the longest-surviving physical artifact ever produced by humankind.",
+      "hardwareType": "deep-space-probe",
+      "status": "operational",
+      "yearDeployed": 1977,
+      "nasaImageId": "PIA00140",
+      "firstPerson": "Play me at 16 and two-thirds RPM! I am the Golden Record — an electroplated gold-copper phonograph record carrying Earth's mixtape to the stars. Greetings in 55 languages, songs by Chuck Berry and Bach, whale songs, and 115 pictures of our blue planet. If aliens find me in a million years, they are gonna groove. Interstellar time capsule, pure vibe!"
+    },
+    {
+      "id": "rtg-power-boom",
+      "name": "MHW-RTG Nuclear Power Boom",
+      "position": [
+        -3.2,
+        0,
+        -2.4
+      ],
+      "description": "Three Multi-Hundred-Watt Radioisotope Thermoelectric Generators stacked on a deployable fiberglass boom, generating electricity from the radioactive decay heat of plutonium-238 dioxide spheres.",
+      "xp": 50,
+      "source": "DOE / GE Space Division RTG Operations Handbook",
+      "whySent": "To provide continuous electrical power beyond Jupiter where solar radiation is too feeble to operate photovoltaic panels.",
+      "scienceDiscovery": "Demonstrated record-breaking thermocouple longevity, reliably powering spacecraft electronics for over four decades without moving parts or servicing.",
+      "ongoingScience": "Engineers monitor RTG thermal degradation curves to design next-generation Stirling radioisotope power systems for future Neptune and Kuiper Belt probes.",
+      "hardwareType": "scientific-package",
+      "status": "operational",
+      "yearDeployed": 1977,
+      "nasaImageId": "PIA14112",
+      "firstPerson": "No solar panels out here, kid — it is pitch black! I am the Radioisotope Thermoelectric Generator boom. My decaying Plutonium-238 pellets glow red hot, generating electricity to power Voyager's computer and transmitters 15 billion miles away from the Sun. Forty-seven years of uninterrupted nuclear juice. Built for eternity!"
+    },
+    {
+      "id": "plasma-wave-antenna",
+      "name": "PWS Plasma Wave Dipole Antenna",
+      "position": [
+        0,
+        2.5,
+        3.8
+      ],
+      "description": "Two 10-meter beryllium-copper boom antennas deployed in a 90-degree V-configuration, sensing electric field fluctuations and electron plasma oscillations from 10 Hz to 56 kHz.",
+      "xp": 50,
+      "source": "Gurnett et al. (Science 2013) / University of Iowa",
+      "whySent": "To detect electrostatic and electromagnetic waves in planetary magnetospheres and determine electron density in the outer solar wind.",
+      "scienceDiscovery": "Provided the definitive scientific proof that Voyager entered interstellar space when it detected a forty-fold increase in electron plasma density outside the heliosphere.",
+      "ongoingScience": "Continuously records coronal mass ejection shockwaves echoing through the local interstellar cloud, mapping the density of the interstellar void.",
+      "hardwareType": "scientific-package",
+      "status": "operational",
+      "yearDeployed": 1977,
+      "nasaImageId": "PIA17045",
+      "firstPerson": "I am the ears that heard interstellar space! I am Voyager's Plasma Wave Subsystem. In August 2012, I detected a massive jump in plasma density that officially proved Voyager had left our Sun's protective bubble and entered the untamed interstellar medium. Heard the real music of the galaxy, no cap!"
+    }
+  ]
+}

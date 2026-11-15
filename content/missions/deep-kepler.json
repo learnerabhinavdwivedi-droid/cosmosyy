@@ -1,0 +1,120 @@
+{
+  "id": "deep-kepler",
+  "name": "Kepler Space Telescope",
+  "planet": "deep-space",
+  "site": "Earth-Trailing Heliocentric Orbit",
+  "date": "2009-03-07",
+  "evaSunTime": "2009-03-07T03:49:00Z",
+  "missionType": "robotic",
+  "operator": "NASA / Ames Research Center",
+  "crew": {
+    "commander": "William Borucki (Kepler Principal Investigator)",
+    "lmp": "Dr. Natalie Batalha (Mission Scientist)",
+    "cmp": "NASA Ames / Ball Aerospace"
+  },
+  "landing": {
+    "lat": 0.0,
+    "lon": 0.0,
+    "label": "Graveyard Heliocentric Orbit (~1.0 AU)"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null
+  },
+  "keyDiscovery": "Revolutionized astronomy by discovering 2,662 confirmed exoplanets, proving statistically that planets outnumber stars in the Milky Way and that Earth-sized worlds in habitable zones are common throughout our galaxy.",
+  "missionLegacy": "The foundational exoplanet mission that transformed astronomy from wondering if other solar systems existed to cataloging thousands of alien planetary architectures.",
+  "funFact": "Kepler was so sensitive it could detect a flea crawling across a car headlight thousands of miles away! During its 9.6-year mission, it stared unblinkingly at over 530,000 stars.",
+  "heritageNote": "Decommissioned on October 30, 2018 after completely exhausting its hydrazine fuel, Kepler now drifts in a safe, permanent heliocentric graveyard orbit trailing Earth.",
+  "timeline": {
+    "launch": "2009-03-07T03:49:57Z",
+    "landing": "2009-05-12T00:00:00Z",
+    "lastContact": "2018-10-30T00:00:00Z",
+    "endOfMission": "2018-10-30T00:00:00Z"
+  },
+  "objects": [
+    {
+      "id": "kepler-telescope",
+      "name": "Kepler Space Observatory",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "description": "0.95-meter Schmidt telescope with a 1.4-meter primary mirror and carbon-fiber sunshade. Weighs 1,052 kg and drifts in a perpetual Earth-trailing solar orbit.",
+      "xp": 50,
+      "source": "NASA Ames Kepler Mission Archive (NSSDCA #2009-011A)",
+      "whySent": "To determine the frequency of Earth-size planets in and near the habitable zones of Sun-like stars through high-precision transit photometry.",
+      "scienceDiscovery": "Proved that rocky super-Earths and sub-Neptunes are the most abundant class of planets in the galaxy, revolutionizing our understanding of planetary formation.",
+      "ongoingScience": "Kepler's archived transit light curves continue to reveal new exoplanets today through modern machine learning and automated vetting pipelines.",
+      "hardwareType": "orbiter",
+      "status": "dormant",
+      "yearDeployed": 2009,
+      "yearLastContact": 2018,
+      "nasaImageId": "PIA18909",
+      "firstPerson": "I am the cosmic planet hunter! I am the Kepler Space Telescope. For nine glorious years in Earth-trailing orbit, I stared unblinking at over 150,000 stars, waiting for tiny dips in brightness as planets passed in front of them. The result? Over 2,600 confirmed alien worlds and proof that there are more planets than stars in our galaxy! Legendary resume, zero debate!"
+    },
+    {
+      "id": "ccd-focal-plane",
+      "name": "95-Megapixel CCD Focal Plane",
+      "position": [
+        0,
+        1.8,
+        0
+      ],
+      "description": "Focal plane array of 42 science CCDs covering a massive 115 square-degree field of view, measuring minute stellar brightness dips down to 20 parts per million.",
+      "xp": 50,
+      "source": "Caldwell et al. (ApJL 2010) / Ball Aerospace",
+      "whySent": "To achieve unprecedented photometric precision in space, capable of detecting the 0.0084% dimming of a Sun-like star when an Earth-size planet transits.",
+      "scienceDiscovery": "Discovered Kepler-186f and Kepler-452b, the first confirmed Earth-radius exoplanets orbiting in the habitable zones of their host stars.",
+      "ongoingScience": "CCD stellar calibration datasets remain the baseline standard for NASA's TESS and the Nancy Grace Roman Space Telescope.",
+      "hardwareType": "scientific-package",
+      "status": "dormant",
+      "yearDeployed": 2009,
+      "yearLastContact": 2018,
+      "nasaImageId": "PIA11831",
+      "firstPerson": "The largest camera ever launched into deep space at the time! I am Kepler's 95-megapixel focal plane array — forty-two CCD sensors working in unison at minus 85 degrees Celsius. I could spot a flea walking across a car headlight from miles away. That is how I caught Earth-sized exoplanets trillions of kilometers out. Peak precision optics!"
+    },
+    {
+      "id": "reaction-wheel-assembly",
+      "name": "Precision Reaction Wheel Assembly",
+      "position": [
+        -1.8,
+        -0.6,
+        1.6
+      ],
+      "description": "Set of four flywheels spun at thousands of RPM to impart gyroscopic torque for steady sub-arcsecond pointing without expending thruster propellant.",
+      "xp": 50,
+      "source": "NASA Ames K2 Mission Planning Guide / Howell et al.",
+      "whySent": "To hold the spacecraft absolutely motionless pointed at the Cygnus constellation for years at a time.",
+      "scienceDiscovery": "When two reaction wheels failed, engineers invented the 'K2 Mission', using solar radiation pressure balanced against the spacecraft body as a virtual third reaction wheel — extending the mission by four years!",
+      "ongoingScience": "Solar radiation pressure pointing algorithms developed for K2 are now standard contingency procedures for all deep-space space telescopes.",
+      "hardwareType": "deep-space-probe",
+      "status": "defunct",
+      "yearDeployed": 2009,
+      "yearLastContact": 2018,
+      "nasaImageId": "PIA16609",
+      "firstPerson": "Engineers called it the greatest hack in space history! When two of my reaction wheels broke and left me spinning out of control, NASA engineers used the gentle pressure of sunlight hitting my solar panels like a sail to stabilize me! That launched the K2 extended mission and found hundreds more planets. You cannot kill a good telescope, bro!"
+    },
+    {
+      "id": "photometer-sunshield",
+      "name": "Solar Array & Thermal Sunshade",
+      "position": [
+        1.9,
+        -0.4,
+        -1.8
+      ],
+      "description": "Curved carbon-composite sunshade and Gallium Arsenide solar array generating 1.1 kW of electrical power while thermally isolating the sensitive photometer at -85°C.",
+      "xp": 50,
+      "source": "Ball Aerospace System Architecture Report",
+      "whySent": "To prevent blinding solar glare from entering the telescope aperture while keeping the optical assembly at cryogenic thermal equilibrium.",
+      "scienceDiscovery": "Proved that high-aspect carbon-composite baffle structures could maintain sub-millikelvin thermal stability in interplanetary space.",
+      "ongoingScience": "Baffle designs directly influenced the sunshield geometry of the James Webb Space Telescope and Roman Space Telescope.",
+      "hardwareType": "deep-space-probe",
+      "status": "dormant",
+      "yearDeployed": 2009,
+      "yearLastContact": 2018,
+      "nasaImageId": "PIA16610",
+      "firstPerson": "Keeping things frosty in direct sunlight! I am Kepler's massive carbon-fiber sunshield. By keeping the blazing Sun out of the telescope's optics, I let the Schmidt camera peer into the coldest reaches of deep space. Silent guardian of the planet hunter!"
+    }
+  ]
+}

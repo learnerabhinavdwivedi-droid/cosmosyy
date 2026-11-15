@@ -1,0 +1,119 @@
+{
+  "id": "deep-near",
+  "name": "NEAR Shoemaker at Eros",
+  "planet": "deep-space",
+  "site": "Asteroid 433 Eros (South Pole)",
+  "date": "2001-02-12",
+  "evaSunTime": "2001-02-12T20:00:00Z",
+  "missionType": "robotic",
+  "operator": "NASA / JHU APL",
+  "crew": {
+    "commander": "Dr. Robert Farquhar (Mission Director)",
+    "lmp": "Dr. Joseph Veverka (Lead Scientist)",
+    "cmp": "Johns Hopkins Applied Physics Lab"
+  },
+  "landing": {
+    "lat": -35.0,
+    "lon": 279.0,
+    "label": "Eros Touchdown Site"
+  },
+  "terrain": {
+    "model": null,
+    "ortho": null
+  },
+  "keyDiscovery": "The first spacecraft to orbit and touch down on an asteroid in human history. Proved that 433 Eros is a pristine, undifferentiated rubble-pile asteroid from the dawn of our solar system without a global magnetic field.",
+  "missionLegacy": "Pioneered low-gravity proximity operations around irregularly shaped minor bodies, laying the direct engineering foundation for OSIRIS-REx, Hayabusa, and DART planetary defense missions.",
+  "funFact": "NEAR was never designed to land! It had no landing gear or shock absorbers. Engineers gently tapped the thrusters to slow its descent to just 1.7 meters per second — slower than human walking speed — and it survived the impact, transmitting signals from the asteroid surface for two full weeks!",
+  "heritageNote": "NEAR Shoemaker remains intact on the boulder-strewn surface of Asteroid 433 Eros, serving as humanity's very first permanent monument on a near-Earth asteroid.",
+  "timeline": {
+    "launch": "1996-02-17T20:43:00Z",
+    "landing": "2001-02-12T20:01:52Z",
+    "lastContact": "2001-02-28T00:00:00Z",
+    "endOfMission": "2001-02-28T00:00:00Z"
+  },
+  "objects": [
+    {
+      "id": "near-spacecraft",
+      "name": "NEAR Shoemaker Spacecraft",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "description": "Octagonal spacecraft bus measuring 1.5 x 1.7 meters with four gallium arsenide solar panels and a 1.5-meter high-gain antenna dish. Rested upright on Eros after an improvised gentle landing on February 12, 2001.",
+      "xp": 50,
+      "source": "NASA/JHUAPL NEAR Mission Archive (NSSDCA #1996-008A)",
+      "whySent": "To conduct the first dedicated long-term orbital study of a near-Earth asteroid, measuring its physical dimensions, mass distribution, mineralogy, and internal structure.",
+      "scienceDiscovery": "Confirmed that Eros is a consolidated chunk of primitive ordinary chondrite material with a density of 2.67 g/cm³, nearly identical to Earth's continental crust.",
+      "ongoingScience": "Historical orbital tracking data from NEAR remains the primary benchmark for designing planetary defense kinetic impactors and asteroid deflection models.",
+      "hardwareType": "surface-lander",
+      "status": "dormant",
+      "yearDeployed": 2001,
+      "yearLastContact": 2001,
+      "nasaImageId": "PIA03173",
+      "firstPerson": "History books called it impossible, but I pulled it off! I am NEAR Shoemaker. I spent a year orbiting the giant potato-shaped asteroid 433 Eros, snapping 160,000 photos. And then, without any landing legs designed on me, I performed a gentle, powered touchdown directly onto the asteroid's boulder-strewn surface and kept transmitting for two more weeks! First spacecraft to ever land on an asteroid, mic drop!"
+    },
+    {
+      "id": "xgrs-spectrometer",
+      "name": "XGRS Gamma-Ray Spectrometer",
+      "position": [
+        -3.8,
+        0,
+        4.2
+      ],
+      "description": "Combined X-ray and Gamma-Ray Spectrometer mounted to detect characteristic fluorescent X-rays (magnesium, aluminum, silicon) and gamma-ray lines (iron, potassium, thorium) from Eros's surface.",
+      "xp": 50,
+      "source": "Science 292 (Evans et al. 2001) / NSSDCA",
+      "whySent": "To determine the elemental bulk composition of Eros and resolve whether near-Earth asteroids are primitive chondrites or melted differentiated cores.",
+      "scienceDiscovery": "Proved Eros never underwent melting or differentiation, meaning its minerals have remained virtually unchanged since condensing from the solar nebula 4.56 billion years ago.",
+      "ongoingScience": "Spectroscopic calibration techniques refined on NEAR form the foundation for modern asteroid mining and resource prospecting algorithms.",
+      "hardwareType": "scientific-package",
+      "status": "dormant",
+      "yearDeployed": 2001,
+      "yearLastContact": 2001,
+      "nasaImageId": "PIA02970",
+      "firstPerson": "I read asteroid atomic barcodes! I am XGRS — the X-ray and Gamma-Ray Spectrometer on NEAR. From orbit and then from the surface, I bombarded Eros with detector physics to measure iron, magnesium, and silicon ratios, proving 433 Eros is an un-melted, primitive chondrite asteroid from the dawn of the solar system. Pure forensic science!"
+    },
+    {
+      "id": "near-solar-wings",
+      "name": "Gallium Arsenide Solar Arrays",
+      "position": [
+        4.2,
+        0,
+        -3.5
+      ],
+      "description": "Four rigid solar array wings spanning 5.6 meters total, utilizing high-efficiency GaAs cells generating 1,800 watts at 1 AU from the Sun.",
+      "xp": 50,
+      "source": "JHU APL Technical Digest / Jenkins et al.",
+      "whySent": "To supply electrical power across wildly fluctuating solar distances as Eros loops from 1.13 to 1.78 astronomical units away from the Sun.",
+      "scienceDiscovery": "Demonstrated that gallium arsenide photovoltaic cells could survive severe deep-space radiation belts and micrometeroid bombardment without catastrophic voltage loss.",
+      "ongoingScience": "Accelerated commercial adoption of GaAs multi-junction solar cells for high-radiation deep space probes.",
+      "hardwareType": "deep-space-probe",
+      "status": "defunct",
+      "yearDeployed": 1996,
+      "yearLastContact": 2001,
+      "nasaImageId": "PIA02462",
+      "firstPerson": "Four wings of pure solar power! Even when Eros tumbled wildly in deep space between Earth and Mars, my gallium arsenide solar panels captured every photon to keep NEAR's transmitters roaring. Rocking that butterfly silhouette across the asteroid belt!"
+    },
+    {
+      "id": "eros-ponded-regolith",
+      "name": "Eros Ponded Regolith Feature",
+      "position": [
+        -0.5,
+        0,
+        -5.8
+      ],
+      "description": "A flat, crater-free 'pond' of ultra-fine dust accumulated in low gravitational depressions on Eros, created by electrostatic levitation and acoustic seismic shaking.",
+      "xp": 50,
+      "source": "Icarus (Robinson et al. 2002) / NEAR MSI Camera",
+      "whySent": "To investigate the strange microgravity dust transport mechanisms unique to small airless planetary bodies.",
+      "scienceDiscovery": "Discovered that micrometeorite impacts trigger global seismic vibrations that cause fine electrostatic dust to flow like fluid and settle into completely flat dust ponds.",
+      "ongoingScience": "Crucial for planning future robotic and human surface operations on Phobos, Deimos, and hazardous near-Earth asteroids.",
+      "hardwareType": "scientific-package",
+      "status": "dormant",
+      "yearDeployed": 2001,
+      "nasaImageId": "PIA03141",
+      "firstPerson": "I look like a serene zen sand garden on an alien rock! I am the ponded regolith of Eros — super-flat dust deposits nestled inside craters where electrostatic levitation and micrometeorite shaking smoothed out the debris over millions of years. The weirdest sandbox in the solar system, certified!"
+    }
+  ]
+}

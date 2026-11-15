@@ -59,12 +59,7 @@ export function STLTerrain({ stlPath, orthoPath }: { stlPath: string; orthoPath:
   }, [orthoTex]);
 
   return (
-    <mesh
-      geometry={processedGeometry}
-      material={material}
-      receiveShadow
-      position={[0, -0.5, 0]}
-    />
+    <mesh geometry={processedGeometry} material={material} receiveShadow position={[0, -0.5, 0]} />
   );
 }
 
@@ -146,7 +141,19 @@ export function MarsTerrain({ lat, lon }: { lat?: number; lon?: number }) {
   );
 }
 
-export function Terrain({ stlPath, orthoPath, lat, lon, planet }: { stlPath?: string | null; orthoPath?: string | null; lat?: number; lon?: number; planet?: string }) {
+export function Terrain({
+  stlPath,
+  orthoPath,
+  lat,
+  lon,
+  planet,
+}: {
+  stlPath?: string | null;
+  orthoPath?: string | null;
+  lat?: number;
+  lon?: number;
+  planet?: string;
+}) {
   if (stlPath && orthoPath) {
     return <STLTerrain stlPath={stlPath} orthoPath={orthoPath} />;
   }
@@ -159,11 +166,7 @@ export function Terrain({ stlPath, orthoPath, lat, lon, planet }: { stlPath?: st
 export function GroundPlane({ planet }: { planet?: string }) {
   const color = planet === "mars" ? "#6b3a2a" : "#3a3a3a";
   return (
-    <mesh
-      rotation={[-Math.PI / 2, 0, 0]}
-      position={[0, -1, 0]}
-      receiveShadow
-    >
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]} receiveShadow>
       <planeGeometry args={[2000, 2000]} />
       <meshStandardMaterial color={color} roughness={0.98} metalness={0} />
     </mesh>

@@ -26,17 +26,16 @@ export function LandingFloatingBalloonAstronaut({ targetRef }: FloatingAstronaut
   );
 
   // Subtle aerodynamic balloon tilt matching the inclined path
-  const rotateSway = useTransform(
-    scrollYProgress,
-    [0, 0.25, 0.5, 0.75, 1],
-    [-3, 4, -2, 5, 1],
-  );
+  const rotateSway = useTransform(scrollYProgress, [0, 0.25, 0.5, 0.75, 1], [-3, 4, -2, 5, 1]);
 
   // Gentle scale-up as it rises higher into deep space
   const scaleProgress = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1.05, 1]);
 
   return (
-    <div className="pointer-events-none absolute top-4 left-3 z-0 overflow-visible sm:left-6 md:left-10 lg:left-16" aria-hidden="true">
+    <div
+      className="pointer-events-none absolute top-4 left-3 z-0 overflow-visible sm:left-6 md:left-10 lg:left-16"
+      aria-hidden="true"
+    >
       <motion.div
         style={{
           x: driftX,

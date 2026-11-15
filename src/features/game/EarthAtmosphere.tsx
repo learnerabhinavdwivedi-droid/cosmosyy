@@ -21,9 +21,7 @@ export function EarthAtmosphere({
   });
 
   const posArray: [number, number, number] =
-    position instanceof THREE.Vector3
-      ? [position.x, position.y, position.z]
-      : position;
+    position instanceof THREE.Vector3 ? [position.x, position.y, position.z] : position;
 
   return (
     <group position={posArray}>
@@ -60,4 +58,3 @@ export function EarthAtmosphere({
     </group>
   );
 }
-

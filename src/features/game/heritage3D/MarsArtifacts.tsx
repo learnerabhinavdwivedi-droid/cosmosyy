@@ -50,27 +50,4 @@ export {
   VikingAntenna3D,
   VikingSeismometer3D,
 } from "./missions/marsViking1";
-export {
-  Viking2LanderBody3D,
-  Viking2SamplerArm3D,
-  Viking2Seismometer3D,
-  Viking2Meteorology3D,
-  Viking2FacsimileCameras3D,
-  Viking2GCMSInlet3D,
-} from "./missions/marsViking2";
-export {
-  PhoenixLanderBody3D,
-  PhoenixRoboticArm3D,
-  PhoenixTEGA3D,
-  PhoenixMECA3D,
-  PhoenixSolarWings3D,
-  PhoenixLidarStation3D,
-} from "./missions/marsPhoenix";
-export {
-  InSightLanderBody3D,
-  InSightSEIS3D,
-  InSightHP3Mole3D,
-  InSightUltraFlexArrays3D,
-  InSightIDCArm3D,
-  InSightTWINS3D,
-} from "./missions/marsInsight";
+

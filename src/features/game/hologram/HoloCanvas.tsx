@@ -243,13 +243,7 @@ function CosmicDust({ count = 36, color = "#93c5fd" }: { count?: number; color?:
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[points, 3]} />
       </bufferGeometry>
-      <pointsMaterial
-        size={0.022}
-        color={color}
-        transparent
-        opacity={0.35}
-        depthWrite={false}
-      />
+      <pointsMaterial size={0.022} color={color} transparent opacity={0.35} depthWrite={false} />
     </points>
   );
 }
@@ -269,7 +263,7 @@ const _fitBox = new THREE.Box3();
 const _fitSize = new THREE.Vector3();
 const _fitCenter = new THREE.Vector3();
 
-function fitObject(pivot: THREE.Group, content: THREE.Group, targetSize = 1.30): boolean {
+function fitObject(pivot: THREE.Group, content: THREE.Group, targetSize = 1.3): boolean {
   pivot.position.set(0, 0, 0);
   pivot.scale.set(1, 1, 1);
   pivot.rotation.set(0, 0, 0);
@@ -316,7 +310,7 @@ function DedicatedHoloModel({
   useLayoutEffect(() => {
     if (!contentRef.current || !pivotRef.current) return;
     // 1.30 target size provides a majestic hero scale across the full viewport
-    if (fitObject(pivotRef.current, contentRef.current, 1.30)) {
+    if (fitObject(pivotRef.current, contentRef.current, 1.3)) {
       centeredRef.current = true;
     }
   }, [missionId, objectId, explode]);
@@ -326,7 +320,7 @@ function DedicatedHoloModel({
       groupRef.current.rotation.y += delta * 0.22;
     }
     if (!centeredRef.current && contentRef.current && pivotRef.current) {
-      if (fitObject(pivotRef.current, contentRef.current, 1.30)) {
+      if (fitObject(pivotRef.current, contentRef.current, 1.3)) {
         centeredRef.current = true;
       }
     }
