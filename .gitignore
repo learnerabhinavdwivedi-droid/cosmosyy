@@ -47,3 +47,5 @@ storybook-static/
 # raw downloads (large source assets)
 assets-src/
 test-screenshots/
+
+.vercel
