@@ -1,6 +1,8 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { Howl } from "howler";
 import { stopNarration } from "@/lib/narration";
+import { duck } from "@/lib/audio";
+import { speakTutorText } from "@/lib/tutorVoice";
 import type { ObjectTheme } from "./types";
 
 interface AudioTransmissionDeckProps {
@@ -32,6 +34,7 @@ export function AudioTransmissionDeck({
   const soundRef = useRef<Howl | null>(null);
   const animFrameRef = useRef<number | null>(null);
   const speechTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const tutorCancelRef = useRef<(() => void) | null>(null);
 
   // 20 energetic equalizer bars
   const idleBars = [35, 55, 72, 45, 82, 60, 92, 50, 78, 65, 88, 48, 70, 42, 65, 80, 52, 74, 40, 60];
@@ -50,9 +53,12 @@ export function AudioTransmissionDeck({
       soundRef.current = null;
     }
 
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
+    if (tutorCancelRef.current) {
+      tutorCancelRef.current();
+      tutorCancelRef.current = null;
     }
+    duck(false);
+
     if (speechTimerRef.current) {
       clearInterval(speechTimerRef.current);
       speechTimerRef.current = null;
@@ -88,6 +94,7 @@ export function AudioTransmissionDeck({
         }
       },
       onend: () => {
+        duck(false);
         setIsPlaying(false);
         setAudioProgress(1);
         setCurrentTime(sound.duration());
@@ -96,15 +103,19 @@ export function AudioTransmissionDeck({
           animFrameRef.current = null;
         }
       },
+      onstop: () => {
+        duck(false);
+      },
     });
 
     soundRef.current = sound;
 
     return () => {
+      duck(false);
       sound.stop();
       sound.unload();
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
+      if (tutorCancelRef.current) {
+        tutorCancelRef.current();
       }
       if (speechTimerRef.current) {
         clearInterval(speechTimerRef.current);
@@ -140,9 +151,11 @@ export function AudioTransmissionDeck({
       if (soundRef.current && soundRef.current.playing()) {
         soundRef.current.pause();
       }
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
+      if (tutorCancelRef.current) {
+        tutorCancelRef.current();
+        tutorCancelRef.current = null;
       }
+      duck(false);
       if (speechTimerRef.current) {
         clearInterval(speechTimerRef.current);
         speechTimerRef.current = null;
@@ -154,43 +167,45 @@ export function AudioTransmissionDeck({
       }
     } else {
       if (soundRef.current && soundRef.current.state() === "loaded") {
+        duck(true);
         soundRef.current.play();
         setIsPlaying(true);
         animFrameRef.current = requestAnimationFrame(updateProgress);
-      } else if (firstPersonLog && typeof window !== "undefined" && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(firstPersonLog);
-        utter.rate = 0.95;
-        utter.pitch = 0.9;
+      } else if (firstPersonLog) {
         const totalDur = duration || Math.max(5, Math.round(firstPersonLog.split(/\s+/).length / 2.5));
         let elapsed = 0;
-        utter.onend = () => {
-          setIsPlaying(false);
-          setAudioProgress(1);
-          setCurrentTime(totalDur);
-          if (speechTimerRef.current) {
-            clearInterval(speechTimerRef.current);
-            speechTimerRef.current = null;
-          }
-        };
-        utter.onerror = () => {
-          setIsPlaying(false);
-          if (speechTimerRef.current) {
-            clearInterval(speechTimerRef.current);
-            speechTimerRef.current = null;
-          }
-        };
-        window.speechSynthesis.speak(utter);
-        setIsPlaying(true);
-        speechTimerRef.current = setInterval(() => {
-          elapsed += 0.1;
-          setCurrentTime(elapsed);
-          setAudioProgress(Math.min(1, elapsed / totalDur));
-          setLiveBars((prev) => prev.map(() => Math.floor(Math.random() * 75) + 25));
-          if (elapsed >= totalDur) {
-            if (speechTimerRef.current) clearInterval(speechTimerRef.current);
-          }
-        }, 100);
+        tutorCancelRef.current = speakTutorText({
+          text: firstPersonLog,
+          withRadioChirp: true,
+          onStart: () => {
+            setIsPlaying(true);
+            speechTimerRef.current = setInterval(() => {
+              elapsed += 0.1;
+              setCurrentTime(elapsed);
+              setAudioProgress(Math.min(1, elapsed / totalDur));
+              setLiveBars((prev) => prev.map(() => Math.floor(Math.random() * 75) + 25));
+              if (elapsed >= totalDur) {
+                if (speechTimerRef.current) clearInterval(speechTimerRef.current);
+              }
+            }, 100);
+          },
+          onEnd: () => {
+            setIsPlaying(false);
+            setAudioProgress(1);
+            setCurrentTime(totalDur);
+            if (speechTimerRef.current) {
+              clearInterval(speechTimerRef.current);
+              speechTimerRef.current = null;
+            }
+          },
+          onError: () => {
+            setIsPlaying(false);
+            if (speechTimerRef.current) {
+              clearInterval(speechTimerRef.current);
+              speechTimerRef.current = null;
+            }
+          },
+        });
       }
     }
   };

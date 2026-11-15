@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { StoryScene } from "./StoryScene";
 import { useStoryPlayer } from "./useStoryPlayer";
+import { speakTutorText } from "@/lib/tutorVoice";
 import type { ObjectStoryPacket } from "./storySchema";
 import {
   Play,
@@ -35,6 +36,7 @@ export function ObjectStoryCard({
   const containerRef = useRef<HTMLDivElement>(null);
   const audioTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelTutorRef = useRef<(() => void) | null>(null);
 
   // Auto-start playback on mount if requested
   useEffect(() => {
@@ -72,6 +74,10 @@ export function ObjectStoryCard({
 
   // Clean narration audio / Web Speech Synthesis with fallback timer
   const stopNarration = useCallback(() => {
+    if (cancelTutorRef.current) {
+      cancelTutorRef.current();
+      cancelTutorRef.current = null;
+    }
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
@@ -89,7 +95,7 @@ export function ObjectStoryCard({
     if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
     advanceTimerRef.current = setTimeout(() => {
       dispatch({ type: "NEXT" });
-    }, 900);
+    }, 1200);
   }, [dispatch]);
 
   // Play narration whenever scene or mode changes while active
@@ -102,33 +108,23 @@ export function ObjectStoryCard({
     // Word-count reading duration in ms (approx 140 WPM + padding)
     const readingDurationMs = Math.max(4500, words * 420 + 1500);
 
-    if (state.sound && typeof window !== "undefined" && "speechSynthesis" in window) {
-      const utterance = new SpeechSynthesisUtterance(captionText);
-      utterance.lang = i18n.language.startsWith("hi") ? "hi-IN" : "en-US";
-      utterance.rate = state.mode === "kids" ? 0.92 : 1.0;
-      utterance.pitch = 1.02;
-
-      utterance.onend = () => {
-        dispatch({ type: "SCENE_AUDIO_END" });
-        triggerAutoAdvance();
-      };
-
-      utterance.onerror = () => {
-        // Fallback to word-count duration timer if speech synthesis fails
-        audioTimerRef.current = setTimeout(() => {
+    if (state.sound) {
+      cancelTutorRef.current = speakTutorText({
+        text: captionText,
+        lang: i18n.language.startsWith("hi") ? "hi-IN" : "en-US",
+        rate: state.mode === "kids" ? 0.90 : 0.94,
+        withRadioChirp: false,
+        onEnd: () => {
           dispatch({ type: "SCENE_AUDIO_END" });
           triggerAutoAdvance();
-        }, readingDurationMs);
-      };
-
-      try {
-        window.speechSynthesis.speak(utterance);
-      } catch {
-        audioTimerRef.current = setTimeout(() => {
-          dispatch({ type: "SCENE_AUDIO_END" });
-          triggerAutoAdvance();
-        }, readingDurationMs);
-      }
+        },
+        onError: () => {
+          audioTimerRef.current = setTimeout(() => {
+            dispatch({ type: "SCENE_AUDIO_END" });
+            triggerAutoAdvance();
+          }, readingDurationMs);
+        },
+      });
     } else {
       // Sound muted: timer-based reading pacing
       audioTimerRef.current = setTimeout(() => {
