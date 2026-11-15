@@ -38,10 +38,7 @@ interface AppState {
   session: SessionState;
 
   setPlayerName: (name: string) => void;
-  setSetting: <K extends keyof SettingsState>(
-    key: K,
-    value: SettingsState[K],
-  ) => void;
+  setSetting: <K extends keyof SettingsState>(key: K, value: SettingsState[K]) => void;
   addXp: (missionId: string, amount: number) => void;
   findObject: (missionId: string, objectId: string) => void;
   plantFlag: (missionId: string) => void;
@@ -73,13 +70,21 @@ export const XP_FLAG = 100;
 export const XP_COMPLETE = 100;
 
 export const MOON_MISSION_ORDER = [
-  "apollo-11", "apollo-12", "apollo-14",
-  "apollo-15", "apollo-16", "apollo-17",
+  "apollo-11",
+  "apollo-12",
+  "apollo-14",
+  "apollo-15",
+  "apollo-16",
+  "apollo-17",
 ];
 
 export const MARS_MISSION_ORDER = [
-  "mars-viking1", "mars-pathfinder", "mars-spirit",
-  "mars-opportunity", "mars-curiosity", "mars-perseverance",
+  "mars-viking1",
+  "mars-pathfinder",
+  "mars-spirit",
+  "mars-opportunity",
+  "mars-curiosity",
+  "mars-perseverance",
 ];
 
 export const MISSION_ORDER = [...MOON_MISSION_ORDER, ...MARS_MISSION_ORDER];
@@ -108,11 +113,9 @@ export const useAppStore = create<AppState>()(
       },
       session: { demoMode: false },
 
-      setPlayerName: (name) =>
-        set((s) => ({ player: { ...s.player, name } })),
+      setPlayerName: (name) => set((s) => ({ player: { ...s.player, name } })),
 
-      setSetting: (key, value) =>
-        set((s) => ({ settings: { ...s.settings, [key]: value } })),
+      setSetting: (key, value) => set((s) => ({ settings: { ...s.settings, [key]: value } })),
 
       addXp: (missionId, amount) =>
         set((s) => {

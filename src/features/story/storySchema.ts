@@ -1,12 +1,7 @@
 /// <reference types="vite/client" />
 import { z } from "zod";
 
-export const FactStatusSchema = z.enum([
-  "verified",
-  "from-repo",
-  "general-science",
-  "unverified",
-]);
+export const FactStatusSchema = z.enum(["verified", "from-repo", "general-science", "unverified"]);
 
 export const StoryFactSchema = z.object({
   id: z.string(),
@@ -77,7 +72,7 @@ export type FactStatus = z.infer<typeof FactStatusSchema>;
 // Dynamic Vite-powered registry of all bundled story packets
 const storyModules = import.meta.glob<{ default: unknown }>(
   "../../../content/stories/**/*.story.json",
-  { eager: true }
+  { eager: true },
 );
 
 const STORY_REGISTRY: Record<string, Record<string, StoryPacket>> = {};

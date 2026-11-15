@@ -43,10 +43,10 @@ export function ArtifactInfoPanel({
               isCruising
                 ? "bg-cyan-950/70 text-cyan-300 border-cyan-500/40 shadow-[0_0_8px_rgba(6,182,212,0.3)]"
                 : isOperational
-                ? "bg-emerald-950/70 text-emerald-300 border-emerald-500/40 shadow-[0_0_8px_rgba(16,185,129,0.2)]"
-                : isDormant
-                ? "bg-amber-950/70 text-amber-300 border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.2)]"
-                : "bg-space-850 text-regolith-400 border-space-700"
+                  ? "bg-emerald-950/70 text-emerald-300 border-emerald-500/40 shadow-[0_0_8px_rgba(16,185,129,0.2)]"
+                  : isDormant
+                    ? "bg-amber-950/70 text-amber-300 border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.2)]"
+                    : "bg-space-850 text-regolith-400 border-space-700"
             }`}
           >
             <span
@@ -54,20 +54,20 @@ export function ArtifactInfoPanel({
                 isCruising
                   ? "bg-cyan-400 animate-ping"
                   : isOperational
-                  ? "bg-emerald-400 animate-pulse"
-                  : isDormant
-                  ? "bg-amber-400"
-                  : "bg-regolith-500"
+                    ? "bg-emerald-400 animate-pulse"
+                    : isDormant
+                      ? "bg-amber-400"
+                      : "bg-regolith-500"
               }`}
             />
             <span>
               {isCruising
                 ? "Cruising Interstellar"
                 : isOperational
-                ? "Active Telemetry"
-                : isDormant
-                ? "Dormant Sensor"
-                : "Defunct Structure"}
+                  ? "Active Telemetry"
+                  : isDormant
+                    ? "Dormant Sensor"
+                    : "Defunct Structure"}
             </span>
           </span>
         </div>
@@ -109,9 +109,7 @@ export function ArtifactInfoPanel({
           <span className="text-[9px] font-mono uppercase tracking-wider text-regolith-500">
             Discovery
           </span>
-          <span className="text-xs font-mono font-bold text-signal">
-            +{obj.xp || 50} XP
-          </span>
+          <span className="text-xs font-mono font-bold text-signal">+{obj.xp || 50} XP</span>
         </div>
       </div>
 
@@ -177,9 +175,7 @@ export function ArtifactInfoPanel({
                     Why Earth Built Me (Mission Purpose)
                   </span>
                 </div>
-                <p className="text-xs leading-relaxed text-sky-100 font-medium">
-                  {obj.whySent}
-                </p>
+                <p className="text-xs leading-relaxed text-sky-100 font-medium">{obj.whySent}</p>
               </div>
             )}
 
@@ -275,9 +271,7 @@ export function ArtifactInfoPanel({
                 <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-regolith-400">
                   Mission Legacy & Fate
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-regolith-300">
-                  {obj.legacy}
-                </p>
+                <p className="mt-1 text-xs leading-relaxed text-regolith-300">{obj.legacy}</p>
               </div>
             )}
 
@@ -288,23 +282,19 @@ export function ArtifactInfoPanel({
               </p>
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                 <div>
-                  <span className="text-regolith-500 block text-[10px]">
-                    SURFACE DEPLOYMENT
-                  </span>
+                  <span className="text-regolith-500 block text-[10px]">SURFACE DEPLOYMENT</span>
                   <span className="text-regolith-200">
                     {obj.yearDeployed ? `${obj.yearDeployed} UTC` : "Recorded"}
                   </span>
                 </div>
                 <div>
-                  <span className="text-regolith-500 block text-[10px]">
-                    LAST ACTIVE CONTACT
-                  </span>
+                  <span className="text-regolith-500 block text-[10px]">LAST ACTIVE CONTACT</span>
                   <span className="text-regolith-200">
                     {obj.yearLastContact
                       ? `${obj.yearLastContact} UTC`
                       : isOperational
-                      ? "Ongoing (Operational)"
-                      : "Mission Close"}
+                        ? "Ongoing (Operational)"
+                        : "Mission Close"}
                   </span>
                 </div>
               </div>

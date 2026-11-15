@@ -205,13 +205,18 @@ export function getDedicatedComponents(
   _missionId: string,
   objectId: string,
 ): { name: string; displayName: string; explode: [number, number, number] }[] {
-  return DEDICATED_COMPONENTS[objectId] || [
-    { name: "main", displayName: "Primary Structure", explode: [0, 0.1, 0] },
-    { name: "subsystem", displayName: "Sensor & Avionics Subsystem", explode: [0.2, 0.2, 0] },
-  ];
+  return (
+    DEDICATED_COMPONENTS[objectId] || [
+      { name: "main", displayName: "Primary Structure", explode: [0, 0.1, 0] },
+      { name: "subsystem", displayName: "Sensor & Avionics Subsystem", explode: [0.2, 0.2, 0] },
+    ]
+  );
 }
 
-const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; explode: [number, number, number] }[]> = {
+const DEDICATED_COMPONENTS: Record<
+  string,
+  { name: string; displayName: string; explode: [number, number, number] }[]
+> = {
   flag: [
     { name: "banner", displayName: "50-Star Nylon Banner", explode: [0.2, 0.1, 0] },
     { name: "crossbar", displayName: "Telescopic Spreader Bar", explode: [0, 0.2, 0] },
@@ -272,7 +277,11 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
   ],
   "fallen-astronaut": [
     { name: "statue", displayName: "Solid Aluminum Stylized Astronaut", explode: [0, 0.2, 0] },
-    { name: "plaque", displayName: "14-Astronaut & Cosmonaut Inscribed Plaque", explode: [0.25, 0.1, 0] },
+    {
+      name: "plaque",
+      displayName: "14-Astronaut & Cosmonaut Inscribed Plaque",
+      explode: [0.25, 0.1, 0],
+    },
   ],
   "uv-camera": [
     { name: "barrel", displayName: "Schmidt Optical Telescope Barrel", explode: [0, 0.25, 0] },
@@ -283,7 +292,11 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
   "family-photo": [
     { name: "photo", displayName: "Duke Family Portrait Photograph", explode: [0, 0.15, 0] },
     { name: "wrap", displayName: "Protective Polyethylene Shrink-Wrap", explode: [0, 0.25, 0] },
-    { name: "inscription", displayName: "Handwritten Astronaut Inscription", explode: [0, 0.05, 0] },
+    {
+      name: "inscription",
+      displayName: "Handwritten Astronaut Inscription",
+      explode: [0, 0.05, 0],
+    },
   ],
   "orange-soil": [
     { name: "soil", displayName: "Shorty Crater Pyroclastic Glass Beads", explode: [0, 0.1, 0] },
@@ -299,7 +312,11 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
   "surveyor-3": [
     { name: "frame", displayName: "Triangular Aluminum Spaceframe", explode: [0, 0, 0] },
     { name: "legs", displayName: "3 Landing Legs & Footpads", explode: [0.3, -0.2, 0] },
-    { name: "camera", displayName: "Television Camera (Retrieved by Bean)", explode: [0.25, 0.2, 0] },
+    {
+      name: "camera",
+      displayName: "Television Camera (Retrieved by Bean)",
+      explode: [0.25, 0.2, 0],
+    },
     { name: "mast", displayName: "Solar Panel & High-Gain Mast", explode: [0, 0.35, 0] },
     { name: "sampler", displayName: "Soil Mechanics Surface Sampler", explode: [-0.25, 0.2, 0] },
   ],
@@ -424,7 +441,11 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
   ],
   "sp-wheel-tracks": [
     { name: "left_track", displayName: "Standard Rover Wheel Tread Track", explode: [-0.2, 0, 0] },
-    { name: "right_trench", displayName: "Stalled Wheel Trench (90% Silica)", explode: [0.2, 0.1, 0] },
+    {
+      name: "right_trench",
+      displayName: "Stalled Wheel Trench (90% Silica)",
+      explode: [0.2, 0.1, 0],
+    },
   ],
   "sp-heat-shield": [
     { name: "backshell", displayName: "Crumpled Conical Backshell", explode: [-0.3, 0.2, 0] },
@@ -434,14 +455,26 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
     { name: "chassis", displayName: "Warm Electronics Box Chassis", explode: [0, 0, 0] },
     { name: "mast", displayName: "ChemCam & Mastcam Remote Sensing Mast", explode: [0, 0.45, 0] },
     { name: "arm", displayName: "5-DOF Robotic Arm with Coring Drill", explode: [0.4, -0.2, 0] },
-    { name: "rtg", displayName: "Multi-Mission Radioisotope Generator (MMRTG)", explode: [-0.4, 0.2, 0] },
+    {
+      name: "rtg",
+      displayName: "Multi-Mission Radioisotope Generator (MMRTG)",
+      explode: [-0.4, 0.2, 0],
+    },
     { name: "wheels", displayName: "6 Cleated Machined Aluminum Wheels", explode: [0.3, 0, 0] },
     { name: "hga", displayName: "Steerable Hexagonal High-Gain Antenna", explode: [-0.2, 0.35, 0] },
   ],
   "pe-rover": [
     { name: "chassis", displayName: "Mars 2020 Chassis & MOXIE Vent", explode: [0, 0, 0] },
-    { name: "supercam", displayName: "SuperCam Laser & Mastcam-Z Zoom Mast", explode: [0, 0.45, 0] },
-    { name: "arm", displayName: "Heavy Robotic Arm with SHERLOC/PIXL Turret", explode: [0.4, -0.2, 0] },
+    {
+      name: "supercam",
+      displayName: "SuperCam Laser & Mastcam-Z Zoom Mast",
+      explode: [0, 0.45, 0],
+    },
+    {
+      name: "arm",
+      displayName: "Heavy Robotic Arm with SHERLOC/PIXL Turret",
+      explode: [0.4, -0.2, 0],
+    },
     { name: "rtg", displayName: "Nuclear MMRTG & 8 Radiator Fins", explode: [-0.4, 0.2, 0] },
     { name: "wheels", displayName: "6 Upgraded Curved-Cleat Wheels", explode: [0.3, 0, 0] },
     { name: "meda", displayName: "MEDA Environmental Wind Sensor Booms", explode: [0.2, 0.3, 0] },
@@ -450,7 +483,11 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
     { name: "chassis", displayName: "Warm Electronics Box & Aerogel", explode: [0, 0, 0] },
     { name: "solar", displayName: "Triangular Solar Panel Wings", explode: [0, 0.3, 0] },
     { name: "mast", displayName: "Stereo Pancam & Navcam Camera Mast", explode: [0, 0.45, 0] },
-    { name: "idd", displayName: "Instrument Deployment Device (RAT & Mössbauer)", explode: [0.35, -0.15, 0] },
+    {
+      name: "idd",
+      displayName: "Instrument Deployment Device (RAT & Mössbauer)",
+      explode: [0.35, -0.15, 0],
+    },
     { name: "wheels", displayName: "6 Rocker-Bogie Aluminum Wheels", explode: [0.25, 0, 0] },
     { name: "hga", displayName: "High-Gain Parabolic Dish Antenna", explode: [-0.25, 0.3, 0] },
   ],
@@ -458,14 +495,26 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
     { name: "chassis", displayName: "Warm Electronics Box Body", explode: [0, 0, 0] },
     { name: "solar", displayName: "Dust-Coated Gusev Solar Arrays", explode: [0, 0.3, 0] },
     { name: "mast", displayName: "Pancam Mast Assembly", explode: [0, 0.45, 0] },
-    { name: "jammed_wheel", displayName: "Famous Jammed Right-Front Drag Wheel", explode: [0.3, 0, -0.3] },
-    { name: "trench", displayName: "Pure Opaline White Silica Drag Trench", explode: [0.3, -0.2, -0.3] },
+    {
+      name: "jammed_wheel",
+      displayName: "Famous Jammed Right-Front Drag Wheel",
+      explode: [0.3, 0, -0.3],
+    },
+    {
+      name: "trench",
+      displayName: "Pure Opaline White Silica Drag Trench",
+      explode: [0.3, -0.2, -0.3],
+    },
     { name: "hga", displayName: "High-Gain Parabolic Dish Antenna", explode: [-0.25, 0.3, 0] },
   ],
   "cu-yellowknife": [
     { name: "mudstone", displayName: "Sheepbed Lakebed Mudstone Slab", explode: [0, 0, 0] },
     { name: "veins", displayName: "White Calcium Sulfate Mineral Veins", explode: [0, 0.2, 0] },
-    { name: "drill", displayName: "John Klein Drill Hole & Grey Tailings", explode: [0.2, 0.25, 0] },
+    {
+      name: "drill",
+      displayName: "John Klein Drill Hole & Grey Tailings",
+      explode: [0.2, 0.25, 0],
+    },
   ],
   "cu-mount-sharp": [
     { name: "summit", displayName: "Upper Sulfate Canyons & Yardang Peak", explode: [0, 0.35, 0] },
@@ -475,7 +524,11 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
   ],
   "op-eagle-crater": [
     { name: "outcrop", displayName: "Opportunity Ledge Sulfate Bedrock", explode: [0, 0.2, 0] },
-    { name: "blueberries", displayName: "Embedded Hematite Spherule Concretions", explode: [0, 0.35, 0] },
+    {
+      name: "blueberries",
+      displayName: "Embedded Hematite Spherule Concretions",
+      explode: [0, 0.35, 0],
+    },
     { name: "rim", displayName: "Sandy Impact Crater Slopes", explode: [0, -0.1, 0] },
   ],
   "op-marathon-valley": [
@@ -486,10 +539,18 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
   "op-perseverance-valley": [
     { name: "slope", displayName: "Inner Crater Wall Slope", explode: [0, 0.1, 0] },
     { name: "gully", displayName: "Carved Fluvial Channel Gully", explode: [0, 0.25, 0] },
-    { name: "stripes", displayName: "Sorted Stone Stripes & Basalt Cobbles", explode: [0.2, 0.3, 0] },
+    {
+      name: "stripes",
+      displayName: "Sorted Stone Stripes & Basalt Cobbles",
+      explode: [0.2, 0.3, 0],
+    },
   ],
   "pe-delta": [
-    { name: "kodiak", displayName: "Kodiak Butte Layered Sandstone Promontory", explode: [0, 0.35, 0] },
+    {
+      name: "kodiak",
+      displayName: "Kodiak Butte Layered Sandstone Promontory",
+      explode: [0, 0.35, 0],
+    },
     { name: "scarp", displayName: "Ancient Jezero River Delta Scarp", explode: [0, 0.2, 0] },
     { name: "channel", displayName: "Neretva Vallis Inflow Channel Cut", explode: [0.25, 0.1, 0] },
     { name: "boulders", displayName: "River-Transported Rounded Cobbles", explode: [-0.2, 0.4, 0] },
@@ -497,12 +558,24 @@ const DEDICATED_COMPONENTS: Record<string, { name: string; displayName: string; 
   "sp-columbia-hills": [
     { name: "summit", displayName: "Husband Hill Rocky Summit Massif", explode: [0, 0.25, 0] },
     { name: "outcrop", displayName: "Layered Olivine-Rich Volcanic Slabs", explode: [0, 0.4, 0] },
-    { name: "ventifacts", displayName: "Wind-Sculpted Basalt Ventifacts", explode: [0.25, 0.35, 0] },
+    {
+      name: "ventifacts",
+      displayName: "Wind-Sculpted Basalt Ventifacts",
+      explode: [0.25, 0.35, 0],
+    },
   ],
   "sp-home-plate": [
     { name: "tuff", displayName: "Plateau of Layered Volcanic Ash Tuff", explode: [0, 0.15, 0] },
-    { name: "bomb_sag", displayName: "Volcanic Bomb Sag Impact Depression", explode: [-0.25, 0.3, 0] },
-    { name: "silica", displayName: "Knobby Opaline Silica Hot-Spring Mounds", explode: [0.3, 0.35, 0] },
+    {
+      name: "bomb_sag",
+      displayName: "Volcanic Bomb Sag Impact Depression",
+      explode: [-0.25, 0.3, 0],
+    },
+    {
+      name: "silica",
+      displayName: "Knobby Opaline Silica Hot-Spring Mounds",
+      explode: [0.3, 0.35, 0],
+    },
   ],
   "sp-bonneville": [
     { name: "ejecta", displayName: "Sharp Basalt Ejecta Blocks", explode: [0, 0.35, 0] },

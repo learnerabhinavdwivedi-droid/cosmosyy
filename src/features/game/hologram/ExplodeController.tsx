@@ -81,9 +81,7 @@ export function ExplodeController({
             </span>
           ))}
           {parts.length > 3 && (
-            <span className="text-[9px] font-mono text-regolith-400">
-              +{parts.length - 3}
-            </span>
+            <span className="text-[9px] font-mono text-regolith-400">+{parts.length - 3}</span>
           )}
         </div>
       )}

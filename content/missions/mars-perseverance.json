@@ -33,28 +33,36 @@
     {
       "id": "pe-rover",
       "name": "Perseverance Rover",
-      "position": [3, 0, -2],
+      "position": [
+        3,
+        0,
+        -2
+      ],
       "description": "Perseverance landed on 18 February 2021 in Jezero Crater, a 45-km-wide ancient lake bed. Built on Curiosity's proven design but carrying new instruments, its primary mission is to search for signs of ancient microbial life and collect rock samples for future return to Earth. It also carries MOXIE, which demonstrated making oxygen from Martian CO₂.",
       "xp": 60,
       "source": "NASA/JPL Mars 2020",
       "scienceDiscovery": "Found organic molecules in delta sediments and used MOXIE to produce oxygen from Martian CO₂ — a technology critical for future human missions.",
       "legacy": "Still operational and collecting samples for Mars Sample Return; the most advanced astrobiology laboratory ever sent to another planet.",
       "status": "operational",
-      "firstPerson": "I am the most advanced robot ever sent to another world. I landed in a dried-up lake to search for signs of ancient life, and I am collecting rock samples in sealed tubes for a future mission to bring home. I even carry MOXIE, which breathes Mars's air and makes oxygen. I am paving the way for the first humans on Mars.",
+      "firstPerson": "Yo, top of the food chain! I am Percy — Perseverance! The most technologically advanced rover ever built by humankind. I landed in Jezero Crater in 2021, and I am hunting for ancient fossilized biosignatures! I make oxygen out of thin Martian air with MOXIE, cache core samples in hermetic titanium tubes, and brought my own flying sidekick. Boss status, zero cap!",
       "yearDeployed": 2021,
       "nasaImageId": "PIA24490"
     },
     {
       "id": "pe-ingenuity",
       "name": "Ingenuity Helicopter",
-      "position": [15, 0, 10],
+      "position": [
+        15,
+        0,
+        10
+      ],
       "description": "Ingenuity was the first aircraft to achieve powered, controlled flight on another planet. Weighing just 1.8 kg, it made 72 flights over nearly three years, far exceeding its planned five-flight technology demonstration. On 18 January 2024, it damaged a rotor blade during its 72nd flight and was retired. It proved that aerial exploration of Mars is possible.",
       "xp": 60,
       "source": "NASA/JPL Mars 2020",
       "scienceDiscovery": "Proved powered, controlled flight is possible in Mars's thin atmosphere (1% of Earth's), scouting terrain for Perseverance and photographing the surface from above.",
       "legacy": "Grounded at Valinor Hills since 18 January 2024 after blade damage on flight 72; it now serves as a stationary weather station while still communicating with Perseverance.",
       "status": "dormant",
-      "firstPerson": "I am Ingenuity, and I carry a piece of the Wright Brothers' Flyer inside me. I was supposed to fly just five times — but I flew seventy-two. I soared over Martian dunes, scouted paths for Perseverance, and proved that aircraft can fly on another world. My blade is damaged now and I will never fly again, but I showed the way.",
+      "firstPerson": "Bro, look at me fly! I am Ginny — Ingenuity! They said aerodynamic flight in Mars' 1% thin atmosphere was physically impossible. So what did I do? I spun my carbon-fiber blades at 2,400 RPM, took off, and flew 72 historic flights across 17 kilometers! The first powered flight on another planet, carrying a swatch of the Wright Brothers' 1903 flyer fabric. Aviation royalty forever!",
       "yearDeployed": 2021,
       "yearLastContact": 2024,
       "nasaImageId": "PIA24547"
@@ -62,56 +70,72 @@
     {
       "id": "pe-sample-tubes",
       "name": "Sample Cache Depot",
-      "position": [-10, 0, 14],
+      "position": [
+        -10,
+        0,
+        14
+      ],
       "description": "Perseverance has collected and sealed rock core samples in titanium tubes, then deposited backup copies at the Three Forks cache depot in Jezero Crater. Ten tubes rest on the surface in a carefully mapped pattern. A future Mars Sample Return mission aims to bring these tubes to Earth — they would be the first samples returned from another planet.",
       "xp": 50,
       "source": "NASA/JPL Mars 2020",
       "scienceDiscovery": "Contains sealed rock cores that may hold biosignatures from an ancient lake — they would be the first samples ever returned from another planet.",
       "legacy": "Ten titanium tubes rest on the surface at Three Forks, awaiting a future Mars Sample Return mission to bring them to Earth.",
       "status": "operational",
-      "firstPerson": "I am ten titanium tubes lying in a careful pattern on the Martian surface. Inside each of us is a core of ancient rock drilled by Perseverance — rock that may hold traces of life from billions of years ago. We are waiting for a future mission to pick us up and fly us to Earth. We could be the most important delivery in human history.",
+      "firstPerson": "Ayo, humanity's golden tickets! We are the titanium sample tubes dropped at Three Forks. Percy drilled rock cores from ancient Jezero lakebeds and sealed them inside us with gold-coated seals. We are waiting for the Mars Sample Return mission to pick us up and fly us back to Earth laboratories. The holy grail of astrobiology!",
       "yearDeployed": 2023,
       "nasaImageId": "PIA25658"
     },
     {
       "id": "pe-delta",
       "name": "Jezero Delta Remnant",
-      "position": [18, 0, -8],
+      "position": [
+        18,
+        0,
+        -8
+      ],
       "description": "Jezero Crater contains a well-preserved river delta where a river once flowed into the ancient lake. Perseverance explored the delta and found sedimentary rocks with organic molecules and minerals formed in water. The layered structure preserves evidence of changing water levels and environments over billions of years.",
       "xp": 50,
       "source": "NASA/JPL Mars 2020",
       "scienceDiscovery": "Contains sedimentary rocks with organic molecules and water-formed minerals, preserving billions of years of changing lake environments and possible biosignatures.",
       "legacy": "The Jezero delta is one of the most promising places to search for ancient Martian life, and Perseverance's samples from here are the highest-priority targets for Mars Sample Return.",
       "status": "defunct",
-      "firstPerson": "I am the remains of a river delta, three and a half billion years old. A river once flowed into a lake here, carrying sediment and perhaps life. My layers hold organic molecules and minerals born in water. Perseverance drilled into me and sealed my secrets in tubes. One day those tubes will travel to Earth, and scientists will finally read my story.",
+      "firstPerson": "Bro, billions of years ago, a raging river dumped into an emerald lake right here! I am the Jezero River Delta. My layered fan of clays and mudstones trapped sediments where ancient microbial life could have flourished. Percy is exploring my cliffs right now, looking for ancient alien fossils. Pure geological treasure chest!",
       "yearDeployed": 2022,
       "nasaImageId": "PIA25331"
     },
     {
       "id": "pe-supercam",
       "name": "SuperCam Laser Marks",
-      "position": [-14, 0, -7],
+      "position": [
+        -14,
+        0,
+        -7
+      ],
       "description": "SuperCam fires a laser at rocks from up to 7 metres away, vaporising a tiny spot and analysing the flash of light to determine chemical composition. It can also use Raman spectroscopy to identify minerals and organic compounds. The small pits left by the laser on Martian rocks are among the most precise human-made marks on another world.",
       "xp": 50,
       "source": "NASA/JPL Mars 2020",
       "scienceDiscovery": "Analyses rock chemistry from up to 7 metres away using laser-induced breakdown spectroscopy and Raman spectroscopy, detecting minerals and organic compounds remotely.",
       "legacy": "SuperCam's laser pits on Martian rocks are among the most precise human-made marks on another world; its data guides which rocks Perseverance drills.",
       "status": "operational",
-      "firstPerson": "I fire a laser that vaporises a tiny spot of rock from seven metres away, then I read the flash of light to learn what that rock is made of. I can also use Raman spectroscopy to find organic molecules. I have zapped hundreds of targets across Jezero Crater. Every tiny pit I leave is a question answered about Mars's history.",
+      "firstPerson": "Pew pew, baby! I am SuperCam! From 7 meters away, I blast Martian rocks with an infrared laser at millions of watts per square centimeter, vaporizing a tiny spark of plasma to hear the pop and read the light frequencies! I zap rocks, record alien audio with my microphone, and make science look like Star Wars!",
       "yearDeployed": 2021,
       "nasaImageId": "PIA24684"
     },
     {
       "id": "pe-sky-crane",
       "name": "Descent Stage Wreckage",
-      "position": [12, 0, -16],
+      "position": [
+        12,
+        0,
+        -16
+      ],
       "description": "Like Curiosity, Perseverance was lowered to the surface by a sky crane. The descent stage then flew 700 metres away and crashed. HiRISE orbital images show the dark debris field. Perseverance's cameras captured the first video of a Mars landing, showing the parachute deployment, heat shield separation, and sky crane sequence in stunning detail.",
       "xp": 50,
       "source": "NASA/JPL Mars 2020",
       "scienceDiscovery": "Perseverance's EDL cameras captured the first-ever video of a Mars landing, providing engineering data that will improve future landings.",
       "legacy": "The debris field is visible from orbit; the landing video became one of the most-watched space exploration videos in history.",
       "status": "defunct",
-      "firstPerson": "I lowered Perseverance to the ground on cables, then flew away and crashed — just like my twin did for Curiosity. But this time, cameras recorded everything. Millions of people watched me work in the first-ever video of a Mars landing. I may be wreckage now, but that footage will inspire engineers for generations.",
+      "firstPerson": "Yo, sky crane round two, baby! I am Percy's descent stage. Terrain Relative Navigation brought us right onto the safest patch in Jezero Crater, lowered Percy gently onto her wheels, severed the bridles, and I boosted away at maximum throttle to crash in glory. Mission executed flawlessly!",
       "yearDeployed": 2021,
       "yearLastContact": 2021,
       "nasaImageId": "PIA24333"

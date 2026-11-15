@@ -42,9 +42,11 @@ export async function requestFullscreen(
     }
 
     // Lock orientation to landscape on mobile after entering fullscreen
-    const so = screen.orientation as (ScreenOrientation & {
-      lock?: (o: string) => Promise<void>;
-    }) | undefined;
+    const so = screen.orientation as
+      | (ScreenOrientation & {
+          lock?: (o: string) => Promise<void>;
+        })
+      | undefined;
     if (so?.lock) {
       await so.lock("landscape").catch(() => {});
     }
@@ -73,9 +75,11 @@ export async function exitFullscreen(): Promise<boolean> {
       await doc.msExitFullscreen();
     }
 
-    const so = screen.orientation as (ScreenOrientation & {
-      unlock?: () => void;
-    }) | undefined;
+    const so = screen.orientation as
+      | (ScreenOrientation & {
+          unlock?: () => void;
+        })
+      | undefined;
     so?.unlock?.();
 
     return true;

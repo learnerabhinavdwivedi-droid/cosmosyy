@@ -35,7 +35,11 @@
     {
       "id": "kepler-telescope",
       "name": "Kepler Space Observatory",
-      "position": [0, 0, 0],
+      "position": [
+        0,
+        0,
+        0
+      ],
       "description": "0.95-meter Schmidt telescope with a 1.4-meter primary mirror and carbon-fiber sunshade. Weighs 1,052 kg and drifts in a perpetual Earth-trailing solar orbit.",
       "xp": 50,
       "source": "NASA Ames Kepler Mission Archive (NSSDCA #2009-011A)",
@@ -47,12 +51,16 @@
       "yearDeployed": 2009,
       "yearLastContact": 2018,
       "nasaImageId": "PIA18909",
-      "firstPerson": "I am the cosmic planet hunter! I am the Kepler Space Telescope. Before me, humanity had only spotted a few dozen weird giant gas planets. I stared at 150,000 stars at once for nearly a decade, watching for the tiniest dip in starlight as alien worlds crossed in front. I found 2,662 confirmed alien worlds! Now I drift peacefully in my graveyard solar orbit, knowing we are definitely not alone."
+      "firstPerson": "I am the cosmic planet hunter! I am the Kepler Space Telescope. For nine glorious years in Earth-trailing orbit, I stared unblinking at over 150,000 stars, waiting for tiny dips in brightness as planets passed in front of them. The result? Over 2,600 confirmed alien worlds and proof that there are more planets than stars in our galaxy! Legendary resume, zero debate!"
     },
     {
       "id": "ccd-focal-plane",
       "name": "95-Megapixel CCD Focal Plane",
-      "position": [0, 1.8, 0],
+      "position": [
+        0,
+        1.8,
+        0
+      ],
       "description": "Focal plane array of 42 science CCDs covering a massive 115 square-degree field of view, measuring minute stellar brightness dips down to 20 parts per million.",
       "xp": 50,
       "source": "Caldwell et al. (ApJL 2010) / Ball Aerospace",
@@ -64,12 +72,16 @@
       "yearDeployed": 2009,
       "yearLastContact": 2018,
       "nasaImageId": "PIA11831",
-      "firstPerson": "The largest camera ever launched into space at the time! I am Kepler's 95-megapixel focal plane array. Curved like a bowl to match the telescope's optics, my 42 silicon chips counted millions of photons every six seconds. That micro-level precision discovered thousands of alien solar systems!"
+      "firstPerson": "The largest camera ever launched into deep space at the time! I am Kepler's 95-megapixel focal plane array — forty-two CCD sensors working in unison at minus 85 degrees Celsius. I could spot a flea walking across a car headlight from miles away. That is how I caught Earth-sized exoplanets trillions of kilometers out. Peak precision optics!"
     },
     {
       "id": "reaction-wheel-assembly",
       "name": "Precision Reaction Wheel Assembly",
-      "position": [-1.8, -0.6, 1.6],
+      "position": [
+        -1.8,
+        -0.6,
+        1.6
+      ],
       "description": "Set of four flywheels spun at thousands of RPM to impart gyroscopic torque for steady sub-arcsecond pointing without expending thruster propellant.",
       "xp": 50,
       "source": "NASA Ames K2 Mission Planning Guide / Howell et al.",
@@ -81,12 +93,16 @@
       "yearDeployed": 2009,
       "yearLastContact": 2018,
       "nasaImageId": "PIA16609",
-      "firstPerson": "Engineers called it the greatest hack in space history! When two of my spinning reaction wheels locked up, people thought Kepler was dead. But NASA engineers balanced the pressure of incoming sunlight particles against my solar panels like a rudder, turning solar wind into steering! We kept hunting planets for four more glorious years!"
+      "firstPerson": "Engineers called it the greatest hack in space history! When two of my reaction wheels broke and left me spinning out of control, NASA engineers used the gentle pressure of sunlight hitting my solar panels like a sail to stabilize me! That launched the K2 extended mission and found hundreds more planets. You cannot kill a good telescope, bro!"
     },
     {
       "id": "photometer-sunshield",
       "name": "Solar Array & Thermal Sunshade",
-      "position": [1.9, -0.4, -1.8],
+      "position": [
+        1.9,
+        -0.4,
+        -1.8
+      ],
       "description": "Curved carbon-composite sunshade and Gallium Arsenide solar array generating 1.1 kW of electrical power while thermally isolating the sensitive photometer at -85°C.",
       "xp": 50,
       "source": "Ball Aerospace System Architecture Report",
@@ -98,8 +114,7 @@
       "yearDeployed": 2009,
       "yearLastContact": 2018,
       "nasaImageId": "PIA16610",
-      "firstPerson": "Keeping things frosty in direct sunlight! I am the Kepler sunshield. I shielded the ultra-sensitive optical detector from the Sun's blazing heat while collecting 1,100 watts of solar juice from my curved panels. Without me, the starlight sensors would have been blinded on day one!"
+      "firstPerson": "Keeping things frosty in direct sunlight! I am Kepler's massive carbon-fiber sunshield. By keeping the blazing Sun out of the telescope's optics, I let the Schmidt camera peer into the coldest reaches of deep space. Silent guardian of the planet hunter!"
     }
   ]
 }
-

@@ -34,7 +34,11 @@
     {
       "id": "voyager-probe",
       "name": "Voyager 1 Interstellar Spacecraft",
-      "position": [0, 0, 0],
+      "position": [
+        0,
+        0,
+        0
+      ],
       "description": "722-kilogram deep-space explorer featuring a 3.7-meter parabolic high-gain antenna dish, tubular truss structure, and 13-meter magnetometer boom. Currently cruising through interstellar space at 17 km/s.",
       "xp": 50,
       "source": "NASA/JPL Voyager Mission Archives (NSSDCA #1977-084A)",
@@ -45,12 +49,16 @@
       "status": "operational",
       "yearDeployed": 1977,
       "nasaImageId": "PIA17046",
-      "firstPerson": "Over 24 billion kilometers out and still flexing! I am Voyager 1. I showed Earth the first erupting volcanoes on alien moons, sailed past Saturn's rings, and on August 25, 2012, I broke through our Sun's magnetic shield right into the interstellar void. My computers have only 68 kilobytes of memory, but I am still talking to Earth every single week across the darkness of the Milky Way!"
+      "firstPerson": "Over 24 billion kilometers out and still flexing! I am Voyager — humanity's most distant emissary. Launched in 1977, I flew past Jupiter, Saturn, Uranus, and Neptune, and in 2012 I broke through the heliopause into the cold ocean of interstellar space! Forty-seven years running on plutonium batteries, still talking to Earth every single day. Absolute cosmic immortal!"
     },
     {
       "id": "golden-record",
       "name": "The Golden Record",
-      "position": [1.4, 0, 1.2],
+      "position": [
+        1.4,
+        0,
+        1.2
+      ],
       "description": "A 12-inch gold-plated copper phonograph record enclosed in a protective aluminum jacket with electroplated uranium-238 clocking. Encodes 115 analog images, greetings in 55 languages, 90 minutes of global music, and natural sounds of Earth.",
       "xp": 50,
       "source": "NASA Golden Record Project (Sagan, Drake et al. 1977)",
@@ -61,12 +69,16 @@
       "status": "operational",
       "yearDeployed": 1977,
       "nasaImageId": "PIA00140",
-      "firstPerson": "Play me at 16 and two-thirds RPM! I am the Golden Record. Bolted to Voyager's side, I carry greetings in 55 human languages, whale songs, chuckling babies, Beethoven, Chuck Berry, and the brainwaves of Ann Druyan. If an alien civilization finds me in a billion years, they will know: we were here, we loved music, and we reached for the stars."
+      "firstPerson": "Play me at 16 and two-thirds RPM! I am the Golden Record — an electroplated gold-copper phonograph record carrying Earth's mixtape to the stars. Greetings in 55 languages, songs by Chuck Berry and Bach, whale songs, and 115 pictures of our blue planet. If aliens find me in a million years, they are gonna groove. Interstellar time capsule, pure vibe!"
     },
     {
       "id": "rtg-power-boom",
       "name": "MHW-RTG Nuclear Power Boom",
-      "position": [-3.2, 0, -2.4],
+      "position": [
+        -3.2,
+        0,
+        -2.4
+      ],
       "description": "Three Multi-Hundred-Watt Radioisotope Thermoelectric Generators stacked on a deployable fiberglass boom, generating electricity from the radioactive decay heat of plutonium-238 dioxide spheres.",
       "xp": 50,
       "source": "DOE / GE Space Division RTG Operations Handbook",
@@ -77,12 +89,16 @@
       "status": "operational",
       "yearDeployed": 1977,
       "nasaImageId": "PIA14112",
-      "firstPerson": "No solar panels out here, kid — it is pitch black! I am the RTG boom. Inside my metallic canisters, radioactive plutonium-238 glows cherry-red with heat. Thermocouples turn that heat directly into electricity. I have been burning steady power for 47 non-stop years without a single reboot!"
+      "firstPerson": "No solar panels out here, kid — it is pitch black! I am the Radioisotope Thermoelectric Generator boom. My decaying Plutonium-238 pellets glow red hot, generating electricity to power Voyager's computer and transmitters 15 billion miles away from the Sun. Forty-seven years of uninterrupted nuclear juice. Built for eternity!"
     },
     {
       "id": "plasma-wave-antenna",
       "name": "PWS Plasma Wave Dipole Antenna",
-      "position": [0, 2.5, 3.8],
+      "position": [
+        0,
+        2.5,
+        3.8
+      ],
       "description": "Two 10-meter beryllium-copper boom antennas deployed in a 90-degree V-configuration, sensing electric field fluctuations and electron plasma oscillations from 10 Hz to 56 kHz.",
       "xp": 50,
       "source": "Gurnett et al. (Science 2013) / University of Iowa",
@@ -93,8 +109,7 @@
       "status": "operational",
       "yearDeployed": 1977,
       "nasaImageId": "PIA17045",
-      "firstPerson": "I am the ears that heard interstellar space! I am the Plasma Wave Sensor. When solar coronal storms hit the boundary of the solar system, they made the surrounding interstellar plasma vibrate like a violin string. My 10-meter antennas recorded that cosmic ringing — proving to all of Earth that we were officially outside the solar system!"
+      "firstPerson": "I am the ears that heard interstellar space! I am Voyager's Plasma Wave Subsystem. In August 2012, I detected a massive jump in plasma density that officially proved Voyager had left our Sun's protective bubble and entered the untamed interstellar medium. Heard the real music of the galaxy, no cap!"
     }
   ]
 }
-

@@ -45,7 +45,9 @@ export function LandingLaunchBanner() {
           </h2>
 
           <p className="mx-auto mt-4 max-w-2xl text-sm sm:text-base text-regolith-300 leading-relaxed">
-            Choose from all 12 authentic Moon and Mars expeditions. Walk in real low gravity, scan historical relics left on the surface, and record your discoveries in your permanent Explorer Passport.
+            Choose from all 12 authentic Moon and Mars expeditions. Walk in real low gravity, scan
+            historical relics left on the surface, and record your discoveries in your permanent
+            Explorer Passport.
           </p>
 
           {/* Action CTAs */}

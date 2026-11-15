@@ -11,7 +11,8 @@ export default function CreditsPage() {
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
-          backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
+          backgroundImage:
+            "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
           backgroundSize: "40px 40px",
         }}
       />
@@ -56,8 +57,11 @@ export default function CreditsPage() {
             </h2>
             <p className="text-xs text-regolith-300 mt-1 leading-relaxed">
               Cosmosyy is an interactive web simulation built for the challenge:{" "}
-              <span className="text-amber-300 font-semibold">&ldquo;NASA&apos;s Discarded Equipment Storytelling&rdquo;</span>.
-              Dedicated to celebrating human exploration, preserving extraterrestrial cultural heritage, and teaching the scientific legacy of artifacts on the Moon and Mars.
+              <span className="text-amber-300 font-semibold">
+                &ldquo;NASA&apos;s Discarded Equipment Storytelling&rdquo;
+              </span>
+              . Dedicated to celebrating human exploration, preserving extraterrestrial cultural
+              heritage, and teaching the scientific legacy of artifacts on the Moon and Mars.
             </p>
           </div>
         </div>
@@ -85,7 +89,8 @@ export default function CreditsPage() {
                 </a>
               </h4>
               <p className="text-regolith-400 mt-1.5 leading-relaxed">
-                Transcripts, mission audio, Houston CAPCOM communications, and ground telemetry curated by Eric M. Jones and Ken Glover.
+                Transcripts, mission audio, Houston CAPCOM communications, and ground telemetry
+                curated by Eric M. Jones and Ken Glover.
               </p>
             </div>
 
@@ -102,7 +107,8 @@ export default function CreditsPage() {
                 </a>
               </h4>
               <p className="text-regolith-400 mt-1.5 leading-relaxed">
-                Orbital photographic mosaics and elevation digital elevation models from the Lunar Reconnaissance Orbiter (LRO) Narrow Angle Camera.
+                Orbital photographic mosaics and elevation digital elevation models from the Lunar
+                Reconnaissance Orbiter (LRO) Narrow Angle Camera.
               </p>
             </div>
 
@@ -119,7 +125,8 @@ export default function CreditsPage() {
                 </a>
               </h4>
               <p className="text-regolith-400 mt-1.5 leading-relaxed">
-                Landing coordinates, scientific discoveries, and panoramic observations from Viking 1, Mars Pathfinder, Spirit, Opportunity, Curiosity, and Perseverance.
+                Landing coordinates, scientific discoveries, and panoramic observations from Viking
+                1, Mars Pathfinder, Spirit, Opportunity, Curiosity, and Perseverance.
               </p>
             </div>
 
@@ -136,7 +143,8 @@ export default function CreditsPage() {
                 </a>
               </h4>
               <p className="text-regolith-400 mt-1.5 leading-relaxed">
-                High-resolution Hasselblad EVA photographs and rover hazard camera imagery archived for public domain educational use.
+                High-resolution Hasselblad EVA photographs and rover hazard camera imagery archived
+                for public domain educational use.
               </p>
             </div>
           </div>
@@ -153,13 +161,20 @@ export default function CreditsPage() {
 
           <div className="space-y-3 text-xs text-regolith-300 leading-relaxed">
             <p>
-              • <strong className="text-white">NASA 3D Resources:</strong> Reconstructed spacecraft models, including the Apollo Lunar Module Descent Stage, Apollo Ascent Stage, Mars Aeroshell, and Descent Stages.
+              • <strong className="text-white">NASA 3D Resources:</strong> Reconstructed spacecraft
+              models, including the Apollo Lunar Module Descent Stage, Apollo Ascent Stage, Mars
+              Aeroshell, and Descent Stages.
             </p>
             <p>
-              • <strong className="text-white">Heritage Equipment Models:</strong> ALSEP Central Station, Laser Ranging Retroreflector (LRRR), Solar Wind Composition Experiment, Lunar Roving Vehicle (LRV), and Mars Rovers provided via NASA/JPL open access 3D repositories.
+              • <strong className="text-white">Heritage Equipment Models:</strong> ALSEP Central
+              Station, Laser Ranging Retroreflector (LRRR), Solar Wind Composition Experiment, Lunar
+              Roving Vehicle (LRV), and Mars Rovers provided via NASA/JPL open access 3D
+              repositories.
             </p>
             <p>
-              • <strong className="text-white">Interactive Exploded View Engine:</strong> Procedurally animates and decomposes 3D GLB subsystems along exact vectors based on NASA engineering schematics.
+              • <strong className="text-white">Interactive Exploded View Engine:</strong>{" "}
+              Procedurally animates and decomposes 3D GLB subsystems along exact vectors based on
+              NASA engineering schematics.
             </p>
           </div>
         </section>
@@ -185,7 +200,10 @@ export default function CreditsPage() {
               { name: "Vite", desc: "Build & Module Bundler" },
               { name: "TypeScript", desc: "Strict Type Safety" },
             ].map((tech) => (
-              <div key={tech.name} className="rounded-lg border border-space-800/80 bg-space-950/40 p-3">
+              <div
+                key={tech.name}
+                className="rounded-lg border border-space-800/80 bg-space-950/40 p-3"
+              >
                 <span className="text-white font-bold block">{tech.name}</span>
                 <span className="text-[10px] text-regolith-400 block mt-0.5">{tech.desc}</span>
               </div>

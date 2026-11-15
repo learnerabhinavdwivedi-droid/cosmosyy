@@ -35,7 +35,11 @@
     {
       "id": "dawn-spacecraft",
       "name": "Dawn Spacecraft",
-      "position": [0, 0, 0],
+      "position": [
+        0,
+        0,
+        0
+      ],
       "description": "Robotic explorer measuring 19.7 meters wing-to-wing. Carried three xenon ion thrusters, framing cameras, and a visible/infrared mapping spectrometer. Currently orbiting silently around Ceres in a perpetual graveyard orbit.",
       "xp": 50,
       "source": "NASA/JPL-Caltech Dawn Mission Archive (NSSDCA #2007-043A)",
@@ -47,12 +51,16 @@
       "yearDeployed": 2015,
       "yearLastContact": 2018,
       "nasaImageId": "PIA21924",
-      "firstPerson": "Listen up, space cadets! I am the Dawn Spacecraft, the dual-destination champion of the asteroid belt! While rockets were guzzling tons of fuel, I used futuristic xenon ion thrusters to cruise almost 7 billion kilometers. When I reached Ceres, I spotted these blinding white lights in Occator Crater — turns out they are pure sodium carbonate salts from a deep briny underground ocean! Now I drift in a silent quarantine orbit around Ceres, protecting its alien ocean from Earth germs forever!"
+      "firstPerson": "Listen up, space cadets! I am the Dawn Spacecraft, and I am the only probe in human history to orbit two different extraterrestrial bodies — asteroid Vesta and dwarf planet Ceres! Powered by futuristic ion thrusters, I traveled nearly 7 billion kilometers on a whisper of xenon gas. Ran out of hydrazine in 2018, but I am still orbiting Ceres in eternal silence. Solar system globetrotter, no cap!"
     },
     {
       "id": "cerealia-facula",
       "name": "Cerealia Facula Salt Dome",
-      "position": [-6.5, 0, 5.2],
+      "position": [
+        -6.5,
+        0,
+        5.2
+      ],
       "description": "A dazzling 10-kilometer bright dome of sodium carbonate salts and ammonium chloride in the center of Occator Crater. Formed when subsurface brines erupted through cryovolcanic fractures caused by asteroid impact.",
       "xp": 50,
       "source": "Nature Geoscience (De Sanctis et al. 2020) / Dawn VIR Spectrometer",
@@ -63,12 +71,16 @@
       "status": "dormant",
       "yearDeployed": 2015,
       "nasaImageId": "PIA22477",
-      "firstPerson": "Earth telescopes thought I was an alien beacon! I am Cerealia Facula, the brightest geologic feature on Ceres. When a massive impact punched a crater 20 million years ago, deep pressurized saltwater surged to the surface. In the freezing vacuum, the water flashed away, leaving behind a glowing mountain of pure white sodium salts. Cosmic ice volcano vibes only!"
+      "firstPerson": "Earth telescopes thought I was an alien beacon! I am Cerealia Facula — the gleaming white spot in Occator Crater on Ceres. Dawn flew down to just 35 kilometers to snap my portrait, proving I am made of sodium carbonate salts left behind by ancient cryovolcanic brines erupting from an alien subsurface ocean. I glow like a disco ball on a dwarf planet!"
     },
     {
       "id": "grand-sensor",
       "name": "GRaND Gamma-Ray Detector",
-      "position": [5.8, 0, -4.6],
+      "position": [
+        5.8,
+        0,
+        -4.6
+      ],
       "description": "Gamma Ray and Neutron Detector mounted on Dawn. Measured elemental concentrations of hydrogen, iron, potassium, and carbon by analyzing cosmic-ray-induced gamma emissions from the top meter of regolith.",
       "xp": 50,
       "source": "Prettyman et al. (Science 2016) / NASA PDS",
@@ -80,12 +92,16 @@
       "yearDeployed": 2015,
       "yearLastContact": 2018,
       "nasaImageId": "PIA21078",
-      "firstPerson": "I see through solid alien rock using cosmic rays! I am GRaND. Whenever high-energy galactic rays slammed into Ceres, I caught the neutrons bouncing back. That is how I sniffed out massive subterranean water ice layers hiding just centimeters beneath the dusty crust. No drill required, pure particle physics!"
+      "firstPerson": "I see through solid alien rock using cosmic rays! I am the Gamma Ray and Neutron Detector, or GRaND, on Dawn. By counting neutrons kicked up by galactic cosmic rays, I mapped the subsurface water-ice hidden across Ceres — ten percent water by weight! I have got x-ray vision for solar system geology, pure superhero vibes!"
     },
     {
       "id": "dawn-ion-engine",
       "name": "NSTAR Xenon Ion Engine",
-      "position": [0, -1.2, -6.8],
+      "position": [
+        0,
+        -1.2,
+        -6.8
+      ],
       "description": "Triple electrostatic 30-centimeter ion thruster package using xenon propellant ionized by electron bombardment and accelerated through 1,280-volt molybdenum grids.",
       "xp": 50,
       "source": "JPL Ion Propulsion Technical Report / Brophy et al.",
@@ -97,8 +113,7 @@
       "yearDeployed": 2007,
       "yearLastContact": 2018,
       "nasaImageId": "PIA14875",
-      "firstPerson": "Who needs explosive rocket explosions when you have blue plasma? I am the NSTAR Ion Engine! I took xenon gas, stripped its electrons, and kicked out charged ions at 40 kilometers per second. My thrust feels like the weight of a single sheet of paper on your hand, but run continuously for five years, it pushed our spacecraft across billions of kilometers!"
+      "firstPerson": "Who needs explosive rocket fuel when you have sci-fi blue plasma? I am Dawn's NSTAR Ion Thruster! I shot charged xenon ions out the back at 90,000 kilometers per hour, accelerating non-stop for over two thousand days using less fuel than a family minivan. The ultimate endurance runner of deep space, built completely different!"
     }
   ]
 }
-

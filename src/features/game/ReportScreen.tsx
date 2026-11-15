@@ -51,25 +51,32 @@ export function ReportScreen() {
       completeMission(missionId);
       addXp(missionId, XP_LAND);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const foundObjects = useMemo(() =>
-    mission.objects.filter((o) => found.includes(o.id)),
+  const foundObjects = useMemo(
+    () => mission.objects.filter((o) => found.includes(o.id)),
     [mission.objects, found],
   );
-  const operationalCount = useMemo(() =>
-    foundObjects.filter((o) => o.status === "operational").length,
+  const operationalCount = useMemo(
+    () => foundObjects.filter((o) => o.status === "operational").length,
     [foundObjects],
   );
   const objectXp = found.length * 50;
   const flagXp = isRobotic ? 50 : 100;
   const missionXp = XP_LAND + objectXp + flagXp + XP_COMPLETE;
 
-  const nextMissionId = useMemo(() => missionId ? getNextMissionId(missionId) : null, [missionId]);
+  const nextMissionId = useMemo(
+    () => (missionId ? getNextMissionId(missionId) : null),
+    [missionId],
+  );
   const nextMissionLabel = useMemo(() => {
     if (!nextMissionId) return "";
-    try { return getMission(nextMissionId).name; } catch { return nextMissionId; }
+    try {
+      return getMission(nextMissionId).name;
+    } catch {
+      return nextMissionId;
+    }
   }, [nextMissionId]);
 
   const missionName = mission.name;
@@ -118,12 +125,8 @@ export function ReportScreen() {
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-ok">
             {t("report.missionSuccess")}
           </p>
-          <h1 className="mt-2 font-display text-4xl font-bold text-regolith-200">
-            {missionName}
-          </h1>
-          <p className="mt-2 text-sm text-regolith-400">
-            {t("report.subheading")}
-          </p>
+          <h1 className="mt-2 font-display text-4xl font-bold text-regolith-200">{missionName}</h1>
+          <p className="mt-2 text-sm text-regolith-400">{t("report.subheading")}</p>
         </motion.div>
 
         <motion.div
@@ -149,7 +152,9 @@ export function ReportScreen() {
               <span className="font-mono text-ok">+{objectXp}</span>
             </div>
             <div className="flex items-center justify-between border-b border-space-700 pb-2">
-              <span className="text-regolith-400">{t(isRobotic ? "report.surveyCompleted" : "report.flagPlanted")}</span>
+              <span className="text-regolith-400">
+                {t(isRobotic ? "report.surveyCompleted" : "report.flagPlanted")}
+              </span>
               <span className="font-mono text-ok">+{flagXp}</span>
             </div>
             <div className="flex items-center justify-between border-b border-space-700 pb-2">
@@ -157,9 +162,7 @@ export function ReportScreen() {
               <span className="font-mono text-ok">+{XP_COMPLETE}</span>
             </div>
             <div className="flex items-center justify-between pt-2">
-              <span className="font-semibold text-regolith-200">
-                {t("report.totalEarned")}
-              </span>
+              <span className="font-semibold text-regolith-200">{t("report.totalEarned")}</span>
               <span className="font-mono text-xl font-bold text-signal">
                 +<AnimatedNumber target={missionXp} /> XP
               </span>
@@ -189,11 +192,20 @@ export function ReportScreen() {
                     <span className="text-ok">✓</span>
                     <span className="text-regolith-300">{obj.name}</span>
                     {obj.status && (
-                      <span className={`ml-auto text-xs ${
-                        obj.status === "operational" ? "text-ok" :
-                        obj.status === "dormant" ? "text-amber-400" : "text-regolith-500"
-                      }`}>
-                        {obj.status === "operational" ? "● Active" : obj.status === "dormant" ? "○ Silent" : "✕ Defunct"}
+                      <span
+                        className={`ml-auto text-xs ${
+                          obj.status === "operational"
+                            ? "text-ok"
+                            : obj.status === "dormant"
+                              ? "text-amber-400"
+                              : "text-regolith-500"
+                        }`}
+                      >
+                        {obj.status === "operational"
+                          ? "● Active"
+                          : obj.status === "dormant"
+                            ? "○ Silent"
+                            : "✕ Defunct"}
                       </span>
                     )}
                   </motion.div>
@@ -246,9 +258,7 @@ export function ReportScreen() {
                   <p className="text-xs font-bold uppercase tracking-wider text-amber-400/70 mb-1">
                     {t("report.funFact")}
                   </p>
-                  <p className="text-sm leading-relaxed text-regolith-200">
-                    {mission.funFact}
-                  </p>
+                  <p className="text-sm leading-relaxed text-regolith-200">{mission.funFact}</p>
                 </div>
               )}
             </motion.div>
@@ -281,13 +291,17 @@ export function ReportScreen() {
                 {mission.timeline.lastContact && (
                   <div className="flex justify-between text-xs">
                     <span className="text-regolith-400">{t("report.timelineLastContact")}</span>
-                    <span className="text-regolith-300 font-mono">{mission.timeline.lastContact}</span>
+                    <span className="text-regolith-300 font-mono">
+                      {mission.timeline.lastContact}
+                    </span>
                   </div>
                 )}
                 {mission.timeline.endOfMission && (
                   <div className="flex justify-between text-xs">
                     <span className="text-regolith-400">{t("report.timelineEndOfMission")}</span>
-                    <span className="text-regolith-300 font-mono">{mission.timeline.endOfMission}</span>
+                    <span className="text-regolith-300 font-mono">
+                      {mission.timeline.endOfMission}
+                    </span>
                   </div>
                 )}
               </div>
@@ -316,9 +330,7 @@ export function ReportScreen() {
             <p className="text-xs uppercase tracking-wide text-regolith-400">
               {t("report.currentRank")}
             </p>
-            <p className="mt-1 font-display text-2xl font-bold text-signal">
-              {getRank()}
-            </p>
+            <p className="mt-1 font-display text-2xl font-bold text-signal">{getRank()}</p>
             <p className="mt-1 text-sm text-regolith-400">
               <AnimatedNumber target={totalXp} duration={1500} /> {t("report.xpTotalSuffix")}
             </p>

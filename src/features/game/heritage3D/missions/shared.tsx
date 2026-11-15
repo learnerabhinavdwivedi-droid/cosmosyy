@@ -27,19 +27,11 @@ export function MarsLandscapeFeature3D({
       </mesh>
       <mesh position={[0, 0.25, 0]} castShadow>
         <dodecahedronGeometry args={[0.5, 1]} />
-        <meshStandardMaterial
-          color="#8b4a26"
-          roughness={0.92}
-          wireframe={wireframe}
-        />
+        <meshStandardMaterial color="#8b4a26" roughness={0.92} wireframe={wireframe} />
       </mesh>
       <mesh position={[0.45, 0.2, 0.3]} castShadow>
         <octahedronGeometry args={[0.28, 0]} />
-        <meshStandardMaterial
-          color="#b86940"
-          roughness={0.88}
-          wireframe={wireframe}
-        />
+        <meshStandardMaterial color="#b86940" roughness={0.88} wireframe={wireframe} />
       </mesh>
       {/* Site Name Label Plaque Base */}
       <mesh position={[0, 0.05, 1.6]} rotation={[-Math.PI / 4, 0, 0]}>

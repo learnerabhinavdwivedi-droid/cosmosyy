@@ -21,4 +21,3 @@ Object.defineProperty(globalThis, "localStorage", {
   value: storageMock,
   writable: true,
 });
-

@@ -61,9 +61,7 @@ export function MissionCompartmentDrawer({
         {objects.length > 1 && (
           <button
             type="button"
-            onClick={() =>
-              onSelectIndex(activeIdx > 0 ? activeIdx - 1 : objects.length - 1)
-            }
+            onClick={() => onSelectIndex(activeIdx > 0 ? activeIdx - 1 : objects.length - 1)}
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-space-700/60 bg-space-800/60 text-xs font-bold text-regolith-300 transition hover:bg-space-700 hover:text-white active:scale-95 cursor-pointer"
             aria-label="Previous artifact"
           >
@@ -88,18 +86,14 @@ export function MissionCompartmentDrawer({
                   borderColor: isActive
                     ? theme.primary
                     : isScanned
-                    ? "rgba(74,222,128,0.3)"
-                    : "rgba(100,116,139,0.25)",
+                      ? "rgba(74,222,128,0.3)"
+                      : "rgba(100,116,139,0.25)",
                   background: isActive
                     ? theme.primaryDim
                     : isScanned
-                    ? "rgba(34,197,94,0.08)"
-                    : "rgba(15,23,42,0.4)",
-                  color: isActive
-                    ? theme.primary
-                    : isScanned
-                    ? "#86efac"
-                    : "#64748b",
+                      ? "rgba(34,197,94,0.08)"
+                      : "rgba(15,23,42,0.4)",
+                  color: isActive ? theme.primary : isScanned ? "#86efac" : "#64748b",
                   boxShadow: isActive ? `0 0 8px ${theme.glow}` : "none",
                 }}
               >
@@ -113,9 +107,7 @@ export function MissionCompartmentDrawer({
         {objects.length > 1 && (
           <button
             type="button"
-            onClick={() =>
-              onSelectIndex(activeIdx < objects.length - 1 ? activeIdx + 1 : 0)
-            }
+            onClick={() => onSelectIndex(activeIdx < objects.length - 1 ? activeIdx + 1 : 0)}
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-space-700/60 bg-space-800/60 text-xs font-bold text-regolith-300 transition hover:bg-space-700 hover:text-white active:scale-95 cursor-pointer"
             aria-label="Next artifact"
           >

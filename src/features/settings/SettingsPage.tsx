@@ -4,7 +4,16 @@ import { useAppStore, type Quality } from "@/store/useAppStore";
 import { gameAudio } from "@/lib/gameAudio";
 import { setNarrationVolume } from "@/lib/narration";
 import { Howler } from "howler";
-import { Volume2, VolumeX, Monitor, Shield, ArrowLeft, RefreshCw, Check, Sparkles } from "lucide-react";
+import {
+  Volume2,
+  VolumeX,
+  Monitor,
+  Shield,
+  ArrowLeft,
+  RefreshCw,
+  Check,
+  Sparkles,
+} from "lucide-react";
 
 export default function SettingsPage() {
   const navigate = useNavigate();
@@ -49,7 +58,8 @@ export default function SettingsPage() {
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
-          backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
+          backgroundImage:
+            "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
           backgroundSize: "40px 40px",
         }}
       />
@@ -99,7 +109,10 @@ export default function SettingsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
             <form onSubmit={handleNameSave} className="space-y-3">
-              <label htmlFor="callsign" className="block text-xs font-mono uppercase tracking-wider text-regolith-300">
+              <label
+                htmlFor="callsign"
+                className="block text-xs font-mono uppercase tracking-wider text-regolith-300"
+              >
                 Commander Callsign
               </label>
               <div className="flex gap-2">
@@ -136,9 +149,7 @@ export default function SettingsPage() {
                 <span className="text-[10px] font-mono uppercase tracking-wider text-regolith-400">
                   Accumulated XP
                 </span>
-                <p className="font-mono text-base font-bold text-emerald-400">
-                  {totalXp} XP
-                </p>
+                <p className="font-mono text-base font-bold text-emerald-400">{totalXp} XP</p>
               </div>
             </div>
           </div>
@@ -165,7 +176,9 @@ export default function SettingsPage() {
                 <span className="uppercase tracking-wider text-regolith-300">
                   Master Communication Volume
                 </span>
-                <span className="text-amber-400 font-bold">{Math.round(settings.volume * 100)}%</span>
+                <span className="text-amber-400 font-bold">
+                  {Math.round(settings.volume * 100)}%
+                </span>
               </div>
               <div className="flex items-center gap-4">
                 <button
@@ -174,7 +187,11 @@ export default function SettingsPage() {
                   className="p-2 rounded-lg border border-space-700 bg-space-800/80 hover:bg-space-700 text-regolith-300 transition-colors"
                   title={settings.volume > 0 ? "Mute" : "Unmute"}
                 >
-                  {settings.volume === 0 ? <VolumeX className="h-4 w-4 text-red-400" /> : <Volume2 className="h-4 w-4" />}
+                  {settings.volume === 0 ? (
+                    <VolumeX className="h-4 w-4 text-red-400" />
+                  ) : (
+                    <Volume2 className="h-4 w-4" />
+                  )}
                 </button>
                 <input
                   type="range"
@@ -251,7 +268,11 @@ export default function SettingsPage() {
                       {q}
                     </span>
                     <span className="text-[10px] text-regolith-400 mt-1 block">
-                      {q === "low" ? "Performance / 30 FPS" : q === "medium" ? "Balanced / 60 FPS" : "Max Fidelity & Bloom"}
+                      {q === "low"
+                        ? "Performance / 30 FPS"
+                        : q === "medium"
+                          ? "Balanced / 60 FPS"
+                          : "Max Fidelity & Bloom"}
                     </span>
                   </button>
                 ))}
@@ -261,9 +282,7 @@ export default function SettingsPage() {
             {/* Reduced Motion Toggle */}
             <div className="flex items-center justify-between pt-2 border-t border-space-800/60">
               <div>
-                <span className="text-sm font-medium text-white block">
-                  Reduced Motion Mode
-                </span>
+                <span className="text-sm font-medium text-white block">Reduced Motion Mode</span>
                 <span className="text-xs text-regolith-400">
                   Minimize camera bobbing, high-frequency camera shake, and rapid visual transitions
                 </span>
@@ -337,7 +356,8 @@ export default function SettingsPage() {
 
       {/* Footer Info */}
       <footer className="relative z-10 border-t border-space-800/80 bg-space-900/40 py-4 text-center text-xs font-mono text-regolith-500">
-        Cosmosyy Engine v2.4 · NASA Space Apps Challenge 2026 · Built with React 19, Three.js & Tailwind CSS
+        Cosmosyy Engine v2.4 · NASA Space Apps Challenge 2026 · Built with React 19, Three.js &
+        Tailwind CSS
       </footer>
     </div>
   );

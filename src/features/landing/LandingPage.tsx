@@ -30,7 +30,6 @@ export default function LandingPage() {
 
   return (
     <div className="relative min-h-screen bg-space-950 text-regolith-200 selection:bg-signal-500 selection:text-space-950 overflow-x-clip">
-      
       {/* Dynamic Starfield Background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
         {stars.map((s, idx) => (
@@ -53,7 +52,7 @@ export default function LandingPage() {
       {/* Main Page Content */}
       <div className="relative z-10 flex min-h-screen flex-col">
         <LandingNavbar />
-        
+
         <main className="flex-1">
           <LandingHero />
 
@@ -77,7 +76,6 @@ export default function LandingPage() {
           </div>
         </main>
       </div>
-
     </div>
   );
 }

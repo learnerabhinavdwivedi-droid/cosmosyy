@@ -62,10 +62,7 @@ export function LoadingScreen({ progress: explicitProgress }: LoadingScreenProps
       ? explicitProgress
       : Math.min(
           99,
-          Math.max(
-            smoothSimProgress,
-            active ? Math.max(dreiProgress, 18) : smoothSimProgress,
-          ),
+          Math.max(smoothSimProgress, active ? Math.max(dreiProgress, 18) : smoothSimProgress),
         );
 
   useEffect(() => {
@@ -95,10 +92,7 @@ export function LoadingScreen({ progress: explicitProgress }: LoadingScreenProps
       </h1>
 
       <div className="w-full max-w-xs">
-        <Progress
-          value={progress}
-          className="h-1.5 bg-space-800"
-        />
+        <Progress value={progress} className="h-1.5 bg-space-800" />
         <p className="mt-1.5 text-center text-xs font-mono text-regolith-400">
           {Math.round(progress)}%
         </p>

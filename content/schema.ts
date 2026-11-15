@@ -10,7 +10,10 @@ export const HeritageObjectSchema = z.object({
   hidden: z.boolean().optional(),
   scienceDiscovery: z.string().optional(),
   legacy: z.string().optional(),
-  status: z.enum(["operational", "dormant", "defunct"]).optional(),
+  status: z.enum(["operational", "dormant", "defunct", "cruising"]).optional(),
+  whySent: z.string().optional(),
+  ongoingScience: z.string().optional(),
+  hardwareType: z.string().optional(),
   firstPerson: z.string().optional(),
   yearDeployed: z.number().int().optional(),
   yearLastContact: z.number().int().optional(),
@@ -35,7 +38,7 @@ export type MissionTimeline = z.infer<typeof MissionTimelineSchema>;
 
 export const MissionSpecSchema = z.object({
   id: z.string().min(1),
-  planet: z.enum(["moon", "mars"]).optional(),
+  planet: z.enum(["moon", "mars", "deep-space"]).optional(),
   name: z.string().min(1),
   site: z.string().min(1),
   date: z.string().min(1),

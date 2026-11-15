@@ -8,7 +8,12 @@ export function OrangeSoil3D({ explode = 0, wireframe = false, scale = 1 }: Arti
       {/* Shorty Crater Dark Titanium-Basalt Regolith Mound */}
       <mesh position={[0, 0.04, 0]} receiveShadow>
         <cylinderGeometry args={[0.85, 1.05, 0.12, 24]} />
-        <meshStandardMaterial color="#334155" roughness={0.96} metalness={0.05} wireframe={wireframe} />
+        <meshStandardMaterial
+          color="#334155"
+          roughness={0.96}
+          metalness={0.05}
+          wireframe={wireframe}
+        />
       </mesh>
 
       {/* Excavated Geological Trench Hollow */}
@@ -18,7 +23,7 @@ export function OrangeSoil3D({ explode = 0, wireframe = false, scale = 1 }: Arti
       </mesh>
 
       {/* Vivid Orange & Reddish Pyroclastic Volcanic Glass Beads Bed */}
-      <group position={[0.02, 0.10, 0]}>
+      <group position={[0.02, 0.1, 0]}>
         <mesh rotation={[-Math.PI / 2, 0, 0.25]} receiveShadow>
           <planeGeometry args={[0.68, 0.26, 16, 8]} />
           <meshStandardMaterial
@@ -32,13 +37,15 @@ export function OrangeSoil3D({ explode = 0, wireframe = false, scale = 1 }: Arti
         </mesh>
 
         {/* Scattered 3D Glass Spherule Clusters */}
-        {([
-          [-0.22, 0.015, -0.05],
-          [-0.1, 0.02, 0.04],
-          [0.05, 0.018, -0.02],
-          [0.18, 0.022, 0.06],
-          [0.26, 0.012, -0.04],
-        ] as const).map(([px, py, pz], idx) => (
+        {(
+          [
+            [-0.22, 0.015, -0.05],
+            [-0.1, 0.02, 0.04],
+            [0.05, 0.018, -0.02],
+            [0.18, 0.022, 0.06],
+            [0.26, 0.012, -0.04],
+          ] as const
+        ).map(([px, py, pz], idx) => (
           <mesh key={idx} position={[px, py, pz]} castShadow>
             <sphereGeometry args={[0.025, 8, 8]} />
             <meshStandardMaterial
@@ -58,12 +65,22 @@ export function OrangeSoil3D({ explode = 0, wireframe = false, scale = 1 }: Arti
         {/* Tubular Extension Handle */}
         <mesh castShadow>
           <cylinderGeometry args={[0.01, 0.01, 0.65, 8]} />
-          <meshStandardMaterial color="#cbd5e1" metalness={0.92} roughness={0.18} wireframe={wireframe} />
+          <meshStandardMaterial
+            color="#cbd5e1"
+            metalness={0.92}
+            roughness={0.18}
+            wireframe={wireframe}
+          />
         </mesh>
         {/* Steel Scoop Head with Trenching Teeth */}
         <mesh position={[0, -0.32, 0]} castShadow>
           <boxGeometry args={[0.1, 0.09, 0.06]} />
-          <meshStandardMaterial color="#94a3b8" metalness={0.88} roughness={0.25} wireframe={wireframe} />
+          <meshStandardMaterial
+            color="#94a3b8"
+            metalness={0.88}
+            roughness={0.25}
+            wireframe={wireframe}
+          />
         </mesh>
       </group>
 
@@ -80,14 +97,24 @@ export function OrangeSoil3D({ explode = 0, wireframe = false, scale = 1 }: Arti
               castShadow
             >
               <cylinderGeometry args={[0.005, 0.005, 0.32, 8]} />
-              <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.25} wireframe={wireframe} />
+              <meshStandardMaterial
+                color="#94a3b8"
+                metalness={0.9}
+                roughness={0.25}
+                wireframe={wireframe}
+              />
             </mesh>
           );
         })}
         {/* Weighted Gimballed Center Staff */}
         <mesh position={[0, 0.08, 0]} castShadow>
           <cylinderGeometry args={[0.007, 0.007, 0.48, 8]} />
-          <meshStandardMaterial color="#f8fafc" metalness={0.85} roughness={0.2} wireframe={wireframe} />
+          <meshStandardMaterial
+            color="#f8fafc"
+            metalness={0.85}
+            roughness={0.2}
+            wireframe={wireframe}
+          />
         </mesh>
         {/* Color & Gray Scale Calibration Target Panel */}
         <mesh position={[0, 0.16, 0.015]} castShadow>
@@ -97,7 +124,12 @@ export function OrangeSoil3D({ explode = 0, wireframe = false, scale = 1 }: Arti
         {/* Shadow-Casting Tip Sphere */}
         <mesh position={[0, 0.32, 0]}>
           <sphereGeometry args={[0.016, 8, 8]} />
-          <meshStandardMaterial color="#eab308" metalness={0.95} roughness={0.15} wireframe={wireframe} />
+          <meshStandardMaterial
+            color="#eab308"
+            metalness={0.95}
+            roughness={0.15}
+            wireframe={wireframe}
+          />
         </mesh>
       </group>
     </group>

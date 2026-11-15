@@ -34,7 +34,13 @@ export interface HeritageObject {
   whySent?: string;
   scienceDiscovery?: string;
   ongoingScience?: string;
-  hardwareType?: "surface-lander" | "rover" | "orbiter" | "deep-space-probe" | "passive-reflector" | "scientific-package";
+  hardwareType?:
+    | "surface-lander"
+    | "rover"
+    | "orbiter"
+    | "deep-space-probe"
+    | "passive-reflector"
+    | "scientific-package";
   legacy?: string;
   status?: "operational" | "dormant" | "defunct" | "cruising";
   firstPerson?: string;
@@ -158,5 +164,9 @@ export function getMission(id: string): MissionSpec {
 
 export function getMissionOrNull(id: string | null): MissionSpec | null {
   if (!id) return null;
-  try { return getMission(id); } catch { return null; }
+  try {
+    return getMission(id);
+  } catch {
+    return null;
+  }
 }

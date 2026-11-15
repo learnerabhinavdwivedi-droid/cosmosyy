@@ -2,8 +2,7 @@ import { useSyncExternalStore } from "react";
 
 export function isTouchDevice(): boolean {
   return (
-    typeof window !== "undefined" &&
-    (navigator.maxTouchPoints > 0 || "ontouchstart" in window)
+    typeof window !== "undefined" && (navigator.maxTouchPoints > 0 || "ontouchstart" in window)
   );
 }
 

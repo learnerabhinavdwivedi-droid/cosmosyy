@@ -9,15 +9,33 @@ const NASA_SOURCES = [
   { label: "NASA Apollo Mission Archives", url: "https://www.nasa.gov/mission/apollo-program/" },
   { label: "Planetary Data System (PDS)", url: "https://pds.nasa.gov/" },
   { label: "JPL Mars Exploration Program", url: "https://mars.nasa.gov/" },
-  { label: "HiRISE — High Resolution Imaging Science Experiment", url: "https://www.uahirise.org/" },
-  { label: "NASA Apollo Preliminary Science Reports", url: "https://www.hq.nasa.gov/alsj/alsj-PSRs.html" },
-  { label: "ALSEP — Apollo Lunar Surface Experiments Package", url: "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_alsep.html" },
+  {
+    label: "HiRISE — High Resolution Imaging Science Experiment",
+    url: "https://www.uahirise.org/",
+  },
+  {
+    label: "NASA Apollo Preliminary Science Reports",
+    url: "https://www.hq.nasa.gov/alsj/alsj-PSRs.html",
+  },
+  {
+    label: "ALSEP — Apollo Lunar Surface Experiments Package",
+    url: "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_alsep.html",
+  },
 ];
 
 const TECH_STACK = [
-  "React 19", "Three.js + React Three Fiber", "Rapier Physics", "ecctrl",
-  "TypeScript", "Vite", "Tailwind CSS v4", "shadcn/ui",
-  "zustand", "Howler.js", "i18next", "Vercel",
+  "React 19",
+  "Three.js + React Three Fiber",
+  "Rapier Physics",
+  "ecctrl",
+  "TypeScript",
+  "Vite",
+  "Tailwind CSS v4",
+  "shadcn/ui",
+  "zustand",
+  "Howler.js",
+  "i18next",
+  "Vercel",
 ];
 
 export default function AboutPage() {
@@ -55,9 +73,7 @@ export default function AboutPage() {
           <h1 className="mt-3 font-display text-4xl font-bold text-regolith-200">
             {t("about.heading")}
           </h1>
-          <p className="mt-2 text-lg text-regolith-400 italic">
-            {t("about.tagline")}
-          </p>
+          <p className="mt-2 text-lg text-regolith-400 italic">{t("about.tagline")}</p>
         </motion.div>
 
         {/* Challenge context */}
@@ -67,9 +83,7 @@ export default function AboutPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <p className="text-sm leading-relaxed text-regolith-300">
-            {t("about.challengeDesc")}
-          </p>
+          <p className="text-sm leading-relaxed text-regolith-300">{t("about.challengeDesc")}</p>
         </motion.section>
 
         {/* What we built */}
@@ -109,7 +123,15 @@ export default function AboutPage() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 rounded-lg border border-space-700/40 bg-space-900/60 px-4 py-2.5 text-sm text-regolith-300 transition hover:border-signal/30 hover:text-regolith-200"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0 text-signal/60">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="shrink-0 text-signal/60"
+                >
                   <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                   <polyline points="15 3 21 3 21 9" />
                   <line x1="10" y1="14" x2="21" y2="3" />

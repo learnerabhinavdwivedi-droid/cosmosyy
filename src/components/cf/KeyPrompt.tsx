@@ -25,9 +25,7 @@ export function KeyPrompt({ actions, className }: KeyPromptProps) {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      const action = visibleActions.find(
-        (a) => a.key.toLowerCase() === e.key.toLowerCase(),
-      );
+      const action = visibleActions.find((a) => a.key.toLowerCase() === e.key.toLowerCase());
       if (!action) return;
 
       setFlashKey(action.key);

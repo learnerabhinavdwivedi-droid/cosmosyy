@@ -62,9 +62,11 @@ export function LandingHero() {
 
   return (
     <section className="relative overflow-hidden pt-10 pb-36 sm:pt-14 sm:pb-44 md:pt-16 md:pb-52 lg:pt-20 lg:pb-60 min-h-[760px] sm:min-h-[820px] md:min-h-[880px] lg:min-h-[940px] flex flex-col justify-center">
-      
       {/* 1. Primary Full-Width Mars Landscape Cinematic Background */}
-      <div className="pointer-events-none absolute inset-0 z-0 select-none overflow-hidden" aria-hidden="true">
+      <div
+        className="pointer-events-none absolute inset-0 z-0 select-none overflow-hidden"
+        aria-hidden="true"
+      >
         {/* Base Layer: Mars Landscape Wallpaper Anchored to Bottom */}
         <div
           className="absolute inset-0 bg-cover bg-bottom bg-no-repeat transition-transform duration-1000 ease-out"
@@ -95,7 +97,6 @@ export function LandingHero() {
       {/* 2. Main Foreground Hero Content (Mobile & Desktop Responsive) */}
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 w-full">
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-8">
-          
           {/* Left Column: Playful Hero Text & CTAs */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -120,12 +121,18 @@ export function LandingHero() {
 
             {/* Subtitle */}
             <p className="mt-4 text-sm leading-relaxed text-regolith-200 sm:text-base md:text-lg max-w-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-              Blast off on genuine Saturn V rockets, leap in lunar low gravity, and scan historical rovers and Apollo landers left behind on other worlds. Real NASA terrain, zero boring lectures!
+              Blast off on genuine Saturn V rockets, leap in lunar low gravity, and scan historical
+              rovers and Apollo landers left behind on other worlds. Real NASA terrain, zero boring
+              lectures!
             </p>
 
             {/* CTA Buttons */}
             <div className="mt-8 flex flex-col items-center justify-center gap-3.5 sm:flex-row lg:justify-start">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full sm:w-auto">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto"
+              >
                 <Link
                   to="/missions"
                   onClick={handleStartMissionClick}
@@ -151,19 +158,27 @@ export function LandingHero() {
             <div className="mt-10 grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-4">
               <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1 sm:p-3.5">
                 <p className="font-display text-xl sm:text-2xl font-bold text-white">6</p>
-                <p className="mt-1 text-[10px] sm:text-[11px] font-medium text-regolith-300">Apollo Landing Sites</p>
+                <p className="mt-1 text-[10px] sm:text-[11px] font-medium text-regolith-300">
+                  Apollo Landing Sites
+                </p>
               </div>
               <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1 sm:p-3.5">
                 <p className="font-display text-xl sm:text-2xl font-bold text-white">6</p>
-                <p className="mt-1 text-[10px] sm:text-[11px] font-medium text-regolith-300">Mars Rovers & Landers</p>
+                <p className="mt-1 text-[10px] sm:text-[11px] font-medium text-regolith-300">
+                  Mars Rovers & Landers
+                </p>
               </div>
               <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1 sm:p-3.5">
                 <p className="font-display text-xl sm:text-2xl font-bold text-white">1/6th G</p>
-                <p className="mt-1 text-[10px] sm:text-[11px] font-medium text-regolith-300">Real Lunar Bounding</p>
+                <p className="mt-1 text-[10px] sm:text-[11px] font-medium text-regolith-300">
+                  Real Lunar Bounding
+                </p>
               </div>
               <div className="rounded-xl border border-space-800/80 bg-space-900/75 p-3 text-center backdrop-blur-md shadow-lg transition-transform hover:-translate-y-1 sm:p-3.5">
                 <p className="font-display text-xl sm:text-2xl font-bold text-white">60+</p>
-                <p className="mt-1 text-[10px] sm:text-[11px] font-medium text-regolith-300">Historical Relics</p>
+                <p className="mt-1 text-[10px] sm:text-[11px] font-medium text-regolith-300">
+                  Historical Relics
+                </p>
               </div>
             </div>
           </motion.div>
@@ -176,7 +191,6 @@ export function LandingHero() {
             className="relative flex items-center justify-center lg:col-span-5"
           >
             <div className="relative flex flex-col items-center">
-              
               {/* Outer Cosmic Nebular Glow behind transparent mascot */}
               <div
                 className={`pointer-events-none absolute -inset-10 rounded-full bg-gradient-to-tr from-signal-500/25 via-warn-500/25 to-amber-300/20 blur-3xl transition-opacity duration-500 ${
@@ -250,10 +264,8 @@ export function LandingHero() {
                   className="h-60 w-auto object-contain drop-shadow-[0_20px_35px_rgba(255,140,0,0.35)] transition-transform duration-300 sm:h-72 md:h-80 lg:h-88"
                 />
               </motion.div>
-
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>

@@ -55,11 +55,12 @@ export function LandingControls() {
   };
 
   return (
-    <section id="controls" className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent">
+    <section
+      id="controls"
+      className="relative py-12 md:py-16 border-t border-space-800/60 bg-transparent"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
-          
           {/* Left Column: Explorer Controls Cheat Sheet with Interactive Testing */}
           <div className="lg:col-span-7">
             <div className="flex items-center gap-2.5">
@@ -112,9 +113,7 @@ export function LandingControls() {
                     <h4 className="mt-3 font-display text-base font-bold text-regolith-200">
                       {c.label}
                     </h4>
-                    <p className="mt-0.5 text-xs text-regolith-400">
-                      {c.desc}
-                    </p>
+                    <p className="mt-0.5 text-xs text-regolith-400">{c.desc}</p>
                   </motion.div>
                 );
               })}
@@ -126,7 +125,8 @@ export function LandingControls() {
               <div>
                 <p className="font-bold text-sky-100">Touch & Mobile Ready Ergonomics</p>
                 <p className="mt-0.5 text-sky-200/90 leading-relaxed">
-                  On phones and tablets, interactive virtual thumbsticks and large on-screen action buttons activate automatically in the 3D surface view.
+                  On phones and tablets, interactive virtual thumbsticks and large on-screen action
+                  buttons activate automatically in the 3D surface view.
                 </p>
               </div>
             </div>
@@ -152,13 +152,17 @@ export function LandingControls() {
             <div className="mt-6 rounded-2xl border border-signal-500/40 bg-gradient-to-br from-space-900/95 to-space-950 p-4 shadow-lg backdrop-blur">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-regolith-400">Active Explorer Status</p>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-regolith-400">
+                    Active Explorer Status
+                  </p>
                   <p className="font-display text-xl font-black text-white">
                     Rank: <span className="text-signal-500">{currentRank}</span>
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-regolith-400">Total Progress</p>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-regolith-400">
+                    Total Progress
+                  </p>
                   <p className="font-mono text-xl font-bold text-amber-400">
                     {totalXp} <span className="text-xs font-normal text-regolith-400">XP</span>
                   </p>
@@ -212,9 +216,7 @@ export function LandingControls() {
                         {r.xp}
                       </span>
                     </div>
-                    <p className="mt-1.5 text-xs text-regolith-300">
-                      {r.desc}
-                    </p>
+                    <p className="mt-1.5 text-xs text-regolith-300">{r.desc}</p>
                   </div>
                 );
               })}
@@ -226,9 +228,7 @@ export function LandingControls() {
               <span>XP saves automatically to your browser passport storage.</span>
             </div>
           </div>
-
         </div>
-
       </div>
     </section>
   );

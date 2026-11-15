@@ -29,8 +29,14 @@ export function LandingNavbar() {
         <div className="relative rounded-full p-[1.5px] bg-gradient-to-r from-orange-500/80 via-white/10 to-sky-500/80 shadow-[0_4px_30px_rgba(0,0,0,0.7)] transition-all">
           <div className="relative flex items-center justify-between overflow-hidden rounded-full bg-space-950/85 backdrop-blur-xl px-3.5 py-2 sm:px-6 sm:py-2.5">
             {/* Ambient Orange & Blue Accent Lighting inside the capsule */}
-            <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-10 w-36 rounded-full bg-orange-500/25 blur-xl" aria-hidden="true" />
-            <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-10 w-48 rounded-full bg-sky-500/25 blur-xl" aria-hidden="true" />
+            <div
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-10 w-36 rounded-full bg-orange-500/25 blur-xl"
+              aria-hidden="true"
+            />
+            <div
+              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-10 w-48 rounded-full bg-sky-500/25 blur-xl"
+              aria-hidden="true"
+            />
 
             {/* Brand Logo with 3-Dot Orbital Ring */}
             <Link
@@ -78,7 +84,9 @@ export function LandingNavbar() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={toggleSound}
-                aria-label={soundPlaying ? "Mute space ambient sound" : "Play space ambient sound preview"}
+                aria-label={
+                  soundPlaying ? "Mute space ambient sound" : "Play space ambient sound preview"
+                }
                 title={soundPlaying ? "Mute ambient sound" : "Play space ambient sound preview"}
                 className={`flex min-h-[40px] items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold backdrop-blur-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
                   soundPlaying

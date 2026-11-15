@@ -41,9 +41,7 @@ export function Effects({
           mipmapBlur
         />
       )}
-      {vignette && (
-        <Vignette eskil={false} offset={0.28} darkness={vignetteDarkness} />
-      )}
+      {vignette && <Vignette eskil={false} offset={0.28} darkness={vignetteDarkness} />}
       {chromaticAberration && quality === "high" && (
         <ChromaticAberration
           offset={CHROMATIC_OFFSET}

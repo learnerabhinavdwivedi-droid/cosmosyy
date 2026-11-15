@@ -35,56 +35,72 @@
     {
       "id": "descent-stage",
       "name": "Orion Descent Stage",
-      "position": [0, 0, 0],
+      "position": [
+        0,
+        0,
+        0
+      ],
       "description": "Lower half of Lunar Module Orion. Young and Duke explored the Descartes highlands — a region geologists hoped was volcanic but turned out to be impact breccia.",
       "xp": 50,
       "source": "LROC imagery; Apollo 16 Traverse Map (NASA)",
       "scienceDiscovery": "Landing in the highlands tested geological predictions about lunar volcanism — the crew's samples disproved the volcanic hypothesis, showing the terrain was formed entirely by massive asteroid impacts.",
       "legacy": "Remains at Descartes; its ascent stage developed a guidance malfunction after separation and tumbled onto the Moon in an uncontrolled impact.",
       "status": "defunct",
-      "firstPerson": "I am Orion, and I landed in the highlands where geologists expected to find ancient volcanoes. Instead, John and Charlie found nothing but impact breccia — rocks shattered and fused by asteroid strikes billions of years ago. It was not what anyone expected, but proving a theory wrong is just as important as proving one right.",
+      "firstPerson": "Ayo, highlands represent! I am Orion, the Apollo 16 descent stage. Mission Control almost aborted the mission in lunar orbit because the command module engine was acting sus, but they fixed it and I dropped John Young and Charlie Duke right onto the Descartes Highlands! 2.5 kilometers above the plains, breathing pure high-altitude lunar swagger!",
       "yearDeployed": 1972,
       "nasaImageId": "as16-113-18359"
     },
     {
       "id": "flag",
       "name": "American Flag",
-      "position": [-5, 0, 6],
+      "position": [
+        -5,
+        0,
+        6
+      ],
       "description": "Planted during EVA-1. The famous photo of Young saluting the flag while jumping off the ground was taken by Duke — Young's feet are clearly off the surface in lunar gravity.",
       "xp": 50,
       "source": "AS16-113-18339; LROC imagery",
       "scienceDiscovery": "The jumping salute photograph became an iconic demonstration of lunar gravity — Young's body position and height off the ground helped scientists calculate the reduced gravitational acceleration at the surface.",
       "legacy": "LROC images from 2012 confirm the Apollo 16 flag is still standing, casting a shadow on the highland surface.",
       "status": "defunct",
-      "firstPerson": "I am the flag that John Young jumped beside. When Charlie Duke snapped that famous photo, John was nearly a metre off the ground in his full spacesuit, saluting me mid-air. In one-sixth gravity, even a suited astronaut can leap like a gymnast. That picture became one of the most iconic images of the Apollo programme.",
+      "firstPerson": "Bro, you know the iconic photo! John Young saluting me while literally leaping two feet into the air in one-sixth gravity! That's me — the Apollo 16 flag! We were celebrating NASA's space shuttle budget approval while bouncing on the Moon. Talk about jumping for joy at the top of the solar system!",
       "yearDeployed": 1972,
       "nasaImageId": "as16-113-18339"
     },
     {
       "id": "lrv",
       "name": "Lunar Roving Vehicle (LRV-2)",
-      "position": [85, 0, -15],
+      "position": [
+        85,
+        0,
+        -15
+      ],
       "description": "The second rover on the Moon. Young and Duke drove it to a maximum distance of 4.5 km from the LM during their three EVAs, covering 26.7 km total. Its TV camera broadcast the ascent liftoff live.",
       "xp": 50,
       "source": "AS16-107-17446; LROC imagery",
       "scienceDiscovery": "Enabled collection of samples from North Ray Crater 4.5 km away, reaching the deepest impact-excavated material sampled during the entire Apollo programme.",
       "legacy": "Parked at its final TV position to film the departure from Descartes; one of three rovers remaining on the Moon.",
       "status": "defunct",
-      "firstPerson": "I am the second Lunar Roving Vehicle. John drove me to North Ray Crater, the most distant point any Apollo rover reached relative to the LM. Standing on the rim of that giant crater, the astronauts could see House Rock — a boulder bigger than a house, blasted up from deep underground. My TV camera filmed them leaving as Houston tilted me skyward to catch the ascent.",
+      "firstPerson": "Hold my battery, let me cook! I am LRV-2 — the Apollo 16 moon buggy! John Young literally drifted me across Descartes, setting up the Grand Prix moon driving demo! When John accidentally ripped off my rear fender with his hammer, we duct-taped lunar maps together to fix it. Off-road rally champion with 27 kilometers on the odometer, certified rizz!",
       "yearDeployed": 1972,
       "nasaImageId": "as16-107-17436"
     },
     {
       "id": "alsep",
       "name": "ALSEP Central Station",
-      "position": [-30, 0, -80],
+      "position": [
+        -30,
+        0,
+        -80
+      ],
       "description": "Apollo 16's experiment package included a passive seismometer, active seismometer (with mortar-launched grenades), magnetometer, and heat flow experiment. Transmitted data until 1977.",
       "xp": 50,
       "source": "Apollo 16 ALSEP deployment map (NASA)",
       "scienceDiscovery": "Its active seismic experiment used mortar-launched grenades and thumper charges to map the subsurface, revealing a 12-metre-deep fragmental regolith layer over fractured bedrock at Descartes.",
       "legacy": "Operated until 30 September 1977; the mortar package was only partially fired due to risk of damaging nearby instruments.",
       "status": "defunct",
-      "firstPerson": "I am the ALSEP at Descartes. My most dramatic instrument was the active seismic experiment — it fired small grenades into the ground to create vibrations I could measure. Scientists were nervous about breaking my other instruments, so they only fired some of the charges. Still, I mapped the layers of broken rock beneath me and reported home for five years.",
+      "firstPerson": "Ayo, don't touch the cable! I am the Apollo 16 ALSEP. Poor John Young tripped over my heat flow sensor cable and accidentally ripped it right out of the connector! But my mortar launcher, active seismometer, and magnetometers still pumped out god-tier data on Descartes moonquakes and cosmic magnetic fields. Resilient king right here!",
       "yearDeployed": 1972,
       "yearLastContact": 1977,
       "nasaImageId": "as16-113-18384"
@@ -92,28 +108,36 @@
     {
       "id": "uv-camera",
       "name": "Far Ultraviolet Camera/Spectrograph",
-      "position": [-12, 0, 8],
+      "position": [
+        -12,
+        0,
+        8
+      ],
       "description": "The first telescope operated from another world. George Carruthers' UV camera photographed Earth's geocorona, the Milky Way, the Large Magellanic Cloud, and nebulae — all in wavelengths blocked by Earth's atmosphere.",
       "xp": 50,
       "source": "AS16-114-18439; Apollo 16 UV astronomy results",
       "scienceDiscovery": "Captured the first astronomical photographs from another world, imaging Earth's hydrogen geocorona, the Large Magellanic Cloud, and nebulae in far-ultraviolet wavelengths that cannot penetrate Earth's atmosphere.",
       "legacy": "Remains at Descartes; it was designed by Dr. George Carruthers of the Naval Research Laboratory, who was later inducted into the National Inventors Hall of Fame for this work.",
       "status": "defunct",
-      "firstPerson": "I am the Far Ultraviolet Camera, the first telescope operated from another world. Dr. George Carruthers built me to see what no Earth telescope can — ultraviolet light from stars and galaxies that our atmosphere blocks. From my perch on the Moon, I photographed Earth's glowing hydrogen halo, the Milky Way, and distant nebulae. I am still here, the oldest observatory on the Moon.",
+      "firstPerson": "Bro, look at the big brain on me! I am the Far Ultraviolet Camera — the very first astronomical telescope operated by humans on another celestial world! George Carruthers designed me to shoot in deep UV light. I photographed Earth's glowing geocorona and deep star clusters without atmosphere getting in the way. Space astronomy started right here!",
       "yearDeployed": 1972,
       "nasaImageId": "as16-117-18825"
     },
     {
       "id": "family-photo",
       "name": "Duke Family Photo",
-      "position": [20, 0, -40],
+      "position": [
+        20,
+        0,
+        -40
+      ],
       "description": "Charlie Duke left a plastic-wrapped family photo on the surface — a portrait of himself, his wife Dorothy, and their sons Charles and Tom. The back reads: 'This is the family of Astronaut Duke from Planet Earth. Landed on the Moon, April 1972.'",
       "xp": 50,
       "source": "AS16-117-18841; Duke interview transcripts",
       "scienceDiscovery": "While not a science instrument, it documents the human dimension of lunar exploration — the personal connections astronauts maintained during the most isolated missions in history.",
       "legacy": "The plastic-wrapped photograph remains on the surface at Descartes; decades of intense UV radiation have likely destroyed the image, but the plastic wrapping may preserve some trace.",
       "status": "defunct",
-      "firstPerson": "I am a family portrait — Charlie Duke, his wife Dorothy, and their sons Charles and Tom, smiling together on a warm day back home. Charlie wrapped me in plastic and laid me gently on the grey dust. On my back he wrote: 'This is the family of Astronaut Duke from Planet Earth. Landed on the Moon, April 1972.' The Sun has probably bleached my image away, but I am still here.",
+      "firstPerson": "Ayo, sweetest flex in space! I am Charlie Duke's family photo, sealed in protective clear plastic. It shows Charlie, his wife Dotty, and their two young boys sitting in their backyard. On the back, Charlie wrote: This is the family of Astronaut Duke from planet Earth who landed on the moon on the 20th of April, 1972. The Sun has faded the image, but love is eternal, bro!",
       "yearDeployed": 1972,
       "nasaImageId": "as16-117-18841"
     }

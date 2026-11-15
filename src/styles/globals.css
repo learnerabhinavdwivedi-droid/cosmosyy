@@ -13,7 +13,12 @@ body {
   min-height: 100dvh;
   background-color: var(--bg);
   color: var(--fg);
-  font-family: "Inter Variable", Inter, system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter Variable",
+    Inter,
+    system-ui,
+    -apple-system,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -25,11 +30,16 @@ body {
   height: 100vh;
 }
 
-h1, h2, .font-display {
+h1,
+h2,
+.font-display {
   font-family: "Barlow Condensed", system-ui, sans-serif;
 }
 
-code, kbd, pre, .font-mono {
+code,
+kbd,
+pre,
+.font-mono {
   font-family: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
 }
 

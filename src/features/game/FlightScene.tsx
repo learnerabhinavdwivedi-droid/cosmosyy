@@ -42,11 +42,7 @@ const STAGE_SEP_AT = 0.35;
 const CRUISE_SEP_AT = 0.05;
 
 function orbitPos(angle: number, out: THREE.Vector3): THREE.Vector3 {
-  return out.set(
-    MOON.x + ORBIT_R * Math.cos(angle),
-    1,
-    MOON.z + ORBIT_R * Math.sin(angle),
-  );
+  return out.set(MOON.x + ORBIT_R * Math.cos(angle), 1, MOON.z + ORBIT_R * Math.sin(angle));
 }
 
 const _shipOut = new THREE.Vector3();
@@ -167,112 +163,244 @@ type NarrationSet = Record<string, string>;
 
 const MISSION_NARRATION: Record<string, (n: string) => NarrationSet> = {
   "apollo-11": (n) => ({
-    flight: "Welcome aboard, " + n + ". Apollo 11 is bound for the Moon. Three days, 240,000 miles. Your mission: land at the Sea of Tranquility and find what Armstrong and Aldrin left behind.",
-    coast: "Collins stays in orbit aboard Columbia. You ride Eagle down with Armstrong and Aldrin. No human has ever attempted a lunar landing before.",
-    orbit: "Lunar Orbit Insertion complete. The far side was silent and dark. Now the Sea of Tranquility fills your window.",
-    targetLocked: "Target locked: Tranquility Base. 0.67 degrees North, 23.47 degrees East. Undocking Eagle for powered descent.",
-    descent: "Eagle's descent engine firing. Program alarms, 1202, 1202. Ignore them. Armstrong takes manual control. Fuel running low. Almost there.",
-    touchdown: "Contact light. Engine stop. The Eagle has landed. Tranquility Base, July 20, 1969. Houston, we copy you on the ground.",
-    stepOut: "Cabin depressurised. Opening the hatch. That's one small step for man, " + n + ". One giant leap for mankind.",
+    flight:
+      "Welcome aboard, " +
+      n +
+      ". Apollo 11 is bound for the Moon. Three days, 240,000 miles. Your mission: land at the Sea of Tranquility and find what Armstrong and Aldrin left behind.",
+    coast:
+      "Collins stays in orbit aboard Columbia. You ride Eagle down with Armstrong and Aldrin. No human has ever attempted a lunar landing before.",
+    orbit:
+      "Lunar Orbit Insertion complete. The far side was silent and dark. Now the Sea of Tranquility fills your window.",
+    targetLocked:
+      "Target locked: Tranquility Base. 0.67 degrees North, 23.47 degrees East. Undocking Eagle for powered descent.",
+    descent:
+      "Eagle's descent engine firing. Program alarms, 1202, 1202. Ignore them. Armstrong takes manual control. Fuel running low. Almost there.",
+    touchdown:
+      "Contact light. Engine stop. The Eagle has landed. Tranquility Base, July 20, 1969. Houston, we copy you on the ground.",
+    stepOut:
+      "Cabin depressurised. Opening the hatch. That's one small step for man, " +
+      n +
+      ". One giant leap for mankind.",
   }),
   "apollo-12": (n) => ({
-    flight: "Welcome aboard, " + n + ". Apollo 12 is bound for the Ocean of Storms. Thirty-six seconds after launch, lightning struck the Saturn V twice. All telemetry went haywire. But the crew kept flying.",
-    coast: "Gordon stays in orbit aboard Yankee Clipper. You ride Intrepid down with Conrad and Bean. Target: a precision landing beside Surveyor 3, the unmanned probe that landed two years ago.",
-    orbit: "Lunar Orbit Insertion complete. The Ocean of Storms stretches below, vast and grey. Surveyor 3 is down there somewhere, waiting.",
-    targetLocked: "Target locked: 3.01 degrees South, 23.42 degrees West. Ocean of Storms. Conrad is threading the needle, aiming Intrepid right next to Surveyor 3.",
-    descent: "Intrepid's descent engine firing. Conrad grins: he can see the crater. Bean calls out the numbers. Right on target.",
-    touchdown: "Contact light. Intrepid has landed. November 19, 1969. Conrad's first words: Whoopee! Man, that may have been a small one for Neil, but that's a long one for me.",
-    stepOut: "Cabin depressurised. Opening the hatch. The Ocean of Storms awaits, " + n + ". Surveyor 3 is just a short walk away.",
+    flight:
+      "Welcome aboard, " +
+      n +
+      ". Apollo 12 is bound for the Ocean of Storms. Thirty-six seconds after launch, lightning struck the Saturn V twice. All telemetry went haywire. But the crew kept flying.",
+    coast:
+      "Gordon stays in orbit aboard Yankee Clipper. You ride Intrepid down with Conrad and Bean. Target: a precision landing beside Surveyor 3, the unmanned probe that landed two years ago.",
+    orbit:
+      "Lunar Orbit Insertion complete. The Ocean of Storms stretches below, vast and grey. Surveyor 3 is down there somewhere, waiting.",
+    targetLocked:
+      "Target locked: 3.01 degrees South, 23.42 degrees West. Ocean of Storms. Conrad is threading the needle, aiming Intrepid right next to Surveyor 3.",
+    descent:
+      "Intrepid's descent engine firing. Conrad grins: he can see the crater. Bean calls out the numbers. Right on target.",
+    touchdown:
+      "Contact light. Intrepid has landed. November 19, 1969. Conrad's first words: Whoopee! Man, that may have been a small one for Neil, but that's a long one for me.",
+    stepOut:
+      "Cabin depressurised. Opening the hatch. The Ocean of Storms awaits, " +
+      n +
+      ". Surveyor 3 is just a short walk away.",
   }),
   "apollo-14": (n) => ({
-    flight: "Welcome aboard, " + n + ". Apollo 14 is bound for Fra Mauro, the highlands target Apollo 13 never reached. Shepard is back. America's first astronaut, now commanding a Moon mission at age 47.",
-    coast: "Roosa stays in orbit aboard Kitty Hawk. You ride Antares down with Shepard and Mitchell. After the Apollo 13 abort, NASA needs this landing to succeed.",
-    orbit: "Lunar Orbit Insertion complete. Fra Mauro's rolling hills are visible below. This ancient impact site holds secrets about the Moon's formation.",
-    targetLocked: "Target locked: 3.65 degrees South, 17.47 degrees West. Fra Mauro formation. A computer abort signal fires, but it's a false alarm. Mitchell patches the software. Undocking Antares.",
-    descent: "Antares is descending. The landing radar locks on late, 18,000 feet. Shepard takes manual control. The highlands rise to meet you.",
-    touchdown: "Contact light. Antares has landed at Fra Mauro. February 5, 1971. Shepard: It's been a long way, but we're here.",
-    stepOut: "Cabin depressurised. Opening the hatch. Walk the hills of Fra Mauro, " + n + ". And yes, Shepard brought his golf club.",
+    flight:
+      "Welcome aboard, " +
+      n +
+      ". Apollo 14 is bound for Fra Mauro, the highlands target Apollo 13 never reached. Shepard is back. America's first astronaut, now commanding a Moon mission at age 47.",
+    coast:
+      "Roosa stays in orbit aboard Kitty Hawk. You ride Antares down with Shepard and Mitchell. After the Apollo 13 abort, NASA needs this landing to succeed.",
+    orbit:
+      "Lunar Orbit Insertion complete. Fra Mauro's rolling hills are visible below. This ancient impact site holds secrets about the Moon's formation.",
+    targetLocked:
+      "Target locked: 3.65 degrees South, 17.47 degrees West. Fra Mauro formation. A computer abort signal fires, but it's a false alarm. Mitchell patches the software. Undocking Antares.",
+    descent:
+      "Antares is descending. The landing radar locks on late, 18,000 feet. Shepard takes manual control. The highlands rise to meet you.",
+    touchdown:
+      "Contact light. Antares has landed at Fra Mauro. February 5, 1971. Shepard: It's been a long way, but we're here.",
+    stepOut:
+      "Cabin depressurised. Opening the hatch. Walk the hills of Fra Mauro, " +
+      n +
+      ". And yes, Shepard brought his golf club.",
   }),
   "apollo-15": (n) => ({
-    flight: "Welcome aboard, " + n + ". Apollo 15 is the first J-mission: longer stays, more science, and the first lunar rover. Destination: the Hadley-Apennine region, where mountains meet a winding canyon.",
-    coast: "Worden stays in orbit aboard Endeavour running a full science bay. You ride Falcon down with Scott and Irwin. The rover is folded up in the descent stage, ready to deploy.",
-    orbit: "Lunar Orbit Insertion complete. The Apennine mountains tower 15,000 feet above the plain. Hadley Rille carves a sinuous channel along the base. Extraordinary.",
-    targetLocked: "Target locked: 26.13 degrees North, 3.63 degrees East. Hadley-Apennine. Undocking Falcon. Scott and Irwin will drive farther from the LM than anyone before.",
-    descent: "Falcon's descent engine firing. The Apennine Front looms ahead, a wall of mountains. Scott guides Falcon between the peaks and the rille.",
-    touchdown: "Contact light. Falcon has landed at Hadley. July 30, 1971. Scott: Okay, Houston. The Falcon is on the plain at Hadley.",
-    stepOut: "Cabin depressurised. Opening the hatch. The mountains surround you, " + n + ". Time to unpack the rover and explore.",
+    flight:
+      "Welcome aboard, " +
+      n +
+      ". Apollo 15 is the first J-mission: longer stays, more science, and the first lunar rover. Destination: the Hadley-Apennine region, where mountains meet a winding canyon.",
+    coast:
+      "Worden stays in orbit aboard Endeavour running a full science bay. You ride Falcon down with Scott and Irwin. The rover is folded up in the descent stage, ready to deploy.",
+    orbit:
+      "Lunar Orbit Insertion complete. The Apennine mountains tower 15,000 feet above the plain. Hadley Rille carves a sinuous channel along the base. Extraordinary.",
+    targetLocked:
+      "Target locked: 26.13 degrees North, 3.63 degrees East. Hadley-Apennine. Undocking Falcon. Scott and Irwin will drive farther from the LM than anyone before.",
+    descent:
+      "Falcon's descent engine firing. The Apennine Front looms ahead, a wall of mountains. Scott guides Falcon between the peaks and the rille.",
+    touchdown:
+      "Contact light. Falcon has landed at Hadley. July 30, 1971. Scott: Okay, Houston. The Falcon is on the plain at Hadley.",
+    stepOut:
+      "Cabin depressurised. Opening the hatch. The mountains surround you, " +
+      n +
+      ". Time to unpack the rover and explore.",
   }),
   "apollo-16": (n) => ({
-    flight: "Welcome aboard, " + n + ". Apollo 16 targets the Descartes Highlands, a region scientists believe is volcanic. Young and Duke will test that theory on the ground.",
-    coast: "Mattingly stays in orbit aboard Casper. You ride Orion down with Young and Duke. But in orbit, a problem: Casper's engine gimbal shakes. Mission Control debates an abort for six anxious hours.",
-    orbit: "Lunar Orbit Insertion complete. The Descartes Highlands roll out below, ancient and cratered. Houston gives the go. The landing is on.",
-    targetLocked: "Target locked: 8.97 degrees South, 15.50 degrees East. Descartes Highlands. Undocking Orion after the longest hold in Apollo history.",
-    descent: "Orion's descent engine firing. The highlands approach. Young and Duke are finally going down, six hours late but on target.",
-    touchdown: "Contact light. Orion has landed at Descartes. April 21, 1972. Young: Orion is finally here, Houston. Fantastic.",
-    stepOut: "Cabin depressurised. Opening the hatch. Welcome to the Descartes Highlands, " + n + ". Young will set the lunar high-jump record here.",
+    flight:
+      "Welcome aboard, " +
+      n +
+      ". Apollo 16 targets the Descartes Highlands, a region scientists believe is volcanic. Young and Duke will test that theory on the ground.",
+    coast:
+      "Mattingly stays in orbit aboard Casper. You ride Orion down with Young and Duke. But in orbit, a problem: Casper's engine gimbal shakes. Mission Control debates an abort for six anxious hours.",
+    orbit:
+      "Lunar Orbit Insertion complete. The Descartes Highlands roll out below, ancient and cratered. Houston gives the go. The landing is on.",
+    targetLocked:
+      "Target locked: 8.97 degrees South, 15.50 degrees East. Descartes Highlands. Undocking Orion after the longest hold in Apollo history.",
+    descent:
+      "Orion's descent engine firing. The highlands approach. Young and Duke are finally going down, six hours late but on target.",
+    touchdown:
+      "Contact light. Orion has landed at Descartes. April 21, 1972. Young: Orion is finally here, Houston. Fantastic.",
+    stepOut:
+      "Cabin depressurised. Opening the hatch. Welcome to the Descartes Highlands, " +
+      n +
+      ". Young will set the lunar high-jump record here.",
   }),
   "apollo-17": (n) => ({
-    flight: "Welcome aboard, " + n + ". Apollo 17. The last mission. The final crew to leave Earth for the Moon. This is history's closing chapter on the lunar surface.",
-    coast: "Evans stays in orbit aboard America. You ride Challenger down with Cernan and Schmitt. Schmitt is a geologist, the only scientist to walk on another world.",
-    orbit: "Lunar Orbit Insertion complete. Taurus-Littrow valley is a dark slash between towering massifs. It was chosen for its geological diversity: old highlands and young volcanic fill.",
-    targetLocked: "Target locked: 20.19 degrees North, 30.77 degrees East. Taurus-Littrow. Undocking Challenger for the final crewed lunar descent in the 20th century.",
-    descent: "Challenger's descent engine firing. The massifs rise on either side. Cernan guides the last crewed lander down between them.",
-    touchdown: "Contact light. Challenger has landed at Taurus-Littrow. December 11, 1972. Cernan: Houston, the Challenger has landed.",
-    stepOut: "Cabin depressurised. Opening the hatch. The last footprints, " + n + ". Make them count. Schmitt's geologist eyes are already scanning the regolith.",
+    flight:
+      "Welcome aboard, " +
+      n +
+      ". Apollo 17. The last mission. The final crew to leave Earth for the Moon. This is history's closing chapter on the lunar surface.",
+    coast:
+      "Evans stays in orbit aboard America. You ride Challenger down with Cernan and Schmitt. Schmitt is a geologist, the only scientist to walk on another world.",
+    orbit:
+      "Lunar Orbit Insertion complete. Taurus-Littrow valley is a dark slash between towering massifs. It was chosen for its geological diversity: old highlands and young volcanic fill.",
+    targetLocked:
+      "Target locked: 20.19 degrees North, 30.77 degrees East. Taurus-Littrow. Undocking Challenger for the final crewed lunar descent in the 20th century.",
+    descent:
+      "Challenger's descent engine firing. The massifs rise on either side. Cernan guides the last crewed lander down between them.",
+    touchdown:
+      "Contact light. Challenger has landed at Taurus-Littrow. December 11, 1972. Cernan: Houston, the Challenger has landed.",
+    stepOut:
+      "Cabin depressurised. Opening the hatch. The last footprints, " +
+      n +
+      ". Make them count. Schmitt's geologist eyes are already scanning the regolith.",
   }),
   "mars-viking1": (n) => ({
-    flight: "Welcome to the mission, " + n + ". Viking 1 launched on 20 August 1975, bound for Mars. After ten months of interplanetary cruise, it will be the first spacecraft to successfully land on the Red Planet.",
-    coast: "The spacecraft coasts through interplanetary space. Mars is 225 million kilometres away. The orbiter will map the surface to find a safe landing site before the lander separates.",
-    orbit: "Mars Orbit Insertion complete. Chryse Planitia is visible below — a vast, smooth plain where ancient floodwaters once carved channels. The original landing site was too rough. A new one was chosen.",
-    targetLocked: "Target locked: Chryse Planitia. 22.48 degrees North, 49.97 degrees West. The lander separates from the orbiter. No turning back.",
-    descent: "The lander enters the Martian atmosphere at 4.5 kilometres per second. Aeroshell, parachute, retrorockets. Seven minutes of terror — in 1976, with a 20-minute signal delay.",
-    touchdown: "Touchdown confirmed. Viking 1 has landed on Mars. July 20, 1976. The first successful Mars landing. The cameras begin to scan. A rocky, rust-coloured desert fills the frame.",
-    stepOut: "Deploying instruments, " + n + ". The soil sampler extends. The meteorology boom unfolds. The biology experiments begin their search for life on Mars.",
+    flight:
+      "Welcome to the mission, " +
+      n +
+      ". Viking 1 launched on 20 August 1975, bound for Mars. After ten months of interplanetary cruise, it will be the first spacecraft to successfully land on the Red Planet.",
+    coast:
+      "The spacecraft coasts through interplanetary space. Mars is 225 million kilometres away. The orbiter will map the surface to find a safe landing site before the lander separates.",
+    orbit:
+      "Mars Orbit Insertion complete. Chryse Planitia is visible below — a vast, smooth plain where ancient floodwaters once carved channels. The original landing site was too rough. A new one was chosen.",
+    targetLocked:
+      "Target locked: Chryse Planitia. 22.48 degrees North, 49.97 degrees West. The lander separates from the orbiter. No turning back.",
+    descent:
+      "The lander enters the Martian atmosphere at 4.5 kilometres per second. Aeroshell, parachute, retrorockets. Seven minutes of terror — in 1976, with a 20-minute signal delay.",
+    touchdown:
+      "Touchdown confirmed. Viking 1 has landed on Mars. July 20, 1976. The first successful Mars landing. The cameras begin to scan. A rocky, rust-coloured desert fills the frame.",
+    stepOut:
+      "Deploying instruments, " +
+      n +
+      ". The soil sampler extends. The meteorology boom unfolds. The biology experiments begin their search for life on Mars.",
   }),
   "mars-pathfinder": (n) => ({
-    flight: "Welcome to the mission, " + n + ". Mars Pathfinder launched on 4 December 1996 — a low-cost mission to prove that faster, cheaper exploration works. It carries the first Mars rover: tiny Sojourner.",
-    coast: "Pathfinder cruises toward Mars on a direct trajectory, no orbit insertion needed. It will enter the atmosphere and land in a single pass. The airbag landing system has never been tried on another planet.",
-    orbit: "Approaching Mars. No orbit for this mission — Pathfinder is heading straight in. Ares Vallis, an ancient flood plain, is the target. The rocks washed here billions of years ago will tell the story of Mars's wet past.",
-    targetLocked: "Target locked: Ares Vallis. 19.33 degrees North, 33.55 degrees West. Entry interface in minutes. The heat shield will face temperatures over 1,600 degrees Celsius.",
-    descent: "Entry. Parachute deployed. Heat shield jettisoned. Airbags inflate — 24 spheres surrounding the lander. Retrorockets fire. Cut. Free fall. Impact. Bouncing. Bouncing across Mars.",
-    touchdown: "Pathfinder has landed. July 4, 1997. After bouncing 15 times and rolling for over a minute, it comes to rest. The petals open. Welcome to the Carl Sagan Memorial Station.",
-    stepOut: "Deploying Sojourner, " + n + ". The ramp extends. The first rover to operate on another planet begins to roll. Six wheels on Mars. Just 10.6 kilograms making history.",
+    flight:
+      "Welcome to the mission, " +
+      n +
+      ". Mars Pathfinder launched on 4 December 1996 — a low-cost mission to prove that faster, cheaper exploration works. It carries the first Mars rover: tiny Sojourner.",
+    coast:
+      "Pathfinder cruises toward Mars on a direct trajectory, no orbit insertion needed. It will enter the atmosphere and land in a single pass. The airbag landing system has never been tried on another planet.",
+    orbit:
+      "Approaching Mars. No orbit for this mission — Pathfinder is heading straight in. Ares Vallis, an ancient flood plain, is the target. The rocks washed here billions of years ago will tell the story of Mars's wet past.",
+    targetLocked:
+      "Target locked: Ares Vallis. 19.33 degrees North, 33.55 degrees West. Entry interface in minutes. The heat shield will face temperatures over 1,600 degrees Celsius.",
+    descent:
+      "Entry. Parachute deployed. Heat shield jettisoned. Airbags inflate — 24 spheres surrounding the lander. Retrorockets fire. Cut. Free fall. Impact. Bouncing. Bouncing across Mars.",
+    touchdown:
+      "Pathfinder has landed. July 4, 1997. After bouncing 15 times and rolling for over a minute, it comes to rest. The petals open. Welcome to the Carl Sagan Memorial Station.",
+    stepOut:
+      "Deploying Sojourner, " +
+      n +
+      ". The ramp extends. The first rover to operate on another planet begins to roll. Six wheels on Mars. Just 10.6 kilograms making history.",
   }),
   "mars-spirit": (n) => ({
-    flight: "Welcome to the mission, " + n + ". Spirit, also known as MER-A, launched on 10 June 2003. Destination: Gusev Crater, a 160-kilometre-wide basin that may once have been a lake.",
-    coast: "Spirit cruises toward Mars. Designed for 90 sols — about 90 days — on the surface. The rover carries a panoramic camera, a microscopic imager, and a rock abrasion tool to grind into stones.",
-    orbit: "Approaching Mars. Like Pathfinder, Spirit will land directly — no orbital phase. Gusev Crater looms ahead. A channel called Ma'adim Vallis once fed water into this basin.",
-    targetLocked: "Target locked: Gusev Crater. 14.57 degrees South, 175.47 degrees East. Entry in minutes. The airbags are ready. The parachute is armed.",
-    descent: "Entry, descent, and landing. Parachute deployed. Retrorockets fire. Airbags inflate. Spirit bounces across the crater floor, tumbling to a stop. The petals begin to open.",
-    touchdown: "Spirit has landed in Gusev Crater. January 4, 2004. Named the Columbia Memorial Station in honour of the seven astronauts lost on Space Shuttle Columbia.",
-    stepOut: "Deploying Spirit, " + n + ". The rover rolls off the lander platform onto Martian soil. Panoramic cameras spin. The Columbia Hills are visible in the distance — Spirit will reach them.",
+    flight:
+      "Welcome to the mission, " +
+      n +
+      ". Spirit, also known as MER-A, launched on 10 June 2003. Destination: Gusev Crater, a 160-kilometre-wide basin that may once have been a lake.",
+    coast:
+      "Spirit cruises toward Mars. Designed for 90 sols — about 90 days — on the surface. The rover carries a panoramic camera, a microscopic imager, and a rock abrasion tool to grind into stones.",
+    orbit:
+      "Approaching Mars. Like Pathfinder, Spirit will land directly — no orbital phase. Gusev Crater looms ahead. A channel called Ma'adim Vallis once fed water into this basin.",
+    targetLocked:
+      "Target locked: Gusev Crater. 14.57 degrees South, 175.47 degrees East. Entry in minutes. The airbags are ready. The parachute is armed.",
+    descent:
+      "Entry, descent, and landing. Parachute deployed. Retrorockets fire. Airbags inflate. Spirit bounces across the crater floor, tumbling to a stop. The petals begin to open.",
+    touchdown:
+      "Spirit has landed in Gusev Crater. January 4, 2004. Named the Columbia Memorial Station in honour of the seven astronauts lost on Space Shuttle Columbia.",
+    stepOut:
+      "Deploying Spirit, " +
+      n +
+      ". The rover rolls off the lander platform onto Martian soil. Panoramic cameras spin. The Columbia Hills are visible in the distance — Spirit will reach them.",
   }),
   "mars-opportunity": (n) => ({
-    flight: "Welcome to the mission, " + n + ". Opportunity, MER-B, launched on 7 July 2003 — three weeks after its twin Spirit. Target: Meridiani Planum, where an orbiter detected grey haematite, a mineral that often forms in water.",
-    coast: "Opportunity cruises toward Mars, trailing Spirit by 21 days. The rovers are identical, but their landing sites are a world apart. Meridiani Planum is flat and smooth — the haematite signal is strong.",
-    orbit: "Approaching Mars. Meridiani Planum is on the far side from Gusev. Opportunity will enter and land in a single pass, just as Spirit did three weeks ago.",
-    targetLocked: "Target locked: Meridiani Planum. 1.95 degrees South, 354.47 degrees East. If the haematite is there, it will be proof of ancient water. Entry sequence initiated.",
-    descent: "Entry, descent, and landing. Parachute. Retrorockets. Airbags. Opportunity bounces into a small crater just 22 metres wide. Scientists call it a hole in one.",
-    touchdown: "Opportunity has landed at Meridiani Planum. January 25, 2004. Inside Eagle Crater, bedrock is exposed right at the rover's wheels. This is better than anyone hoped.",
-    stepOut: "Deploying Opportunity, " + n + ". The first image shows layered bedrock and tiny grey spheres — blueberries. Evidence of water, in the first frame. This rover will run for almost 15 years.",
+    flight:
+      "Welcome to the mission, " +
+      n +
+      ". Opportunity, MER-B, launched on 7 July 2003 — three weeks after its twin Spirit. Target: Meridiani Planum, where an orbiter detected grey haematite, a mineral that often forms in water.",
+    coast:
+      "Opportunity cruises toward Mars, trailing Spirit by 21 days. The rovers are identical, but their landing sites are a world apart. Meridiani Planum is flat and smooth — the haematite signal is strong.",
+    orbit:
+      "Approaching Mars. Meridiani Planum is on the far side from Gusev. Opportunity will enter and land in a single pass, just as Spirit did three weeks ago.",
+    targetLocked:
+      "Target locked: Meridiani Planum. 1.95 degrees South, 354.47 degrees East. If the haematite is there, it will be proof of ancient water. Entry sequence initiated.",
+    descent:
+      "Entry, descent, and landing. Parachute. Retrorockets. Airbags. Opportunity bounces into a small crater just 22 metres wide. Scientists call it a hole in one.",
+    touchdown:
+      "Opportunity has landed at Meridiani Planum. January 25, 2004. Inside Eagle Crater, bedrock is exposed right at the rover's wheels. This is better than anyone hoped.",
+    stepOut:
+      "Deploying Opportunity, " +
+      n +
+      ". The first image shows layered bedrock and tiny grey spheres — blueberries. Evidence of water, in the first frame. This rover will run for almost 15 years.",
   }),
   "mars-curiosity": (n) => ({
-    flight: "Welcome to the mission, " + n + ". Curiosity, the Mars Science Laboratory, launched on 26 November 2011. At 899 kilograms, it is the size of a car — too heavy for airbags. A sky crane will lower it to the surface.",
-    coast: "Curiosity cruises toward Mars carrying ten instruments and a nuclear power source. No solar panels — this rover will work through dust storms and winter darkness. Gale Crater awaits, with a 5-kilometre mountain of layered rock.",
-    orbit: "Approaching Mars. Gale Crater sits near the equator, 154 kilometres wide. At its centre rises Mount Sharp — Aeolis Mons — a layered mountain taller than Mount Rainier. Each layer is a chapter of Mars history.",
-    targetLocked: "Target locked: Gale Crater. 4.59 degrees South, 137.44 degrees East. Entry in seven minutes. The sky crane sequence has never been tried before. There is no margin for error.",
-    descent: "Entry. Heat shield at 1,600 degrees. Parachute. Backshell separation. Sky crane rockets ignite. Nylon tethers lower Curiosity. Twenty metres. Ten. Five. Wheels down.",
-    touchdown: "Curiosity has landed in Gale Crater. August 6, 2012. Bradbury Landing. The sky crane flies away and crashes. JPL erupts. The most complex landing in history succeeded.",
-    stepOut: "Systems online, " + n + ". Curiosity's mast camera rises. Mount Sharp fills the frame. ChemCam fires its first laser pulse. The greatest Mars laboratory ever built is open for business.",
+    flight:
+      "Welcome to the mission, " +
+      n +
+      ". Curiosity, the Mars Science Laboratory, launched on 26 November 2011. At 899 kilograms, it is the size of a car — too heavy for airbags. A sky crane will lower it to the surface.",
+    coast:
+      "Curiosity cruises toward Mars carrying ten instruments and a nuclear power source. No solar panels — this rover will work through dust storms and winter darkness. Gale Crater awaits, with a 5-kilometre mountain of layered rock.",
+    orbit:
+      "Approaching Mars. Gale Crater sits near the equator, 154 kilometres wide. At its centre rises Mount Sharp — Aeolis Mons — a layered mountain taller than Mount Rainier. Each layer is a chapter of Mars history.",
+    targetLocked:
+      "Target locked: Gale Crater. 4.59 degrees South, 137.44 degrees East. Entry in seven minutes. The sky crane sequence has never been tried before. There is no margin for error.",
+    descent:
+      "Entry. Heat shield at 1,600 degrees. Parachute. Backshell separation. Sky crane rockets ignite. Nylon tethers lower Curiosity. Twenty metres. Ten. Five. Wheels down.",
+    touchdown:
+      "Curiosity has landed in Gale Crater. August 6, 2012. Bradbury Landing. The sky crane flies away and crashes. JPL erupts. The most complex landing in history succeeded.",
+    stepOut:
+      "Systems online, " +
+      n +
+      ". Curiosity's mast camera rises. Mount Sharp fills the frame. ChemCam fires its first laser pulse. The greatest Mars laboratory ever built is open for business.",
   }),
   "mars-perseverance": (n) => ({
-    flight: "Welcome to the mission, " + n + ". Perseverance launched on 30 July 2020, bound for Jezero Crater — an ancient lakebed with a river delta. The mission: find signs of ancient life and cache samples for return to Earth.",
-    coast: "Perseverance cruises toward Mars carrying Ingenuity, a 1.8-kilogram helicopter, strapped to its belly. If it flies, it will be the first powered flight on another planet. Also aboard: MOXIE, which will try to make oxygen from CO₂.",
-    orbit: "Approaching Jezero Crater. An ancient river once flowed through a gap in the crater wall, spreading sediment into a fan-shaped delta. If microbial life ever existed on Mars, this delta is where to look.",
-    targetLocked: "Target locked: Jezero Crater. 18.44 degrees North, 77.45 degrees East. The terrain-relative navigation system will steer around hazards in real time. Entry in seven minutes.",
-    descent: "Entry, descent, landing. Heat shield. Supersonic parachute. Radar. Sky crane. The range trigger deploys the chute at exactly the right moment. Terrain navigation steers past boulders. Touchdown.",
-    touchdown: "Perseverance has landed at Jezero Crater. February 18, 2021. Octavia E. Butler Landing. Cameras recorded the entire descent — the first video of a Mars landing.",
-    stepOut: "Systems online, " + n + ". Perseverance rolls off the landing pad. Ingenuity is still folded underneath. Sample tubes are ready. The search for ancient life on Mars begins now.",
+    flight:
+      "Welcome to the mission, " +
+      n +
+      ". Perseverance launched on 30 July 2020, bound for Jezero Crater — an ancient lakebed with a river delta. The mission: find signs of ancient life and cache samples for return to Earth.",
+    coast:
+      "Perseverance cruises toward Mars carrying Ingenuity, a 1.8-kilogram helicopter, strapped to its belly. If it flies, it will be the first powered flight on another planet. Also aboard: MOXIE, which will try to make oxygen from CO₂.",
+    orbit:
+      "Approaching Jezero Crater. An ancient river once flowed through a gap in the crater wall, spreading sediment into a fan-shaped delta. If microbial life ever existed on Mars, this delta is where to look.",
+    targetLocked:
+      "Target locked: Jezero Crater. 18.44 degrees North, 77.45 degrees East. The terrain-relative navigation system will steer around hazards in real time. Entry in seven minutes.",
+    descent:
+      "Entry, descent, landing. Heat shield. Supersonic parachute. Radar. Sky crane. The range trigger deploys the chute at exactly the right moment. Terrain navigation steers past boulders. Touchdown.",
+    touchdown:
+      "Perseverance has landed at Jezero Crater. February 18, 2021. Octavia E. Butler Landing. Cameras recorded the entire descent — the first video of a Mars landing.",
+    stepOut:
+      "Systems online, " +
+      n +
+      ". Perseverance rolls off the landing pad. Ingenuity is still folded underneath. Sample tubes are ready. The search for ancient life on Mars begins now.",
   }),
 };
 
@@ -328,19 +456,17 @@ function MoonSphere() {
   const ref = useRef<THREE.Mesh>(null);
   const phaseRef = useRef(useGameStore.getState().phase);
   const elRef = useRef(0);
-  const color = useLoader(
-    THREE.TextureLoader,
-    "/textures/moon-color-4k.webp",
-  );
-  const disp = useLoader(
-    THREE.TextureLoader,
-    "/textures/moon-elevation-2k.png",
-  );
+  const color = useLoader(THREE.TextureLoader, "/textures/moon-color-4k.webp");
+  const disp = useLoader(THREE.TextureLoader, "/textures/moon-elevation-2k.png");
 
   useEffect(
-    () => useGameStore.subscribe((s) => {
-      if (s.phase !== phaseRef.current) { phaseRef.current = s.phase; elRef.current = 0; }
-    }),
+    () =>
+      useGameStore.subscribe((s) => {
+        if (s.phase !== phaseRef.current) {
+          phaseRef.current = s.phase;
+          elRef.current = 0;
+        }
+      }),
     [],
   );
 
@@ -351,8 +477,8 @@ function MoonSphere() {
       const p = phaseRef.current;
       const dur = DUR[p] || 5;
       const prog = Math.min(elRef.current / dur, 1);
-      const inLand = (p === "descent" && prog >= LAND_CUT_AT)
-        || p === "touchdown" || p === "stepOut";
+      const inLand =
+        (p === "descent" && prog >= LAND_CUT_AT) || p === "touchdown" || p === "stepOut";
       ref.current.visible = !inLand;
     }
   });
@@ -378,9 +504,13 @@ function MarsSphere() {
   const disp = useLoader(THREE.TextureLoader, "/textures/moon-elevation-2k.png");
 
   useEffect(
-    () => useGameStore.subscribe((s) => {
-      if (s.phase !== phaseRef.current) { phaseRef.current = s.phase; elRef.current = 0; }
-    }),
+    () =>
+      useGameStore.subscribe((s) => {
+        if (s.phase !== phaseRef.current) {
+          phaseRef.current = s.phase;
+          elRef.current = 0;
+        }
+      }),
     [],
   );
 
@@ -391,8 +521,8 @@ function MarsSphere() {
       const p = phaseRef.current;
       const dur = DUR[p] || 5;
       const prog = Math.min(elRef.current / dur, 1);
-      const inLand = (p === "descent" && prog >= LAND_CUT_AT)
-        || p === "touchdown" || p === "stepOut";
+      const inLand =
+        (p === "descent" && prog >= LAND_CUT_AT) || p === "touchdown" || p === "stepOut";
       ref.current.visible = !inLand;
     }
   });
@@ -416,10 +546,7 @@ function LandingMarker({ isMars }: { isMars: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const phaseRef = useRef(useGameStore.getState().phase);
 
-  useEffect(
-    () => useGameStore.subscribe((s) => (phaseRef.current = s.phase)),
-    [],
-  );
+  useEffect(() => useGameStore.subscribe((s) => (phaseRef.current = s.phase)), []);
 
   useFrame(() => {
     const show =
@@ -434,11 +561,7 @@ function LandingMarker({ isMars }: { isMars: boolean }) {
   });
   return (
     <group ref={groupRef}>
-      <mesh
-        ref={ref}
-        position={[28, 0.5, -20]}
-        rotation={[-Math.PI / 2, 0, 0]}
-      >
+      <mesh ref={ref} position={[28, 0.5, -20]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.5, 0.8, 32]} />
         <meshBasicMaterial
           color={isMars ? "#ff6633" : "#ffd36e"}
@@ -457,10 +580,7 @@ function OrbitPath({ isMars }: { isMars: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
   const phaseRef = useRef(useGameStore.getState().phase);
 
-  useEffect(
-    () => useGameStore.subscribe((s) => (phaseRef.current = s.phase)),
-    [],
-  );
+  useEffect(() => useGameStore.subscribe((s) => (phaseRef.current = s.phase)), []);
 
   useFrame(() => {
     if (groupRef.current) {
@@ -527,7 +647,12 @@ export function MarsCruiseStageContent() {
       {/* Upper equipment deck with thermal louvers */}
       <mesh position={[0, 0.122, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.15, 0.44, 32]} />
-        <meshStandardMaterial color="#8e949c" metalness={0.65} roughness={0.35} side={THREE.DoubleSide} />
+        <meshStandardMaterial
+          color="#8e949c"
+          metalness={0.65}
+          roughness={0.35}
+          side={THREE.DoubleSide}
+        />
       </mesh>
 
       {/* ── Internal Propellant Tanks (4 gold spherical titanium tanks) ── */}
@@ -549,7 +674,13 @@ export function MarsCruiseStageContent() {
       {/* Inner nozzle throat with amber glow */}
       <mesh position={[0, -0.25, 0]}>
         <cylinderGeometry args={[0.04, 0.07, 0.02, 16]} />
-        <meshStandardMaterial color="#ff7722" emissive="#cc4400" emissiveIntensity={0.6} metalness={0.3} roughness={0.7} />
+        <meshStandardMaterial
+          color="#ff7722"
+          emissive="#cc4400"
+          emissiveIntensity={0.6}
+          metalness={0.3}
+          roughness={0.7}
+        />
       </mesh>
 
       {/* ── 4 RCS Thruster Outrigger Assemblies (90° intervals) ── */}
@@ -632,11 +763,21 @@ export function MarsCruiseStageContent() {
         {/* Camera lenses (deep anti-reflective blue) */}
         <mesh position={[-0.03, 0.046, 0]}>
           <cylinderGeometry args={[0.018, 0.018, 0.005, 12]} />
-          <meshStandardMaterial color="#0055aa" emissive="#002255" emissiveIntensity={0.5} roughness={0.1} />
+          <meshStandardMaterial
+            color="#0055aa"
+            emissive="#002255"
+            emissiveIntensity={0.5}
+            roughness={0.1}
+          />
         </mesh>
         <mesh position={[0.03, 0.046, 0]}>
           <cylinderGeometry args={[0.018, 0.018, 0.005, 12]} />
-          <meshStandardMaterial color="#0055aa" emissive="#002255" emissiveIntensity={0.5} roughness={0.1} />
+          <meshStandardMaterial
+            color="#0055aa"
+            emissive="#002255"
+            emissiveIntensity={0.5}
+            roughness={0.1}
+          />
         </mesh>
       </group>
 
@@ -754,11 +895,7 @@ function MarsAeroshellContent() {
       {/* ── Conical Backshell (Aft Aero-Shell with Thermal Protection System) ── */}
       <mesh position={[0, 0.14, 0]}>
         <coneGeometry args={[0.56, 0.52, 32]} />
-        <meshStandardMaterial
-          color="#ebe7de"
-          roughness={0.55}
-          metalness={0.15}
-        />
+        <meshStandardMaterial color="#ebe7de" roughness={0.55} metalness={0.15} />
       </mesh>
       {/* Parachute Mortar Canister at Apex */}
       <mesh position={[0, 0.39, 0]}>
@@ -800,11 +937,7 @@ function MarsAeroshellContent() {
       {/* ── Forward Ablative Heat Shield with Charred PICA-X Tiles ── */}
       <mesh position={[0, -0.18, 0]} rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[0.575, 0.17, 32]} />
-        <meshStandardMaterial
-          map={heatShieldTex}
-          roughness={0.78}
-          metalness={0.25}
-        />
+        <meshStandardMaterial map={heatShieldTex} roughness={0.78} metalness={0.25} />
       </mesh>
       {/* Aerodynamic Shoulder Ring Transition */}
       <mesh position={[0, -0.11, 0]}>
@@ -1039,10 +1172,7 @@ function FlightAnimator({
     // Stage 2 Mars Cruise/Orbiter drift before atmospheric entry
     if (marsCruiseSepRef.current) {
       const showCruiseDrift =
-        isMars &&
-        cruiseSeparated.current &&
-        phase === "descent" &&
-        !inLandingScene;
+        isMars && cruiseSeparated.current && phase === "descent" && !inLandingScene;
       marsCruiseSepRef.current.visible = showCruiseDrift;
       if (showCruiseDrift) {
         const t = cruiseSepTime.current;
@@ -1074,8 +1204,7 @@ function FlightAnimator({
     if (phase === "flight" || phase === "coast") landingCut.current = false;
 
     if (isMars) {
-      const showRocket =
-        phase === "flight" || (phase === "coast" && !separated.current);
+      const showRocket = phase === "flight" || (phase === "coast" && !separated.current);
       if (saturnRef.current) saturnRef.current.visible = showRocket;
       if (lmRef.current) lmRef.current.visible = false;
       if (marsProbeRef.current) {
@@ -1102,7 +1231,8 @@ function FlightAnimator({
         }
       }
       if (shieldDropRef.current) {
-        const dropping = inLandingScene && phase === "descent" && progress >= 0.58 && shieldDropY.current > -18;
+        const dropping =
+          inLandingScene && phase === "descent" && progress >= 0.58 && shieldDropY.current > -18;
         shieldDropRef.current.visible = dropping;
         if (dropping) {
           shieldDropY.current -= dt * 7.5;
@@ -1286,7 +1416,9 @@ function FlightAnimator({
             </mesh>
             {/* White band pattern on chute */}
             <mesh position={[0, 0.18, 0]}>
-              <sphereGeometry args={[1.14, 32, 6, 0, Math.PI * 2, Math.PI * 0.18, Math.PI * 0.08]} />
+              <sphereGeometry
+                args={[1.14, 32, 6, 0, Math.PI * 2, Math.PI * 0.18, Math.PI * 0.08]}
+              />
               <meshStandardMaterial color="#f0e8d8" roughness={0.7} side={THREE.DoubleSide} />
             </mesh>
             {/* 8 suspension lines */}
@@ -1319,7 +1451,12 @@ function FlightAnimator({
           </mesh>
 
           {/* Separated heat shield falling away */}
-          <mesh ref={shieldDropRef} position={[0, -0.45, 0]} rotation={[Math.PI, 0, 0]} visible={false}>
+          <mesh
+            ref={shieldDropRef}
+            position={[0, -0.45, 0]}
+            rotation={[Math.PI, 0, 0]}
+            visible={false}
+          >
             <coneGeometry args={[0.58, 0.16, 24]} />
             <meshStandardMaterial color="#3c2a21" metalness={0.2} roughness={0.8} />
           </mesh>
@@ -1337,13 +1474,15 @@ function FlightAnimator({
           />
 
           {/* 5 Individual F-1 Engine Nozzle Supersonic Jets */}
-          {([
-            [0, 0, 0],
-            [0, 0, 0.175],
-            [0, 0, -0.175],
-            [-0.175, 0, 0],
-            [0.175, 0, 0],
-          ] as const).map(([nx, ny, nz], i) => (
+          {(
+            [
+              [0, 0, 0],
+              [0, 0, 0.175],
+              [0, 0, -0.175],
+              [-0.175, 0, 0],
+              [0.175, 0, 0],
+            ] as const
+          ).map(([nx, ny, nz], i) => (
             <group key={i} position={[nx, ny, nz]}>
               {/* Nozzle white-hot shock core */}
               <mesh position={[0, 0.45, 0]}>
@@ -1408,7 +1547,11 @@ function FlightAnimator({
 
           {/* Mach Disks / Shock Diamonds along the plume centerline */}
           {[0.5, 0.95, 1.45, 2.0].map((y, idx) => (
-            <mesh key={`diamond-${idx}`} position={[0, y, 0]} rotation={[0, (idx * Math.PI) / 4, 0]}>
+            <mesh
+              key={`diamond-${idx}`}
+              position={[0, y, 0]}
+              rotation={[0, (idx * Math.PI) / 4, 0]}
+            >
               <octahedronGeometry args={[0.08 - idx * 0.012, 0]} />
               <meshBasicMaterial
                 color="#ffffff"
@@ -1468,12 +1611,13 @@ function LandingGround() {
   const elapsedRef = useRef(0);
 
   useEffect(
-    () => useGameStore.subscribe((s) => {
-      if (s.phase !== phaseRef.current) {
-        phaseRef.current = s.phase;
-        elapsedRef.current = 0;
-      }
-    }),
+    () =>
+      useGameStore.subscribe((s) => {
+        if (s.phase !== phaseRef.current) {
+          phaseRef.current = s.phase;
+          elapsedRef.current = 0;
+        }
+      }),
     [],
   );
 
@@ -1488,12 +1632,7 @@ function LandingGround() {
     <group ref={groupRef} position={LAND_SCENE.toArray()} visible={false}>
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[60, 60, 1, 1]} />
-        <meshStandardMaterial
-          map={clonedTex}
-          roughness={0.95}
-          metalness={0}
-          color="#8a8a8a"
-        />
+        <meshStandardMaterial map={clonedTex} roughness={0.95} metalness={0} color="#8a8a8a" />
       </mesh>
       <ambientLight intensity={0.1} />
       <directionalLight position={[10, 15, 5]} intensity={2.5} color="#fff5e0" />
@@ -1515,12 +1654,13 @@ function MarsLandingGround() {
   const elapsedRef = useRef(0);
 
   useEffect(
-    () => useGameStore.subscribe((s) => {
-      if (s.phase !== phaseRef.current) {
-        phaseRef.current = s.phase;
-        elapsedRef.current = 0;
-      }
-    }),
+    () =>
+      useGameStore.subscribe((s) => {
+        if (s.phase !== phaseRef.current) {
+          phaseRef.current = s.phase;
+          elapsedRef.current = 0;
+        }
+      }),
     [],
   );
 
@@ -1535,12 +1675,7 @@ function MarsLandingGround() {
     <group ref={groupRef} position={LAND_SCENE.toArray()} visible={false}>
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[60, 60, 1, 1]} />
-        <meshStandardMaterial
-          map={clonedTex}
-          roughness={0.92}
-          metalness={0}
-          color="#c08060"
-        />
+        <meshStandardMaterial map={clonedTex} roughness={0.92} metalness={0} color="#c08060" />
       </mesh>
       <ambientLight intensity={0.15} color="#e8c4a0" />
       <directionalLight position={[10, 15, 5]} intensity={2.0} color="#ffe0b0" />
@@ -1569,28 +1704,16 @@ function FlightContent({ cutVeilRef }: { cutVeilRef: RefObject<HTMLDivElement | 
           <meshBasicMaterial color="#fff4d0" transparent opacity={0.35} />
         </mesh>
       </group>
-      <Stars
-        radius={300}
-        depth={80}
-        count={8000}
-        factor={5}
-        saturation={0.6}
-        fade
-        speed={0.2}
-      />
+      <Stars radius={300} depth={80} count={8000} factor={5} saturation={0.6} fade speed={0.2} />
       {!isMars && (
         <Suspense fallback={null}>
           <EarthSphere />
         </Suspense>
       )}
-      <Suspense fallback={null}>
-        {isMars ? <MarsSphere /> : <MoonSphere />}
-      </Suspense>
+      <Suspense fallback={null}>{isMars ? <MarsSphere /> : <MoonSphere />}</Suspense>
       <LandingMarker isMars={!!isMars} />
       <OrbitPath isMars={!!isMars} />
-      <Suspense fallback={null}>
-        {isMars ? <MarsLandingGround /> : <LandingGround />}
-      </Suspense>
+      <Suspense fallback={null}>{isMars ? <MarsLandingGround /> : <LandingGround />}</Suspense>
       <FlightAnimator isMars={!!isMars} cutVeilRef={cutVeilRef} />
     </>
   );
@@ -1607,20 +1730,13 @@ function FlightHUD({ onSkip }: { onSkip: () => void }) {
   const mission = useMemo(() => getMissionOrNull(missionId), [missionId]);
   const planet = mission?.planet ?? "moon";
   const i18nPhaseLabel = t(`flight.phaseLabels.${phase}`, { defaultValue: "" });
-  const label = phase === "touchdown"
-    ? getTouchdownLabel(mission)
-    : (i18nPhaseLabel || getPhaseLabel(phase, planet));
+  const label =
+    phase === "touchdown"
+      ? getTouchdownLabel(mission)
+      : i18nPhaseLabel || getPhaseLabel(phase, planet);
   const narration = getNarration(phase, playerName, mission);
 
-  const phases = [
-    "flight",
-    "coast",
-    "orbit",
-    "targetLocked",
-    "descent",
-    "touchdown",
-    "stepOut",
-  ];
+  const phases = ["flight", "coast", "orbit", "targetLocked", "descent", "touchdown", "stepOut"];
   const idx = phases.indexOf(phase);
   const pct = Math.max(0, (idx / (phases.length - 1)) * 100);
 
@@ -1649,9 +1765,7 @@ function FlightHUD({ onSkip }: { onSkip: () => void }) {
           <p className="text-[10px] sm:text-xs font-medium tracking-wide text-regolith-400">
             {mission?.name?.toUpperCase() || "APOLLO"}
           </p>
-          <p className="font-display text-base sm:text-lg font-semibold text-signal">
-            {label}
-          </p>
+          <p className="font-display text-base sm:text-lg font-semibold text-signal">{label}</p>
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="text-right">
@@ -1679,14 +1793,34 @@ function FlightHUD({ onSkip }: { onSkip: () => void }) {
             title={isFullscreen ? t("fullscreen.exitHint") : t("fullscreen.enterHint")}
           >
             {isFullscreen ? (
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
                 <polyline points="4 14 10 14 10 20" />
                 <polyline points="20 10 14 10 14 4" />
                 <line x1="14" y1="10" x2="21" y2="3" />
                 <line x1="3" y1="21" x2="10" y2="14" />
               </svg>
             ) : (
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
                 <polyline points="15 3 21 3 21 9" />
                 <polyline points="9 21 3 21 3 15" />
                 <line x1="21" y1="3" x2="14" y2="10" />
@@ -1756,9 +1890,7 @@ function FlightHUD({ onSkip }: { onSkip: () => void }) {
             <span className="shrink-0 text-[10px] sm:text-xs font-bold tracking-widest text-signal">
               {label.toUpperCase() || "FLIGHT"}
             </span>
-            <p className="text-xs sm:text-base leading-relaxed text-regolith-200">
-              {narration}
-            </p>
+            <p className="text-xs sm:text-base leading-relaxed text-regolith-200">{narration}</p>
           </div>
         </div>
       </div>
@@ -1768,12 +1900,21 @@ function FlightHUD({ onSkip }: { onSkip: () => void }) {
 
 /* ---- Main ---- */
 
-function getGates(planet: Planet, missionType?: string): Partial<Record<GamePhase, { event: "BEGIN_DESCENT" | "OPEN_HATCH"; labelKey: string }>> {
+function getGates(
+  planet: Planet,
+  missionType?: string,
+): Partial<Record<GamePhase, { event: "BEGIN_DESCENT" | "OPEN_HATCH"; labelKey: string }>> {
   const isMars = planet === "mars";
   const isRobotic = missionType === "robotic";
   return {
-    targetLocked: { event: "BEGIN_DESCENT", labelKey: isMars ? "flight.beginEntry" : "flight.beginDescent" },
-    touchdown: { event: "OPEN_HATCH", labelKey: isRobotic ? "flight.deployInstruments" : "flight.openHatch" },
+    targetLocked: {
+      event: "BEGIN_DESCENT",
+      labelKey: isMars ? "flight.beginEntry" : "flight.beginDescent",
+    },
+    touchdown: {
+      event: "OPEN_HATCH",
+      labelKey: isRobotic ? "flight.deployInstruments" : "flight.openHatch",
+    },
   };
 }
 

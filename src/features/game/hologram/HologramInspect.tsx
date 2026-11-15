@@ -45,8 +45,14 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
     [missionId, obj],
   );
 
-  const hasStory = useMemo(() => (obj ? hasStoryPacket(missionId, obj.id) : false), [missionId, obj]);
-  const storyPacket = useMemo(() => (hasStory && obj ? getStoryPacket(missionId, obj.id) : null), [hasStory, missionId, obj]);
+  const hasStory = useMemo(
+    () => (obj ? hasStoryPacket(missionId, obj.id) : false),
+    [missionId, obj],
+  );
+  const storyPacket = useMemo(
+    () => (hasStory && obj ? getStoryPacket(missionId, obj.id) : null),
+    [hasStory, missionId, obj],
+  );
 
   useEffect(() => {
     if (!modelEntry) {
@@ -59,10 +65,7 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
       .catch(() => setManifest(null));
   }, [modelEntry]);
 
-  const theme = useMemo(
-    () => (obj ? getObjectTheme(obj.id) : getObjectTheme("default")),
-    [obj],
-  );
+  const theme = useMemo(() => (obj ? getObjectTheme(obj.id) : getObjectTheme("default")), [obj]);
 
   // Smooth entrance fade
   useEffect(() => {
@@ -178,8 +181,8 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
                   isOperational
                     ? "bg-emerald-950/70 text-emerald-300 border-emerald-500/40"
                     : isDormant
-                    ? "bg-amber-950/70 text-amber-300 border-amber-500/40"
-                    : "bg-space-850 text-regolith-400 border-space-700"
+                      ? "bg-amber-950/70 text-amber-300 border-amber-500/40"
+                      : "bg-space-850 text-regolith-400 border-space-700"
                 }`}
               >
                 <span
@@ -187,16 +190,16 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
                     isOperational
                       ? "bg-emerald-400 animate-pulse"
                       : isDormant
-                      ? "bg-amber-400"
-                      : "bg-regolith-500"
+                        ? "bg-amber-400"
+                        : "bg-regolith-500"
                   }`}
                 />
                 <span>
                   {isOperational
                     ? "Active Telemetry"
                     : isDormant
-                    ? "Dormant Sensor"
-                    : "Defunct Structure"}
+                      ? "Dormant Sensor"
+                      : "Defunct Structure"}
                 </span>
               </span>
             </div>
@@ -222,7 +225,9 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
               >
                 <span>🎬</span>
                 <span>Watch 3D Story</span>
-                <span className="rounded bg-sky-400/30 px-1 py-0.5 text-[9px] text-sky-100 font-mono">[T]</span>
+                <span className="rounded bg-sky-400/30 px-1 py-0.5 text-[9px] text-sky-100 font-mono">
+                  [T]
+                </span>
               </button>
             )}
 
@@ -264,8 +269,8 @@ export function HologramInspect({ objects, missionId }: HologramInspectProps) {
                 {lightingMode === "studio"
                   ? "Studio"
                   : lightingMode === "solar"
-                  ? "Solar"
-                  : "Deep Space"}
+                    ? "Solar"
+                    : "Deep Space"}
               </span>
             </button>
 

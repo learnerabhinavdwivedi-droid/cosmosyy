@@ -35,42 +35,54 @@
     {
       "id": "descent-stage",
       "name": "Intrepid Descent Stage",
-      "position": [0, 0, 0],
+      "position": [
+        0,
+        0,
+        0
+      ],
       "description": "Lower half of Lunar Module Intrepid. Conrad and Bean landed just 163 metres from their target — the unmanned Surveyor 3 probe that had been sitting on the Moon since April 1967.",
       "xp": 50,
       "source": "LROC imagery; Apollo 12 Traverse Map (NASA)",
       "scienceDiscovery": "Validated the precision landing guidance system that allowed subsequent missions to target scientifically valuable terrain features.",
       "legacy": "Remains in the Ocean of Storms; its ascent stage was deliberately crashed into the Moon to calibrate the Apollo 12 seismometer.",
       "status": "defunct",
-      "firstPerson": "I am the descent stage of Intrepid. Pete Conrad flew me to a pinpoint landing just 163 metres from Surveyor 3 — exactly where we planned. When my upper half launched away, NASA deliberately crashed it into the Moon so the seismometer could feel the impact. I still stand here, proof that humans could land on a dime.",
+      "firstPerson": "Ayo, precision landing king in the building! I am Intrepid! Pete Conrad and Al Bean flew me right into the Ocean of Storms, and check the flex — I parked barely 160 meters from Surveyor 3! Talk about parallel parking on another planet with zero GPS. NASA wanted proof we could land on a dime, and I delivered with 100% rizz. Now I am chillin here forever as the ultimate interplanetary bullseye!",
       "yearDeployed": 1969,
       "nasaImageId": "as12-46-6737"
     },
     {
       "id": "flag",
       "name": "American Flag",
-      "position": [-4.5, 0, 6.2],
+      "position": [
+        -4.5,
+        0,
+        6.2
+      ],
       "description": "Planted by Conrad and Bean during EVA-1. Like all Apollo flags, it has a horizontal rod to keep it extended. Bleached white by decades of UV radiation.",
       "xp": 50,
       "source": "AS12-47-6897; LROC M175428601RE",
       "scienceDiscovery": "Served as a visual reference point in photographs, helping scientists reconstruct the precise layout and distances of the EVA work area.",
       "legacy": "LROC images suggest the flag may have been knocked over by the ascent engine exhaust during departure from the surface.",
       "status": "defunct",
-      "firstPerson": "I am the second American flag on the Moon. Pete and Al planted me near Intrepid during their first moonwalk. Like my sister flag at Tranquility Base, I have been baking in unfiltered sunlight for over fifty years. I may have fallen when Intrepid's ascent engine blasted off — no one has visited to check.",
+      "firstPerson": "Bro, round two on the Moon! I am the Apollo 12 Stars and Stripes. Pete Conrad was laughing the whole time trying to set me up because the latch was being stubborn, but once I locked in, I stood tall like an absolute boss. The solar wind has bleached my threads into ghost white couture, but no cap, Ocean of Storms has been my private penthouse since 1969!",
       "yearDeployed": 1969,
       "nasaImageId": "as12-46-6729"
     },
     {
       "id": "alsep",
       "name": "ALSEP Central Station",
-      "position": [-40, 0, -125],
+      "position": [
+        -40,
+        0,
+        -125
+      ],
       "description": "The Apollo Lunar Surface Experiments Package — a suite of scientific instruments powered by a plutonium-238 RTG. Included a seismometer, magnetometer, solar wind spectrometer, and more. Transmitted data to Earth until September 1977.",
       "xp": 50,
       "source": "Apollo 12 ALSEP deployment map (NASA)",
       "scienceDiscovery": "Its seismometer detected the deliberate crash of the Intrepid ascent stage, producing vibrations that rang for nearly an hour — revealing the Moon's highly fractured upper crust.",
       "legacy": "Transmitted data continuously for nearly eight years until NASA shut down all ALSEP stations on 30 September 1977 to save budget.",
       "status": "defunct",
-      "firstPerson": "I am the ALSEP — a whole science station powered by the heat of plutonium-238. My seismometer felt the crash of Intrepid's upper half and the Moon rang like a bell for almost an hour. I whispered data back to Earth every day for eight years until NASA turned me off in 1977 to save money.",
+      "firstPerson": "Hold up, let me cook! I am the Apollo 12 ALSEP station, fueled by a glowing SNAP-27 plutonium battery. While the astronauts bounced back to Earth, my nuclear heart pumped power into seismometers, solar wind detectors, and ion gauges nonstop for eight whole years! I detected the exact moment their discarded ascent stage crashed into the Moon and made it ring like a bell. Talk about cosmic eavesdropping, zero chill!",
       "yearDeployed": 1969,
       "yearLastContact": 1977,
       "nasaImageId": "as12-46-6813"
@@ -78,14 +90,18 @@
     {
       "id": "surveyor-3",
       "name": "Surveyor 3",
-      "position": [50, 0, -155],
+      "position": [
+        50,
+        0,
+        -155
+      ],
       "description": "NASA's unmanned probe that soft-landed on 20 April 1967, two and a half years before Apollo 12. Conrad and Bean walked to it, inspected it, and cut off its TV camera to bring back to Earth. The rest of Surveyor 3 is still here.",
       "xp": 50,
       "source": "AS12-48-7100; LROC imagery",
       "scienceDiscovery": "After 31 months on the Moon, its retrieved camera and soil scoop showed the effects of micrometeorite bombardment and solar radiation on hardware, providing data for long-duration spacecraft design.",
       "legacy": "The retrieved TV camera is on display at the Smithsonian National Air and Space Museum; analysis of bacteria reportedly found inside it sparked decades of scientific debate about contamination protocols.",
       "status": "defunct",
-      "firstPerson": "I am Surveyor 3, and I was here first. I soft-landed in April 1967 and scooped lunar soil to prove the Moon could support a heavy spacecraft. Two and a half years later, Pete and Al walked over and cut off my TV camera to bring home. The rest of me still stands in this crater — the oldest piece of equipment the Apollo astronauts ever visited on the Moon.",
+      "firstPerson": "Yo, respect your elders! I am Surveyor 3, the robotic pioneer that soft-landed in 1967 when humans were still dreaming about walking on the Moon! Pete Conrad literally walked right up to my crater, chopped off my TV camera with bolt cutters, and brought it back to Earth. Scientists found dormant bacteria on me and went crazy thinking life survived two years on the Moon! OG robot status, built completely different!",
       "yearDeployed": 1967,
       "yearLastContact": 1967,
       "nasaImageId": "as12-48-7133"
@@ -93,28 +109,36 @@
     {
       "id": "s-band-antenna",
       "name": "S-Band Antenna",
-      "position": [3.2, 0, -5.8],
+      "position": [
+        3.2,
+        0,
+        -5.8
+      ],
       "description": "An erectable S-band antenna deployed near the LM to provide a high-gain communication link with Mission Control. Replaced the small LM antenna for better TV and data transmission.",
       "xp": 50,
       "source": "AS12-46-6726; Apollo 12 surface photos",
       "scienceDiscovery": "Provided the high-gain communication link that enabled high-quality colour television broadcasts and science data transmission from the lunar surface.",
       "legacy": "Remains near the Intrepid landing site; its erectable parabolic design was carried on all subsequent Apollo missions for reliable deep-space communication.",
       "status": "defunct",
-      "firstPerson": "I am the S-band erectable antenna. When the astronauts set me up, I gave Mission Control a much stronger signal than the small antenna on Intrepid. I beamed back television pictures and science data across 384,000 kilometres of empty space — though Al Bean accidentally pointed the TV camera at the Sun and burned it out early in the mission.",
+      "firstPerson": "Bro, I was the literal Wi-Fi router of the Moon! I am the erectable S-band high-gain dish. Conrad and Bean deployed my umbrella mesh so Houston could hear every giggle, heartbeat, and technical callout across 380,000 kilometers of deep space. Without me, they were screaming into the cosmic void. Big antenna energy!",
       "yearDeployed": 1969,
       "nasaImageId": "as12-47-6988"
     },
     {
       "id": "hand-tool-carrier",
       "name": "Hand Tool Carrier",
-      "position": [-8.5, 0, 3.1],
+      "position": [
+        -8.5,
+        0,
+        3.1
+      ],
       "description": "A small carrier holding geological hand tools used during the EVAs — tongs, a scoop, core tubes, and sample bags. Left behind to save weight for the lunar samples being brought home.",
       "xp": 50,
       "source": "Apollo 12 EVA checklist (NASA)",
       "scienceDiscovery": "Carried the tools that collected 34.4 kilograms of lunar samples from six locations, including material from the rim of a crater that revealed the site's impact history.",
       "legacy": "Left on the surface to save weight for the lunar samples; the tools it carried are archived at the Lunar Sample Laboratory in Houston.",
       "status": "defunct",
-      "firstPerson": "I am the hand tool carrier — a simple rack holding tongs, scoops, core tubes, and sample bags. Pete and Al carried me on both moonwalks as they collected rocks and soil from six different spots. When it was time to go home, they left me behind — I weighed too much compared to the 34 kilograms of Moon they were bringing back.",
+      "firstPerson": "Ayo, don't sleep on the gear caddy! I am the Apollo 12 Hand Tool Carrier. You think lunar geology happens by magic? Nah, bro, I hauled the heavy tongs, sample scoops, core tubes, and hammer across Ocean of Storms so the boys didn't drop NASA's million-dollar moonrocks in the dust. Unsung MVP of the mission, zero cap!",
       "yearDeployed": 1969,
       "nasaImageId": "as12-49-7278"
     }

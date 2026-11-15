@@ -228,8 +228,8 @@ function MissionCard({
               isMars
                 ? "hover:border-warn/40 hover:shadow-lg hover:shadow-warn/5"
                 : isDeepSpace
-                ? "hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/10"
-                : "hover:border-signal/40 hover:shadow-lg hover:shadow-signal/5",
+                  ? "hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/10"
+                  : "hover:border-signal/40 hover:shadow-lg hover:shadow-signal/5",
             ),
       )}
       whileHover={isLocked ? undefined : { scale: 1.03, y: -4 }}
@@ -242,8 +242,8 @@ function MissionCard({
             isMars
               ? "bg-gradient-to-r from-transparent via-warn to-transparent"
               : isDeepSpace
-              ? "bg-gradient-to-r from-transparent via-purple-400 to-transparent"
-              : "bg-gradient-to-r from-transparent via-signal to-transparent",
+                ? "bg-gradient-to-r from-transparent via-purple-400 to-transparent"
+                : "bg-gradient-to-r from-transparent via-signal to-transparent",
           )}
         />
       )}
@@ -253,16 +253,24 @@ function MissionCard({
           <h3
             className={cn(
               "font-display text-xl font-bold transition-colors",
-              isLocked ? "text-regolith-400" : cn(
-                "text-regolith-200",
-                isMars ? "group-hover:text-warn" : "group-hover:text-signal",
-              ),
+              isLocked
+                ? "text-regolith-400"
+                : cn(
+                    "text-regolith-200",
+                    isMars ? "group-hover:text-warn" : "group-hover:text-signal",
+                  ),
             )}
           >
             {mission.name}
           </h3>
           <p className="mt-0.5 flex items-center gap-1.5 text-sm text-regolith-400">
-            <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              className="h-3 w-3 shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
@@ -276,13 +284,24 @@ function MissionCard({
 
       <div className="mt-3 flex items-center gap-3 text-[11px] text-regolith-400/70">
         <span className="font-mono">{mission.date}</span>
-        <span className={cn("h-3 w-px", isMars ? "bg-warn/20" : isDeepSpace ? "bg-purple-500/20" : "bg-signal/20")} />
+        <span
+          className={cn(
+            "h-3 w-px",
+            isMars ? "bg-warn/20" : isDeepSpace ? "bg-purple-500/20" : "bg-signal/20",
+          )}
+        />
         <span className="truncate">{mission.crew}</span>
       </div>
 
       <div className="mt-3 flex items-center gap-3">
         <span className="flex items-center gap-1.5 text-[11px] text-regolith-400/70">
-          <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            className="h-3 w-3"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <circle cx="11" cy="11" r="8" />
             <path d="M21 21l-4.35-4.35" />
           </svg>
@@ -304,8 +323,8 @@ function MissionCard({
             isMars
               ? "bg-gradient-to-r from-warn to-[#c1440e] text-space-950 hover:shadow-md hover:shadow-warn/20 focus-visible:ring-warn"
               : isDeepSpace
-              ? "bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:shadow-md hover:shadow-purple-500/20 focus-visible:ring-purple-400"
-              : "bg-gradient-to-r from-signal to-[#e85d20] text-space-950 hover:shadow-md hover:shadow-signal/20 focus-visible:ring-signal",
+                ? "bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:shadow-md hover:shadow-purple-500/20 focus-visible:ring-purple-400"
+                : "bg-gradient-to-r from-signal to-[#e85d20] text-space-950 hover:shadow-md hover:shadow-signal/20 focus-visible:ring-signal",
           )}
         >
           {t("missionSelect.launch")}
@@ -333,8 +352,8 @@ export default function MissionSelectPage() {
     planetTab === "mars"
       ? MARS_MISSIONS
       : planetTab === "deep-space"
-      ? DEEP_SPACE_MISSIONS
-      : MOON_MISSIONS;
+        ? DEEP_SPACE_MISSIONS
+        : MOON_MISSIONS;
 
   useEffect(() => {
     preloadGameAssets();
@@ -343,7 +362,7 @@ export default function MissionSelectPage() {
       startMission("apollo-11");
       navigate("/play/apollo-11?demo=1");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDemo]);
 
   const handleNameSubmit = () => {
@@ -416,13 +435,17 @@ export default function MissionSelectPage() {
       <div
         className={cn(
           "pointer-events-none fixed top-0 right-0 h-[500px] w-[500px] rounded-full blur-[120px] transition-all duration-1000",
-          isMars ? "bg-[#c1440e]/8 translate-x-1/3 -translate-y-1/3" : "bg-signal/5 translate-x-1/3 -translate-y-1/3",
+          isMars
+            ? "bg-[#c1440e]/8 translate-x-1/3 -translate-y-1/3"
+            : "bg-signal/5 translate-x-1/3 -translate-y-1/3",
         )}
       />
       <div
         className={cn(
           "pointer-events-none fixed bottom-0 left-0 h-[400px] w-[400px] rounded-full blur-[100px] transition-all duration-1000",
-          isMars ? "bg-warn/5 -translate-x-1/3 translate-y-1/3" : "bg-[#38BDF8]/4 -translate-x-1/3 translate-y-1/3",
+          isMars
+            ? "bg-warn/5 -translate-x-1/3 translate-y-1/3"
+            : "bg-[#38BDF8]/4 -translate-x-1/3 translate-y-1/3",
         )}
       />
 
@@ -434,7 +457,13 @@ export default function MissionSelectPage() {
             to="/"
             className="inline-flex items-center gap-1.5 rounded-xl border border-space-700/60 bg-space-900/60 px-3.5 py-1.5 text-xs font-semibold text-regolith-300 backdrop-blur-md transition hover:border-signal/50 hover:text-signal hover:bg-space-800/80"
           >
-            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <svg
+              className="h-3.5 w-3.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
             Home
@@ -465,9 +494,7 @@ export default function MissionSelectPage() {
           <h1 className="font-display text-5xl font-black tracking-tight sm:text-6xl md:text-7xl">
             <span className="text-regolith-200">{t("app.title")}</span>
           </h1>
-          <p className="mt-3 text-base text-regolith-400 sm:text-lg">
-            {t("app.tagline")}
-          </p>
+          <p className="mt-3 text-base text-regolith-400 sm:text-lg">{t("app.tagline")}</p>
         </motion.header>
 
         {/* Name input or Welcome bar */}
@@ -516,12 +543,14 @@ export default function MissionSelectPage() {
             <span className="h-4 w-px bg-space-700" />
             <span className="font-mono text-sm text-signal">{totalXp} XP</span>
             <span className="h-4 w-px bg-space-700" />
-            <span className={cn(
-              "font-bold text-sm",
-              getRank() === "Cadet" && "text-regolith-400",
-              getRank() === "Pilot" && "text-warn",
-              getRank() === "Commander" && "text-signal",
-            )}>
+            <span
+              className={cn(
+                "font-bold text-sm",
+                getRank() === "Cadet" && "text-regolith-400",
+                getRank() === "Pilot" && "text-warn",
+                getRank() === "Commander" && "text-signal",
+              )}
+            >
               {getRank()}
             </span>
           </motion.div>
@@ -582,15 +611,15 @@ export default function MissionSelectPage() {
           {planetTab === "mars"
             ? t("missionSelect.marsHeading")
             : planetTab === "deep-space"
-            ? "Deep Space Probes & Asteroids"
-            : t("missionSelect.heading")}
+              ? "Deep Space Probes & Asteroids"
+              : t("missionSelect.heading")}
         </motion.h2>
         <p className="mx-auto mt-2 max-w-lg text-center text-sm text-regolith-400/80">
           {planetTab === "mars"
             ? "Deploy robotic explorers to the red planet. Scan landers, rovers and instruments left on Martian soil."
             : planetTab === "deep-space"
-            ? "Track silent voyagers and asteroid touchdowns. Discover probes still traveling away from Earth and telescopes in solar orbit."
-            : "Fly Saturn V rockets to the Moon. Walk the landing sites and scan what the astronauts left behind."}
+              ? "Track silent voyagers and asteroid touchdowns. Discover probes still traveling away from Earth and telescopes in solar orbit."
+              : "Fly Saturn V rockets to the Moon. Walk the landing sites and scan what the astronauts left behind."}
         </p>
 
         {/* Mission grid */}
@@ -629,9 +658,7 @@ export default function MissionSelectPage() {
 
         {/* Footer */}
         <footer className="mt-auto pt-16 pb-6 text-center">
-          <p className="text-xs text-regolith-400/50">
-            NASA Space Apps Challenge 2026
-          </p>
+          <p className="text-xs text-regolith-400/50">NASA Space Apps Challenge 2026</p>
         </footer>
       </div>
     </div>

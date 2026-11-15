@@ -35,7 +35,11 @@
     {
       "id": "near-spacecraft",
       "name": "NEAR Shoemaker Spacecraft",
-      "position": [0, 0, 0],
+      "position": [
+        0,
+        0,
+        0
+      ],
       "description": "Octagonal spacecraft bus measuring 1.5 x 1.7 meters with four gallium arsenide solar panels and a 1.5-meter high-gain antenna dish. Rested upright on Eros after an improvised gentle landing on February 12, 2001.",
       "xp": 50,
       "source": "NASA/JHUAPL NEAR Mission Archive (NSSDCA #1996-008A)",
@@ -47,12 +51,16 @@
       "yearDeployed": 2001,
       "yearLastContact": 2001,
       "nasaImageId": "PIA03173",
-      "firstPerson": "History books called it impossible, but I pulled it off! I am NEAR Shoemaker. I was built as an orbiter with zero landing legs. But after circling this 33-kilometer potato-shaped asteroid for a year, engineers decided: 'Why not touch down?' We gently kissed the boulders at 4 miles per hour. Miraculously, my antennas kept transmitting data right from the rock! I am humanity's first footprint on an asteroid!"
+      "firstPerson": "History books called it impossible, but I pulled it off! I am NEAR Shoemaker. I spent a year orbiting the giant potato-shaped asteroid 433 Eros, snapping 160,000 photos. And then, without any landing legs designed on me, I performed a gentle, powered touchdown directly onto the asteroid's boulder-strewn surface and kept transmitting for two more weeks! First spacecraft to ever land on an asteroid, mic drop!"
     },
     {
       "id": "xgrs-spectrometer",
       "name": "XGRS Gamma-Ray Spectrometer",
-      "position": [-3.8, 0, 4.2],
+      "position": [
+        -3.8,
+        0,
+        4.2
+      ],
       "description": "Combined X-ray and Gamma-Ray Spectrometer mounted to detect characteristic fluorescent X-rays (magnesium, aluminum, silicon) and gamma-ray lines (iron, potassium, thorium) from Eros's surface.",
       "xp": 50,
       "source": "Science 292 (Evans et al. 2001) / NSSDCA",
@@ -64,12 +72,16 @@
       "yearDeployed": 2001,
       "yearLastContact": 2001,
       "nasaImageId": "PIA02970",
-      "firstPerson": "I read asteroid atomic barcodes! I am XGRS. From just 4 inches above the dust after touchdown, I bathed the regolith in my detectors and counted magnesium and silicon atoms. I proved Eros is a pristine cosmic time capsule that never got baked or melted when our solar system was born."
+      "firstPerson": "I read asteroid atomic barcodes! I am XGRS — the X-ray and Gamma-Ray Spectrometer on NEAR. From orbit and then from the surface, I bombarded Eros with detector physics to measure iron, magnesium, and silicon ratios, proving 433 Eros is an un-melted, primitive chondrite asteroid from the dawn of the solar system. Pure forensic science!"
     },
     {
       "id": "near-solar-wings",
       "name": "Gallium Arsenide Solar Arrays",
-      "position": [4.2, 0, -3.5],
+      "position": [
+        4.2,
+        0,
+        -3.5
+      ],
       "description": "Four rigid solar array wings spanning 5.6 meters total, utilizing high-efficiency GaAs cells generating 1,800 watts at 1 AU from the Sun.",
       "xp": 50,
       "source": "JHU APL Technical Digest / Jenkins et al.",
@@ -81,12 +93,16 @@
       "yearDeployed": 1996,
       "yearLastContact": 2001,
       "nasaImageId": "PIA02462",
-      "firstPerson": "Four wings of pure solar power! Even when Eros tumbled wildly through space casting crazy shadows, my gallium arsenide cells soaked up every beam of sunlight to keep the radio purring. When we landed, two of my wings rested directly on the cold asteroid dirt!"
+      "firstPerson": "Four wings of pure solar power! Even when Eros tumbled wildly in deep space between Earth and Mars, my gallium arsenide solar panels captured every photon to keep NEAR's transmitters roaring. Rocking that butterfly silhouette across the asteroid belt!"
     },
     {
       "id": "eros-ponded-regolith",
       "name": "Eros Ponded Regolith Feature",
-      "position": [-0.5, 0, -5.8],
+      "position": [
+        -0.5,
+        0,
+        -5.8
+      ],
       "description": "A flat, crater-free 'pond' of ultra-fine dust accumulated in low gravitational depressions on Eros, created by electrostatic levitation and acoustic seismic shaking.",
       "xp": 50,
       "source": "Icarus (Robinson et al. 2002) / NEAR MSI Camera",
@@ -97,8 +113,7 @@
       "status": "dormant",
       "yearDeployed": 2001,
       "nasaImageId": "PIA03141",
-      "firstPerson": "I look like a serene zen sand garden on an alien rock! I am an Eros dust pond. In microgravity where gravity is 1,000 times weaker than Earth, solar radiation charges tiny dust grains and makes them float across the surface until they settle into glass-smooth lakes. Walk gently, space explorer!"
+      "firstPerson": "I look like a serene zen sand garden on an alien rock! I am the ponded regolith of Eros — super-flat dust deposits nestled inside craters where electrostatic levitation and micrometeorite shaking smoothed out the debris over millions of years. The weirdest sandbox in the solar system, certified!"
     }
   ]
 }
-

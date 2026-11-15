@@ -35,42 +35,54 @@
     {
       "id": "descent-stage",
       "name": "Antares Descent Stage",
-      "position": [0, 0, 0],
+      "position": [
+        0,
+        0,
+        0
+      ],
       "description": "Lower half of Lunar Module Antares. After a tense manual landing following a computer abort signal, Shepard and Mitchell touched down at Fra Mauro — the original target for the ill-fated Apollo 13.",
       "xp": 50,
       "source": "LROC imagery; Apollo 14 Traverse Map (NASA)",
       "scienceDiscovery": "Validated improved landing radar and abort guidance systems developed after the Apollo 13 incident, enabling future missions to target more challenging terrain.",
       "legacy": "Remains at Fra Mauro; its ascent stage was deliberately crashed into the Moon, creating a known-energy seismic source for the ALSEP network.",
       "status": "defunct",
-      "firstPerson": "I am Antares, and I almost did not make it. A faulty abort switch nearly ended our mission before we even started the descent. The crew and Mission Control raced to reprogram my computer in flight. When we finally touched down at Fra Mauro — the target Apollo 13 never reached — it felt like the whole world exhaled.",
+      "firstPerson": "Yo, talk about clutching a 1v1 against disaster! I am Antares, Apollo 14's descent stage. Right before powered descent, a faulty abort switch almost made the computer panic-abort the entire landing! But Alan Shepard and Ed Mitchell typed an in-flight hack into the AGC, and I brought them down softly right into the Fra Mauro highlands. Greatest software clutch in space history, period!",
       "yearDeployed": 1971,
       "nasaImageId": "as14-66-9277"
     },
     {
       "id": "flag",
       "name": "American Flag",
-      "position": [-5.0, 0, 5.5],
+      "position": [
+        -5.0,
+        0,
+        5.5
+      ],
       "description": "Planted during EVA-1 near the Lunar Module. Shepard, America's first man in space, was now the oldest person to walk on the Moon at age 47.",
       "xp": 50,
       "source": "AS14-66-9232; LROC imagery",
       "scienceDiscovery": "Documented the surface conditions and served as a photographic reference for reconstructing the EVA timeline and crew movements at Fra Mauro.",
       "legacy": "LROC images from 2011 show the Apollo 14 flag still casts a shadow, indicating it remains standing.",
       "status": "defunct",
-      "firstPerson": "I am the flag planted by Alan Shepard, America's first astronaut and the oldest moonwalker at age 47. He had fought his way back from a disabling inner-ear condition just to stand here. When he pushed my pole into Fra Mauro soil, it was a personal triumph as much as a national one.",
+      "firstPerson": "Bro, look at this flex! Alan Shepard, the very first American in space who rode a Mercury rocket a decade earlier, came all the way to Fra Mauro just to plant me on the Moon! I have been standing here overlooking Cone Crater through boiling lunar days and freezing nights. Radiation stripped my red and blue, but my legacy is pure gold!",
       "yearDeployed": 1971,
       "nasaImageId": "as14-66-9233"
     },
     {
       "id": "alsep",
       "name": "ALSEP Central Station",
-      "position": [-55, 0, -170],
+      "position": [
+        -55,
+        0,
+        -170
+      ],
       "description": "Apollo 14's experiment package included an active seismometer, a charged particle detector, and a cold cathode ion gauge. Powered by a plutonium RTG, it operated until 1977.",
       "xp": 50,
       "source": "Apollo 14 ALSEP deployment map (NASA)",
       "scienceDiscovery": "Its active seismometer and charged particle detector mapped the Moon's deep interior structure and showed that the Moon has no global magnetic field, unlike Earth.",
       "legacy": "Operated for over six years, transmitting data until NASA deactivated all ALSEP stations on 30 September 1977.",
       "status": "defunct",
-      "firstPerson": "I am the ALSEP station at Fra Mauro, powered by a glowing heart of plutonium. My active seismometer thumped the ground with small explosions to map the layers beneath me. My charged particle detector watched the solar wind slam into the unprotected surface. I reported home faithfully for six years until the day NASA said goodbye.",
+      "firstPerson": "Ayo, listen up! I am Apollo 14's ALSEP scientific powerhouse. I didn't just listen to the Moon — Shepard literally set off explosive thumper charges on the ground to give me seismic shockwaves to analyze! We mapped the Moon's crust down to dozens of meters, proving the regolith was deep and layered. Real-life science with literal explosions, absolute cinema!",
       "yearDeployed": 1971,
       "yearLastContact": 1977,
       "nasaImageId": "as14-67-9374"
@@ -78,42 +90,54 @@
     {
       "id": "lrrr",
       "name": "Laser Ranging Retroreflector",
-      "position": [-48, 0, -165],
+      "position": [
+        -48,
+        0,
+        -165
+      ],
       "description": "An array of 100 fused-silica corner cubes, identical to the Apollo 11 unit. Still operational today — Earth-based observatories bounce laser pulses off it to measure the Earth-Moon distance with millimetre precision.",
       "xp": 50,
       "source": "Apollo 14 ALSEP deployment map (NASA)",
       "scienceDiscovery": "Forms the middle point of a triangle with the Apollo 11 and 15 retroreflectors, enabling scientists to measure not just the Earth-Moon distance but also the Moon's libration and tidal flexing.",
       "legacy": "Still fully operational and regularly targeted by laser ranging stations worldwide, more than fifty years after deployment.",
       "status": "operational",
-      "firstPerson": "I am the second Laser Ranging Retroreflector placed on the Moon, with 100 precision glass prisms aimed at Earth. Together with my twins at Tranquility Base and Hadley Rille, I form a triangle that lets scientists track how the Moon wobbles, flexes, and slowly spirals away from Earth. After more than fifty years, I still bounce back every laser that finds me.",
+      "firstPerson": "Hold up, laser gang back in business! I am the Apollo 14 Retroreflector. Zero batteries, zero wires, zero maintenance for fifty-plus years, and Earth observatories are still hitting my silica prisms with green laser pulses every single month! Tracking the Moon's drift millimeter by millimeter without paying a single electric bill. Passive tech gigachad right here!",
       "yearDeployed": 1971,
       "nasaImageId": "as14-67-9386"
     },
     {
       "id": "met",
       "name": "MET (Modular Equipment Transporter)",
-      "position": [15, 0, -60],
+      "position": [
+        15,
+        0,
+        -60
+      ],
       "description": "Nicknamed the 'lunar rickshaw,' this two-wheeled hand cart carried tools, cameras, and sample bags during the EVAs. It was the only wheeled vehicle used before the Lunar Roving Vehicle of Apollo 15.",
       "xp": 50,
       "source": "AS14-68-9405; Apollo 14 surface photos",
       "scienceDiscovery": "Enabled astronauts to transport 43 kilograms of lunar samples over rough terrain during two EVAs, more than doubling the sample collection range compared to walking-only missions.",
       "legacy": "The only human-pulled wheeled vehicle ever used on the Moon; its design informed requirements for the Lunar Roving Vehicle deployed on Apollo 15, 16, and 17.",
       "status": "defunct",
-      "firstPerson": "I am the MET — the Modular Equipment Transporter — but everyone called me the lunar rickshaw. Al and Ed pulled me across Fra Mauro's hilly terrain, carrying tools, cameras, and sample bags. I was not glamorous like the rovers that came after me, but I let them explore farther and bring back more Moon than any mission before.",
+      "firstPerson": "Ayo, say hello to the Lunar Rickshaw! I am the MET — a two-wheeled handcart with rubber tires designed for the Moon. Shepard and Mitchell pulled me up the steep slope of Cone Crater loaded with rocks. They were breathing so hard their heart rates hit 150 BPM! I got so bumpy they almost carried me instead, but hey, I hauled 42 kilos of ancient lunar crust home. Heavy lifting certified!",
       "yearDeployed": 1971,
       "nasaImageId": "as14-68-9487"
     },
     {
       "id": "golf-balls",
       "name": "Shepard's Golf Balls",
-      "position": [8, 0, 12],
+      "position": [
+        8,
+        0,
+        12
+      ],
       "description": "Alan Shepard attached a 6-iron head to a sample tool handle and hit two golf balls on live TV, famously claiming one went 'miles and miles.' Analysis later estimated about 40 yards. The balls are still out there.",
       "xp": 50,
       "source": "AS14-66-9337; Apollo 14 TV footage transcript",
       "scienceDiscovery": "Provided a memorable demonstration of reduced lunar gravity — a ball hit one-handed in a bulky spacesuit traveled roughly 40 yards in one-sixth gravity, six times farther than the same swing would achieve on Earth.",
       "legacy": "The two golf balls remain on the surface at Fra Mauro; the makeshift 6-iron club head is on display at the USGA Golf Museum in Far Hills, New Jersey.",
       "status": "defunct",
-      "firstPerson": "We are Shepard's golf balls — two ordinary balls that became the most famous sports equipment off Earth. Alan smuggled a 6-iron head in his suit pocket and clipped it onto a sample tool. His first swing was a shank, but the second sent us sailing in the low gravity. He said we went 'miles and miles' — really about 40 yards. We are still out here.",
+      "firstPerson": "Bro! We are Alan Shepard's iconic lunar golf balls! Right at the end of EVA-2, Al pulled a smuggled 6-iron head out of his spacesuit, clicked it onto a sample handle, and swung with one hand in his bulky suit! The first one hooked into a crater, but the second one? Miles and miles and miles, baby! Pure vacuum, one-sixth gravity, infinite hangtime. Most legendary sports moment outside Earth, no debate!",
       "yearDeployed": 1971,
       "nasaImageId": "as14-67-9367"
     }

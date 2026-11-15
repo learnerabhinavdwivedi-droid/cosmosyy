@@ -35,14 +35,18 @@
     {
       "id": "sp-rover",
       "name": "Spirit Rover",
-      "position": [3, 0, -1],
+      "position": [
+        3,
+        0,
+        -1
+      ],
       "description": "Spirit landed in Gusev Crater on 4 January 2004 for a planned 90-sol mission, but operated for over six years. In 2009, its right front wheel became stuck in soft soil at a site called 'Troy'. NASA spent months trying to free it before declaring Spirit a stationary research platform. Last contact was 22 March 2010.",
       "xp": 60,
       "source": "NASA/JPL Mars Exploration Rovers",
       "scienceDiscovery": "Discovered nearly pure silica deposits and goethite minerals proving ancient hydrothermal activity — hot springs or steam vents — once existed at Gusev Crater.",
       "legacy": "Spirit is stuck in soft soil at Troy, tilted with its solar panels unable to catch enough winter sun; it has been silent since 22 March 2010.",
       "status": "dormant",
-      "firstPerson": "I was only supposed to work for 90 days, but I lasted over six years. I climbed hills, survived dust storms, and even kept doing science after my front wheel broke. Then I got stuck at Troy, and the cold Martian winter took me. I am still here, tilted in the sand, dreaming of the Columbia Hills I once explored.",
+      "firstPerson": "Yo, talk about pure grit! I am Spirit — MER-A! NASA planned a 90-sol mission, but I survived for over six grueling years across Gusev Crater! I fought through raging dust storms, survived brutal freezing winters, and climbed entire mountains on six wheels. They called me Spirit because you literally could not break my resolve!",
       "yearDeployed": 2004,
       "yearLastContact": 2010,
       "nasaImageId": "PIA05019"
@@ -50,70 +54,90 @@
     {
       "id": "sp-columbia-hills",
       "name": "Columbia Hills",
-      "position": [18, 0, 10],
+      "position": [
+        18,
+        0,
+        10
+      ],
       "description": "Spirit drove 3 km to reach the Columbia Hills, named for the seven astronauts lost in the Space Shuttle Columbia disaster. The hills proved to be a scientific treasure: Spirit found evidence that water had once altered the rocks here. Minerals like goethite and hematite confirmed past water activity.",
       "xp": 50,
       "source": "NASA/JPL Mars Exploration Rovers",
       "scienceDiscovery": "Contained rocks altered by water, including goethite (an iron mineral that only forms in the presence of water), proving Gusev Crater once had liquid water.",
       "legacy": "The Columbia Hills remain a memorial to the seven Space Shuttle Columbia astronauts; Spirit's exploration showed their namesake hills held profound scientific secrets.",
       "status": "defunct",
-      "firstPerson": "I am a cluster of ancient hills named for seven brave astronauts. For billions of years my rocks held a secret: they were once soaked in water. When Spirit drove three kilometres to reach me, she found the proof in my minerals — goethite and hematite, forged in liquid water long ago. I keep their memory alive.",
+      "firstPerson": "Bro, look at this view! I am the Columbia Hills — named in eternal tribute to the seven heroes of Space Shuttle Columbia. Spirit drove 3 kilometers across treacherous dunes just to reach my peaks and uncover ancient rocks soaked in ancient hot springs. Monument of courage on Mars!",
       "yearDeployed": 2004,
       "nasaImageId": "PIA06917"
     },
     {
       "id": "sp-home-plate",
       "name": "Home Plate Formation",
-      "position": [-10, 0, 16],
+      "position": [
+        -10,
+        0,
+        16
+      ],
       "description": "Home Plate is a roughly circular plateau about 80 metres across in the Inner Basin of the Columbia Hills. Spirit found that it was composed of layered rocks with a volcanic origin, likely formed by explosive interaction between magma and water or ice. This was strong evidence for past hydrothermal activity.",
       "xp": 50,
       "source": "NASA/JPL Mars Exploration Rovers",
       "scienceDiscovery": "Revealed layered volcanic rocks formed by explosive interaction between magma and water or ice — strong evidence for past hydrothermal activity on Mars.",
       "legacy": "Home Plate is recognised as one of the most scientifically significant geological formations discovered by any Mars rover.",
       "status": "defunct",
-      "firstPerson": "I am Home Plate, an 80-metre circle of layered rock in the Columbia Hills. Billions of years ago, magma met water inside me and exploded — leaving behind layers that tell the story. Spirit spent years studying me, and I rewarded her with proof that Mars once had the heat and water life needs.",
+      "firstPerson": "Ayo, baseball fans on Mars! I am Home Plate — an 80-meter plateau of layered volcanic ash. Spirit spent two harsh Martian winters parked on my slopes, discovering silica-rich deposits that proved boiling hydrothermal geysers once exploded right here. Mars had hot springs, baby!",
       "yearDeployed": 2004,
       "nasaImageId": "PIA10214"
     },
     {
       "id": "sp-wheel-tracks",
       "name": "Rover Wheel Tracks",
-      "position": [10, 0, -8],
+      "position": [
+        10,
+        0,
+        -8
+      ],
       "description": "Spirit's broken right front wheel, which stopped turning in 2006, inadvertently became a scientific tool. As Spirit dragged the wheel, it scraped away the surface layer to reveal bright white soil rich in silica — up to 90% pure SiO₂. This discovery suggested either hot springs or fumaroles once existed here.",
       "xp": 50,
       "source": "NASA/JPL Mars Exploration Rovers",
       "scienceDiscovery": "Accidentally uncovered soil that was 90% pure silica — a composition that on Earth forms only in hot springs or volcanic steam vents.",
       "legacy": "The wheel tracks exposing silica remain on the surface, a visible record of one of Mars exploration's most serendipitous discoveries.",
       "status": "defunct",
-      "firstPerson": "I am the tracks of a broken wheel. When Spirit's right front wheel jammed in 2006, she had to drag me everywhere. But that turned out to be a gift — I scraped away the top layer and revealed bright white soil, 90% pure silica. On Earth that only comes from hot springs. My accident became one of Mars's biggest discoveries.",
+      "firstPerson": "Bro, greatest accidental discovery in space history! In 2006, Spirit's right front wheel broke and stopped spinning, dragging behind like an anchor. But that dragged wheel scraped away the topsoil and revealed 90 percent pure silica — proof of ancient hydrothermal vents! A broken wheel unlocked the biggest scientific jackpot of the mission. Infinite aura!",
       "yearDeployed": 2006,
       "nasaImageId": "PIA07372"
     },
     {
       "id": "sp-bonneville",
       "name": "Bonneville Crater",
-      "position": [-15, 0, -10],
+      "position": [
+        -15,
+        0,
+        -10
+      ],
       "description": "Bonneville Crater was one of Spirit's first major waypoints, a 200-metre impact crater about 300 metres from the landing site. Scientists hoped to find exposed rock layers in its walls, but found mostly loose soil. The disappointment led to the decision to drive the 3 km to Columbia Hills — which turned out to be the right call.",
       "xp": 50,
       "source": "NASA/JPL Mars Exploration Rovers",
       "scienceDiscovery": "Showed that not all craters expose useful rock layers, which redirected the mission toward the far more rewarding Columbia Hills.",
       "legacy": "Bonneville Crater remains an unremarkable impact feature, but it played a pivotal role in the decision that made the Spirit mission legendary.",
       "status": "defunct",
-      "firstPerson": "Scientists hoped I would reveal layers of ancient rock in my walls. Instead they found loose soil and disappointment. But that disappointment was the best thing that happened to Spirit — it pushed the team to aim for the Columbia Hills, three kilometres away. Sometimes a dead end leads to the greatest journey.",
+      "firstPerson": "Look down into the abyss! I am Bonneville Crater — a 200-meter impact bowl that Spirit explored early in her mission. Looking into my fractured rim gave geologists their first peek beneath Gusev Crater's dusty volcanic crust. Classic impact architecture!",
       "yearDeployed": 2004,
       "nasaImageId": "PIA05578"
     },
     {
       "id": "sp-heat-shield",
       "name": "Backshell and Parachute",
-      "position": [12, 0, -17],
+      "position": [
+        12,
+        0,
+        -17
+      ],
       "description": "Spirit's backshell and parachute landed about 300 metres from the rover. The airbag-enclosed lander bounced 28 times before coming to rest. These entry, descent, and landing components remain on the Martian surface as testament to the engineering that delivered Spirit safely to Gusev Crater.",
       "xp": 50,
       "source": "NASA/JPL Mars Exploration Rovers",
       "scienceDiscovery": "No direct science, but the EDL hardware demonstrates the airbag landing technology that delivered two rovers safely to Mars.",
       "legacy": "The backshell and parachute remain on the surface about 300 metres from Spirit's landing site, visible in orbital imagery.",
       "status": "defunct",
-      "firstPerson": "I am the parachute and backshell that brought Spirit to Mars. We slowed from 19,000 km/h to a gentle bounce — twenty-eight bounces, actually. Then Spirit rolled out and drove away, leaving us behind. We are not glamorous, but without us there would be no mission. We are the unsung heroes of every safe landing.",
+      "firstPerson": "Bro, I took the fiery heat so Spirit could live! I am the backshell and supersonic parachute. I slammed into Mars' upper atmosphere at 19,000 kilometers per hour, enduring 1,500 degrees of friction before popping the parachute and drifting softly down. A twisted pile of heroic metal resting proudly in the red sands!",
       "yearDeployed": 2004,
       "nasaImageId": "PIA07222"
     }

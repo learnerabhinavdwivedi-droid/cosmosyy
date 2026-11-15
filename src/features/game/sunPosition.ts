@@ -12,13 +12,7 @@ export function getSunPosition(
   const observer = new Astronomy.Observer(lat, lon, 0);
   const date = new Date(evaDate);
 
-  const equ = Astronomy.Equator(
-    Astronomy.Body.Sun,
-    date,
-    observer,
-    true,
-    true,
-  );
+  const equ = Astronomy.Equator(Astronomy.Body.Sun, date, observer, true, true);
 
   const hor = Astronomy.Horizon(date, observer, equ.ra, equ.dec, "normal");
 
@@ -36,10 +30,7 @@ export function getSunPosition(
   };
 }
 
-export function getEarthPosition(
-  lat: number,
-  lon: number,
-): [number, number, number] {
+export function getEarthPosition(lat: number, lon: number): [number, number, number] {
   const elevDeg = 60 + lat * 0.5;
   const azDeg = 280 - lon * 0.3;
   const elevRad = (elevDeg * Math.PI) / 180;

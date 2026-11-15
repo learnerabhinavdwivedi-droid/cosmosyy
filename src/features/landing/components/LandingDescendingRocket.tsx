@@ -27,11 +27,7 @@ export function LandingDescendingRocket({ targetRef }: DescendingRocketProps) {
   );
 
   // Subtle aerodynamic gimbal steering sway
-  const rotateSway = useTransform(
-    smoothProgress,
-    [0, 0.25, 0.5, 0.75, 1],
-    [0, 2.5, -2, 1.8, 0],
-  );
+  const rotateSway = useTransform(smoothProgress, [0, 0.25, 0.5, 0.75, 1], [0, 2.5, -2, 1.8, 0]);
 
   // Scale dynamics during descent
   const scale = useTransform(smoothProgress, [0, 0.5, 1], [0.95, 1.05, 1]);
@@ -311,15 +307,7 @@ export function LandingDescendingRocket({ targetRef }: DescendingRocketProps) {
               />
 
               {/* Center Fin (Dorsal Keel) */}
-              <rect
-                x="58.5"
-                y="96"
-                width="3"
-                height="28"
-                rx="1"
-                fill="#F59E0B"
-                opacity="0.9"
-              />
+              <rect x="58.5" y="96" width="3" height="28" rx="1" fill="#F59E0B" opacity="0.9" />
 
               {/* Upper Porthole Window */}
               <circle cx="60" cy="126" r="9" fill="#FBBF24" stroke="#78350F" strokeWidth="1.5" />
@@ -339,4 +327,3 @@ export function LandingDescendingRocket({ targetRef }: DescendingRocketProps) {
     </motion.div>
   );
 }
-

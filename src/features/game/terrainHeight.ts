@@ -80,8 +80,8 @@ export function getTerrainElevation(
     const u = THREE.MathUtils.clamp((x + 100) / 200, 0, 1);
     const v = THREE.MathUtils.clamp((100 - z) / 200, 0, 1);
 
-    const uvOffsetU = (((lon + 180) / 360) * 4) * 0.5;
-    const uvOffsetV = (((lat + 90) / 180) * 4) * 0.5;
+    const uvOffsetU = ((lon + 180) / 360) * 4 * 0.5;
+    const uvOffsetV = ((lat + 90) / 180) * 4 * 0.5;
 
     let sampleU = (u * 4 + uvOffsetU) % 1;
     if (sampleU < 0) sampleU += 1;
